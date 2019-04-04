@@ -44,7 +44,17 @@ This means that `.pop()` or `.shift()` will return the new array instead of the 
 
 ## Immutable prototype chain and classes
 
-TBD
+Since const objects can only contain other const values, the prototype chain will be const as well.
+
+- `(@const {}).__proto__` is a const object with keys such as `__defineGetter__`, `hasOwnProperty`, `toString` etc...
+- `(@const []).__proto__` is a const object with keys such as `map`, `push`, etc...
+
+Since prototypes can be manipulated classes are the same, they can be const themselves and the object that they instantiate will end up being const:
+
+- `(@const class {})` is a const object
+- `new (@const class {})()` is a const object
+
+One thing is important here, the constructor and the class field initializers can assume that the fields are mutable.
 
 ## Examples
 
@@ -167,14 +177,39 @@ class Tick {
     }
 }
 
-const aaplTick1 = new Tick("AAPL", 195.855);
-const aaplTick2 = aaplTick1.withNewPrice(195.891);
-const appleTick2 = aaplTick2 with name = "Apple";
-appleTick2.toString();
+let aaplTick = new Tick("AAPL", 195.855);
+aaplTick = aaplTick.withNewPrice(195.891);
+aaplTick = aaplTick with name = "Apple";
+aaplTick.toString();
 /*
 Apple (Ticker: AAPL): $195.891
 
 History:
 - $195.855
 */
+```
+
+Prototype chain changes:
+
+```js
+const aapl = @const {
+    ticker: "AAPL",
+    price: 195.855,
+    __proto__: {
+        tick() {
+            return this with price = 195.891;
+        }
+    }
+};
+
+const aapl2 = aapl.tick();
+
+const aapl3 with __proto__.tick = function() {
+    return this with price = 200;
+};
+
+const aapl4 = aapl3.tick();
+
+assert(aapl.__proto__ !== aapl3.__proto__);
+assert(aapl3.__proto__ === aapl4.__proto__);
 ```
