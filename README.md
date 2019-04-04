@@ -21,7 +21,30 @@ As of today, a few libraries are actually implementing that concept such as [Imm
 
 On top of that, this proposal will give you the ability to define const classes.
 
-Const structures will require to contain const substructures and values such as `number`, `string`, `symbol` and [Temporal's Instant](https://github.com/tc39/proposal-temporal)
+Const structures will require to contain only const substructures and values such as `number`, `string`, `symbol` and [Temporal's Instant](https://github.com/tc39/proposal-temporal).
+
+## Syntax
+
+You can declare a new const data structure using `@const` before an object or array expresssion, for instance:
+
+- `@const {}` is the empty const object expression
+- `@const []` is the empty const array expression
+
+In order to return a derived const data structure expression, you will need to use the `with` keyword and pass a mutating operation on an attribute of the structure, for instance:
+
+- `@const [] with push(1) with push(2)` will be equal to `@const [1, 2]`
+- `@const {} with a = 1 with b = 2` will be equal to `@const { a: 1, b: 2 }`
+
+You can also use mutating operations on the const structure directly for it to return the derived const structure:
+
+- `(@const []).push(1).push(2)` will be equal to `@const [1, 2]`
+- `(@const [1, 2]).pop().pop()` will be equal to `@const []`
+
+This means that `.pop()` or `.shift()` will return the new array instead of the extracted value, in order to extract the value, we're going to introduce `.last()` and `.first()` on the const array.
+
+## Immutable prototype chain ansd classes
+
+TBD
 
 ## Examples
 
