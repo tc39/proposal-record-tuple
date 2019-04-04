@@ -42,7 +42,7 @@ You can also use mutating operations on the const structure directly for it to r
 
 This means that `.pop()` or `.shift()` will return the new array instead of the extracted value, in order to extract the value, we're going to introduce `.last()` and `.first()` on the const array.
 
-## Immutable prototype chain ansd classes
+## Immutable prototype chain and classes
 
 TBD
 
