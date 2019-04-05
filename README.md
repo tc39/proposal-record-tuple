@@ -204,7 +204,7 @@ const aapl = @const {
 
 const aapl2 = aapl.tick();
 
-const aapl3 = with __proto__.tick = function() {
+const aapl3 = aapl with __proto__.tick = function() {
     return this with price = 200;
 };
 
