@@ -42,8 +42,8 @@ You can declare a new const data structure using `@const` before an object or ar
 
 In order to return a derived const data structure expression, you will need to use the `with` keyword and pass a mutating operation on an attribute of the structure, for instance:
 
-- `@const [] with push(1) with push(2)` will be equal to `@const [1, 2]`
-- `@const {} with a = 1 with b = 2` will be equal to `@const { a: 1, b: 2 }`
+- `@const [] with .push(1), .push(2)` will be equal to `@const [1, 2]`
+- `@const {} with .a = 1, .b = 2` will be equal to `@const { a: 1, b: 2 }`
 
 You can also use mutating operations on the const structure directly for it to return the derived const structure:
 
@@ -52,19 +52,33 @@ You can also use mutating operations on the const structure directly for it to r
 
 This means that `.pop()` or `.shift()` will return the new array instead of the extracted value, in order to extract the value, we're going to introduce `.last()` and `.first()` on the const array.
 
+Finally, `with` lets you manipulate your const data structures deeply, you can go to as many levels as you need to change things, for instance:
+
+- `@const [ {} ] with .0.a = 1` will be equal to `@const [ { a: 1 } ]`
+- `@const { arr: [] } with .arr.push(0)` will be equal to `@const { arr: [0] }`
+
+Computed access is also supported by using brackets instead of the dot notation:
+
+- `@const [ {} ] with [0].a = 1` will be equal to `@const [ { a: 1 } ]`
+- `x = 0, @const [ {} ] with [x].a = 1` will be equal to `@const [ { a: 1 } ]`
+
 ## Immutable prototype chain and classes
 
 Since const objects can only contain other const values, the prototype chain will be const as well.
 
-- `(@const {}).__proto__` is a const object with keys such as `__defineGetter__`, `hasOwnProperty`, `toString` etc...
-- `(@const []).__proto__` is a const object with keys such as `map`, `push`, etc...
+- Const objects have `null` prototypes, there are no built-in functions to operate on them. You will however be able to use `Object.` functions on them such as `Object.keys(@const { a: 1, b: 2}) === @const ["a", "b"]`
+- Const arrays have a const object prototype that takes the same functions as an array prototype but also adds `.last()` and `.first()` and changes the behavior of `.pop()` and `.shift()`.
 
 Since prototypes can be manipulated classes are the same, they can be const themselves and the object that they instantiate will end up being const:
 
 - `(@const class {})` is a const object
 - `new (@const class {})()` is a const object
 
-One thing is important here, the constructor and the class field initializers can assume that the fields are mutable.
+Since the classes are now immutable and any of their instances will be as well, using `new` on them will not make sense, so we need to make the constructor callable, we can use the `@call` decorator to do that.
+
+`@const` can now be used to create a value defined by the given class: `@const(MyClass)(constrArg1, constrArg2) with .publicField = value`.
+
+No method of that class can actually mutate `this` but can take `this` and return it modified.
 
 ## Examples
 
@@ -77,7 +91,7 @@ const map1 = @const {
     c: 3,
 };
 
-const map2 = map1 with b = 5;
+const map2 = map1 with .b = 5;
 
 assert(map1 !== map2);
 assert(map2 === @const { a: 1, b: 5, c: 3});
@@ -88,7 +102,7 @@ Simple array:
 ```js
 const array1 = @const [1, 2, 3];
 
-const array2 = array1 with 0 = 2;
+const array2 = array1 with .0 = 2;
 
 assert(array1 !== array2);
 assert(array1 === @const [2, 2, 3]);
@@ -116,8 +130,8 @@ const marketData = @const [
 ];
 
 const updatedData = marketData
-    with 0.lastPrice = 195.891
-    with 1.lastPrice = 286.61;
+    with .0.lastPrice = 195.891,
+         .1.lastPrice = 286.61;
 
 assert(updatedData === @const [
     { ticker: "AAPL", lastPrice: 195.891 },
@@ -137,7 +151,7 @@ const immutableContainer = @const {
 const immutableContainer = @const {
     instance: null,
 };
-immutableContainer with instance = new MyClass();
+immutableContainer with .instance = new MyClass();
 // TypeError: Can't use a non-immutable type in an immutable operation
 
 const array = @const [1, 2, 3];
@@ -166,7 +180,11 @@ class Tick {
     #lastPrice = Math.random();
     #priceHistory = [];
     name;
-    constructor(ticker, lastPrice) {
+    @call constructor(ticker, lastPrice) {
+        return @const(Tick)
+            with .name = ticker,
+                 .#ticker = ticker;
+        }
         // The constructor and field initializers are the only places where you can do "free" assignments
         this.name = ticker;
         this.#ticker = ticker;
@@ -177,8 +195,8 @@ class Tick {
 
     withNewPrice(price) {
         return this
-            with #priceHistory.push(this.#lastPrice)
-            with #lastPrice = price;
+            with .#priceHistory.push(this.#lastPrice),
+                 .#lastPrice = price;
     }
 
     toString() {
@@ -189,7 +207,7 @@ class Tick {
 
 let aaplTick = new Tick("AAPL", 195.855);
 aaplTick = aaplTick.withNewPrice(195.891);
-aaplTick = aaplTick with name = "Apple";
+aaplTick = aaplTick with .name = "Apple";
 aaplTick.toString();
 /*
 Apple (Ticker: AAPL): $195.891
@@ -199,37 +217,13 @@ History:
 */
 ```
 
-Prototype chain changes:
-
-```js
-const aapl = @const {
-    ticker: "AAPL",
-    price: 195.855,
-    __proto__: {
-        tick() {
-            return this with price = 195.891;
-        }
-    }
-};
-
-const aapl2 = aapl.tick();
-
-const aapl3 = aapl with __proto__.tick = function() {
-    return this with price = 200;
-};
-
-const aapl4 = aapl3.tick();
-
-assert(aapl.__proto__ !== aapl3.__proto__);
-assert(aapl3.__proto__ === aapl4.__proto__);
-```
-
-
 ## FAQ
 
 ### Relation to the [decorator propsal](https://github.com/tc39/proposal-decorators)
 
 `@const` is not a decorator and can't be used to create a new decorator declaration.
+
+`@call` is a necessary decorator to make the constructor callable.
 
 ### Are there any follow up proposals being considered?
 
