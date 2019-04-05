@@ -1,18 +1,20 @@
-# Immutable types
+# Constant value types
 
-ECMAScript proposal and reference implementation for Immutable types.
+ECMAScript proposal for constant and value types (also known as immutable types).
 
-**Author:** Robin Ricard (Bloomberg)
+**Authors:** Robin Ricard (Bloomberg), Philipp Dunkel (Bloomberg)
 
-**Champion:** Philipp Dunkel (Bloomberg)
+**Champions:** TBD
 
 **Stage:** 0
 
-## Overview and motivation
+## Overview
 
-The goal of this proposal is to introduce immutable data structures to JavaScript. Immutable data structures are very useful while writing programs in a functional programming style since they make comparing deep data structures fast and easy. They also introduce safety on what the value is and make concurrent programming easier.
+The goal of this proposal is to introduce constant/immutable value types to JavaScript. Immutable data structures are very useful while writing programs in a functional programming style since they make comparing deep data structures fast and easy. They also introduce safety on what the value is and make concurrent programming easier.
 
-As of today, a few libraries are actually implementing that concept such as [Immutable.js](https://immutable-js.github.io/immutable-js/) or [Immer](https://github.com/mweststrate/immer). However, those libraries are lacking the ability to use language idioms to express operations on those data structures.
+As of today, a few libraries are actually implementing that concept such as [Immutable.js](https://immutable-js.github.io/immutable-js/) or [Immer](https://github.com/mweststrate/immer). However, the main influence to that proposal is [Bloomberg's constant.js](https://github.com/bloomberg/constant.js/) that forces data structures to be deeply constant.
+
+Using libraries to handle those types has multiple issues: we have multiple ways of doing the same thing that do not interoperate with each other, the syntax is not as expressive as it could be if it was integrated in the language and finally, it can be very challenging for a type system to pick up what the library is doing.
 
 2 JS Immutable data structures are going to be introduced:
 
@@ -21,7 +23,15 @@ As of today, a few libraries are actually implementing that concept such as [Imm
 
 On top of that, this proposal will give you the ability to define const classes.
 
-Const structures will require to contain only const substructures and values such as `number`, `string`, `symbol` and [Temporal's Instant](https://github.com/tc39/proposal-temporal).
+Const structures will require to contain only const substructures and values such as `number`, `string`, `symbol`, const classes and [Temporal's Instant](https://github.com/tc39/proposal-temporal).
+
+## Motivations
+
+Immutable data structures present the opportunity for implementers to add structural sharing, making operations such as concatenation `O(log n)` instead of `O(n)` and reducing memory footprint for heavily derived data structures.
+
+Thanks to deep immutability, we have guarantees that comparing only the roots will be enough to define equality, this could be extremely useful to write performant components in a library such as React where optimizing performance for components with deep data structures as input can be complex and error-prone. Using this kind of data structure could enable doing a shallow comparison of props to define if the component needs to re-render.
+
+Finally, using immutable datastructures encourages a safer style of programming where all manipulated values are known to be guaranteed during the lifecycle of an application, this would make multi-threaded programming easier as shared values would be guaranteed to be constant.
 
 ## Syntax
 
@@ -213,3 +223,19 @@ const aapl4 = aapl3.tick();
 assert(aapl.__proto__ !== aapl3.__proto__);
 assert(aapl3.__proto__ === aapl4.__proto__);
 ```
+
+
+## FAQ
+
+### Relation to the [decorator propsal](https://github.com/tc39/proposal-decorators)
+
+`@const` is not a decorator and can't be used to create a new decorator declaration.
+
+### Are there any follow up proposals being considered?
+
+As this proposal adds a new concept to the language, we expect that other proposals might use this proposal to extend an another orthogonal feature.
+
+We consider exploring the following proposals once this one gets considered for higher stages:
+
+- ConstSet and ConstMap, the const versions of [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) and [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
+- There is some intersection with the [Temporal Proposal](https://github.com/tc39/proposal-temporal) which might be able to express its types using const classes
