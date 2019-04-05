@@ -1,0 +1,17 @@
+# TODO
+
+- [ ] Add the dot in the with syntax (#1)
+- [ ] Add the comma separated `with` declaration (#1)
+- [ ] Remove the `__proto__` part (#1)
+- [ ] Motivations: Structural Sharing (#2)
+- [ ] Motivations: Why deep immutability (#7)
+- [ ] Motivations: Relation to the decorator proposal (#7)
+- [ ] Motivations: Why are those features important (#7)
+- [ ] Motivations: Possible follow-on proposals (#7)
+- [ ] Const class callable constructor `@const() {}` (#4)
+- [ ] Const Objects and Arrays as value types (#5)
+- [ ] Const Objects are not callable (#5)
+- [ ] Explain const and normal object equality difference (#5)
+- [ ] Non-frozen prototypes for polyfilling (#6)
+- [ ] Transpiler strategy document (#8)
+- [ ] Type System strategy document (#9)
