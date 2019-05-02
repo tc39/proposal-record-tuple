@@ -294,6 +294,16 @@ We consider exploring the following proposals once this one gets considered for 
 
 The main difference is that this proposal has a proper assignment operation using `with`. This difference makes it possible to handle proper type support, which was not possible with the former proposal.
 
+### Would those matters be solved by a library and operator overloading?
+
+Not quite since the `with` operation does some more advanced things such as being able to deeply change and return a value, for instance:
+
+```js
+const newState = state with .settings.theme = "dark";
+```
+
+Even with operator overloading we wouldn't be able to perform such operation.
+
 ## Glossary
 
 #### Immutable Data Structure
@@ -315,3 +325,7 @@ Structural sharing is a technique used to limit the memory footprint of immutabl
 In this proposal it defines any of those: `boolean`, `number`, `symbol`, `undefiened`, `null`, `const object`, `const array` and `const class`.
 
 Value types can only contain other value types: because of that, two value types with the same contents are strictly equal.
+
+```
+
+```
