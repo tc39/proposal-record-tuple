@@ -159,10 +159,6 @@ _ConstExpression_:
 
 > `const` _ArrayExpression_
 
-> `const` _Identifier_ _ObjectExpression_
-
-> `const` _CallExpression_ _ObjectExpression_
-
 #### Examples
 
 ```js
