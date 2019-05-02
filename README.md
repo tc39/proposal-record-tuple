@@ -288,6 +288,7 @@ We consider exploring the following proposals once this one gets considered for 
 - Const classes
 - ConstSet and ConstMap, the const versions of [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) and [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
 - There is some intersection with the [Temporal Proposal](https://github.com/tc39/proposal-temporal) which might be able to express its types using const classes
+- Same with [BigInt](https://github.com/tc39/proposal-bigint)
 
 ### What is different with this proposal than with [previous attempts](https://github.com/sebmarkbage/ecmascript-immutable-data-structures)?
 
