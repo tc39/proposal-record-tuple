@@ -318,10 +318,7 @@ Structural sharing is a technique used to limit the memory footprint of immutabl
 
 #### Value type
 
-In this proposal it defines any of those: `boolean`, `number`, `symbol`, `undefiened`, `null`, `const object`, `const array` and `const class`.
+In this proposal it defines any of those: `boolean`, `number`, `symbol`, `undefiened`, `null`, `const object` and `const array`.
 
 Value types can only contain other value types: because of that, two value types with the same contents are strictly equal.
 
-```
-
-```
