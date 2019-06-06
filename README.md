@@ -104,7 +104,7 @@ const map2 = const {
     c: 3,
 };
 
-assert(map1 !== map1);
+assert(map1 !== map2);
 assert(map1 === {} with .a = 1, .b = 2, .c = 3);
 assert(map1 !== {} with .b = 2, .a = 1, .c = 3);
 
