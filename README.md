@@ -35,7 +35,7 @@ Using libraries to handle those types has multiple issues: we have multiple ways
 #### Simple map
 
 ```js
-const map1 = const {
+const map1 = @const {
     a: 1,
     b: 2,
     c: 3,
@@ -44,13 +44,13 @@ const map1 = const {
 const map2 = map1 with .b = 5;
 
 assert(map1 !== map2);
-assert(map2 === const { a: 1, b: 5, c: 3});
+assert(map2 === @const { a: 1, b: 5, c: 3});
 ```
 
 #### Simple array
 
 ```js
-const array1 = const [1, 2, 3];
+const array1 = @const [1, 2, 3];
 
 const array2 = array1 with [0] = 2;
 
@@ -61,20 +61,20 @@ assert(array1 === const [2, 2, 3]);
 #### Computed access
 
 ```js
-const map = const { a: 1, b: 2, c: 3 };
-const array = const [1, 2, 3];
+const map = @const { a: 1, b: 2, c: 3 };
+const array = @const [1, 2, 3];
 
 const k = "b";
 const i = 0;
 
-assert((map with [k] = 5) === const { a: 1, b: 5, c: 3});
-assert((array with [i] = 2) === const [2, 2, 3]);
+assert((map with [k] = 5) === @const { a: 1, b: 5, c: 3});
+assert((array with [i] = 2) === @const [2, 2, 3]);
 ```
 
 #### Nested structures
 
 ```js
-const marketData = const [
+const marketData = @const [
     { ticker: "AAPL", lastPrice: 195.855 },
     { ticker: "SPY", lastPrice: 286.53 },
 ];
@@ -83,7 +83,7 @@ const updatedData = marketData
     with [0].lastPrice = 195.891,
          [1].lastPrice = 286.61;
 
-assert(updatedData === const [
+assert(updatedData === @const [
     { ticker: "AAPL", lastPrice: 195.891 },
     { ticker: "SPY", lastPrice: 286.61 },
 ]);
@@ -92,13 +92,13 @@ assert(updatedData === const [
 #### Key ordering
 
 ```js
-const map1 = const {
+const map1 = @const {
     a: 1,
     b: 2,
     c: 3,
 };
 
-const map2 = const {
+const map2 = @const {
     b: 2,
     a: 1,
     c: 3,
@@ -114,18 +114,18 @@ assert(map1 !== {} with .b = 2, .a = 1, .c = 3);
 
 ```js
 const instance = new MyClass();
-const immutableContainer = const {
+const immutableContainer = @const {
     instance: instance
 };
 // TypeError: Can't use a non-immutable type in an immutable declaration
 
-const immutableContainer = const {
+const immutableContainer = @const {
     instance: null,
 };
 immutableContainer with .instance = new MyClass();
 // TypeError: Can't use a non-immutable type in an immutable operation
 
-const array = const [1, 2, 3];
+const array = @const [1, 2, 3];
 
 array.map(x => new MyClass(x));
 // TypeError: Can't use a non-immutable type in an immutable operation
@@ -137,12 +137,12 @@ Array.from(array).map(x => new MyClass(x))
 #### More assertions
 
 ```js
-assert(const [] with .push(1), .push(2) === const [1, 2]);
-assert((const {} with .a = 1, .b = 2) === const { a: 1, b: 2 });
-assert((const []).push(1).push(2) === const [1, 2]);
-assert((const [1, 2]).pop().pop() === const []);
-assert((const [ {} ] with [0].a = 1) === const [ { a: 1 } ]);
-assert((x = 0, const [ {} ] with [x].a = 1) === const [ { a: 1 } ]);
+assert(@const [] with .push(1), .push(2) === @const [1, 2]);
+assert((@const {} with .a = 1, .b = 2) === @const { a: 1, b: 2 });
+assert((@const []).push(1).push(2) === @const [1, 2]);
+assert((@const [1, 2]).pop().pop() === @const []);
+assert((@const [ {} ] with [0].a = 1) === @const [ { a: 1 } ]);
+assert((x = 0, @const [ {} ] with [x].a = 1) === @const [ { a: 1 } ]);
 ```
 
 ## Syntax
@@ -155,19 +155,19 @@ We define _ConstExpression_ by using the `const` modifier in front of otherwise 
 
 _ConstExpression_:
 
-> `const` _ObjectExpression_
+> `@const` _ObjectExpression_
 
-> `const` _ArrayExpression_
+> `@onst` _ArrayExpression_
 
 #### Examples
 
 ```js
-const {}
-const { a: 1, b: 2 }
-const { a: 1, b: [2, 3, { c: 4 }] }
-const []
-const [1, 2]
-const [1, 2, { a: 3 }]
+@const {}
+@const { a: 1, b: 2 }
+@const { a: 1, b: [2, 3, { c: 4 }] }
+@const []
+@const [1, 2]
+@const [1, 2, { a: 3 }]
 ```
 
 #### Runtime verification
@@ -225,8 +225,8 @@ The same runtime verification will apply. It is a Type Error when a const type g
 In order to keep this new structure as simple as possible, the const object prototype is `null`. The `Object` namespace and the `in` should however be able to work with const objects and return const values. For instance:
 
 ```js
-assert(Object.keys(const { a: 1, b: 2 }) === const ["a", "b"]);
-assert("a" in const { a: 1, b: 2 });
+assert(Object.keys(@const { a: 1, b: 2 }) === @const ["a", "b"]);
+assert("a" in @const { a: 1, b: 2 });
 ```
 
 ### Const array prototype
@@ -244,29 +244,33 @@ Const classes are being considered as a followup proposal that would let us asso
 
 You can see an attempt at defining them in an [earlier version of this proposal](./history/with-classes.md).
 
-### `const` vs `const` ?
+### `const` vs `@const` ?
 
-`const` variable declarations and `const` value types are completely orthogonal features.
+`const` variable declarations and `@const` value types are completely orthogonal features.
 
 `const` variable declarations force the reference or value type to stay constant for a given identifier in a given lexical scope.
 
-`const` value types makes the value deeply constant and unchangeable.
+`@const` value types makes the value deeply constant and unchangeable.
 
 Using both at the same time is possible, but using a non-const variable declaration is also possible:
 
 ```js
-const obj = const { a: 1, b: 2 };
+const obj = @const { a: 1, b: 2 };
 let obj2 = obj with .c = 3;
 obj2 = obj2 with .a = 3, .b = 3;
 ```
 
+> **Note**: `@const` is being used as a placeholder to one of the following symbols:
+> `const`/`#`/`@const`/`@immutable`/`@fixed`/`@final`
+> Which one it will be is being discussed in issue [#10](https://github.com/rricard/proposal-const-value-types/issues/10)
+
 ### Const equality vs normal equality
 
 ```js
-assert(const { a: 1 } === const { a: 1 });
-assert(Object(const { a: 1 }) !== Object(const { a: 1 }));
+assert(@const { a: 1 } === @const { a: 1 });
+assert(Object(@const { a: 1 }) !== Object(@const { a: 1 }));
 assert({ a: 1 } !== { a: 1 });
-assert(const { a: 1, b: 2 } !== const { b: 2, a: 1 });
+assert(@const { a: 1, b: 2 } !== @const { b: 2, a: 1 });
 ```
 
 Since we established that value types are completely and deeply constant, if they have the same values stored and **inserted in the same order**, they will be considered strictly equal.
