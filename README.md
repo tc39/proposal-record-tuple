@@ -89,27 +89,6 @@ assert(updatedData === @const [
 ]);
 ```
 
-#### Key ordering
-
-```js
-const map1 = @const {
-    a: 1,
-    b: 2,
-    c: 3,
-};
-
-const map2 = @const {
-    b: 2,
-    a: 1,
-    c: 3,
-};
-
-assert(map1 !== map2);
-assert(map1 === {} with .a = 1, .b = 2, .c = 3);
-assert(map1 !== {} with .b = 2, .a = 1, .c = 3);
-
-```
-
 #### Forbidden cases
 
 ```js
@@ -270,10 +249,9 @@ obj2 = obj2 with .a = 3, .b = 3;
 assert(@const { a: 1 } === @const { a: 1 });
 assert(Object(@const { a: 1 }) !== Object(@const { a: 1 }));
 assert({ a: 1 } !== { a: 1 });
-assert(@const { a: 1, b: 2 } !== @const { b: 2, a: 1 });
 ```
 
-Since we established that value types are completely and deeply constant, if they have the same values stored and **inserted in the same order**, they will be considered strictly equal.
+Since we established that value types are completely and deeply constant, if they have the same values stored, they will be considered strictly equal.
 
 It is not the case with normal objects, those objects are instantiated in memory and strict comparison will see that both objects are located at different addresses, they are not strictly equal.
 
