@@ -42,9 +42,11 @@ const map1 = @const {
 };
 
 const map2 = map1 with .b = 5;
+const map3 = @const {...map1, b: 5};
 
 assert(map1 !== map2);
 assert(map2 === @const { a: 1, b: 5, c: 3});
+assert(map2 === map3);
 ```
 
 #### Simple array
@@ -55,7 +57,11 @@ const array1 = @const [1, 2, 3];
 const array2 = array1 with [0] = 2;
 
 assert(array1 !== array2);
-assert(array1 === const [2, 2, 3]);
+assert(array2 === @const [2, 2, 3]);
+
+const array3 = @const [1, ...array2];
+
+assert(array3 === @const [1, 2, 2, 3]);
 ```
 
 #### Computed access
