@@ -39,52 +39,52 @@ Using libraries to handle those types has multiple issues: we have multiple ways
 #### Simple map
 
 ```js
-const map1 = @const {
+const map1 = #{
     a: 1,
     b: 2,
     c: 3,
 };
 
 const map2 = map1 with .b = 5;
-const map3 = @const {...map1, b: 5};
+const map3 = #{...map1, b: 5};
 
 assert(map1 !== map2);
-assert(map2 === @const { a: 1, b: 5, c: 3});
+assert(map2 === #{ a: 1, b: 5, c: 3});
 assert(map2 === map3);
 ```
 
 #### Simple array
 
 ```js
-const array1 = @const [1, 2, 3];
+const array1 = #[1, 2, 3];
 
 const array2 = array1 with [0] = 2;
 
 assert(array1 !== array2);
-assert(array2 === @const [2, 2, 3]);
+assert(array2 === #[2, 2, 3]);
 
-const array3 = @const [1, ...array2];
+const array3 = #[1, ...array2];
 
-assert(array3 === @const [1, 2, 2, 3]);
+assert(array3 === #[1, 2, 2, 3]);
 ```
 
 #### Computed access
 
 ```js
-const map = @const { a: 1, b: 2, c: 3 };
-const array = @const [1, 2, 3];
+const map = #{ a: 1, b: 2, c: 3 };
+const array = #[1, 2, 3];
 
 const k = "b";
 const i = 0;
 
-assert((map with [k] = 5) === @const { a: 1, b: 5, c: 3});
-assert((array with [i] = 2) === @const [2, 2, 3]);
+assert((map with [k] = 5) === #{ a: 1, b: 5, c: 3});
+assert((array with [i] = 2) === #[2, 2, 3]);
 ```
 
 #### Nested structures
 
 ```js
-const marketData = @const [
+const marketData = #[
     { ticker: "AAPL", lastPrice: 195.855 },
     { ticker: "SPY", lastPrice: 286.53 },
 ];
@@ -93,7 +93,7 @@ const updatedData = marketData
     with [0].lastPrice = 195.891,
          [1].lastPrice = 286.61;
 
-assert(updatedData === @const [
+assert(updatedData === #[
     { ticker: "AAPL", lastPrice: 195.891 },
     { ticker: "SPY", lastPrice: 286.61 },
 ]);
@@ -103,18 +103,18 @@ assert(updatedData === @const [
 
 ```js
 const instance = new MyClass();
-const immutableContainer = @const {
+const immutableContainer = #{
     instance: instance
 };
 // TypeError: Can't use a non-immutable type in an immutable declaration
 
-const immutableContainer = @const {
+const immutableContainer = #{
     instance: null,
 };
 immutableContainer with .instance = new MyClass();
 // TypeError: Can't use a non-immutable type in an immutable operation
 
-const array = @const [1, 2, 3];
+const array = #[1, 2, 3];
 
 array.map(x => new MyClass(x));
 // TypeError: Can't use a non-immutable type in an immutable operation
@@ -126,12 +126,12 @@ Array.from(array).map(x => new MyClass(x))
 #### More assertions
 
 ```js
-assert(@const [] with .push(1), .push(2) === @const [1, 2]);
-assert((@const {} with .a = 1, .b = 2) === @const { a: 1, b: 2 });
-assert((@const []).push(1).push(2) === @const [1, 2]);
-assert((@const [1, 2]).pop().pop() === @const []);
-assert((@const [ {} ] with [0].a = 1) === @const [ { a: 1 } ]);
-assert((x = 0, @const [ {} ] with [x].a = 1) === @const [ { a: 1 } ]);
+assert(#[] with .push(1), .push(2) === #[1, 2]);
+assert((#{} with .a = 1, .b = 2) === #{ a: 1, b: 2 });
+assert((#[]).push(1).push(2) === #[1, 2]);
+assert((#[1, 2]).pop().pop() === #[]);
+assert((#[ {} ] with [0].a = 1) === #[ { a: 1 } ]);
+assert((x = 0, #[ {} ] with [x].a = 1) === #[ { a: 1 } ]);
 ```
 
 ## Syntax
@@ -144,19 +144,19 @@ We define _ConstExpression_ by using the `const` modifier in front of otherwise 
 
 _ConstExpression_:
 
-> `@const` _ObjectExpression_
+> `#` _ObjectExpression_
 
-> `@onst` _ArrayExpression_
+> `#` _ArrayExpression_
 
 #### Examples
 
 ```js
-@const {}
-@const { a: 1, b: 2 }
-@const { a: 1, b: [2, 3, { c: 4 }] }
-@const []
-@const [1, 2]
-@const [1, 2, { a: 3 }]
+#{}
+#{ a: 1, b: 2 }
+#{ a: 1, b: [2, 3, { c: 4 }] }
+#[]
+#[1, 2]
+#[1, 2, { a: 3 }]
 ```
 
 #### Runtime verification
@@ -214,8 +214,8 @@ The same runtime verification will apply. It is a Type Error when a const type g
 In order to keep this new structure as simple as possible, the const object prototype is `null`. The `Object` namespace and the `in` should however be able to work with const objects and return const values. For instance:
 
 ```js
-assert(Object.keys(@const { a: 1, b: 2 }) === @const ["a", "b"]);
-assert("a" in @const { a: 1, b: 2 });
+assert(Object.keys(#{ a: 1, b: 2 }) === #["a", "b"]);
+assert("a" in #{ a: 1, b: 2 });
 ```
 
 #### Note about ordering
@@ -226,7 +226,7 @@ from regular objects, where insertion order is preserved when enumerating proper
 
 ```js
 const obj = { z: 1, a: 1 };
-const constObj = @const { z: 1, a: 1 };
+const constObj = #{ z: 1, a: 1 };
 
 Object.keys(obj); // ["z", "a"]
 Object.keys(constObj); // ["a", "z"]
@@ -236,8 +236,8 @@ The properties of const objects and const arrays are enumerated in this sorted o
 preserve their equality when consuming them in pure functions.
 
 ```js
-const constObj1 = { a: 1, z: 1 };
-const constObj1 = { z: 1, a: 1 };
+const constObj1 = #{ a: 1, z: 1 };
+const constObj1 = #{ z: 1, a: 1 };
 
 const func = (constObj) => {...} // some function with no observable side effects
 
@@ -262,8 +262,8 @@ The typeof operator will return a new value for const objects and const arrays. 
 is still being considered, and is represented by `<placeholder>` below.
 
 ```js
-assert(typeof @const { a: 1 } === "<placeholder>");
-assert(typeof @const [1, 2]   === "<placeholder>");
+assert(typeof #{ a: 1 } === "<placeholder>");
+assert(typeof #[1, 2]   === "<placeholder>");
 ```
 
 ## Usage in {`Map`|`Set`|`WeakMap`}
@@ -278,8 +278,8 @@ or const array as the key will result in a `TypeError`.
 #### Map
 
 ```js
-const constObj1 = @const { a: 1, b: 2 };
-const constObj2 = @const { a: 1, b: 2 };
+const constObj1 = #{ a: 1, b: 2 };
+const constObj2 = #{ a: 1, b: 2 };
 
 const map = new Map();
 map.set(constObj1, true);
@@ -289,8 +289,8 @@ assert(map.get(constObj2));
 #### Set
 
 ```js
-const constObj1 = @const { a: 1, b: 2 };
-const constObj2 = @const { a: 1, b: 2 };
+const constObj1 = #{ a: 1, b: 2 };
+const constObj2 = #{ a: 1, b: 2 };
 
 const set = new Set();
 set.add(constObj1);
@@ -301,7 +301,7 @@ assert(set.size === 1);
 #### WeakMap
 
 ```js
-const constObj = @const { a: 1, b: 2 };
+const constObj = #{ a: 1, b: 2 };
 const weakMap = new WeakMap();
 
 // TypeError: Can't use a const object as the key in a WeakMap
@@ -316,31 +316,27 @@ Const classes are being considered as a followup proposal that would let us asso
 
 You can see an attempt at defining them in an [earlier version of this proposal](./history/with-classes.md).
 
-### `const` vs `@const` ?
+### Relation to const?
 
-`const` variable declarations and `@const` value types are completely orthogonal features.
+`const` variable declarations and const value types are completely orthogonal features.
 
 `const` variable declarations force the reference or value type to stay constant for a given identifier in a given lexical scope.
 
-`@const` value types makes the value deeply constant and unchangeable.
+const value types makes the value deeply constant and unchangeable.
 
 Using both at the same time is possible, but using a non-const variable declaration is also possible:
 
 ```js
-const obj = @const { a: 1, b: 2 };
+const obj = #{ a: 1, b: 2 };
 let obj2 = obj with .c = 3;
 obj2 = obj2 with .a = 3, .b = 3;
 ```
 
-> **Note**: `@const` is being used as a placeholder to one of the following symbols:
-> `const`/`#`/`@const`/`@immutable`/`@fixed`/`@final`
-> Which one it will be is being discussed in issue [#10](https://github.com/rricard/proposal-const-value-types/issues/10)
-
 ### Const equality vs normal equality
 
 ```js
-assert(@const { a: 1 } === @const { a: 1 });
-assert(Object(@const { a: 1 }) !== Object(@const { a: 1 }));
+assert(#{ a: 1 } === #{ a: 1 });
+assert(Object(#{ a: 1 }) !== Object(#{ a: 1 }));
 assert({ a: 1 } !== { a: 1 });
 ```
 
