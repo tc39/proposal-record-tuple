@@ -221,6 +221,48 @@ The const array prototype is a const object that contains the same methods as Ar
 - `ConstArray.prototype.pop()` and `ConstArray.prototype.shift()` do not return the removed element, they return the result of the change
 - `ConstArray.prototype.first()` and `ConstArray.prototype.last()` are added to return the first and last element of the const array
 
+## Usage in {`Map`|`Set`|`WeakMap`}
+
+It is possible to use a const object or const array as a key in a `Map`, and as a value in a `Set`. When using a const object or const array in this way, key/value equality behaves as expected.
+
+It is not possible to use a const object or const array as a key in a `WeakMap`, because const objects and const arrays are not `Objects`, and their lifetime is not observable. Attempting to set a value in a WeakMap using a const object
+or const array as the key will result in a `TypeError`.
+
+### Examples
+
+#### Map
+
+```js
+const constObj1 = @const { a: 1, b: 2 };
+const constObj2 = @const { a: 1, b: 2 };
+
+const map = new Map();
+map.set(constObj1, true);
+assert(map.get(constObj2));
+```
+
+#### Set
+
+```js
+const constObj1 = @const { a: 1, b: 2 };
+const constObj2 = @const { a: 1, b: 2 };
+
+const set = new Set();
+set.add(constObj1);
+set.add(constObj2);
+assert(set.size === 1);
+```
+
+#### WeakMap
+
+```js
+const constObj = @const { a: 1, b: 2 };
+const weakMap = new WeakMap();
+
+// TypeError: Can't use a const object as the key in a WeakMap
+weakMap.set(constObj, true);
+```
+
 ## FAQ
 
 ### Const classes?
@@ -309,4 +351,3 @@ Structural sharing is a technique used to limit the memory footprint of immutabl
 In this proposal it defines any of those: `boolean`, `number`, `symbol`, `string`, `undefined`, `null`, `const object` and `const array`.
 
 Value types can only contain other value types: because of that, two value types with the same contents are strictly equal.
-
