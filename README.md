@@ -218,7 +218,7 @@ assert(Object.keys(#{ a: 1, b: 2 }) === #["a", "b"]);
 assert("a" in #{ a: 1, b: 2 });
 ```
 
-#### Note about ordering
+#### Ordering of properties
 
 When the properties of a const object are enumerated, its keys are enumerated in sorted order. This differs
 from regular objects, where insertion order is preserved when enumerating properties
@@ -248,6 +248,24 @@ assert(func(constObj1) === func(constObj2));
 If enumeration order for const objects and const arrays was instead insertion order, then:
 `const func = Object.keys;`
 would break the above assertion.
+
+#### Iteration of properties
+
+Just like regular objects and arrays, const objects are not iterable, while const arrays are iterable. For example:
+
+```js
+const constObj = #{ a: 1, b: 2 };
+const constArr = #[1, 2];
+
+// TypeError: constObj is not iterable
+for (const o of constObj) { console.log(o); }
+
+
+// output is:
+// 1
+// 2
+for (const o of constArr) { console.log(o); }
+```
 
 ### Const array prototype
 
