@@ -2,7 +2,11 @@
 
 ECMAScript proposal for constant and value types (also known as immutable types).
 
-**Authors:** Robin Ricard (Bloomberg), Philipp Dunkel (Bloomberg)
+**Authors:**
+
+- Robin Ricard (Bloomberg)
+- Richard Button (Bloomberg)
+- Philipp Dunkel (Bloomberg)
 
 **Champions:** TBD
 
