@@ -140,7 +140,7 @@ This defines the new pieces of syntax being added to the language with this prop
 
 ### Const expressions and declarations
 
-We define _ConstExpression_ by using the `const` modifier in front of otherwise normal expressions and declarations.
+We define _ConstExpression_ by using the `#` modifier in front of otherwise normal expressions and declarations.
 
 _ConstExpression_:
 
