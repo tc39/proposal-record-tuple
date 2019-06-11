@@ -218,6 +218,37 @@ assert(Object.keys(@const { a: 1, b: 2 }) === @const ["a", "b"]);
 assert("a" in @const { a: 1, b: 2 });
 ```
 
+#### Note about ordering
+
+When the properties of a const object are enumerated, its keys are enumerated in sorted order. This differs
+from regular objects, where insertion order is preserved when enumerating properties
+(except for properties that parse as numerics, where the behavior is undefined).
+
+```js
+const obj = { z: 1, a: 1 };
+const constObj = @const { z: 1, a: 1 };
+
+Object.keys(obj); // ["z", "a"]
+Object.keys(constObj); // ["a", "z"]
+```
+
+The properties of const objects and const arrays are enumerated in this sorted order in order to
+preserve their equality when consuming them in pure functions.
+
+```js
+const constObj1 = { a: 1, z: 1 };
+const constObj1 = { z: 1, a: 1 };
+
+const func = (constObj) => {...} // some function with no observable side effects
+
+assert(constObj1 === constObj2);
+assert(func(constObj1) === func(constObj2));
+```
+
+If enumeration order for const objects and const arrays was instead insertion order, then:
+`const func = Object.keys;`
+would break the above assertion.
+
 ### Const array prototype
 
 The const array prototype is a const object that contains the same methods as Array with a few changes:
