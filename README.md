@@ -214,6 +214,13 @@ assert(Object.keys(@const { a: 1, b: 2 }) === @const ["a", "b"]);
 assert("a" in @const { a: 1, b: 2 });
 ```
 
+### Const array prototype
+
+The const array prototype is a const object that contains the same methods as Array with a few changes:
+
+- `ConstArray.prototype.pop()` and `ConstArray.prototype.shift()` do not return the removed element, they return the result of the change
+- `ConstArray.prototype.first()` and `ConstArray.prototype.last()` are added to return the first and last element of the const array
+
 ## Usage in {`Map`|`Set`|`WeakMap`}
 
 It is possible to use a const object or const array as a key in a `Map`, and as a value in a `Set`. When using a const object or const array in this way, key/value equality behaves as expected.
@@ -255,13 +262,6 @@ const weakMap = new WeakMap();
 // TypeError: Can't use a const object as the key in a WeakMap
 weakMap.set(constObj, true);
 ```
-
-### Const array prototype
-
-The const array prototype is a const object that contains the same methods as Array with a few changes:
-
-- `ConstArray.prototype.pop()` and `ConstArray.prototype.shift()` do not return the removed element, they return the result of the change
-- `ConstArray.prototype.first()` and `ConstArray.prototype.last()` are added to return the first and last element of the const array
 
 ## FAQ
 
