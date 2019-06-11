@@ -221,6 +221,16 @@ The const array prototype is a const object that contains the same methods as Ar
 - `ConstArray.prototype.pop()` and `ConstArray.prototype.shift()` do not return the removed element, they return the result of the change
 - `ConstArray.prototype.first()` and `ConstArray.prototype.last()` are added to return the first and last element of the const array
 
+## `typeof`
+
+The typeof operator will return a new value for const objects and const arrays. The value to be returned
+is still being considered, and is represented by `<placeholder>` below.
+
+```js
+assert(typeof @const { a: 1 } === "<placeholder>");
+assert(typeof @const [1, 2]   === "<placeholder>");
+```
+
 ## Usage in {`Map`|`Set`|`WeakMap`}
 
 It is possible to use a const object or const array as a key in a `Map`, and as a value in a `Set`. When using a const object or const array in this way, key/value equality behaves as expected.
