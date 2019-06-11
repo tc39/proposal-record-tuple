@@ -218,7 +218,7 @@ assert("a" in @const { a: 1, b: 2 });
 
 It is possible to use a const object or const array as a key in a `Map`, and as a value in a `Set`. When using a const object or const array in this way, key/value equality behaves as expected.
 
-It is not possible to use a const arary of object as a key in a `WeakMap`, because const arrays and const objects are not `Objects`, and have no lifetime. Attempting to set a value in a WeakMap using a const object
+It is not possible to use a const object or const array as a key in a `WeakMap`, because const objects and const arrays are not `Objects`, and have no lifetime. Attempting to set a value in a WeakMap using a const object
 or const array as the key will result in a `TypeError`.
 
 ### Examples
