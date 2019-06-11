@@ -220,7 +220,7 @@ assert("a" in @const { a: 1, b: 2 });
 
 #### Note about ordering
 
-When the properties of a const object are enumerated, it's keys are enumerated in sorted order. This differs
+When the properties of a const object are enumerated, its keys are enumerated in sorted order. This differs
 from regular objects, where insertion order is preserved when enumerating properties
 (except for properties that parse as numerics, where the behavior is undefined).
 
