@@ -214,6 +214,48 @@ assert(Object.keys(@const { a: 1, b: 2 }) === @const ["a", "b"]);
 assert("a" in @const { a: 1, b: 2 });
 ```
 
+## Usage in {`Map`|`Set`|`WeakMap`}
+
+It is possible to use a const object or const array as a key in a `Map`, and as a value in a `Set`. When using a const object or const array in this way, key/value equality behaves as expected.
+
+It is not possible to use a const arary of object as a key in a `WeakMap`, because const arrays and const objects are not `Objects`, and have no lifetime. Attempting to set a value in a WeakMap using a const object
+or const array as the key will result in a `TypeError`.
+
+### Examples
+
+#### Map
+
+```js
+const constObj1 = @const { a: 1, b: 2 };
+const constObj2 = @const { a: 1, b: 2 };
+
+const map = new Map();
+map.set(constObj1, true);
+assert(map.get(constObj2));
+```
+
+#### Set
+
+```js
+const constObj1 = @const { a: 1, b: 2 };
+const constObj2 = @const { a: 1, b: 2 };
+
+const set = new Set();
+set.add(constObj1);
+set.add(constObj2);
+assert(set.size === 1);
+```
+
+#### WeakMap
+
+```js
+const constObj = @const { a: 1, b: 2 };
+const weakMap = new WeakMap();
+
+// TypeError: Can't use a const object as the key in a WeakMap
+weakMap.set(constObj, true);
+```
+
 ### Const array prototype
 
 The const array prototype is a const object that contains the same methods as Array with a few changes:
@@ -309,4 +351,3 @@ Structural sharing is a technique used to limit the memory footprint of immutabl
 In this proposal it defines any of those: `boolean`, `number`, `symbol`, `string`, `undefined`, `null`, `const object` and `const array`.
 
 Value types can only contain other value types: because of that, two value types with the same contents are strictly equal.
-
