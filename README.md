@@ -237,7 +237,7 @@ preserve their equality when consuming them in pure functions.
 
 ```js
 const constObj1 = #{ a: 1, z: 1 };
-const constObj1 = #{ z: 1, a: 1 };
+const constObj2 = #{ z: 1, a: 1 };
 
 const func = (constObj) => {...} // some function with no observable side effects
 
