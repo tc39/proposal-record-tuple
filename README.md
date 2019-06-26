@@ -343,6 +343,17 @@ a similar concept (variable reference immutability) while this proposal intends 
 While immutability is the common thread between these two features, there has been significant community feedback that
 indicates that using `const` in both contexts is undesirable.
 
+Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible alternatives. For example:
+
+```js
+const first = {| a: 1, b: 2 |};
+const second = [|1, 2, 3|];
+```
+
+This syntax also avoids the problems with using a keyword. However, it is also used by [Flow](https://flow.org/) as
+the syntax for [exact object types](https://flow.org/en/docs/types/objects/#toc-exact-object-types). Investigation
+will need to be done to determine if introducing this syntax in ECMAScript will break existing Flow typings.
+
 ## How does this relate to the const keyword?
 
 `const` variable declarations and const value types are completely orthogonal features.
