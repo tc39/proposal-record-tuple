@@ -12,7 +12,7 @@ ECMAScript proposal for constant and value types (also known as immutable types)
 
 **Stage:** 0
 
-## Overview
+# Overview
 
 The goal of this proposal is to introduce constant/immutable value types to JavaScript. It has multiple objectives:
 
@@ -28,13 +28,13 @@ This proposal presents 2 main additions to the language:
 
 Once you create one of those structures, the only accepted sub-structures will only be one of those const structures and normal value types such as `number`, `string`, `symbol` or `null`.
 
-### Prior work on immutable data structures in JavaScript
+## Prior work on immutable data structures in JavaScript
 
 As of today, a few libraries are actually implementing similar concepts such as [Immutable.js](https://immutable-js.github.io/immutable-js/) or [Immer](https://github.com/mweststrate/immer) that have been covered by [a previous proposal attempt](https://github.com/sebmarkbage/ecmascript-immutable-data-structures). However, the main influence to that proposal is [constant.js](https://github.com/bloomberg/constant.js/) that forces data structures to be deeply constant.
 
 Using libraries to handle those types has multiple issues: we have multiple ways of doing the same thing that do not interoperate with each other, the syntax is not as expressive as it could be if it was integrated in the language and finally, it can be very challenging for a type system to pick up what the library is doing.
 
-## Examples
+# Examples
 
 #### Simple map
 
@@ -134,11 +134,11 @@ assert((#[ {} ] with [0].a = 1) === #[ { a: 1 } ]);
 assert((x = 0, #[ {} ] with [x].a = 1) === #[ { a: 1 } ]);
 ```
 
-## Syntax
+# Syntax
 
 This defines the new pieces of syntax being added to the language with this proposal.
 
-### Const expressions and declarations
+## Const expressions and declarations
 
 We define _ConstExpression_ by using the `#` modifier in front of otherwise normal expressions and declarations.
 
@@ -163,7 +163,7 @@ _ConstExpression_:
 
 At runtime, if a non-const data structure is passed in a const expression, it is a Type Error. That means that the object or array expressions can't contain a Reference Type or call a function that returns a Reference Type.
 
-### Const update expression
+## Const update expression
 
 _ConstAssignment_:
 
@@ -207,9 +207,9 @@ constObj with .arr.push(1)
 
 The same runtime verification will apply. It is a Type Error when a const type gets updated with a reference type in it.
 
-## Prototypes
+# Prototypes
 
-### Const object prototype
+## Const object prototype
 
 In order to keep this new structure as simple as possible, the const object prototype is `null`. The `Object` namespace and the `in` should however be able to work with const objects and return const values. For instance:
 
@@ -218,7 +218,7 @@ assert(Object.keys(#{ a: 1, b: 2 }) === #["a", "b"]);
 assert("a" in #{ a: 1, b: 2 });
 ```
 
-#### Ordering of properties
+## Ordering of properties
 
 When the properties of a const object are enumerated, its keys are enumerated in sorted order. This differs
 from regular objects, where insertion order is preserved when enumerating properties
@@ -249,7 +249,7 @@ If enumeration order for const objects and const arrays was instead insertion or
 `const func = Object.keys;`
 would break the above assertion.
 
-#### Iteration of properties
+## Iteration of properties
 
 Just like regular objects and arrays, const objects are not iterable, while const arrays are iterable. For example:
 
@@ -267,7 +267,7 @@ for (const o of constObj) { console.log(o); }
 for (const o of constArr) { console.log(o); }
 ```
 
-### Const array prototype
+## Const array prototype
 
 The const array prototype is a const object that contains the same methods as Array with a few changes:
 
@@ -326,15 +326,35 @@ const weakMap = new WeakMap();
 weakMap.set(constObj, true);
 ```
 
-## FAQ
+# FAQ
 
-### Const classes?
+## Why #{}/#[] syntax? What about an existing or new keyword?
 
-Const classes are being considered as a followup proposal that would let us associate methods to const objects.
+Using a keyword as a prefix to the standard object/array literal syntax presents issues around
+backwards compatibility. Additionally, re-using existing keywords can introduce ambiguity.
 
-You can see an attempt at defining them in an [earlier version of this proposal](./history/with-classes.md).
+ECMAScript defines a set of [*reserved keywords*](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#Keywords) that can be used for future extensions to the language.
+Defining a new keyword that is not already reserved is possible, but requires significant effort to validate
+that the new keyword will not likely break backwards compatibility.
 
-### Relation to const?
+Using a reserved keyword makes this process easier, but it is not a perfect solution because there are no reserved keywords
+that match the "intent" of the feature, other than `const`. The `const` keyword is also tricky, because it describes
+a similar concept (variable reference immutability) while this proposal intends to add new immutable data structures.
+While immutability is the common thread between these two features, there has been significant community feedback that
+indicates that using `const` in both contexts is undesirable.
+
+Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible alternatives. For example:
+
+```js
+const first = {| a: 1, b: 2 |};
+const second = [|1, 2, 3|];
+```
+
+This syntax also avoids the problems with using a keyword. However, it is also used by [Flow](https://flow.org/) as
+the syntax for [exact object types](https://flow.org/en/docs/types/objects/#toc-exact-object-types). Investigation
+will need to be done to determine if introducing this syntax in ECMAScript will break existing Flow typings.
+
+## How does this relate to the const keyword?
 
 `const` variable declarations and const value types are completely orthogonal features.
 
@@ -350,7 +370,7 @@ let obj2 = obj with .c = 3;
 obj2 = obj2 with .a = 3, .b = 3;
 ```
 
-### Const equality vs normal equality
+## Const equality vs normal equality
 
 ```js
 assert(#{ a: 1 } === #{ a: 1 });
@@ -362,7 +382,13 @@ Since we established that value types are completely and deeply constant, if the
 
 It is not the case with normal objects, those objects are instantiated in memory and strict comparison will see that both objects are located at different addresses, they are not strictly equal.
 
-### Are there any follow up proposals being considered?
+## What about const classes?
+
+Const classes are being considered as a followup proposal that would let us associate methods to const objects.
+
+You can see an attempt at defining them in an [earlier version of this proposal](./history/with-classes.md).
+
+## Are there any follow up proposals being considered?
 
 As this proposal adds a new concept to the language, we expect that other proposals might use this proposal to extend an another orthogonal feature.
 
@@ -375,11 +401,11 @@ A goal of the broader set of proposals (including [operator overloading](https:/
 
 If const classes are standardized, features like [Temporal Proposal](https://github.com/tc39/proposal-temporal) which might be able to express its types using const classes. However, this is far in the future, and we do not encourage people to wait for the addition of const classes.
 
-### What is different with this proposal than with [previous attempts](https://github.com/sebmarkbage/ecmascript-immutable-data-structures)?
+## What is different with this proposal than with [previous attempts](https://github.com/sebmarkbage/ecmascript-immutable-data-structures)?
 
 The main difference is that this proposal has a proper assignment operation using `with`. This difference makes it possible to handle proper type support, which was not possible with the former proposal.
 
-### Would those matters be solved by a library and operator overloading?
+## Would those matters be solved by a library and operator overloading?
 
 Not quite since the `with` operation does some more advanced things such as being able to deeply change and return a value, for instance:
 
@@ -389,7 +415,7 @@ const newState = state with .settings.theme = "dark";
 
 Even with operator overloading we wouldn't be able to perform such operation.
 
-## Glossary
+# Glossary
 
 #### Immutable Data Structure
 
