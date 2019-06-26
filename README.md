@@ -337,17 +337,11 @@ ECMAScript defines a set of *reserved keywords* that can be used for future exte
 Defining a new keyword that is not already reserved is possible, but requires significant effort to validate
 that the new keyword will not likely break backwards compatibility.
 
-Using a reserved keyword makes this process easier, but is not a perfect solution, because there are no reserved keywords
+Using a reserved keyword makes this process easier, but it is not a perfect solution because there are no reserved keywords
 that match the "intent" of the feature, other than `const`. The `const` keyword is also tricky, because it describes
 a similar concept (variable reference immutability) while this proposal intends to add new immutable data structures.
-While immutability is the common thread between these two features, the features are orthogonal, and using `const`
-in both contexts would create hard-to-reason-about ambiguities.
-
-Using the `#` character solves most of these problems. The `#` character can be safely used in this context without
-re-using an existing keyword or reserving a new keyword. Further, while `#` is already used to describe
-private fields in the [Class field declarations](https://github.com/tc39/proposal-class-fields) proposal, it is
-less ambiguous than re-using `const`, because they are completely orthogonal features (and contexts) with no relation
-in design or intent.
+While immutability is the common thread between these two features, there has been significant community feedback that
+indicates that using `const` in both contexts is undesirable.
 
 ## How does this relate to the const keyword?
 
