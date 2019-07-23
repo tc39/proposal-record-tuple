@@ -1,6 +1,6 @@
-# Constant Value Types
+# Record/Tuple Value Types
 
-ECMAScript proposal for constant and value types (also known as immutable types).
+ECMAScript proposal for the Record and Tuple value types (also known as immutable types).
 
 **Authors:**
 
@@ -14,46 +14,46 @@ ECMAScript proposal for constant and value types (also known as immutable types)
 
 # Overview
 
-The goal of this proposal is to introduce constant/immutable value types to JavaScript. It has multiple objectives:
+The goal of this proposal is to introduce deeply constant/immutable value types to JavaScript. It has multiple objectives:
 
 - Introducing efficient data structures that makes copying and changing them cheap and will allow programs avoiding mutation of data to run faster (pattern heavily used in Redux for instance).
-- Add guarantees in strict equality when comparing data. This is only possible because those data structures are deeply constant (comparing props fast is essential for efficient virtual dom reconciliation in React apps for instance)
+- Add guarantees in strict equality when comparing data. This is only possible because those data structures are deeply immutable (comparing props fast is essential for efficient virtual dom reconciliation in React apps for instance)
 - Be easily understood by external typesystem supersets such as TypeScript or Flow.
 - Offers the possibility to improve structured cloning efficiency when messaging across workers.
 
 This proposal presents 2 main additions to the language:
 
-- Const Objects
-- Const Arrays
+- `Record`
+- `Tuple`
 
-Once you create one of those structures, the only accepted sub-structures will only be one of those const structures and normal value types such as `number`, `string`, `symbol` or `null`.
+The only valid sub-structures of these values will be one of those structures and normal value types such as `number`, `string`, `symbol` or `null`.
 
 ## Prior work on immutable data structures in JavaScript
 
-As of today, a few libraries are actually implementing similar concepts such as [Immutable.js](https://immutable-js.github.io/immutable-js/) or [Immer](https://github.com/mweststrate/immer) that have been covered by [a previous proposal attempt](https://github.com/sebmarkbage/ecmascript-immutable-data-structures). However, the main influence to that proposal is [constant.js](https://github.com/bloomberg/constant.js/) that forces data structures to be deeply constant.
+As of today, a few libraries are actually implementing similar concepts such as [Immutable.js](https://immutable-js.github.io/immutable-js/) or [Immer](https://github.com/mweststrate/immer) that have been covered by [a previous proposal attempt](https://github.com/sebmarkbage/ecmascript-immutable-data-structures). However, the main influence to that proposal is [constant.js](https://github.com/bloomberg/constant.js/) that forces data structures to be deeply immutable.
 
 Using libraries to handle those types has multiple issues: we have multiple ways of doing the same thing that do not interoperate with each other, the syntax is not as expressive as it could be if it was integrated in the language and finally, it can be very challenging for a type system to pick up what the library is doing.
 
 # Examples
 
-#### Simple map
+#### Simple `Record`
 
 ```js
-const map1 = #{
+const record1 = #{
     a: 1,
     b: 2,
     c: 3,
 };
 
-const map2 = map1 with .b = 5;
-const map3 = #{...map1, b: 5};
+const record2 = record1 with .b = 5;
+const record3 = #{...record1, b: 5};
 
-assert(map1 !== map2);
-assert(map2 === #{ a: 1, b: 5, c: 3});
-assert(map2 === map3);
+assert(record1 !== record2);
+assert(record2 === #{ a: 1, b: 5, c: 3});
+assert(record2 === record3);
 ```
 
-#### Simple array
+#### Simple `Tuple`
 
 ```js
 const array1 = #[1, 2, 3];
@@ -71,14 +71,14 @@ assert(array3 === #[1, 2, 2, 3]);
 #### Computed access
 
 ```js
-const map = #{ a: 1, b: 2, c: 3 };
-const array = #[1, 2, 3];
+const record = #{ a: 1, b: 2, c: 3 };
+const tuple = #[1, 2, 3];
 
 const k = "b";
 const i = 0;
 
-assert((map with [k] = 5) === #{ a: 1, b: 5, c: 3});
-assert((array with [i] = 2) === #[2, 2, 3]);
+assert((record with [k] = 5) === #{ a: 1, b: 5, c: 3});
+assert((tuple with [i] = 2) === #[2, 2, 3]);
 ```
 
 #### Nested structures
@@ -114,9 +114,9 @@ const immutableContainer = #{
 immutableContainer with .instance = new MyClass();
 // TypeError: Can't use a non-immutable type in an immutable operation
 
-const array = #[1, 2, 3];
+const tuple = #[1, 2, 3];
 
-array.map(x => new MyClass(x));
+tuple.map(x => new MyClass(x));
 // TypeError: Can't use a non-immutable type in an immutable operation
 
 // The following should work:
@@ -138,7 +138,7 @@ assert((x = 0, #[ {} ] with [x].a = 1) === #[ { a: 1 } ]);
 
 This defines the new pieces of syntax being added to the language with this proposal.
 
-## Const expressions and declarations
+## Expressions and Declarations
 
 We define _ConstExpression_ by using the `#` modifier in front of otherwise normal expressions and declarations.
 
@@ -161,7 +161,7 @@ _ConstExpression_:
 
 #### Runtime verification
 
-At runtime, if a non-const data structure is passed in a const expression, it is a Type Error. That means that the object or array expressions can't contain a Reference Type or call a function that returns a Reference Type.
+At runtime, if a non-value type is placed inside a `Record` or `Tuple`, it is a `TypeError`. This means that a `Record` or `Tuple` expression can only contain value types.
 
 ## Const update expression
 
@@ -194,24 +194,24 @@ _ConstUpdateExpresion_:
 #### Examples
 
 ```js
-constObj with .a = 1
-constObj with .a = 1, .b = 2
-constArr with .push(1), .push(2)
-constArr with [0] = 1
-constObj with .a.b = 1
-constObj with ["a"]["b"] = 1
-constObj with .arr.push(1)
+record with .a = 1
+record with .a = 1, .b = 2
+tuple with .push(1), .push(2)
+tuple with [0] = 1
+record with .a.b = 1
+record with ["a"]["b"] = 1
+record with .arr.push(1)
 ```
 
 #### Runtime verification
 
-The same runtime verification will apply. It is a Type Error when a const type gets updated with a reference type in it.
+The same runtime verification will apply. It is a `TypeError` when a value inside a `Record` or `Tuple` is updated with a non-value type.
 
 # Prototypes
 
-## Const object prototype
+## `Record` prototype
 
-In order to keep this new structure as simple as possible, the const object prototype is `null`. The `Object` namespace and the `in` should however be able to work with const objects and return const values. For instance:
+In order to keep this new structure as simple as possible, the `Record` prototype is `null`. The `Object` namespace and the `in` should however be able to work with `Records` and return the immutable equivalent. For instance:
 
 ```js
 assert(Object.keys(#{ a: 1, b: 2 }) === #["a", "b"]);
@@ -220,63 +220,63 @@ assert("a" in #{ a: 1, b: 2 });
 
 ## Ordering of properties
 
-When the properties of a const object are enumerated, its keys are enumerated in sorted order. This differs
+When the properties of a `Record` or `Tuple` are enumerated, its keys are enumerated in sorted order. This differs
 from regular objects, where insertion order is preserved when enumerating properties
 (except for properties that parse as numerics, where the behavior is undefined).
 
 ```js
 const obj = { z: 1, a: 1 };
-const constObj = #{ z: 1, a: 1 };
+const record = #{ z: 1, a: 1 };
 
 Object.keys(obj); // ["z", "a"]
-Object.keys(constObj); // ["a", "z"]
+Object.keys(record); // ["a", "z"]
 ```
 
-The properties of const objects and const arrays are enumerated in this sorted order in order to
+The properties of `Records` and `Tuple`s are enumerated in this sorted order in order to
 preserve their equality when consuming them in pure functions.
 
 ```js
-const constObj1 = #{ a: 1, z: 1 };
-const constObj2 = #{ z: 1, a: 1 };
+const record1 = #{ a: 1, z: 1 };
+const record2 = #{ z: 1, a: 1 };
 
-const func = (constObj) => {...} // some function with no observable side effects
+const func = (record) => {...} // some function with no observable side effects
 
-assert(constObj1 === constObj2);
-assert(func(constObj1) === func(constObj2));
+assert(record1 === record2);
+assert(func(record1) === func(record2));
 ```
 
-If enumeration order for const objects and const arrays was instead insertion order, then:
+If enumeration order for `Records` and `Tuple`s was instead insertion order, then:
 `const func = Object.keys;`
 would break the above assertion.
 
 ## Iteration of properties
 
-Just like regular objects and arrays, const objects are not iterable, while const arrays are iterable. For example:
+Similar to objects and arrays, `Records` are not iterable, while `Tuple`s are iterable. For example:
 
 ```js
-const constObj = #{ a: 1, b: 2 };
-const constArr = #[1, 2];
+const record = #{ a: 1, b: 2 };
+const tuple = #[1, 2];
 
-// TypeError: constObj is not iterable
-for (const o of constObj) { console.log(o); }
+// TypeError: record is not iterable
+for (const o of record) { console.log(o); }
 
 
 // output is:
 // 1
 // 2
-for (const o of constArr) { console.log(o); }
+for (const o of tuple) { console.log(o); }
 ```
 
-## Const array prototype
+## `Tuple` prototype
 
-The const array prototype is a const object that contains the same methods as Array with a few changes:
+The `Tuple` prototype is an object that contains the same methods as Array with a few changes:
 
-- `ConstArray.prototype.pop()` and `ConstArray.prototype.shift()` do not return the removed element, they return the result of the change
-- `ConstArray.prototype.first()` and `ConstArray.prototype.last()` are added to return the first and last element of the const array
+- `Tuple.prototype.pop()` and `Tuple.prototype.shift()` do not return the removed element, they return the result of the change
+- `Tuple.prototype.first()` and `Tuple.prototype.last()` are added to return the first and last element of the `Tuple`
 
 ## `typeof`
 
-The typeof operator will return a new value for const objects and const arrays. The value to be returned
+The typeof operator will return a new value for `Records` and `Tuple`s. The value to be returned
 is still being considered, and is represented by `<placeholder>` below.
 
 ```js
@@ -286,44 +286,43 @@ assert(typeof #[1, 2]   === "<placeholder>");
 
 ## Usage in {`Map`|`Set`|`WeakMap`}
 
-It is possible to use a const object or const array as a key in a `Map`, and as a value in a `Set`. When using a const object or const array in this way, key/value equality behaves as expected.
+It is possible to use a `Record` or `Tuple` as a key in a `Map`, and as a value in a `Set`. When using a `Record` or `Tuple` in this way, key/value equality behaves as expected.
 
-It is not possible to use a const object or const array as a key in a `WeakMap`, because const objects and const arrays are not `Objects`, and their lifetime is not observable. Attempting to set a value in a WeakMap using a const object
-or const array as the key will result in a `TypeError`.
+It is not possible to use a `Record` or `Tuple` as a key in a `WeakMap`, because `Records` and `Tuple`s are not `Objects`, and their lifetime is not observable. Attempting to set a value in a WeakMap using a `Record` or `Tuple` as the key will result in a `TypeError`.
 
 ### Examples
 
 #### Map
 
 ```js
-const constObj1 = #{ a: 1, b: 2 };
-const constObj2 = #{ a: 1, b: 2 };
+const record1 = #{ a: 1, b: 2 };
+const record2 = #{ a: 1, b: 2 };
 
 const map = new Map();
-map.set(constObj1, true);
-assert(map.get(constObj2));
+map.set(record1, true);
+assert(map.get(record2));
 ```
 
 #### Set
 
 ```js
-const constObj1 = #{ a: 1, b: 2 };
-const constObj2 = #{ a: 1, b: 2 };
+const record1 = #{ a: 1, b: 2 };
+const record2 = #{ a: 1, b: 2 };
 
 const set = new Set();
-set.add(constObj1);
-set.add(constObj2);
+set.add(record1);
+set.add(record2);
 assert(set.size === 1);
 ```
 
 #### WeakMap
 
 ```js
-const constObj = #{ a: 1, b: 2 };
+const record = #{ a: 1, b: 2 };
 const weakMap = new WeakMap();
 
-// TypeError: Can't use a const object as the key in a WeakMap
-weakMap.set(constObj, true);
+// TypeError: Can't use a Record as the key in a WeakMap
+weakMap.set(record, true);
 ```
 
 # FAQ
@@ -356,21 +355,21 @@ will need to be done to determine if introducing this syntax in ECMAScript will 
 
 ## How does this relate to the const keyword?
 
-`const` variable declarations and const value types are completely orthogonal features.
+`const` variable declarations and `Record`/`Tuple` are completely orthogonal features.
 
 `const` variable declarations force the reference or value type to stay constant for a given identifier in a given lexical scope.
 
-const value types makes the value deeply constant and unchangeable.
+The `Record` and `Tuple` value types are deeply constant and unchangeable.
 
 Using both at the same time is possible, but using a non-const variable declaration is also possible:
 
 ```js
-const obj = #{ a: 1, b: 2 };
-let obj2 = obj with .c = 3;
-obj2 = obj2 with .a = 3, .b = 3;
+const record = #{ a: 1, b: 2 };
+let record2 = record with .c = 3;
+record2 = record2 with .a = 3, .b = 3;
 ```
 
-## Const equality vs normal equality
+## `Record`/`Tuple` equality vs normal equality
 
 ```js
 assert(#{ a: 1 } === #{ a: 1 });
@@ -378,13 +377,13 @@ assert(Object(#{ a: 1 }) !== Object(#{ a: 1 }));
 assert({ a: 1 } !== { a: 1 });
 ```
 
-Since we established that value types are completely and deeply constant, if they have the same values stored, they will be considered strictly equal.
+Since we established that these value types are completely and deeply constant, if they have the same values stored, they will be considered strictly equal.
 
 It is not the case with normal objects, those objects are instantiated in memory and strict comparison will see that both objects are located at different addresses, they are not strictly equal.
 
 ## What about const classes?
 
-Const classes are being considered as a followup proposal that would let us associate methods to const objects.
+"Const" classes are being considered as a followup proposal that would let us associate methods to `Records`.
 
 You can see an attempt at defining them in an [earlier version of this proposal](./history/with-classes.md).
 
@@ -394,7 +393,7 @@ As this proposal adds a new concept to the language, we expect that other propos
 
 We consider exploring the following proposals once this one gets considered for higher stages:
 
-- Const classes
+- "Const" classes
 - ConstSet and ConstMap, the const versions of [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) and [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
 
 A goal of the broader set of proposals (including [operator overloading](https://github.com/littledan/proposal-operator-overloading/) and [extended numeric literals](https://github.com/tc39/proposal-extended-numeric-literals) is to provide a way for user-defined types to do the same as [BigInt](https://github.com/tc39/proposal-bigint).
@@ -421,7 +420,7 @@ Even with operator overloading we wouldn't be able to perform such operation.
 
 A Data Structure that doesn't accept operations that change it internally, it has operations that return a new value type that is the result of applying that operation on it.
 
-In this proposal `const object` and `const array` are immutable data structures.
+In this proposal `Record` and `Tuple` are immutable data structures.
 
 #### Strict Equality
 
@@ -433,6 +432,6 @@ Structural sharing is a technique used to limit the memory footprint of immutabl
 
 #### Value type
 
-In this proposal it defines any of those: `boolean`, `number`, `symbol`, `string`, `undefined`, `null`, `const object` and `const array`.
+In this proposal it defines any of those: `boolean`, `number`, `symbol`, `string`, `undefined`, `null`, `record` and `tuple`.
 
 Value types can only contain other value types: because of that, two value types with the same contents are strictly equal.
