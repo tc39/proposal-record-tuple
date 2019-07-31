@@ -187,7 +187,7 @@ _ConstUpdatePart_:
 
 > _ConstUpdatePart_`,` _ConstUpdatePart_
 
-_ConstUpdateExpresion_:
+_ConstUpdateExpression_:
 
 > _Identifier_ `with` _ConstUpdatePart_
 
