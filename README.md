@@ -126,10 +126,7 @@ Array.from(array).map(x => new MyClass(x))
 #### More assertions
 
 ```js
-assert(#[] with .push(1), .push(2) === #[1, 2]);
 assert((#{} with .a = 1, .b = 2) === #{ a: 1, b: 2 });
-assert((#[]).push(1).push(2) === #[1, 2]);
-assert((#[1, 2]).pop().pop() === #[]);
 assert((#[ {} ] with [0].a = 1) === #[ { a: 1 } ]);
 assert((x = 0, #[ {} ] with [x].a = 1) === #[ { a: 1 } ]);
 ```
@@ -183,8 +180,6 @@ _ConstUpdatePart_:
 
 > _ConstAssignment_
 
-> _ConstCall_
-
 > _ConstUpdatePart_`,` _ConstUpdatePart_
 
 _ConstUpdateExpresion_:
@@ -196,11 +191,9 @@ _ConstUpdateExpresion_:
 ```js
 record with .a = 1
 record with .a = 1, .b = 2
-tuple with .push(1), .push(2)
 tuple with [0] = 1
 record with .a.b = 1
 record with ["a"]["b"] = 1
-record with .arr.push(1)
 ```
 
 #### Runtime verification
@@ -332,7 +325,7 @@ weakMap.set(record, true);
 Using a keyword as a prefix to the standard object/array literal syntax presents issues around
 backwards compatibility. Additionally, re-using existing keywords can introduce ambiguity.
 
-ECMAScript defines a set of [*reserved keywords*](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#Keywords) that can be used for future extensions to the language.
+ECMAScript defines a set of [_reserved keywords_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#Keywords) that can be used for future extensions to the language.
 Defining a new keyword that is not already reserved is possible, but requires significant effort to validate
 that the new keyword will not likely break backwards compatibility.
 
