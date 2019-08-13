@@ -200,20 +200,49 @@ record with ["a"]["b"] = 1
 
 The same runtime verification will apply. It is a `TypeError` when a value inside a `Record` or `Tuple` is updated with a non-value type.
 
-# Prototypes
+# `Record` and `Tuple` boxing objects
 
-## `Record` prototype
+We add to the global namespace two boxing objects that you can use to manipulate those value types. Those boxing objects have multiple properties that are in line with how those value types behave.
 
-In order to keep this new structure as simple as possible, the `Record` prototype is `null`. The `Object` namespace and the `in` should however be able to work with `Records` and return the immutable equivalent. For instance:
+## Instantiation and converting from non-const types
+
+You can't instantiate (as in, getting a reference of) any `Record` or `Tuple` so using new on them `new` will throw a `TypeError`. However, you can convert any structure that can be deeply represented as const using `Record.from()` or `Tuple.from()` available in the global namespace:
 
 ```js
-assert(Object.keys(#{ a: 1, b: 2 }) === #["a", "b"]);
+const record = Record.from({ a: 1, b: 2, c: 3 });
+const tuple = Tuple.from([1, 2, 3]); // note that an iterable will also work
+asset(record === #{ a: 1, b: 2, c: 3 });
+asset(tuple === #[1, 2, 3]);
+```
+
+Note that the whole structure needs to be shallowly convertable to any acceptable value type at runtime. This means that any of the values supported in the array/iterable/object must be one of these: `Record`, `Tuple`, `number`, `string`, `symbol` or `null`.
+
+> _Note_: adding a recursive way of converting data structures should be possible, as long as we introduce a way to control the depth of the conversion.
+
+## `Record` and `Tuple` namespace
+
+As we've seen previously, we have a `Record` and `Tuple` namespace.
+The `Record` global namespace has some associated functions similar to `Object`. Same goes for `Tuple` and `Array`.
+The `Object` namespace and the `in` operator should also be able to work with `Records` and return as usual equivalent. For instance:
+
+```js
+assert(Record.keys(#{ a: 1, b: 2 }) === #["a", "b"]);
+const keysArr = Object.keys(#{ a: 1, b: 2 }); // returns the array ["a", "b"]
+assert(keysArr[0] === "a");
+assert(keysArr[1] === "b");
+assert(keysArr !== #["a", "b"]);
 assert("a" in #{ a: 1, b: 2 });
 ```
 
+See the [appendix](./NS-Proto-Appendix.md) to learn more about the `Record` & `Tuple` namespaces.
+
 ## Ordering of properties
 
-When the properties of a `Record` or `Tuple` are enumerated, its keys are enumerated in sorted order. This differs
+This part is an **open question**, we did not decide yet what is going to be the behavior and will try to gather additional feedback before proceeding:
+
+### Alphabetical Order (option 1)
+
+When the properties of a `Record` or `Tuple` are enumerated, their keys are enumerated in sorted order. This differs
 from regular objects, where insertion order is preserved when enumerating properties
 (except for properties that parse as numerics, where the behavior is undefined).
 
@@ -222,10 +251,10 @@ const obj = { z: 1, a: 1 };
 const record = #{ z: 1, a: 1 };
 
 Object.keys(obj); // ["z", "a"]
-Object.keys(record); // ["a", "z"]
+Record.keys(record); // #["a", "z"]
 ```
 
-The properties of `Records` and `Tuple`s are enumerated in this sorted order in order to
+The properties of `Record`s and `Tuple`s are enumerated in this sorted order in order to
 preserve their equality when consuming them in pure functions.
 
 ```js
@@ -239,8 +268,27 @@ assert(func(record1) === func(record2));
 ```
 
 If enumeration order for `Records` and `Tuple`s was instead insertion order, then:
-`const func = Object.keys;`
+`const func = Object.keys;` or `const func = Record.keys;`
 would break the above assertion.
+
+### Insertion Order (option 2)
+
+When the properties of a `Record` or `Tuple` are enumerated, their keys are enumerated in the insertion/last update order.
+This has the consequence of making the inserting order matter for strict equality because now the insertion order is actual differentiating information.
+
+```js
+const obj = { z: 1, a: 1 };
+const record = #{ z: 1, a: 1 };
+
+Object.keys(obj); // ["z", "a"]
+Record.keys(record); // #["z", "a"]
+
+const record2 = #{ a: 1, z: 1 };
+assert(record !== record2);
+assert(record === record2 with .a = 1);
+```
+
+> This option is being considered as it could be beneficial in implementing it into javascript engines (such data structure is very similar to hidden classes, "shapes" in SpiderMonkey, "maps" in V8).
 
 ## Iteration of properties
 
@@ -260,6 +308,10 @@ for (const o of record) { console.log(o); }
 for (const o of tuple) { console.log(o); }
 ```
 
+## `Record` prototype
+
+The `Record` prototype is `null`.
+
 ## `Tuple` prototype
 
 The `Tuple` prototype is an object that contains the same methods as Array with a few changes:
@@ -267,14 +319,16 @@ The `Tuple` prototype is an object that contains the same methods as Array with 
 - `Tuple.prototype.pop()` and `Tuple.prototype.shift()` do not return the removed element, they return the result of the change
 - `Tuple.prototype.first()` and `Tuple.prototype.last()` are added to return the first and last element of the `Tuple`
 
+See the [appendix](./NS-Proto-Appendix.md) `Tuple`'s prototype.
+
 ## `typeof`
 
-The typeof operator will return a new value for `Records` and `Tuple`s. The value to be returned
-is still being considered, and is represented by `<placeholder>` below.
+The typeof operator will return a new value for `Record`s and `Tuple`s. The value to be returned
+is still **an open question**. For now, we think that `"record"` is the most reasonable option.
 
 ```js
-assert(typeof #{ a: 1 } === "<placeholder>");
-assert(typeof #[1, 2]   === "<placeholder>");
+assert(typeof #{ a: 1 } === "record");
+assert(typeof #[1, 2]   === "record");
 ```
 
 ## Usage in {`Map`|`Set`|`WeakMap`}
