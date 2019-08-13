@@ -1,6 +1,6 @@
-# Record/Tuple Value Types
+# Const Value Types: Record & Tuple
 
-ECMAScript proposal for the Record and Tuple value types (also known as immutable types).
+ECMAScript proposal for the Record and Tuple const value types (also known as immutable types).
 
 **Authors:**
 
@@ -56,16 +56,16 @@ assert(record2 === record3);
 #### Simple `Tuple`
 
 ```js
-const array1 = #[1, 2, 3];
+const tuple1 = #[1, 2, 3];
 
-const array2 = array1 with [0] = 2;
+const tuple2 = tuple1 with [0] = 2;
 
-assert(array1 !== array2);
-assert(array2 === #[2, 2, 3]);
+assert(tuple1 !== tuple2);
+assert(tuple2 === #[2, 2, 3]);
 
-const array3 = #[1, ...array2];
+const tuple3 = #[1, ...tuple2];
 
-assert(array3 === #[1, 2, 2, 3]);
+assert(tuple3 === #[1, 2, 2, 3]);
 ```
 
 #### Computed access
@@ -103,24 +103,24 @@ assert(updatedData === #[
 
 ```js
 const instance = new MyClass();
-const immutableContainer = #{
+const constContainer = #{
     instance: instance
 };
-// TypeError: Can't use a non-immutable type in an immutable declaration
+// TypeError: Can't use a non-const type in a const declaration
 
-const immutableContainer = #{
+const constContainer = #{
     instance: null,
 };
-immutableContainer with .instance = new MyClass();
-// TypeError: Can't use a non-immutable type in an immutable operation
+constContainer with .instance = new MyClass();
+// TypeError: Can't use a non-const type in a const operation
 
 const tuple = #[1, 2, 3];
 
 tuple.map(x => new MyClass(x));
-// TypeError: Can't use a non-immutable type in an immutable operation
+// TypeError: Can't use a non-const type in a const operation
 
 // The following should work:
-Array.from(array).map(x => new MyClass(x))
+Array.from(tuple).map(x => new MyClass(x))
 ```
 
 #### More assertions
@@ -206,13 +206,15 @@ We add to the global namespace two boxing objects that you can use to manipulate
 
 ## Instantiation and converting from non-const types
 
-You can't instantiate (as in, getting a reference of) any `Record` or `Tuple` so using new on them `new` will throw a `TypeError`. However, you can convert any structure that can be deeply represented as const using `Record.from()` or `Tuple.from()` available in the global namespace:
+You can't instantiate (as in, getting a reference of) any `Record` or `Tuple` so using `new` will throw a `TypeError`. However, you can convert any structure that can be deeply represented as const using `Record.from()` or `Tuple.from()` available in the global namespace:
 
 ```js
 const record = Record.from({ a: 1, b: 2, c: 3 });
 const tuple = Tuple.from([1, 2, 3]); // note that an iterable will also work
 asset(record === #{ a: 1, b: 2, c: 3 });
 asset(tuple === #[1, 2, 3]);
+Record.from({ a: {} }); // TypeError: Can't convert Object with a non-const value to Record
+Tuple.from([{}, {} , {}]); // TypeError: Can't convert Iterable with a non-const value to Tuple
 ```
 
 Note that the whole structure needs to be shallowly convertable to any acceptable value type at runtime. This means that any of the values supported in the array/iterable/object must be one of these: `Record`, `Tuple`, `number`, `string`, `symbol` or `null`.
@@ -267,8 +269,7 @@ assert(record1 === record2);
 assert(func(record1) === func(record2));
 ```
 
-If enumeration order for `Records` and `Tuple`s was instead insertion order, then:
-`const func = Object.keys;` or `const func = Record.keys;`
+If enumeration order for `Records` and `Tuple`s was instead insertion order, then: `const func = Record.keys;`
 would break the above assertion.
 
 ### Insertion Order (option 2)
