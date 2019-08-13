@@ -477,7 +477,7 @@ In this proposal we define strict equality as it is broadly defined in JavaScrip
 
 #### Structural Sharing
 
-Structural sharing is a technique used to limit the memory footprint of immutable data structures. In a nutshell, when applying an operation to derive a new version of an immutable structure, structural sharing will attempt to keep most of the internal structure instinct and used by both the old and derived versions of that structure. This greatly limits the amount to copy to derive the new structure.
+Structural sharing is a technique used to limit the memory footprint of immutable data structures. In a nutshell, when applying an operation to derive a new version of an immutable structure, structural sharing will attempt to keep most of the internal structure intact and used by both the old and derived versions of that structure. This greatly limits the amount to copy to derive the new structure.
 
 #### Value type
 
