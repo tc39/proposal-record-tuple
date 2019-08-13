@@ -209,7 +209,8 @@ We add to the global namespace two boxing objects that you can use to manipulate
 You can't instantiate (as in, getting a reference of) any `Record` or `Tuple` so using `new` will throw a `TypeError`. However, you can convert any structure that can be deeply represented as const using `Record.from()` or `Tuple.from()` available in the global namespace:
 
 ```js
-const record = Record.from({ a: 1, b: 2, c: 3 });
+const record = Record({ a: 1, b: 2, c: 3 });
+const record2 = Record.fromEntries([#["a", 1], #["b", 2], #["c": 3]]); // note that an iterable will also work
 const tuple = Tuple.from([1, 2, 3]); // note that an iterable will also work
 asset(record === #{ a: 1, b: 2, c: 3 });
 asset(tuple === #[1, 2, 3]);
