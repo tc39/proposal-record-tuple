@@ -6,9 +6,17 @@ ECMAScript proposal for the Record and Tuple const value types (also known as im
 
 - Robin Ricard (Bloomberg)
 - Richard Button (Bloomberg)
-- Philipp Dunkel (Bloomberg)
 
-**Champions:** TBD
+**Champions:**
+
+- Robin Ricard (Bloomberg)
+- Richard Button (Bloomberg)
+
+**Main Contributors**
+
+- Philipp Dunkel (Bloomberg)
+- Dan Ehrenberg (Igalia)
+- Maxwell Heiber (Bloomberg)
 
 **Stage:** 0
 
