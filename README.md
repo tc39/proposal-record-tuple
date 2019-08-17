@@ -250,9 +250,13 @@ assert(#{ a: 1, b: 2 } === #{ b: 2, a: 1 }); // not yet specified whether this p
 
 This is related to [Ordering of properties](#ordering-of-properties).
 
-# `Record` and `Tuple` boxing objects
+# `Record` and `Tuple` Globals
 
-We add to the global namespace two boxing objects that you can use to manipulate those value types. Those boxing objects have multiple properties that are in line with how those value types behave.
+We add to the global namespace two objects that you can use to manipulate records and tuples. Those objects have multiple properties that are in line with how records and tuples behave.
+
+The new globals are not constructors, and are distinct from the `Record` and `Tuple` types.
+
+Unlike `Boolean` and `String`, there is no such thing as a boxed `Record` or `Tuple`. For example, `Object.assign("hello")` silently creates a mutable `String` instance, but `Object.assign(#{})` produces a `TypeError`, just like `Object.assign(undefined)`. 
 
 ## Instantiation and converting from non-const types
 
