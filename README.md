@@ -22,19 +22,20 @@ ECMAScript proposal for the Record and Tuple const value types (also known as im
 
 # Overview
 
-The goal of this proposal is to introduce deeply constant/immutable value types to JavaScript. It has multiple objectives:
+The goal of this proposal is to introduce deeply constant/immutable data structures to JavaScript. It has multiple objectives:
 
 - Introducing efficient data structures that makes copying and changing them cheap and will allow programs avoiding mutation of data to run faster (pattern heavily used in Redux for instance).
 - Add guarantees in strict equality when comparing data. This is only possible because those data structures are deeply immutable (comparing props fast is essential for efficient virtual dom reconciliation in React apps for instance)
 - Be easily understood by external typesystem supersets such as TypeScript or Flow.
 - Offers the possibility to improve structured cloning efficiency when messaging across workers.
+- Supports lossless round-tripping with JSON.
 
 This proposal presents 2 main additions to the language:
 
 - `Record`
 - `Tuple`
 
-The only valid sub-structures of these values will be one of those structures and normal value types such as `number`, `string`, `symbol` or `null`.
+`Record`s and `Tuple`s can only contain other immutable values.
 
 ## Prior work on immutable data structures in JavaScript
 
@@ -137,6 +138,7 @@ Array.from(tuple).map(x => new MyClass(x))
 assert((#{} with .a = 1, .b = 2) === #{ a: 1, b: 2 });
 assert((#[ {} ] with [0].a = 1) === #[ { a: 1 } ]);
 assert((x = 0, #[ {} ] with [x].a = 1) === #[ { a: 1 } ]);
+assert.equal(#{ a: 1 }, Record.from(JSON.parse(JSON.stringify(#{ a: 1 }))));
 ```
 
 # Syntax
@@ -167,6 +169,12 @@ _ConstExpression_:
 #### Runtime verification
 
 At runtime, if a non-value type is placed inside a `Record` or `Tuple`, it is a `TypeError`. This means that a `Record` or `Tuple` expression can only contain value types.
+
+At runtime, attempting to create a `Record` with a key that is not a `string` is a `TypeError`.
+
+At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `true`, `false`, and `null`.
+
+> `undefined` is not permitted, as that would violate the goal of lossless round-tripping with JSON.
 
 ## Const update expression
 
@@ -316,6 +324,30 @@ for (const o of record) { console.log(o); }
 // 1
 // 2
 for (const o of tuple) { console.log(o); }
+```
+
+## Object.from
+
+`Object.from(record)` creates an object with the same keys and values as `record`. Note that it is not recursive.
+
+```js
+assert.deepEqual(Object.from(#{ a: #[1, 2, 3] }), { a: #[1, 2, 3] });
+```
+
+`Object.from(object)` behaves identically to `Object.assign({}, object)`
+
+`Object.from(somethingElse)` where `somethingElse` is not a `Record` or `object` returns `{}`.
+
+> This is similar to the behavior of [`Array.from`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from)
+
+## JSON.stringify
+
+- The behavior of `JSON.stringify(record)` is equivalent to calling `JSON.stringify` on the object resulting from recursively converting the record to an object that contains no records or tuples.
+- The behavior of `JSON.stringify(tuple)` is equivalent to calling `JSON.stringify` on the array resulting from recursively converting the record to an object that contains no records or tuples.
+
+```js
+JSON.stringify(#{ a: #[1, 2, 3] }); // "{a: [1, 2, 3]}"
+JSON.stringify(#[true, #{ a: #[1, 2, 3] }]); // "[true, {a: [1, 2, 3]}]"
 ```
 
 ## `Record` prototype
@@ -486,9 +518,3 @@ In this proposal we define strict equality as it is broadly defined in JavaScrip
 #### Structural Sharing
 
 Structural sharing is a technique used to limit the memory footprint of immutable data structures. In a nutshell, when applying an operation to derive a new version of an immutable structure, structural sharing will attempt to keep most of the internal structure intact and used by both the old and derived versions of that structure. This greatly limits the amount to copy to derive the new structure.
-
-#### Value type
-
-In this proposal it defines any of those: `boolean`, `number`, `symbol`, `string`, `undefined`, `null`, `Record` and `Tuple`.
-
-Value types can only contain other value types: because of that, two value types with the same contents are strictly equal.
