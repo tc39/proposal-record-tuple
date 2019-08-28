@@ -216,9 +216,51 @@ record with ["a"]["b"] = 1
 
 The same runtime verification will apply. It is a `TypeError` when a value inside a `Record` or `Tuple` is updated with a non-value type.
 
-# `Record` and `Tuple` boxing objects
+# Equality
 
-We add to the global namespace two boxing objects that you can use to manipulate those value types. Those boxing objects have multiple properties that are in line with how those value types behave.
+Instances of `Record` and `Tuple` are immutable, so their equality works like that of other immutable JS values like `boolean` and `string` instances:
+
+```js
+assert(#{ a: 1 } === #{ a: 1 });
+assert(Object(#{ a: 1 }) !== Object(#{ a: 1 }));
+assert({ a: 1 } !== { a: 1 });
+```
+
+This is distinct from how equality works for JS objects: `assert({} !== {});`. Strict comparison of objects will observe that each object is distinct.
+
+`Record` and `Tuple` types are completely and deeply constant, if they have the same values stored, they will be considered strictly equal.
+
+[Each of the four JS equality algorithms](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness) gives the same result when comparing records or tuples:
+
+```js
+// strict equality
+assert(#{ a:  1} === #{ a: 1 });
+assert(#[1] === #[1]);
+
+// abstract equality comparison
+assert(#{ a:  1} == #{ a: 1 });
+assert(#[1] == #[1]);
+
+// SameValue0
+assert(new Map().set(#{ a: 1 }, true).get(#{ a: 1 }));
+assert(new Map().set(#[1], true).get(#[1]));
+
+// SameValue
+assert(Object.is(#{ a:  1}, #{ a: 1 }));
+assert(Object.is(#[1], #[1]));
+```
+
+It is an **open question** whether two `Record`s with distinct insertion order are equal. We will gather additional feedback before proceeding:
+
+```js
+assert(#{ a: 1, b: 2 } === #{ b: 2, a: 1 }); // not yet specified whether this passes
+```
+
+This is related to [Ordering of properties](#ordering-of-properties).
+
+# `Record` and `Tuple` Globals
+
+We add to the global namespace two objects that you can use to manipulate records and tuples. Those objects have multiple properties that are in line with how records and tuples behave.
 
 ## Instantiation and converting from non-const types
 
@@ -257,7 +299,7 @@ See the [appendix](./NS-Proto-Appendix.md) to learn more about the `Record` & `T
 
 ## Ordering of properties
 
-This part is an **open question**, we did not decide yet what is going to be the behavior and will try to gather additional feedback before proceeding:
+This part is an **open question**. We will gather additional feedback before deciding.
 
 ### Alphabetical Order (option 1)
 
@@ -458,18 +500,6 @@ let record2 = record with .c = 3;
 record2 = record2 with .a = 3, .b = 3;
 ```
 
-## `Record`/`Tuple` equality vs normal equality
-
-```js
-assert(#{ a: 1 } === #{ a: 1 });
-assert(Object(#{ a: 1 }) !== Object(#{ a: 1 }));
-assert({ a: 1 } !== { a: 1 });
-```
-
-Since we established that these value types are completely and deeply constant, if they have the same values stored, they will be considered strictly equal.
-
-It is not the case with normal objects, those objects are instantiated in memory and strict comparison will see that both objects are located at different addresses, they are not strictly equal.
-
 ## What about const classes?
 
 "Const" classes are being considered as a followup proposal that would let us associate methods to `Records`.
@@ -492,6 +522,14 @@ If const classes are standardized, features like [Temporal Proposal](https://git
 ## What is different with this proposal than with [previous attempts](https://github.com/sebmarkbage/ecmascript-immutable-data-structures)?
 
 The main difference is that this proposal has a proper assignment operation using `with`. This difference makes it possible to handle proper type support, which was not possible with the former proposal.
+
+## Are there boxed versions of `Record` and `Tuple`?
+
+Not sure yet! Two options:
+- `Object(record)` creates a `Record` instance where `Object(#{}) !== Object(#{})`. This is akin to how `Object(true)` creates a `Boolean` instance such that `Object(true) !== Object(true)`.
+- `Object(record)` returns `{}`. This is the same behavior as for `Object(null)` and `Object(undefined)`.
+
+> Thanks @ljharb for raising this question.
 
 ## Would those matters be solved by a library and operator overloading?
 
