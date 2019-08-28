@@ -231,7 +231,7 @@ assert(#[1] === #[1]);
 
 // abstract equality comparison
 assert(#{ a:  1} == #{ a: 1 });
-assert(#[1] === #[1]);
+assert(#[1] == #[1]);
 
 // SameValue0
 assert(new Map().set(#{ a: 1 }, true).get(#{ a: 1 }));
@@ -253,10 +253,6 @@ This is related to [Ordering of properties](#ordering-of-properties).
 # `Record` and `Tuple` Globals
 
 We add to the global namespace two objects that you can use to manipulate records and tuples. Those objects have multiple properties that are in line with how records and tuples behave.
-
-The new globals are not constructors, and are distinct from the `Record` and `Tuple` types.
-
-Unlike `Boolean` and `String`, there is no such thing as a boxed `Record` or `Tuple`. For example, `Object.assign("hello")` silently creates a mutable `String` instance, but `Object.assign(#{})` produces a `TypeError`, just like `Object.assign(undefined)`. 
 
 ## Instantiation and converting from non-const types
 
@@ -494,6 +490,14 @@ If const classes are standardized, features like [Temporal Proposal](https://git
 ## What is different with this proposal than with [previous attempts](https://github.com/sebmarkbage/ecmascript-immutable-data-structures)?
 
 The main difference is that this proposal has a proper assignment operation using `with`. This difference makes it possible to handle proper type support, which was not possible with the former proposal.
+
+## Are there boxed versions of `Record` and `Tuple`?
+
+Not sure yet! Two options:
+- `Object(record)` creates a `Record` instance where `Object(#{}) !== Object(#{})`. This is akin to how `Object(true)` creates a `Boolean` instance such that `Object(true) !== Object(true)`.
+- `Object(record)` returns `{}`. This is the same behavior as for `Object(null)` and `Object(undefined)`.
+
+> Thanks @ljharb for raising this question.
 
 ## Would those matters be solved by a library and operator overloading?
 
