@@ -39,9 +39,11 @@ This proposal presents 2 main additions to the language:
 
 ## Prior work on immutable data structures in JavaScript
 
-As of today, a few libraries are actually implementing similar concepts such as [Immutable.js](https://immutable-js.github.io/immutable-js/) or [Immer](https://github.com/mweststrate/immer) that have been covered by [a previous proposal attempt](https://github.com/sebmarkbage/ecmascript-immutable-data-structures). However, the main influence to that proposal is [constant.js](https://github.com/bloomberg/constant.js/) that forces data structures to be deeply immutable.
+Today, a few libraries implement similar concepts such as [Immutable.js](https://immutable-js.github.io/immutable-js/) or [Immer](https://github.com/mweststrate/immer). Also [a previous proposal attempt](https://github.com/sebmarkbage/ecmascript-immutable-data-structures) has been done previously but abandoned because of the complexity of the proposal and lack of sufficient use cases.
 
-Using libraries to handle those types has multiple issues: we have multiple ways of doing the same thing that do not interoperate with each other, the syntax is not as expressive as it could be if it was integrated in the language and finally, it can be very challenging for a type system to pick up what the library is doing.
+This new proposal is still inspired by this previous proposal but introduces some significant changes: Record and Tuples are now deeply immutable which can lead to simplifications across the board in the implementation, additionally we're trying to make sure existing mechanisms in the engines could support this feature with minimal work.
+
+Finally, using libraries to handle those types has multiple issues: we have multiple ways of doing the same thing that do not interoperate with each other, the syntax is not as expressive as it could be if it was integrated in the language and finally, it can be very challenging for a type system to pick up what the library is doing.
 
 # Examples
 
@@ -526,6 +528,7 @@ The main difference is that this proposal has a proper assignment operation usin
 ## Are there boxed versions of `Record` and `Tuple`?
 
 Not sure yet! Two options:
+
 - `Object(record)` creates a `Record` instance where `Object(#{}) !== Object(#{})`. This is akin to how `Object(true)` creates a `Boolean` instance such that `Object(true) !== Object(true)`.
 - `Object(record)` returns `{}`. This is the same behavior as for `Object(null)` and `Object(undefined)`.
 
