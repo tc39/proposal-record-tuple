@@ -67,7 +67,7 @@ assert(record2 === #{ a: 1, c: 3, b: 5 });
 ```js
 const tuple1 = #[1, 2, 3];
 
-const tuple2 = #[1, ...tuple2];
+const tuple2 = #[1, ...tuple1];
 
 assert(tuple2 === #[1, 1, 2, 3]);
 ```
