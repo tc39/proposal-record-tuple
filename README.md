@@ -56,12 +56,10 @@ const record1 = #{
     c: 3,
 };
 
-const record2 = record1 with .b = 5;
-const record3 = #{...record1, b: 5};
+const record2 = #{...record1, b: 5};
 
 assert(record1 !== record2);
-assert(record2 === #{ a: 1, b: 5, c: 3});
-assert(record2 === record3);
+assert(record2 === #{ a: 1, c: 3, b: 5 });
 ```
 
 #### Simple `Tuple`
@@ -69,45 +67,19 @@ assert(record2 === record3);
 ```js
 const tuple1 = #[1, 2, 3];
 
-const tuple2 = tuple1 with [0] = 2;
+const tuple2 = #[1, ...tuple2];
 
-assert(tuple1 !== tuple2);
-assert(tuple2 === #[2, 2, 3]);
-
-const tuple3 = #[1, ...tuple2];
-
-assert(tuple3 === #[1, 2, 2, 3]);
+assert(tuple2 === #[1, 1, 2, 3]);
 ```
 
 #### Computed access
 
 ```js
 const record = #{ a: 1, b: 2, c: 3 };
-const tuple = #[1, 2, 3];
 
 const k = "b";
-const i = 0;
 
-assert((record with [k] = 5) === #{ a: 1, b: 5, c: 3});
-assert((tuple with [i] = 2) === #[2, 2, 3]);
-```
-
-#### Nested structures
-
-```js
-const marketData = #[
-    { ticker: "AAPL", lastPrice: 195.855 },
-    { ticker: "SPY", lastPrice: 286.53 },
-];
-
-const updatedData = marketData
-    with [0].lastPrice = 195.891,
-         [1].lastPrice = 286.61;
-
-assert(updatedData === #[
-    { ticker: "AAPL", lastPrice: 195.891 },
-    { ticker: "SPY", lastPrice: 286.61 },
-]);
+assert(#{ ...record, [k]: 5 } === #{ a: 1, c: 3, b: 5 });
 ```
 
 #### Forbidden cases
@@ -119,12 +91,6 @@ const constContainer = #{
 };
 // TypeError: Can't use a non-const type in a const declaration
 
-const constContainer = #{
-    instance: null,
-};
-constContainer with .instance = new MyClass();
-// TypeError: Can't use a non-const type in a const operation
-
 const tuple = #[1, 2, 3];
 
 tuple.map(x => new MyClass(x));
@@ -134,20 +100,9 @@ tuple.map(x => new MyClass(x));
 Array.from(tuple).map(x => new MyClass(x))
 ```
 
-#### More assertions
-
-```js
-assert((#{} with .a = 1, .b = 2) === #{ a: 1, b: 2 });
-assert((#[ {} ] with [0].a = 1) === #[ { a: 1 } ]);
-assert((x = 0, #[ {} ] with [x].a = 1) === #[ { a: 1 } ]);
-assert.equal(#{ a: 1 }, Record.from(JSON.parse(JSON.stringify(#{ a: 1 }))));
-```
-
 # Syntax
 
 This defines the new pieces of syntax being added to the language with this proposal.
-
-## Expressions and Declarations
 
 We define _ConstExpression_ by using the `#` modifier in front of otherwise normal expressions and declarations.
 
@@ -178,46 +133,6 @@ At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any t
 
 > `undefined` is not permitted, as that would violate the goal of lossless round-tripping with JSON.
 
-## Const update expression
-
-_ConstAssignment_:
-
-> `.`_Identifier_ `=` _Expression_
-
-> `[`_Expression_`] =` _Expression_
-
-> `.`_MemberExpression_ `=` _Expression_
-
-> `[`_Expression_`]`_MemberExpression_ `=` _Expression_
-
-_ConstCall_:
-
-> `.`_CallExpression_
-
-_ConstUpdatePart_:
-
-> _ConstAssignment_
-
-> _ConstUpdatePart_`,` _ConstUpdatePart_
-
-_ConstUpdateExpression_:
-
-> _Identifier_ `with` _ConstUpdatePart_
-
-#### Examples
-
-```js
-record with .a = 1
-record with .a = 1, .b = 2
-tuple with [0] = 1
-record with .a.b = 1
-record with ["a"]["b"] = 1
-```
-
-#### Runtime verification
-
-The same runtime verification will apply. It is a `TypeError` when a value inside a `Record` or `Tuple` is updated with a non-value type.
-
 # Equality
 
 Instances of `Record` and `Tuple` are immutable, so their equality works like that of other immutable JS values like `boolean` and `string` instances:
@@ -243,7 +158,7 @@ assert(#[1] === #[1]);
 assert(#{ a:  1} == #{ a: 1 });
 assert(#[1] == #[1]);
 
-// SameValue0
+// SameValue
 assert(new Map().set(#{ a: 1 }, true).get(#{ a: 1 }));
 assert(new Map().set(#[1], true).get(#[1]));
 
@@ -346,8 +261,7 @@ Object.keys(obj); // ["z", "a"]
 Record.keys(record); // #["z", "a"]
 
 const record2 = #{ a: 1, z: 1 };
-assert(record !== record2);
-assert(record === record2 with .a = 1);
+assert(#{ a: 1, z: 1 } !== #{ z: 1, a: 1 });
 ```
 
 > This option is being considered as it could be beneficial in implementing it into javascript engines (such data structure is very similar to hidden classes, "shapes" in SpiderMonkey, "maps" in V8).
@@ -498,8 +412,8 @@ Using both at the same time is possible, but using a non-const variable declarat
 
 ```js
 const record = #{ a: 1, b: 2 };
-let record2 = record with .c = 3;
-record2 = record2 with .a = 3, .b = 3;
+let record2 = #{ ...record, c: 0 };
+record2 = #{ ...record2, c: 3 };
 ```
 
 ## What about const classes?
@@ -514,16 +428,13 @@ As this proposal adds a new concept to the language, we expect that other propos
 
 We consider exploring the following proposals once this one gets considered for higher stages:
 
+- "Computed" and "Deep" update by copy operation (see [previous version of this proposal](https://github.com/rricard/proposal-const-value-types/blob/1c5925ca1235a5b8294cbf0018baa3ef7cf9bd5d/README.md) with the `with` keyword integrated)
 - "Const" classes
 - ConstSet and ConstMap, the const versions of [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) and [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
 
 A goal of the broader set of proposals (including [operator overloading](https://github.com/littledan/proposal-operator-overloading/) and [extended numeric literals](https://github.com/tc39/proposal-extended-numeric-literals) is to provide a way for user-defined types to do the same as [BigInt](https://github.com/tc39/proposal-bigint).
 
 If const classes are standardized, features like [Temporal Proposal](https://github.com/tc39/proposal-temporal) which might be able to express its types using const classes. However, this is far in the future, and we do not encourage people to wait for the addition of const classes.
-
-## What is different with this proposal than with [previous attempts](https://github.com/sebmarkbage/ecmascript-immutable-data-structures)?
-
-The main difference is that this proposal has a proper assignment operation using `with`. This difference makes it possible to handle proper type support, which was not possible with the former proposal.
 
 ## Are there boxed versions of `Record` and `Tuple`?
 
@@ -533,16 +444,6 @@ Not sure yet! Two options:
 - `Object(record)` returns `{}`. This is the same behavior as for `Object(null)` and `Object(undefined)`.
 
 > Thanks @ljharb for raising this question.
-
-## Would those matters be solved by a library and operator overloading?
-
-Not quite since the `with` operation does some more advanced things such as being able to deeply change and return a value, for instance:
-
-```js
-const newState = state with .settings.theme = "dark";
-```
-
-Even with operator overloading we wouldn't be able to perform such operation.
 
 # Glossary
 
