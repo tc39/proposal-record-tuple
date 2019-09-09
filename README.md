@@ -482,10 +482,6 @@ const first = {| a: 1, b: 2 |};
 const second = [|1, 2, 3|];
 ```
 
-This syntax also avoids the problems with using a keyword. However, it is also used by [Flow](https://flow.org/) as
-the syntax for [exact object types](https://flow.org/en/docs/types/objects/#toc-exact-object-types). Investigation
-will need to be done to determine if introducing this syntax in ECMAScript will break existing Flow typings.
-
 ## How does this relate to the const keyword?
 
 `const` variable declarations and `Record`/`Tuple` are completely orthogonal features.
