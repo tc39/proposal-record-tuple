@@ -228,13 +228,12 @@ See the [appendix](./NS-Proto-Appendix.md) to learn more about the `Record` & `T
 
 This part is an **open question**. We will gather additional feedback before deciding.
 
-### Alphabetical Order (option 1)
+### Sorted Order (option 1)
 
-When the properties of a `Record` or `Tuple` are enumerated, their keys are enumerated in sorted order. This differs
-from regular objects, where insertion order is preserved when enumerating properties
-(except for properties that parse as numerics, where the behavior is undefined).
+When the properties of a `Record` or `Tuple` are enumerated, their keys are enumerated in *sorted order*, where
+*sorted order* effectively means "according to the sort order defined by `Array.prototype.sort`".
 
-```js
+```
 const obj = { z: 1, a: 1 };
 const record = #{ z: 1, a: 1 };
 
