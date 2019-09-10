@@ -28,7 +28,6 @@ The goal of this proposal is to introduce deeply constant/immutable data structu
 - Add guarantees in strict equality when comparing data. This is only possible because those data structures are deeply immutable (comparing props fast is essential for efficient virtual dom reconciliation in React apps for instance)
 - Be easily understood by external typesystem supersets such as TypeScript or Flow.
 - Offers the possibility to improve structured cloning efficiency when messaging across workers.
-- Supports lossless round-tripping with JSON.
 
 This proposal presents 2 main additions to the language:
 
@@ -129,9 +128,7 @@ At runtime, if a non-value type is placed inside a `Record` or `Tuple`, it is a 
 
 At runtime, attempting to create a `Record` with a key that is not a `string` is a `TypeError`.
 
-At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `true`, `false`, and `null`.
-
-> `undefined` is not permitted, as that would violate the goal of lossless round-tripping with JSON.
+At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `symbol`, `boolean`, `undefined` and `null`.
 
 # Equality
 
@@ -395,10 +392,6 @@ Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible a
 const first = {| a: 1, b: 2 |};
 const second = [|1, 2, 3|];
 ```
-
-This syntax also avoids the problems with using a keyword. However, it is also used by [Flow](https://flow.org/) as
-the syntax for [exact object types](https://flow.org/en/docs/types/objects/#toc-exact-object-types). Investigation
-will need to be done to determine if introducing this syntax in ECMAScript will break existing Flow typings.
 
 ## How does this relate to the const keyword?
 
