@@ -233,7 +233,7 @@ The `Record` prototype object is an ordinary object, is not a `Record` instance,
 
 `record` values are not an instances of the `Record` prototype. A `Record` instance can be created via `Object(record)`.
 
-The `Tuple` prototype object is an ordinary object, is not a `Tuple` instance, and its prototype is `Object`.
+The `Tuple` prototype object is an ordinary object, is not a `Tuple` instance, and its prototype is `Object.prototype`.
 
 `tuple` values are not an instances of the `Tuple` prototype. A `Tuple` instance can be created via `Object(tuple)`.
 
