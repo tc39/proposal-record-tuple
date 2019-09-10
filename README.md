@@ -231,7 +231,7 @@ This part is an **open question**. We will gather additional feedback before dec
 ### Sorted Order (option 1)
 
 When the properties of a `Record` or `Tuple` are enumerated, their keys are enumerated in *sorted order*, where
-*sorted order* effectively means "according to the sort order defined by `Array.prototype.sort`".
+*sorted order* effectively means "according to the sort order defined by `Array.prototype.sort` with the default comparator".
 
 ```js
 const obj = { z: 1, a: 1 };
