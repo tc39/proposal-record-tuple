@@ -172,7 +172,7 @@ At runtime, if a non-value type is placed inside a `Record` or `Tuple`, it is a 
 
 At runtime, attempting to create a `Record` with a key that is not a `string` is a `TypeError`.
 
-At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `symbol`, `true`, `false`, `undefined` and `null`.
+At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `symbol`, `boolean`, `undefined` and `null`.
 
 ## Const update expression
 
