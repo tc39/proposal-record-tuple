@@ -46,7 +46,7 @@ Finally, using libraries to handle those types has multiple issues: we have mult
 
 # Examples
 
-#### Simple `Record`
+#### `Record`
 
 ```js
 const record1 = #{
@@ -61,24 +61,37 @@ assert(record1 !== record2);
 assert(record2 === #{ a: 1, c: 3, b: 5 });
 ```
 
-#### Simple `Tuple`
+#### `Tuple`
 
 ```js
 const tuple1 = #[1, 2, 3];
 
-const tuple2 = #[1, ...tuple1];
+const tuple2 = tuple1.with(0, 2);
+assert(tuple1 !== tuple2);
+assert(tuple2 === #[2, 2, 3]);
 
-assert(tuple2 === #[1, 1, 2, 3]);
+const tuple3 = #[1, ...tuple2];
+assert(tuple3 === #[1, 2, 2, 3]);
+
+const tuple4 = tuple3.push(4);
+assert(tuple4 === #[1, 2, 2, 3, 4]);
+
+assert(tuple4.first() === 1);
+const tuple5 = tuple4.pop();
+assert(tuple5 === #[2, 2, 3, 4]);
 ```
 
 #### Computed access
 
 ```js
 const record = #{ a: 1, b: 2, c: 3 };
+const tuple = #[1, 2, 3, 4];
 
 const k = "b";
+const i = 1;
 
 assert(#{ ...record, [k]: 5 } === #{ a: 1, c: 3, b: 5 });
+assert(tuple.with(i, 1) === #[1, 1, 3, 4]);
 ```
 
 #### Forbidden cases
@@ -313,6 +326,7 @@ The `Record` prototype is `null`.
 
 The `Tuple` prototype is an object that contains the same methods as Array with a few changes:
 
+- We added `Tuple.prototype.with()` that returns a new tuple with a value changed at a given index.
 - `Tuple.prototype.pop()` and `Tuple.prototype.shift()` do not return the removed element, they return the result of the change
 - `Tuple.prototype.first()` and `Tuple.prototype.last()` are added to return the first and last element of the `Tuple`
 
