@@ -229,15 +229,13 @@ See the [appendix](./NS-Proto-Appendix.md) to learn more about the `Record` & `T
 - `Object(record)` creates an instance of `Record`, which is the wrapper object for `record` values.
 - `Object(tuple)` creates an instance of `Tuple`, which is the wrapper object for `tuple` values.
 
-The `Record` prototype object is an ordinary object, is not a `Record` instance, and its prototype is `Object`.
+`Record.prototype` is an ordinary object, is not a `Record` instance, and its prototype is `Object.prototype`.
 
 `record` values are not an instances of the `Record` prototype. A `Record` instance can be created via `Object(record)`.
 
-The `Tuple` prototype object is an ordinary object, is not a `Tuple` instance, and its prototype is `Object.prototype`.
+`Tuple.prototype` is an ordinary object, is not a `Tuple` instance, and its prototype is `Object.prototype`.
 
-`tuple` values are not an instances of the `Tuple` prototype. A `Tuple` instance can be created via `Object(tuple)`.
-
-Accessing a member expression of a tuple or record via `.` or `[]` follows the standard [`GetValue`](https://www.ecma-international.org/ecma-262/#sec-getvalue) semantics, and implicitly converts to an instance of the corresponding wrapper type.
+Accessing a member expression of a tuple or record via `.` or `[]` follows the standard [`GetValue`](https://tc39.es/ecma262/#sec-getvalue) semantics, and implicitly converts to an instance of the corresponding wrapper type.
 
 ## Ordering of properties
 
