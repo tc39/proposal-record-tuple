@@ -141,7 +141,7 @@ At runtime, if a non-value type is placed inside a `Record` or `Tuple`, it is a 
 
 At runtime, attempting to create a `Record` with a key that is not a `string` is a `TypeError`.
 
-At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `symbol`, `boolean`, `bigint`, `undefined` and `null`.
+At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `symbol`, `boolean`, `bigint`, `undefined` or `null`.
 
 # Equality
 
@@ -203,7 +203,7 @@ Record.from({ a: {} }); // TypeError: Can't convert Object with a non-const valu
 Tuple.from([{}, {} , {}]); // TypeError: Can't convert Iterable with a non-const value to Tuple
 ```
 
-Note that the whole structure needs to be shallowly convertable to any acceptable value type at runtime. This means that any of the values supported in the array/iterable/object must be one of these: `Record`, `Tuple`, `number`, `string`, `symbol` or `null`.
+Note that the whole structure needs to be shallowly convertable to any acceptable value type at runtime. This means that any of the values supported in the array/iterable/object must be one of these: `Record`, `Tuple`, `string`, `number`, `symbol`, `boolean`, `bigint`, `undefined` or `null`.
 
 > _Note_: adding a recursive way of converting data structures should be possible, as long as we introduce a way to control the depth of the conversion.
 
