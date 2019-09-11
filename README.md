@@ -228,8 +228,8 @@ See the [appendix](./NS-Proto-Appendix.md) to learn more about the `Record` & `T
 
 Most users will not have to think about `Record` and `Tuple` wrapper objects. They exist for consistency with other ECMAScript features.
 
-- `Object(record)` creates an instance of `Record`, which is the wrapper object for `record` values.
-- `Object(tuple)` creates an instance of `Tuple`, which is the wrapper object for `tuple` values.
+- `Object(record)` creates an instance of `Record`, which is the wrapper object for `record` values. These instances are not extensible.
+- `Object(tuple)` creates an instance of `Tuple`, which is the wrapper object for `tuple` values. These instances are not extensible.
 
 `Record.prototype` is an ordinary object, is not a `Record` instance, and its prototype is `Object.prototype`. `record` values are not an instances of the `Record` prototype.
 
