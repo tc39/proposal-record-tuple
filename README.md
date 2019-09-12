@@ -224,6 +224,31 @@ assert("a" in #{ a: 1, b: 2 });
 
 See the [appendix](./NS-Proto-Appendix.md) to learn more about the `Record` & `Tuple` namespaces.
 
+## `Record` and `Tuple` Wrapper Objects
+
+Most users will not have to think about `Record` and `Tuple` wrapper objects. They exist for consistency with other ECMAScript features.
+
+- `Object(record)` creates an instance of `Record`, which is the wrapper object for `record` values. These instances are not extensible.
+- `Object(tuple)` creates an instance of `Tuple`, which is the wrapper object for `tuple` values. These instances are not extensible.
+
+`Record.prototype` is an ordinary object, is not a `Record` instance, and its prototype is `Object.prototype`. `record` values are not an instances of the `Record` prototype.
+
+`Tuple.prototype` is an ordinary object, is not a `Tuple` instance, and its prototype is `Object.prototype`. `tuple` values are not instances of the `Tuple` prototype.
+
+Accessing a member expression of a tuple or record via `.` or `[]` follows the standard [`GetValue`](https://tc39.es/ecma262/#sec-getvalue) semantics, and implicitly converts to an instance of the corresponding wrapper type.
+
+An instance of `Record` has the same keys and values as the `record` value it was created from. These keys are all `writable: false, enumerable: true, configurable: false`.
+
+An instance of `Tuple` has keys that are `${index}` for each index in the original `tuple`. The value for each of these keys is the corresponding value in the original `tuple`. These keys are all `writable: false, enumerable: true, configurable: false`. In addition, there is a non-enumerable `length` key. This behavior matches that of the `String` wrapper object. That is,  `Object.getOwnPropertyDescriptors(Object(#["a", "b"]))` and `Object.getOwnPropertyDescriptors(new String("ab"))` each return an object that looks like this:
+
+```json
+{
+  "0": { "value": "a", "writable": false, "enumerable": true, "configurable": false },
+  "1": { "value": "b", "writable": false, "enumerable": true, "configurable": false },
+  "length": { "value": 2, "writable": false, "enumerable": false, "configurable": false }
+}
+```
+
 ## Ordering of properties
 
 This part is an **open question**. We will gather additional feedback before deciding.
@@ -441,15 +466,6 @@ We consider exploring the following proposals once this one gets considered for 
 A goal of the broader set of proposals (including [operator overloading](https://github.com/littledan/proposal-operator-overloading/) and [extended numeric literals](https://github.com/tc39/proposal-extended-numeric-literals) is to provide a way for user-defined types to do the same as [BigInt](https://github.com/tc39/proposal-bigint).
 
 If const classes are standardized, features like [Temporal Proposal](https://github.com/tc39/proposal-temporal) which might be able to express its types using const classes. However, this is far in the future, and we do not encourage people to wait for the addition of const classes.
-
-## Are there boxed versions of `Record` and `Tuple`?
-
-Not sure yet! Two options:
-
-- `Object(record)` creates a `Record` instance where `Object(#{}) !== Object(#{})`. This is akin to how `Object(true)` creates a `Boolean` instance such that `Object(true) !== Object(true)`.
-- `Object(record)` returns `{}`. This is the same behavior as for `Object(null)` and `Object(undefined)`.
-
-> Thanks @ljharb for raising this question.
 
 # Glossary
 
