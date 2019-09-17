@@ -149,11 +149,22 @@ Instances of `Record` and `Tuple` are immutable, so their equality works like th
 
 ```js
 assert(#{ a: 1 } === #{ a: 1 });
-assert(Object(#{ a: 1 }) !== Object(#{ a: 1 }));
-assert({ a: 1 } !== { a: 1 });
+assert(#[1, 2] === #[1, 2]);
 ```
 
-This is distinct from how equality works for JS objects: `assert({} !== {});`. Strict comparison of objects will observe that each object is distinct.
+This is distinct from how equality works for JS objects. Strict comparison of objects will observe that each object is distinct: 
+
+```js
+assert({ a: 1 } !== { a: 1 });
+assert(Object(#{ a: 1 }) !== Object(#{ a: 1 }));
+assert(Object(#[1, 2]) !== Object(#[1, 2]));
+```
+
+Insertion order does not affect equality of records:
+
+```js
+assert(#{ a: 1, b: 2 } === #{ b: 2, a: 1 });
+```
 
 `Record` and `Tuple` types are completely and deeply constant, if they have the same values stored, they will be considered strictly equal.
 
@@ -176,14 +187,6 @@ assert(new Map().set(#[1], true).get(#[1]));
 assert(Object.is(#{ a:  1}, #{ a: 1 }));
 assert(Object.is(#[1], #[1]));
 ```
-
-It is an **open question** whether two `Record`s with distinct insertion order are equal. We will gather additional feedback before proceeding:
-
-```js
-assert(#{ a: 1, b: 2 } === #{ b: 2, a: 1 }); // not yet specified whether this passes
-```
-
-This is related to [Ordering of properties](#ordering-of-properties).
 
 # `Record` and `Tuple` Globals
 
@@ -248,57 +251,6 @@ An instance of `Tuple` has keys that are `${index}` for each index in the origin
   "length": { "value": 2, "writable": false, "enumerable": false, "configurable": false }
 }
 ```
-
-## Ordering of properties
-
-This part is an **open question**. We will gather additional feedback before deciding.
-
-### Sorted Order (option 1)
-
-When the properties of a `Record` or `Tuple` are enumerated, their keys are enumerated in *sorted order*, where
-*sorted order* effectively means "according to the sort order defined by `Array.prototype.sort` with the default comparator".
-
-```js
-const obj = { z: 1, a: 1 };
-const record = #{ z: 1, a: 1 };
-
-Object.keys(obj); // ["z", "a"]
-Record.keys(record); // #["a", "z"]
-```
-
-The properties of `Record`s and `Tuple`s are enumerated in this sorted order in order to
-preserve their equality when consuming them in pure functions.
-
-```js
-const record1 = #{ a: 1, z: 1 };
-const record2 = #{ z: 1, a: 1 };
-
-const func = (record) => {...} // some function with no observable side effects
-
-assert(record1 === record2);
-assert(func(record1) === func(record2));
-```
-
-If enumeration order for `Records` and `Tuple`s was instead insertion order, then: `const func = Record.keys;`
-would break the above assertion.
-
-### Insertion Order (option 2)
-
-When the properties of a `Record` or `Tuple` are enumerated, their keys are enumerated in the insertion/last update order.
-This has the consequence of making the inserting order matter for strict equality because now the insertion order is actual differentiating information.
-
-```js
-const obj = { z: 1, a: 1 };
-const record = #{ z: 1, a: 1 };
-
-Object.keys(obj); // ["z", "a"]
-Record.keys(record); // #["z", "a"]
-
-const record2 = #{ a: 1, z: 1 };
-assert(#{ a: 1, z: 1 } !== #{ z: 1, a: 1 });
-```
-
-> This option is being considered as it could be beneficial in implementing it into javascript engines (such data structure is very similar to hidden classes, "shapes" in SpiderMonkey, "maps" in V8).
 
 ## Iteration of properties
 
