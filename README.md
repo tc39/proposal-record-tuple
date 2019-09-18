@@ -160,7 +160,7 @@ assert(Object(#{ a: 1 }) !== Object(#{ a: 1 }));
 assert(Object(#[1, 2]) !== Object(#[1, 2]));
 ```
 
-Insertion order does not affect equality of records:
+Insertion order of record keys does not affect equality of records:
 
 ```js
 assert(#{ a: 1, b: 2 } === #{ b: 2, a: 1 });
