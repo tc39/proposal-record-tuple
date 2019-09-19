@@ -48,7 +48,7 @@ This proposal also offers a few usability advantages compared to userland librar
 - In large projects, the risk of mixing immutable and mutable data structures grows as the state tree grows as well. This can introduce hard-to-find bugs.
 - Conversion between regular JS objects and library provided immutable types can be expensive.
 
-[Immer](https://github.com/mweststrate/immer) is a notable approach to immutable data structures, and prescribes a pattern for manipulation through producers and reducers. It is not providing immutable data types however, as it generates frozen objects. This same pattern can be adapted to the value types of this proposal additionally to frozen objects.
+[Immer](https://github.com/mweststrate/immer) is a notable approach to immutable data structures, and prescribes a pattern for manipulation through producers and reducers. It is not providing immutable data types however, as it generates frozen objects. This same pattern can be adapted to the value types of this proposal in addition to frozen objects.
 
 Finally, this proposal defines what deep equality means by limiting what a value type can be and can contain. Deep equality in JS has always been user defined and said definition of deep equality can vary significantly across libraries and domains. In the domain of value types (including `string` and `number`) this proposal adds a greater generalization of those concepts.
 
