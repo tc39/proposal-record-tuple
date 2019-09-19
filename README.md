@@ -176,7 +176,8 @@ assert(#{ a: 1, b: 2 } === #{ b: 2, a: 1 });
 
 `Record` and `Tuple` types are completely and deeply constant, if they have the same values stored, they will be considered strictly equal.
 
-`===` follows `SameValue` equality when comparing values inside `Record` or `Tuple`.
+`===` follows `SameValue` equality when comparing values inside `Record` or `Tuple`. Further discussion on
+`===` will be found [here](https://github.com/rricard/proposal-const-value-types/issues/65).
 
 ```js
 assert(#{ a:  1 } === #{ a: 1 });
