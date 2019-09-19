@@ -176,31 +176,33 @@ assert(#{ a: 1, b: 2 } === #{ b: 2, a: 1 });
 
 `Record` and `Tuple` types are completely and deeply constant, if they have the same values stored, they will be considered strictly equal.
 
-`===` follows `SameValue` equality when comparing values inside `Record` or `Tuple`. Further discussion on
-`===` will be found [here](https://github.com/rricard/proposal-const-value-types/issues/65).
+`===` and `==` follows `SameValue` equality when comparing values inside `Record` or `Tuple`. Further
+discussion on this will be found [here](https://github.com/rricard/proposal-const-value-types/issues/65).
 
 ```js
 assert(#{ a:  1 } === #{ a: 1 });
 assert(#[1] === #[1]);
+assert(#{ a:  1 } == #{ a: 1 });
+assert(#[1] == #[1]);
 
 assert(#{ a: -0 } !== #{ a: +0 });
 assert(#[-0] !== #[+0]);
 assert(#{ a: NaN } === #{ a: NaN });
 assert(#[NaN] === #[NaN]);
-```
 
-```js
-// abstract equality comparison
-assert(#{ a: 1 } == #{ a: 1 });
-assert(#[1] == #[1]);
+assert(#{ a: -0 } != #{ a: +0 });
+assert(#[-0] != #[+0]);
+assert(#{ a: NaN } == #{ a: NaN });
+assert(#[NaN] == #[NaN]);
+
+assert(!Object.is(#{ a: -0 }, #{ a: +0 }));
+assert(!Object.is(#[-0], #[+0]));
+assert(Object.is(#{ a: NaN }, #{ a: NaN }));
+assert(Object.is(#[NaN], #[NaN]));
 
 // SameValueZero
 assert(new Map().set(#{ a: 1 }, true).get(#{ a: 1 }));
 assert(new Map().set(#[1], true).get(#[1]));
-
-// SameValue
-assert(Object.is(#{ a: 1 }, #{ a: 1 }));
-assert(Object.is(#[1], #[1]));
 ```
 
 # `Record` and `Tuple` Globals
