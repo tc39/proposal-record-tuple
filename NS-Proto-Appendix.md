@@ -76,4 +76,173 @@ Tuple.of(1,2,3); // #[1, 2, 3]
 
 # `Tuple` prototype
 
-## TODO
+## `Tuple.prototype.pop()`
+
+Returns a `Tuple` identical to the original `Tuple` except the last element is removed.
+
+## `Tuple.prototype.push(values...)`
+
+Returns a `Tuple` identical to the original `Tuple` except that the `values` are added to the end of the `Tuple`.
+
+## `Tuple.prototype.reverse()`
+
+Returns a `Tuple` of the same values as the original `Tuple` in reverse order.
+
+## `Tuple.prototype.shift()`
+
+Returns a `Tuple` identical to the original `Tuple` except the first element is removed.
+
+## `Tuple.prototype.unshift(values)`
+
+Returns a `Tuple` identical to the original `Tuple` except that the `values` are added to the beginning of the `Tuple`.
+
+## `Tuple.prototype.sort(compareFunction?)`
+
+Returns a `Tuple` of the same values as the original `Tuple` in sorted order. Optionally a `compareFunction` can be specified, otherwise
+the default sort order is to convert all values to strings, and comparing their sequences of UTF-16 code unit values.
+
+## `Tuple.prototype.splice(start, deleteCount?, items...)`
+
+Returns a new `Tuple` for which the elements are removed, replaced, or added to, removing `deleteCount` elements from index `start`, and inserting
+dding `items` starting at `start`.
+
+## `Tuple.prototype.concat(values...)`
+
+Returns a new `Tuple` where the elements in the original `Tuple` are concatenated with the `Tuple`s and values in `values...`;
+
+## `Tuple.prototype.includes(valueToFind, fromIndex?)`
+
+Returns a `boolean` indicating whether `valueToFind` is an element of the `Tuple`. Optionally, `fromIndex` can be specified to specify an index
+into the `Tuple` to start searching for positive values, and `tuple.length + fromIndex` for negative values.
+
+## `Tuple.prototype.indexOf(valueToFind, fromIndex?)`
+
+Returns the first index where the element is equal to `valueToFind`. Optionally, `fromIndex` can be specified to specify an index
+into the `Tuple` to start searching for positive values, and `tuple.length + fromIndex` for negative values.
+Returns -1 if `valueToFind` was not found in the `Tuple`.
+
+## `Tuple.prototype.join(separator?)`
+
+Returns a string of the concatenated elements of the `Tuple`, separated by commas (by default) or the specified `separator`.
+
+## `Tuple.prototype.lastIndexOf(valueToFind, fromIndex?)`
+
+Returns the last index where the element is equal to `valueToFind`. Optionally, `fromIndex` can be specified to specify an index
+into the `Tuple` to start searching for positive values, and `tuple.length + fromIndex` for negative values.
+Returns -1 if `valueToFind` was not found in the `Tuple`.
+
+## `Tuple.prototype.slice(start, end?)`
+
+Returns a new `Tuple` containing the elements from the original `Tuple` starting at `start` and optionally ending at `end` exclusive.
+
+## `Tuple.prototype.toString()`
+
+Returns a string containing the elements joined, and separated commas.
+
+## `Tuple.prototype.toLocaleString(locales, options?)`
+
+Returns a string containing the elements joined, and separated by a locale-specific String. The elements are
+converted to strings via their `toLocaleString` methods. Where `locales` is a string or array of strings, and `options` is an object
+of configuration options.
+
+## `Tuple.prototype.entries()`
+
+Returns a new `Tuple` iterator object that contains the key/value pairs for each index in the tuple.
+
+## `Tuple.prototype.every(callback, thisArg?)`
+
+`callback = function(element, index, tuple) { ... }`
+
+Returns `true` if the `callback` returns a truthy value for every element of the `Tuple`, otherwise `false`. Always returns `true` for empty `Tuple`s.
+Optionally, `thisArg` can be specified, which will be used as the `callback`'s `this` value.
+
+## `Tuple.prototype.filter(callback, thisArg?)`
+
+`callback = function(element, index, tuple) { ... }`
+
+Returns a new `Tuple` that contains the elements from the original `Tuple` for which `callback` returned a truthy value.
+Optionally, `thisArg` can be specified, which will be used as the `callback`'s `this` value.
+
+## `Tuple.prototype.find(callback, thisArg?)`
+
+`callback = function(element, index, tuple) { ... }`
+
+Returns the value of the first element in the `Tuple` for which the `callback` returns a truthy value.
+Optionally, `thisArg` can be specified, which will be used as the `callback`'s `this` value.
+
+## `Tuple.prototype.findIndex(callback, thisArg?)`
+
+`callback = function(element, index, tuple) { ... }`
+
+Returns the index of the first element in the `Tuple` for which the `callback` returns a truthy value, otherwise returns -1.
+Optionally, `thisArg` can be specified, which will be used as the `callback`'s `this` value.
+
+## `Tuple.prototype.forEach(callback, thisArg?)`
+
+`callback = function(element, index, tuple) { ... }`
+
+Calls `callback` for each element in the `Tuple` in ascending order.
+Optionally, `thisArg` can be specified, which will be used as the `callback`'s `this` value.
+
+## `Tuple.prototype.keys()`
+
+Returns a `Tuple Iterator` object that contains the keys for each index in the `Tuple`.
+
+## `Tuple.prototype.map(callback, thisArg?)`
+
+`callback = function(element, index, tuple) { ... }`
+
+Returns a `Tuple` of the results of calling `callback` for each element.
+Optionally, `thisArg` can be specified, which will be used as the `callback`'s `this` value.
+
+## `Tuple.prototype.reduce(callback, initialValue?)`
+
+`callback = function(accumulator, element, index, tuple) { ... }`
+
+Calls the reducer function `callback` on each element in the `Tuple`, resulting in a single value.
+
+In the first call to `callback`, `accumulator` is the `initialValue` if provided, or the first value in the `Tuple`. Additionally, `currentValue`
+is the first value in the `Tuple` if `initialValue` is provided, the second value in the `Tuple` otherwise.
+
+In subsequent calls, the `accumulator` is the return value of the previous call to `callback`.
+
+If the `Tuple` is empty and no `initialValue` was provided, a `TypeError` is thrown.
+
+If the `Tuple` has only one element and no `initialValue` was provided, the element is returned, without invoking `callback`.
+
+If the `Tuple` has no elements and an `initialValue` was provided, the `initialValue` is returned, without invoking `callback`.
+
+## `Tuple.prototype.reduceRight(callback, initialValue?)`
+
+`callback = function(accumulator, element, index, tuple) { ... }`
+
+Calls the reducer function `callback` on each element in the `Tuple`, resulting in a single value.
+
+Effectively the same as `Tuple.prototype.reduce` except right-to-left instead of left-to-right.
+
+## `Tuple.prototype.some(callback, thisArg?)`
+
+`callback = function(element, index, tuple) { ... }`
+
+Returns `true` if the `callback` returns a truthy value for at least one element of the `Tuple`, otherwise `false`. Always returns `false` for empty `Tuple`s.
+Optionally, `thisArg` can be specified, which will be used as the `callback`'s `this` value.
+
+## `Tuple.prototype.values()`
+
+Returns a `Tuple Iterator` object that contains the values for each index in the `Tuple`.
+
+## `Tuple.prototype[@@iterator]`
+
+Returns a `Tuple Iterator` object that contains the values for each index in the `Tuple`.
+
+## `Tuple.prototype.with(index, value)`
+
+Returns a `Tuple` with the same elements as the original `Tuple` except the element at `index` is replaced with `value`.
+
+## `Tuple.prototype.first()`
+
+Returns the first element of the `Tuple` or `undefined` if the `Tuple` is empty.
+
+## `Tuple.prototype.last()`
+
+Returns the last element of the `Tuple` or `undefined` if the `Tuple` is empty.
