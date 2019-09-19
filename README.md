@@ -186,7 +186,7 @@ assert(#[1] === #[1]);
 assert(#{ a: -0 } !== #{ a: +0 });
 assert(#[-0] !== #[+0]);
 assert(#{ a: NaN } === #{ a: NaN });
-assert(#[NaN] !== #[NaN]);
+assert(#[NaN] === #[NaN]);
 ```
 
 ```js
