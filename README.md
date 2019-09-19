@@ -46,7 +46,7 @@ This proposal also offers a few usability advantages compared to userland librar
 - Value types are easily introspectable in a debugger while library immutable types are often hard to inspect as you have to inspect through implementation details
 - By using different language idioms (method calls) those immutable objects need additional branching to be handled when writing a generic library that could consume both immutable and js objects
 - In large projects, the risk of mixing immutable and mutable data structures grows as the state tree grows as well. This can introduce hard-to-find bugs.
-- Because of beforementioned arguments, the need to convert to and from js objects grows over time and cancels out the advantages of the libraries.
+- Conversion between regular JS objects and library provided immutable types can be expensive.
 
 [Immer](https://github.com/mweststrate/immer) could have been mentioned before but it is more of a pattern in itself than a datastructure library (Immer produces frozen objects). This same pattern could be adapted to the value types of this proposal easily.
 
