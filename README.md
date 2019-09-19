@@ -43,7 +43,7 @@ This new proposal is still inspired by this previous proposal but introduces som
 
 This proposal also offers a few usability advantages compared to userland libraries:
 
-- Value types are easily introspectable in a debugger while library immutable types are often hard to inspect as you have to inspect through implementation details
+- Value types are easily introspectable in a debugger while library provided immutable types are often hard to inspect as you have to inspect through implementation details
 - Because library provided immutable types use different access idioms (method calls), additional branching is needed in order to write a generic library that consumes both immutable and JS objects
 - In large projects, the risk of mixing immutable and mutable data structures grows as the state tree grows as well. This can introduce hard-to-find bugs.
 - Conversion between regular JS objects and library provided immutable types can be expensive.
