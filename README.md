@@ -50,7 +50,7 @@ This proposal also offers a few usability advantages compared to userland librar
 
 [Immer](https://github.com/mweststrate/immer) is a notable approach to immutable data structures, and prescribes a pattern for manipulation through producers and reducers. This same pattern can be adapted to the value types of this proposal.
 
-Finally, this proposal defines what deep equality means by limiting what a value type can be and can contain. Deep equality in JS has always been up to the users and userland libraries so far and concceptions of what a deep equality can vary. In the domain of value types (including `string` and `number`) this proposal adds a greater generalization of those concepts.
+Finally, this proposal defines what deep equality means by limiting what a value type can be and can contain. Deep equality in JS has always been user defined and said definition of deep equality can vary significantly across libraries and domains. In the domain of value types (including `string` and `number`) this proposal adds a greater generalization of those concepts.
 
 # Examples
 
