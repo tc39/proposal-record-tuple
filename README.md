@@ -24,10 +24,9 @@ ECMAScript proposal for the Record and Tuple const value types (also known as im
 
 The goal of this proposal is to introduce deeply constant/immutable data structures to JavaScript. It has multiple objectives:
 
-- Introducing efficient data structures that makes copying and changing them cheap and will allow programs avoiding mutation of data to run faster (pattern heavily used in Redux for instance).
+- Add guaranteed deep immutable data structures at a language-level that provide similar manipulation idioms as objects
 - Add guarantees in strict equality when comparing data. This is only possible because those data structures are deeply immutable (comparing props fast is essential for efficient virtual dom reconciliation in React apps for instance)
 - Be easily understood by external typesystem supersets such as TypeScript or Flow.
-- Offers the possibility to improve structured cloning efficiency when messaging across workers.
 
 This proposal presents 2 main additions to the language:
 
@@ -38,11 +37,20 @@ This proposal presents 2 main additions to the language:
 
 ## Prior work on immutable data structures in JavaScript
 
-Today, a few libraries implement similar concepts such as [Immutable.js](https://immutable-js.github.io/immutable-js/) or [Immer](https://github.com/mweststrate/immer). Also [a previous proposal attempt](https://github.com/sebmarkbage/ecmascript-immutable-data-structures) has been done previously but abandoned because of the complexity of the proposal and lack of sufficient use cases.
+Today, a few libraries implement similar concepts such as [Immutable.js](https://immutable-js.github.io/immutable-js/). Also [a previous proposal attempt](https://github.com/sebmarkbage/ecmascript-immutable-data-structures) has been done previously but abandoned because of the complexity of the proposal and lack of sufficient use cases.
 
 This new proposal is still inspired by this previous proposal but introduces some significant changes: Record and Tuples are now deeply immutable which can lead to simplifications across the board in the implementation, additionally we're trying to make sure existing mechanisms in the engines could support this feature with minimal work.
 
-Finally, using libraries to handle those types has multiple issues: we have multiple ways of doing the same thing that do not interoperate with each other, the syntax is not as expressive as it could be if it was integrated in the language and finally, it can be very challenging for a type system to pick up what the library is doing.
+This proposal also offers a few usability advantages compared to userland libraries:
+
+- Value types are easily introspectable in a debugger while library immutable types are often hard to inspect as you have to inspect through implementation details
+- By using different language idioms (method calls) those immutable objects need additional branching to be handled when writing a generic library that could consume both immutable and js objects
+- Ultimately in large projects, the risk of mixing immutable and mutable datastructures grows as a state management tree grows as well. This leads to bugs down the line.
+- Because of beforementioned arguments, the need to convert to and from js objects grows over time and cancels out the advantages of the libraries.
+
+[Immer](https://github.com/mweststrate/immer) could have been mentioned before but it is more of a pattern in itself than a datastructure library (Immer produces frozen objects). This same pattern could be adapted to the value types of this proposal easily.
+
+Finally, this proposal defines what deep equality means by limiting what a value type can be and can contain. Deep equality in JS has always been up to the users and userland libraries so far and concceptions of what a deep equality can vary. In the domain of value types (including `string` and `number`) this proposal adds a greater generalization of those concepts.
 
 # Examples
 
