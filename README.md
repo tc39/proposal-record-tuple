@@ -152,7 +152,7 @@ assert(#{ a: 1 } === #{ a: 1 });
 assert(#[1, 2] === #[1, 2]);
 ```
 
-This is distinct from how equality works for JS objects. Strict comparison of objects will observe that each object is distinct: 
+This is distinct from how equality works for JS objects. Strict comparison of objects will observe that each object is distinct:
 
 ```js
 assert({ a: 1 } !== { a: 1 });
@@ -418,6 +418,11 @@ We consider exploring the following proposals once this one gets considered for 
 A goal of the broader set of proposals (including [operator overloading](https://github.com/littledan/proposal-operator-overloading/) and [extended numeric literals](https://github.com/tc39/proposal-extended-numeric-literals) is to provide a way for user-defined types to do the same as [BigInt](https://github.com/tc39/proposal-bigint).
 
 If const classes are standardized, features like [Temporal Proposal](https://github.com/tc39/proposal-temporal) which might be able to express its types using const classes. However, this is far in the future, and we do not encourage people to wait for the addition of const classes.
+
+A previous version of this proposal included `with` syntax for creating new const value types. The community has suggested alernative syntax that could be
+considered in a follow up proposal.
+
+- ["Set-builder inspired notation"](https://github.com/rricard/proposal-const-value-types/issues/44)
 
 # Glossary
 
