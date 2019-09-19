@@ -238,11 +238,3 @@ Returns a `Tuple Iterator` object that contains the values for each index in the
 ## `Tuple.prototype.with(index, value)`
 
 Returns a `Tuple` with the same elements as the original `Tuple` except the element at `index` is replaced with `value`.
-
-## `Tuple.prototype.first()`
-
-Returns the first element of the `Tuple` or `undefined` if the `Tuple` is empty.
-
-## `Tuple.prototype.last()`
-
-Returns the last element of the `Tuple` or `undefined` if the `Tuple` is empty.

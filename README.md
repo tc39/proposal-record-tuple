@@ -312,7 +312,6 @@ The `Tuple` prototype is an object that contains the same methods as Array with 
 
 - We added `Tuple.prototype.with()` that returns a new tuple with a value changed at a given index.
 - `Tuple.prototype.pop()` and `Tuple.prototype.shift()` do not return the removed element, they return the result of the change
-- `Tuple.prototype.first()` and `Tuple.prototype.last()` are added to return the first and last element of the `Tuple`
 
 See the [appendix](./NS-Proto-Appendix.md) `Tuple`'s prototype.
 
