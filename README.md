@@ -434,11 +434,23 @@ considered in a follow up proposal.
 
 # Glossary
 
+#### Value type
+
+In a broad sense, a value type is anything in JavaScript that is not an Object. This includes `string`, `number`, etc... up to Records and Tuples.
+
+#### Record
+
+A value type data structure that stores values in form of value types associated to keys.
+
+#### Tuple
+
+A value type data structure that stores a series of values in form of value types.
+
 #### Immutable Data Structure
 
 A Data Structure that doesn't accept operations that change it internally, it has operations that return a new value type that is the result of applying that operation on it.
 
-In this proposal `Record` and `Tuple` are immutable data structures.
+In this proposal `Record` and `Tuple` are considered immutable data structures.
 
 #### Strict Equality
 
