@@ -444,7 +444,7 @@ A value type data structure that stores values in form of value types associated
 
 #### Tuple
 
-A value type data structure that stores a series ofvalues in form of value types.
+A value type data structure that stores a series of values in form of value types.
 
 #### Immutable Data Structure
 
