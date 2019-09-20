@@ -35,6 +35,8 @@ This proposal presents 2 main additions to the language:
 
 `Record`s and `Tuple`s can only contain other value types.
 
+Additionally, a core goal of this proposal is to give JavaScript engines the capability to implement the same kinds of optimizations for this feature as libraries for functional data structures.
+
 ## Prior work on immutable data structures in JavaScript
 
 Today, userland libraries implement similar concepts, such as [Immutable.js](https://immutable-js.github.io/immutable-js/). Also [a previous proposal attempt](https://github.com/sebmarkbage/ecmascript-immutable-data-structures) has been done previously but abandoned because of the complexity of the proposal and lack of sufficient use cases.
@@ -390,14 +392,16 @@ weakMap.set(record, true);
 
 This proposal in itself does not put any performance guarantees and does not require specific optimizations on the implementers. It is however built in a way that some performance optimizations can be done in most cases if implementers choose to do so.
 
-The way the proposal is built can enable a few things (among other):
+This proposal is designed to enable classical optimizations for purely functional data structures, including but not limited to:
 
-- Structural sharing can be used to represent those data structures internally. Structural sharing enables faster copy and comparison.
-- This structural sharing can be partially derived from the existing shape system implemented in most engines
-- Those structures can be built in a thread-safe way so they can be used across workers
-- The web browser's structural cloning algorithm used to serialize data to a worker can be changed to only pass the thread safe structure across the boundary
+- Optimizations for making deep equality checks fast:
+  - For returning true quickly, intern ("hash-cons") some data structures
+  - For returning false quickly, maintain a hash up the tree of the contents of some structures
+- Optimizations for manipulating data structures
+  - In some cases, reuse existing data structures (e.g., when manipulated with object spread), similar to ropes or typical implementations of functional data structures
+  - In other cases, as determined by the engine, use a flat representation like existing JavaScript object implementations
 
-Not all of those optimizations have to be done but the proposal and the way it's built should enable engines to eventually implement them more easily.
+These optimizations are analogous to the way that modern JavaScript engines handle string concatenation, with various different internal types of strings. The validity of these optimizations rests on the unobservability of the identity of records and tuples. It's not expected that all engines will act identically with respect to these optimizations, but rather, they will each make decisions about particular heuristics to use. Before Stage 4 of this proposal, we plan to publish a guide for best practices for cross-engine optimizable use of Records and Tuples, based on the implementation experience that we will have at that point.
 
 ## Why #{}/#[] syntax? What about an existing or new keyword?
 
