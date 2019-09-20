@@ -253,13 +253,28 @@ Accessing a member expression of a tuple or record via `.` or `[]` follows the s
 
 An instance of `Record` has the same keys and values as the `record` value it was created from. These keys are all `writable: false, enumerable: true, configurable: false`.
 
-An instance of `Tuple` has keys that are `${index}` for each index in the original `tuple`. The value for each of these keys is the corresponding value in the original `tuple`. These keys are all `writable: false, enumerable: true, configurable: false`. In addition, there is a non-enumerable `length` key. This behavior matches that of the `String` wrapper object. That is,  `Object.getOwnPropertyDescriptors(Object(#["a", "b"]))` and `Object.getOwnPropertyDescriptors(new String("ab"))` each return an object that looks like this:
+An instance of `Tuple` has keys that are `${index}` for each index in the original `tuple`. The value for each of these keys is the corresponding value in the original `tuple`. These keys are all `writable: false, enumerable: true, configurable: false`. In addition, there is a non-enumerable `length` key. This behavior matches that of the `String` wrapper object. That is, `Object.getOwnPropertyDescriptors(Object(#["a", "b"]))` and `Object.getOwnPropertyDescriptors(new String("ab"))` each return an object that looks like this:
 
 ```json
 {
-  "0": { "value": "a", "writable": false, "enumerable": true, "configurable": false },
-  "1": { "value": "b", "writable": false, "enumerable": true, "configurable": false },
-  "length": { "value": 2, "writable": false, "enumerable": false, "configurable": false }
+  "0": {
+    "value": "a",
+    "writable": false,
+    "enumerable": true,
+    "configurable": false
+  },
+  "1": {
+    "value": "b",
+    "writable": false,
+    "enumerable": true,
+    "configurable": false
+  },
+  "length": {
+    "value": 2,
+    "writable": false,
+    "enumerable": false,
+    "configurable": false
+  }
 }
 ```
 
@@ -370,6 +385,19 @@ weakMap.set(record, true);
 ```
 
 # FAQ
+
+## What are the performance expectations of those Data Structures?
+
+This proposal in itself does not put any performance guarantees and does not require specific optimizations on the implementers. It is however built in a way that some performance optimizations can be done in most cases if implementers choose to do so.
+
+The way the proposal is built can enable a few things (among other):
+
+- Structural sharing can be used to represent those data structures internally. Structural sharing enables faster copy and comparison.
+- This structural sharing can be partially derived from the existing shape system implemented in most engines
+- Those structures can be built in a thread-safe way so they can be used across workers
+- The web browser's structural cloning algorithm used to serialize data to a worker can be changed to only pass the thread safe structure across the boundary
+
+Not all of those optimizations have to be done but the proposal and the way it's built should enable engines to eventually implement them more easily.
 
 ## Why #{}/#[] syntax? What about an existing or new keyword?
 
