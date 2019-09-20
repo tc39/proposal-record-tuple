@@ -1,6 +1,6 @@
-# Const Value Types: Record & Tuple
+# Value Types: Record & Tuple
 
-ECMAScript proposal for the Record and Tuple const value types (also known as immutable types).
+ECMAScript proposal for the Record and Tuple value types.
 
 **Authors:**
 
@@ -22,7 +22,7 @@ ECMAScript proposal for the Record and Tuple const value types (also known as im
 
 # Overview
 
-The goal of this proposal is to introduce deeply constant/immutable data structures to JavaScript. It has multiple objectives:
+The goal of this proposal is to introduce new value types that are deeply immutable to JavaScript. It has multiple objectives:
 
 - Add guaranteed deep immutable data structures at a language-level that provide similar manipulation idioms as objects
 - Add guarantees in strict equality when comparing data. This is only possible because those data structures are deeply immutable (comparing props fast is essential for efficient virtual dom reconciliation in React apps for instance)
@@ -33,7 +33,7 @@ This proposal presents 2 main additions to the language:
 - `Record`
 - `Tuple`
 
-`Record`s and `Tuple`s can only contain other immutable values.
+`Record`s and `Tuple`s can only contain other value types.
 
 ## Prior work on immutable data structures in JavaScript
 
@@ -109,12 +109,12 @@ const instance = new MyClass();
 const constContainer = #{
     instance: instance
 };
-// TypeError: Can't use a non-const type in a const declaration
+// TypeError: Can't use a non-value type in a value declaration
 
 const tuple = #[1, 2, 3];
 
 tuple.map(x => new MyClass(x));
-// TypeError: Can't use a non-const type in a const operation
+// TypeError: Expected value type as return
 
 // The following should work:
 Array.from(tuple).map(x => new MyClass(x))
@@ -124,13 +124,7 @@ Array.from(tuple).map(x => new MyClass(x))
 
 This defines the new pieces of syntax being added to the language with this proposal.
 
-We define _ConstExpression_ by using the `#` modifier in front of otherwise normal expressions and declarations.
-
-_ConstExpression_:
-
-> `#` _ObjectExpression_
-
-> `#` _ArrayExpression_
+We define a record or tuple expression by using the `#` modifier in front of otherwise normal object or array expressions.
 
 #### Examples
 
@@ -147,13 +141,13 @@ _ConstExpression_:
 
 At runtime, if a non-value type is placed inside a `Record` or `Tuple`, it is a `TypeError`. This means that a `Record` or `Tuple` expression can only contain value types.
 
-At runtime, attempting to create a `Record` with a key that is not a `string` is a `TypeError`.
+At runtime, attempting to create a `Record` with a key that is not a `string` or `symbol` is a `TypeError`.
 
 At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `symbol`, `boolean`, `bigint`, `undefined`, or `null`.
 
 # Equality
 
-Instances of `Record` and `Tuple` are immutable, so their equality works like that of other immutable JS values like `boolean` and `string` instances:
+Instances of `Record` and `Tuple` are deeply immutable, so their equality works like that of other JS primitive value types like `boolean` and `string` instances:
 
 ```js
 assert(#{ a: 1 } === #{ a: 1 });
@@ -174,7 +168,7 @@ Insertion order of record keys does not affect equality of records:
 assert(#{ a: 1, b: 2 } === #{ b: 2, a: 1 });
 ```
 
-`Record` and `Tuple` types are completely and deeply constant, if they have the same values stored, they will be considered strictly equal.
+`Record` and `Tuple` types are completely and deeply immutable, if they have the same values stored, they will be considered strictly equal.
 
 `===` and `==` follows `SameValue` equality when comparing values inside `Record` or `Tuple`. Further
 discussion on this will be found [here](https://github.com/rricard/proposal-const-value-types/issues/65).
@@ -313,7 +307,7 @@ JSON.stringify(#[true, #{ a: #[1, 2, 3] }]); // "[true, {a: [1, 2, 3]}]"
 
 ## `Record` prototype
 
-The `Record` prototype is `null`.
+The `Record` prototype is an empty object.
 
 ## `Tuple` prototype
 
@@ -399,22 +393,6 @@ const first = {| a: 1, b: 2 |};
 const second = [|1, 2, 3|];
 ```
 
-## How does this relate to the const keyword?
-
-`const` variable declarations and `Record`/`Tuple` are completely orthogonal features.
-
-`const` variable declarations force the reference or value type to stay constant for a given identifier in a given lexical scope.
-
-The `Record` and `Tuple` value types are deeply constant and unchangeable.
-
-Using both at the same time is possible, but using a non-const variable declaration is also possible:
-
-```js
-const record = #{ a: 1, b: 2 };
-let record2 = #{ ...record, c: 0 };
-record2 = #{ ...record2, c: 3 };
-```
-
 ## What about const classes?
 
 "Const" classes are being considered as a followup proposal that would let us associate methods to `Records`.
@@ -428,12 +406,12 @@ As this proposal adds a new concept to the language, we expect that other propos
 We consider exploring the following proposals once this one gets considered for higher stages:
 
 - "Computed" and "Deep" update by copy operation (see [previous version of this proposal](https://github.com/rricard/proposal-const-value-types/blob/1c5925ca1235a5b8294cbf0018baa3ef7cf9bd5d/README.md) with the `with` keyword integrated)
-- "Const" classes
+- Value type classes
 - ConstSet and ConstMap, the const versions of [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) and [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
 
 A goal of the broader set of proposals (including [operator overloading](https://github.com/littledan/proposal-operator-overloading/) and [extended numeric literals](https://github.com/tc39/proposal-extended-numeric-literals) is to provide a way for user-defined types to do the same as [BigInt](https://github.com/tc39/proposal-bigint).
 
-If const classes are standardized, features like [Temporal Proposal](https://github.com/tc39/proposal-temporal) which might be able to express its types using const classes. However, this is far in the future, and we do not encourage people to wait for the addition of const classes.
+If value type classes are standardized, features like [Temporal Proposal](https://github.com/tc39/proposal-temporal) which might be able to express its types using const classes. However, this is far in the future, and we do not encourage people to wait for the addition of const classes.
 
 A previous version of this proposal included `with` syntax for creating new const value types. The community has suggested alernative syntax that could be
 considered in a follow up proposal.
@@ -444,7 +422,7 @@ considered in a follow up proposal.
 
 #### Value type
 
-In a broad sense, a value type is anything in JavaScript that is not an Object. This includes `string`, `number`, etc... up to Records and Tuples.
+In a broad sense, a value type is anything in JavaScript that is not an Object. This includes the primitives `string`, `number`, etc... up to Records and Tuples.
 
 #### Record
 
@@ -454,11 +432,15 @@ A value type data structure that stores values in form of value types associated
 
 A value type data structure that stores a series of values in form of value types.
 
+#### Primitive value types
+
+`string`, `number`, `boolean`, `undefined`, `null` and `symbol`
+
 #### Immutable Data Structure
 
 A Data Structure that doesn't accept operations that change it internally, it has operations that return a new value type that is the result of applying that operation on it.
 
-In this proposal `Record` and `Tuple` are considered immutable data structures.
+In this proposal `Record` and `Tuple` are deeply immutable data structures.
 
 #### Strict Equality
 
