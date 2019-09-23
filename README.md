@@ -67,6 +67,8 @@ const record1 = #{
 
 const record2 = #{...record1, b: 5};
 
+assert(record1.a === 1);
+assert(record1["a"] === 1);
 assert(record1 !== record2);
 assert(record2 === #{ a: 1, c: 3, b: 5 });
 ```
@@ -75,6 +77,8 @@ assert(record2 === #{ a: 1, c: 3, b: 5 });
 
 ```js
 const tuple1 = #[1, 2, 3];
+
+assert(tuple1[0] === 1);
 
 const tuple2 = tuple1.with(0, 2);
 assert(tuple1 !== tuple2);
