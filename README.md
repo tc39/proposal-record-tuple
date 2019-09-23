@@ -1,4 +1,4 @@
-# Value Types: Record & Tuple
+# Record & Tuple
 
 ECMAScript proposal for the Record and Tuple value types.
 
