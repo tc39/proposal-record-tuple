@@ -448,6 +448,7 @@ If value type classes are standardized, features like [Temporal Proposal](https:
 A previous version of this proposal included `with` syntax for creating new const value types. The community has suggested alernative syntax that could be
 considered in a follow up proposal.
 
+- [Deep Property Definitions for Records](./Deep-Spread.md)
 - ["Set-builder inspired notation"](https://github.com/rricard/proposal-const-value-types/issues/44)
 
 # Glossary
