@@ -35,6 +35,8 @@ This proposal presents 2 main additions to the language:
 
 `Record`s and `Tuple`s can only contain other value types.
 
+Additionally, a core goal of this proposal is to give JavaScript engines the capability to implement the same kinds of optimizations for this feature as libraries for functional data structures.
+
 ## Prior work on immutable data structures in JavaScript
 
 Today, userland libraries implement similar concepts, such as [Immutable.js](https://immutable-js.github.io/immutable-js/). Also [a previous proposal attempt](https://github.com/sebmarkbage/ecmascript-immutable-data-structures) has been done previously but abandoned because of the complexity of the proposal and lack of sufficient use cases.
@@ -253,13 +255,28 @@ Accessing a member expression of a tuple or record via `.` or `[]` follows the s
 
 An instance of `Record` has the same keys and values as the `record` value it was created from. These keys are all `writable: false, enumerable: true, configurable: false`.
 
-An instance of `Tuple` has keys that are `${index}` for each index in the original `tuple`. The value for each of these keys is the corresponding value in the original `tuple`. These keys are all `writable: false, enumerable: true, configurable: false`. In addition, there is a non-enumerable `length` key. This behavior matches that of the `String` wrapper object. That is,  `Object.getOwnPropertyDescriptors(Object(#["a", "b"]))` and `Object.getOwnPropertyDescriptors(new String("ab"))` each return an object that looks like this:
+An instance of `Tuple` has keys that are `${index}` for each index in the original `tuple`. The value for each of these keys is the corresponding value in the original `tuple`. These keys are all `writable: false, enumerable: true, configurable: false`. In addition, there is a non-enumerable `length` key. This behavior matches that of the `String` wrapper object. That is, `Object.getOwnPropertyDescriptors(Object(#["a", "b"]))` and `Object.getOwnPropertyDescriptors(new String("ab"))` each return an object that looks like this:
 
 ```json
 {
-  "0": { "value": "a", "writable": false, "enumerable": true, "configurable": false },
-  "1": { "value": "b", "writable": false, "enumerable": true, "configurable": false },
-  "length": { "value": 2, "writable": false, "enumerable": false, "configurable": false }
+  "0": {
+    "value": "a",
+    "writable": false,
+    "enumerable": true,
+    "configurable": false
+  },
+  "1": {
+    "value": "b",
+    "writable": false,
+    "enumerable": true,
+    "configurable": false
+  },
+  "length": {
+    "value": 2,
+    "writable": false,
+    "enumerable": false,
+    "configurable": false
+  }
 }
 ```
 
@@ -370,6 +387,21 @@ weakMap.set(record, true);
 ```
 
 # FAQ
+
+## What are the performance expectations of those Data Structures?
+
+This proposal in itself does not put any performance guarantees and does not require specific optimizations on the implementers. It is however built in a way that some performance optimizations can be done in most cases if implementers choose to do so.
+
+This proposal is designed to enable classical optimizations for purely functional data structures, including but not limited to:
+
+- Optimizations for making deep equality checks fast:
+  - For returning true quickly, intern ("hash-cons") some data structures
+  - For returning false quickly, maintain a hash up the tree of the contents of some structures
+- Optimizations for manipulating data structures
+  - In some cases, reuse existing data structures (e.g., when manipulated with object spread), similar to ropes or typical implementations of functional data structures
+  - In other cases, as determined by the engine, use a flat representation like existing JavaScript object implementations
+
+These optimizations are analogous to the way that modern JavaScript engines handle string concatenation, with various different internal types of strings. The validity of these optimizations rests on the unobservability of the identity of records and tuples. It's not expected that all engines will act identically with respect to these optimizations, but rather, they will each make decisions about particular heuristics to use. Before Stage 4 of this proposal, we plan to publish a guide for best practices for cross-engine optimizable use of Records and Tuples, based on the implementation experience that we will have at that point.
 
 ## Why #{}/#[] syntax? What about an existing or new keyword?
 
