@@ -2,17 +2,17 @@ All credit for this idea goes to Lee Byron @leebyron!
 
 The additional syntax below can be introduced as a follow up proposal.
 
-# Deep Spread for Records
+# Deep property definitions for Records
 
 Currently, only spread syntax can be used to manipulate records, via creating a new record
 with the same properties as the old record, overwriting with the properties specified in the new record literal.
 
 If deep path updates are required (updating a value nested deeply inside a record), then the syntax is
 cumbersome, because a spread is needed at each level of nesting. As a way to solve this problem, a deep path
-spread syntax can be introduced for records, which allows the user to "copy" records and update deeply nested
+property definition syntax can be introduced for records, which allows the user to "copy" records and update deeply nested
 properties within them without cumbersome syntax.
 
-These examples demonstrate a possible syntax for deep spreads on records.
+These examples demonstrate a possible syntax for deep property definitions on records.
 
 ```js
 const one = #{
@@ -78,7 +78,7 @@ const three = #{
 };
 ```
 
-Question! What happens if the deep path does not exist in the value that is spread?
+Question! What happens if the deep path does not exist in the value that is being set deeply?
 
 Example:
 
