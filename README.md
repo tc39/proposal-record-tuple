@@ -217,8 +217,8 @@ You can't instantiate (as in, getting a reference of) any `Record` or `Tuple` so
 const record = Record({ a: 1, b: 2, c: 3 });
 const record2 = Record.fromEntries([#["a", 1], #["b", 2], #["c": 3]]); // note that an iterable will also work
 const tuple = Tuple.from([1, 2, 3]); // note that an iterable will also work
-asset(record === #{ a: 1, b: 2, c: 3 });
-asset(tuple === #[1, 2, 3]);
+assert(record === #{ a: 1, b: 2, c: 3 });
+assert(tuple === #[1, 2, 3]);
 Record.from({ a: {} }); // TypeError: Can't convert Object with a non-const value to Record
 Tuple.from([{}, {} , {}]); // TypeError: Can't convert Iterable with a non-const value to Tuple
 ```
