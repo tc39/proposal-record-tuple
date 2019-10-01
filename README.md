@@ -322,8 +322,8 @@ assert.deepEqual(Object.from(#{ a: #[1, 2, 3] }), { a: #[1, 2, 3] });
 - The behavior of `JSON.stringify(tuple)` is equivalent to calling `JSON.stringify` on the array resulting from recursively converting the record to an object that contains no records or tuples.
 
 ```js
-JSON.stringify(#{ a: #[1, 2, 3] }); // "{a: [1, 2, 3]}"
-JSON.stringify(#[true, #{ a: #[1, 2, 3] }]); // "[true, {a: [1, 2, 3]}]"
+JSON.stringify(#{ a: #[1, 2, 3] }); // '{"a":[1,2,3]}'
+JSON.stringify(#[true, #{ a: #[1, 2, 3] }]); // '[true,{"a":[1,2,3]}]'
 ```
 
 ## `Record` prototype
