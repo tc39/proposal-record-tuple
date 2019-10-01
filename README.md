@@ -18,7 +18,7 @@ ECMAScript proposal for the Record and Tuple value types.
 - Dan Ehrenberg (Igalia)
 - Maxwell Heiber (Bloomberg)
 
-**Stage:** 0
+**Stage:** 1
 
 # Overview
 
