@@ -341,12 +341,11 @@ See the [appendix](./NS-Proto-Appendix.md) `Tuple`'s prototype.
 
 ## `typeof`
 
-The typeof operator will return a new value for `Record`s and `Tuple`s. The value to be returned
-is still **an open question**. For now, we think that `"record"` is the most reasonable option.
+The typeof operator will return a new value for `Record`s and `Tuple`s.
 
 ```js
 assert(typeof #{ a: 1 } === "record");
-assert(typeof #[1, 2]   === "record");
+assert(typeof #[1, 2]   === "tuple");
 ```
 
 ## Usage in {`Map`|`Set`|`WeakMap`}
