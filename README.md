@@ -87,11 +87,11 @@ assert(tuple2 === #[2, 2, 3]);
 const tuple3 = #[1, ...tuple2];
 assert(tuple3 === #[1, 2, 2, 3]);
 
-const tuple4 = tuple3.push(4);
+const tuple4 = tuple3.pushed(4);
 assert(tuple4 === #[1, 2, 2, 3, 4]);
 
 assert(tuple4.first() === 1);
-const tuple5 = tuple4.pop();
+const tuple5 = tuple4.popped();
 assert(tuple5 === #[2, 2, 3, 4]);
 ```
 
@@ -335,7 +335,7 @@ The `Record` prototype is an empty object.
 The `Tuple` prototype is an object that contains the same methods as Array with a few changes:
 
 - We added `Tuple.prototype.with()` that returns a new tuple with a value changed at a given index.
-- `Tuple.prototype.pop()` and `Tuple.prototype.shift()` do not return the removed element, they return the result of the change
+- We also added `Tuple.prototype.popped()` and `Tuple.prototype.shifted()` that do not return the removed element, they return the result of the change
 
 See the [appendix](./NS-Proto-Appendix.md) `Tuple`'s prototype.
 
