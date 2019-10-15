@@ -78,9 +78,17 @@ Tuple.of(1,2,3); // #[1, 2, 3]
 
 ## `Tuple.prototype.pop()`
 
+Returns the last value of the tuple.
+
+## `Tuple.prototype.popped()`
+
 Returns a `Tuple` identical to the original `Tuple` except the last element is removed.
 
 ## `Tuple.prototype.push(values...)`
+
+No-op, returns void.
+
+## `Tuple.prototype.pushed(values...)`
 
 Returns a `Tuple` identical to the original `Tuple` except that the `values` are added to the end of the `Tuple`.
 
@@ -90,9 +98,17 @@ Returns a `Tuple` of the same values as the original `Tuple` in reverse order.
 
 ## `Tuple.prototype.shift()`
 
+Returns the first value of the tuple.
+
+## `Tuple.prototype.shifted()`
+
 Returns a `Tuple` identical to the original `Tuple` except the first element is removed.
 
 ## `Tuple.prototype.unshift(values)`
+
+No-op, returns void.
+
+## `Tuple.prototype.unshifted(values)`
 
 Returns a `Tuple` identical to the original `Tuple` except that the `values` are added to the beginning of the `Tuple`.
 
