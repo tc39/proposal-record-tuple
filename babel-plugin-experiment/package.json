@@ -2,6 +2,7 @@
   "name": "babel-plugin-experiment",
   "devDependencies": {
     "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.3",
     "@babel/plugin-proposal-record-and-tuple": "^7.2.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
