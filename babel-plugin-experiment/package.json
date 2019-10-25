@@ -8,5 +8,9 @@
     "gulp-watch": "^5.0.1",
     "lerna": "^3.18.3",
     "through2": "^3.0.1"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "watch": "gulp watch"
   }
 }
