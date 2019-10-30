@@ -85,7 +85,7 @@ export function equal(a, b) {
 
 function validateMember(value) {
     const unboxed = unbox(value);
-    if (isObject(unboxed) && !isRecord(unboxed)) {
+    if (isObject(unboxed) && !(isRecord(unboxed) || isTuple(unboxed))) {
         throw new Error("TypeError: cannot use an object as a value in a record");
     } else if (isFunction(unboxed)) {
         throw new Error("TypeError: cannot use a function as a value in a record");
