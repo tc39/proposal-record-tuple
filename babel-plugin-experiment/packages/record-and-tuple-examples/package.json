@@ -2,7 +2,7 @@
   "name": "record-and-tuple-examples",
   "version": "1.0.0",
   "dependencies": {
-    "record-and-tuple-helpers": "1.0.0"
+    "record-and-tuple-polyfill": "1.0.0"
   },
   "main": "lib/index.js"
 }

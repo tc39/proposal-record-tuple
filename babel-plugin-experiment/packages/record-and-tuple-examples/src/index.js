@@ -1,6 +1,8 @@
 import {
     equal,
-} from "record-and-tuple-helpers";
+    Record,
+    Tuple,
+} from "record-and-tuple-polyfill";
 
 function showEqual(a, b) {
     console.log(`${JSON.stringify(a)} === ${JSON.stringify(b)}`);
