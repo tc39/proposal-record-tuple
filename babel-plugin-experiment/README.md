@@ -1,21 +1,11 @@
-# babel plugin experiment
+# babel polyfill
 
-to setup:
+1. checkout rickbutton/babel#record-and-tuple
+2. bootstrap babel locally
+3. link babel packages and install deps:
 
 ```bash
-cd babel-plugin-experiment
-# ... point lerna.json to babel source
+npm install lerna
+npx lerna link
 npx lerna bootstrap
-```
-
-to build:
-
-```bash
-npm run build
-```
-
-to watch:
-
-```bash
-npm run watch
 ```

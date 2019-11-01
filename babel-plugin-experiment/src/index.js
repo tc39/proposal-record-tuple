@@ -83,18 +83,20 @@ export function equal(a, b) {
     return false;
 }
 
-function validateMember(value) {
+function validateProperty(value) {
     const unboxed = unbox(value);
     if (isObject(unboxed) && !(isRecord(unboxed) || isTuple(unboxed))) {
         throw new Error("TypeError: cannot use an object as a value in a record");
     } else if (isFunction(unboxed)) {
         throw new Error("TypeError: cannot use a function as a value in a record");
     }
+    return unboxed;
 }
 
 export function Record(value) {
     return createRecordFromObject(value);
 }
+Record.isRecord = isRecord;
 Record.assign = function assign(...args) {
     return createRecordFromObject(Object.assign(...args));
 }
@@ -132,8 +134,7 @@ export function createRecordFromObject(value) {
 
     const record = {};
     for (const key of keys) {
-        validateMember(unboxed[key]);
-        record[key] = unboxed[key];
+        record[key] = validateProperty(unboxed[key]);
     }
     RECORD_WEAK_MAP.set(record, true);
     return Object.freeze(record);
@@ -157,7 +158,7 @@ export function createTupleFromArray(value) {
         throw new Error("invalid value, expected an array or iterable as the argument.");
     }
 
-    unboxed.forEach(validateMember);
+    unboxed.forEach(validateProperty);
 
     const tuple = Array.from(unboxed);
     TUPLE_WEAK_MAP.set(tuple, true);
