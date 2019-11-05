@@ -4,6 +4,12 @@
 module.exports = {
   testEnvironment: "node",
   testMatch: [
-    "**/lib/*.test.[tj]s?(x)"
+    "**/lib/*.test.[tj]s?(x)",
+    "**/test/**/*.[tj]s?(x)",
+  ],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/test/fixtures/",
+    "/test/debug-fixtures/",
   ],
 };

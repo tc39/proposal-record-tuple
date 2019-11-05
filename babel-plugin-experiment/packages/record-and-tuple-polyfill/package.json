@@ -1,0 +1,20 @@
+{
+  "name": "record-and-tuple-polyfill",
+  "main": "lib/index.js",
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.3",
+    "babel-jest": "^24.9.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-watch": "^5.0.1",
+    "jest": "^24.9.0",
+    "lerna": "^3.18.3"
+  },
+  "scripts": {
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "build": "gulp build",
+    "watch": "gulp watch"
+  }
+}

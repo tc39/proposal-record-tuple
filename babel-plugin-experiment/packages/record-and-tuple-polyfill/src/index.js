@@ -11,6 +11,11 @@ function isIterable(v) {
     return isObject(v) && typeof (v[Symbol.iterator]) === "function";
 }
 
+function getOwnEnumerablePropertySymbols(object) {
+    return Object.getOwnPropertySymbols(object)
+        .filter(symbol => Object.prototype.propertyIsEnumerable.call(object, symbol));
+}
+
 function unbox(v) {
     if (v instanceof Boolean) {
         return Boolean.prototype.valueOf.call(v);
@@ -30,9 +35,23 @@ function unbox(v) {
 function recordEqual(a, b) {
     const aKeys = Object.keys(a);
     const bKeys = Object.keys(b);
+    const aSymbols = getOwnEnumerablePropertySymbols(a);
+    const bSymbols = getOwnEnumerablePropertySymbols(b);
 
     if (aKeys.length !== bKeys.length) {
         return false;
+    }
+
+    const aSymbolsSet = new Set(aSymbols);
+    const bSymbolsSet = new Set(bSymbols);
+
+    if (aSymbolsSet.size !== bSymbolsSet.size) {
+        return false;
+    }
+    for (const aSymbol of aSymbolsSet) {
+        if (!bSymbolsSet.has(aSymbol)) {
+            return false;
+        }
     }
 
     aKeys.sort();
@@ -48,6 +67,14 @@ function recordEqual(a, b) {
             return false;
         }
     }
+
+    for (let i = 0; i < aSymbols.length; i++) {
+        const aSymbol = aSymbols[i];
+        if (!equal(a[aSymbol], b[aSymbol])) {
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -130,12 +157,21 @@ export function createRecordFromObject(value) {
         throw new Error("invalid value, expected an object as the argument.");
     }
 
-    const keys = Object.keys(unboxed).sort();
+    const propertyNames = Object.keys(unboxed).sort();
+    // own property symbols are currently unsorted
+    // as there isn't really a way to sort them other than by their
+    // description, which doesn't distinguish between two unique symbols
+    // with the same description
+    const propertySymbols = getOwnEnumerablePropertySymbols(unboxed);
 
     const record = {};
-    for (const key of keys) {
-        record[key] = validateProperty(unboxed[key]);
+    for (const name of propertyNames) {
+        record[name] = validateProperty(unboxed[name]);
     }
+    for (const symbol of propertySymbols) {
+        record[symbol] = validateProperty(unboxed[symbol]);
+    }
+
     RECORD_WEAK_MAP.set(record, true);
     return Object.freeze(record);
 }

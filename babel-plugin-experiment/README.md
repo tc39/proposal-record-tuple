@@ -6,6 +6,5 @@
 
 ```bash
 npm install lerna
-npx lerna link
-npx lerna bootstrap
+npm run bootstrap
 ```
