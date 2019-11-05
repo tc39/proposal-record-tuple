@@ -7,7 +7,7 @@ export function isTuple(v) { return TUPLE_WEAK_MAP.has(v); }
 function isObject(v) { return typeof v === "object" && v !== null; }
 function isFunction(v) { return typeof v === "function"; }
 
-function isIterable(v) {
+function isIterableObject(v) {
     return isObject(v) && typeof (v[Symbol.iterator]) === "function";
 }
 
@@ -128,21 +128,21 @@ Record.assign = function assign(...args) {
     return createRecordFromObject(Object.assign(...args));
 }
 Record.entries = function entries(record) {
-    return createTupleFromArray(Object.entries(record).map(createTupleFromArray));
+    return createTupleFromIterableObject(Object.entries(record).map(createTupleFromIterableObject));
 }
 Record.fromEntries = function fromEntries(iterator) {
     return createRecordFromObject(Object.fromEntries(iterator));
 }
 Record.keys = function keys(record) {
-    return createTupleFromArray(Object.keys(record));
+    return createTupleFromIterableObject(Object.keys(record));
 }
 Record.values = function values(record) {
-    return createTupleFromArray(Object.values(record));
+    return createTupleFromIterableObject(Object.values(record));
 }
 Record.parse = function parse(text, reviver) {
     const value = JSON.parse(text, reviver);
-    if (isIterable(value)) {
-        return createTupleFromArray(value);
+    if (isIterableObject(value)) {
+        return createTupleFromIterableObject(value);
     } else if (isObject(value)) {
         return createRecordFromObject(value);
     } else {
@@ -177,26 +177,24 @@ export function createRecordFromObject(value) {
 }
 
 export function Tuple(...values) {
-    return createTupleFromArray(values);
+    return createTupleFromIterableObject(values);
 }
 Tuple.from = function from(arrayLike, mapFn, thisArg) {
-    return createTupleFromArray(Array.from(arrayLike, mapFn, thisArg));
+    return createTupleFromIterableObject(Array.from(arrayLike, mapFn, thisArg));
 }
 Tuple.isTuple = isTuple;
 
 Tuple.of = function of(...values) {
-    return createTupleFromArray(Array.of(...values));
+    return createTupleFromIterableObject(Array.of(...values));
 }
-export function createTupleFromArray(value) {
+export function createTupleFromIterableObject(value) {
     const unboxed = unbox(value);
 
-    if (!isIterable(unboxed)) {
+    if (!isIterableObject(unboxed)) {
         throw new Error("invalid value, expected an array or iterable as the argument.");
     }
 
-    unboxed.forEach(validateProperty);
-
-    const tuple = Array.from(unboxed);
+    const tuple = Array.from(unboxed, validateProperty);
     TUPLE_WEAK_MAP.set(tuple, true);
     return Object.freeze(tuple);
 }

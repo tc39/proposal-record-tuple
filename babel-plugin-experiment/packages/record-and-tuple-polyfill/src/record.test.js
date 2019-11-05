@@ -13,23 +13,23 @@ test("Record function throws when presented a non-plain object", () => {
 
 test("records cannot contain objects", () => {
     expect(() => Record({ a: {} })).toThrow();
+    expect(() => Record({ a: [] })).toThrow();
     expect(() => Record({ a: function() {} })).toThrow();
 });
 
 test("records unbox boxed primitives", () => {
-    expect(Record({ a: Object(true) })).toStrictEqual({ a: true });
-    expect(Record({ a: Object(1) })).toStrictEqual({ a: 1 });
-    //expect(Record({ a: Object(1n) })).toStrictEqual({ a: 1 }); // bigint
-    expect(Record({ a: Object("test") })).toStrictEqual({ a: "test" });
+    expect(Record({ a: Object(true) }).a).toBe(true);
+    expect(Record({ a: Object(1) }).a).toBe(1);
+    expect(Record({ a: Object("test") }).a).toBe("test");
 
     const sym = Symbol();
-    expect(Record({ a: Object(sym) })).toStrictEqual({ a: sym });
+    expect(Record({ a: Object(sym) }).a).toBe(sym);
 });
 
 test("records are correctly identified as records", () => {
     expect(Record.isRecord(Record({ a: 1 }))).toBe(true);
+    expect(Record.isRecord(Tuple(1,2,3))).toBe(false);
     expect(Record.isRecord({ a: 1 })).toBe(false);
-    //expect(Record.isRecord({ a: 1n })).toBe(false); // bigint
     expect(Record.isRecord(function() {})).toBe(false);
     expect(Record.isRecord(true)).toBe(false);
     expect(Record.isRecord(1)).toBe(false);
@@ -79,3 +79,4 @@ test("Record.fromEntries", () => { /*TODO*/ });
 test("Record.keys", () => { /*TODO*/ });
 test("Record.values", () => { /*TODO*/ });
 test("Record.parse", () => { /*TODO*/ });
+// TODO: Record prototype

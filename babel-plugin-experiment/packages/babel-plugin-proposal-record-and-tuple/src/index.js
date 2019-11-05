@@ -50,7 +50,7 @@ export default declare((api, options) => {
       TupleExpression(path) {
         const tuple = this.addNamedImport(
           polyfillModuleName,
-          "createTupleFromArray",
+          "createTupleFromIterableObject",
         );
 
         const array = t.arrayExpression(path.node.elements);

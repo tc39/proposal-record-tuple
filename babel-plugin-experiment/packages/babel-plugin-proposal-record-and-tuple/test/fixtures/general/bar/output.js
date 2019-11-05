@@ -1,6 +1,6 @@
 "use strict";
 
-var _createTupleFromArray = require("record-and-tuple-polyfill").createTupleFromArray;
+var _createTupleFromIterableObject = require("record-and-tuple-polyfill").createTupleFromIterableObject;
 
 var _createRecordFromObject = require("record-and-tuple-polyfill").createRecordFromObject;
 
@@ -20,8 +20,8 @@ const r2 = _createRecordFromObject({
   e: 789
 });
 
-const t1 = _createTupleFromArray([]);
+const t1 = _createTupleFromIterableObject([]);
 
-const t2 = _createTupleFromArray([1, 2, 3]);
+const t2 = _createTupleFromIterableObject([1, 2, 3]);
 
-const t3 = _createTupleFromArray([1, _createTupleFromArray([2, 3, _createTupleFromArray([4]), 5]), 6]);
+const t3 = _createTupleFromIterableObject([1, _createTupleFromIterableObject([2, 3, _createTupleFromIterableObject([4]), 5]), 6]);
