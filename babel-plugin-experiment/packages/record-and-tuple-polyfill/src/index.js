@@ -16,6 +16,13 @@ function getOwnEnumerablePropertySymbols(object) {
         .filter(symbol => Object.prototype.propertyIsEnumerable.call(object, symbol));
 }
 
+function objectFromEntries(iterable) {
+    return [...iterable].reduce((obj, [key, val]) => {
+        obj[key] = val;
+        return obj;
+    }, {});
+}
+
 function unbox(v) {
     if (v instanceof Boolean) {
         return Boolean.prototype.valueOf.call(v);
@@ -131,7 +138,7 @@ Record.entries = function entries(record) {
     return createTupleFromIterableObject(Object.entries(record).map(createTupleFromIterableObject));
 }
 Record.fromEntries = function fromEntries(iterator) {
-    return createRecordFromObject(Object.fromEntries(iterator));
+    return createRecordFromObject(objectFromEntries(iterator));
 }
 Record.keys = function keys(record) {
     return createTupleFromIterableObject(Object.keys(record));

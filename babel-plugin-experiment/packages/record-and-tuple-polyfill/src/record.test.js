@@ -43,10 +43,10 @@ test("Record function creates deeply frozen objects", () => {
 });
 
 test("Record function creates objects with keys in sorted order", () => {
-    expect(Object.keys(Record({ a: 1, b: 2 }))).toStrictEqual(["a", "b"]);
-    expect(Object.keys(Record({ b: 1, a: 2 }))).toStrictEqual(["a", "b"]);
-    expect(Object.keys(Record({ b: 1, a: 2, 0: 3 }))).toStrictEqual(["0", "a", "b"]);
-    expect(Object.keys(Record({ b: 1, a: 2, 0: 3 }))).toStrictEqual(["0", "a", "b"]);
+    expect(Record.keys(Record({ a: 1, b: 2 }))).toStrictEqual(["a", "b"]);
+    expect(Record.keys(Record({ b: 1, a: 2 }))).toStrictEqual(["a", "b"]);
+    expect(Record.keys(Record({ b: 1, a: 2, 0: 3 }))).toStrictEqual(["0", "a", "b"]);
+    expect(Record.keys(Record({ b: 1, a: 2, 0: 3 }))).toStrictEqual(["0", "a", "b"]);
 
     const sym1 = Symbol();
     const sym2 = Symbol();
@@ -74,9 +74,18 @@ test("records with the same structural equality will be equal", () => {
 });
 
 test("Record.assign", () => { /*TODO*/ });
-test("Record.entries", () => { /*TODO*/ });
-test("Record.fromEntries", () => { /*TODO*/ });
-test("Record.keys", () => { /*TODO*/ });
-test("Record.values", () => { /*TODO*/ });
+test("Record.entries", () => {
+    expect(Record.entries(Record({ a: 1 }))).toStrictEqual([["a", 1]]);
+    expect(Record.entries(Record({ a: 1, b: 2 }))).toStrictEqual([["a", 1], ["b", 2]]);
+    expect(Record.entries(Record({ b: 2, a: 1 }))).toStrictEqual([["a", 1], ["b", 2]]);
+});
+test("Record.fromEntries", () => {
+    expect(Record.fromEntries([["a", 1], ["b", 2]])).toStrictEqual(Record({ a: 1, b: 2 }));
+    expect(Record.fromEntries([["b", 2], ["a", 1]])).toStrictEqual(Record({ a: 1, b: 2 }));
+});
+test("Record.values", () => {
+    expect(Record.values(Record({ a: 1, b: 2 }))).toStrictEqual([1, 2]);
+    expect(Record.values(Record({ b: 1, a: 2 }))).toStrictEqual([2, 1]);
+});
 test("Record.parse", () => { /*TODO*/ });
 // TODO: Record prototype
