@@ -1,4 +1,4 @@
-import { Record, Tuple, equal } from "record-and-tuple-polyfill";
+import { Record, Tuple } from "record-and-tuple-polyfill";
 
 test("Record function throws when presented a non-plain object", () => {
     expect(() => Record(true)).toThrow();
