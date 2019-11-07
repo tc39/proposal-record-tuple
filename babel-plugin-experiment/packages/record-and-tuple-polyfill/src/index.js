@@ -146,16 +146,6 @@ Record.keys = function keys(record) {
 Record.values = function values(record) {
     return createTupleFromIterableObject(Object.values(record));
 }
-Record.parse = function parse(text, reviver) {
-    const value = JSON.parse(text, reviver);
-    if (isIterableObject(value)) {
-        return createTupleFromIterableObject(value);
-    } else if (isObject(value)) {
-        return createRecordFromObject(value);
-    } else {
-        return value;
-    }
-}
 
 export function createRecordFromObject(value) {
     const unboxed = unbox(value);

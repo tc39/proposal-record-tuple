@@ -12,4 +12,7 @@ module.exports = {
     "/test/fixtures/",
     "/test/debug-fixtures/",
   ],
+  setupFilesAfterEnv: [
+    "./jest.setup.js"
+  ],
 };
