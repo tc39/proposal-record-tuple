@@ -1,9 +1,10 @@
 {
   "name": "record-and-tuple-polyfill",
+  "version": "0.0.1",
   "main": "lib/index.js",
   "devDependencies": {
-    "@babel/core": "^7.6.0",
-    "@babel/preset-env": "^7.6.3",
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.5",
     "babel-jest": "^24.9.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",

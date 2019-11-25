@@ -2,7 +2,8 @@
   "name": "babel-plugin-experiment",
   "private": true,
   "devDependencies": {
-    "@babel/core": "^7.6.4",
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.5",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-watch": "^5.0.1",
@@ -16,8 +17,5 @@
     "watch": "gulp watch",
     "test": "jest",
     "test-watch": "jest --watch"
-  },
-  "dependencies": {
-    "@babel/preset-env": "^7.6.3"
   }
 }
