@@ -18,12 +18,12 @@ test("records cannot contain objects", () => {
 });
 
 test("records unbox boxed primitives", () => {
-    expect(Record({ a: Object(true) })).toRecordEqual(Record({ a: true }));
-    expect(Record({ a: Object(1) })).toRecordEqual(Record({ a: 1 }));
-    expect(Record({ a: Object("test") })).toRecordEqual(Record({ a: "test" }));
+    expect(Record({ a: Object(true) })).toRecordIsEqual(Record({ a: true }));
+    expect(Record({ a: Object(1) })).toRecordIsEqual(Record({ a: 1 }));
+    expect(Record({ a: Object("test") })).toRecordIsEqual(Record({ a: "test" }));
 
     const sym = Symbol();
-    expect(Record({ a: Object(sym) })).toRecordEqual(Record({ a: sym }));
+    expect(Record({ a: Object(sym) })).toRecordIsEqual(Record({ a: sym }));
 });
 
 test("records are correctly identified as records", () => {
@@ -43,10 +43,10 @@ test("Record function creates deeply frozen objects", () => {
 });
 
 test("Record function creates objects with keys in sorted order", () => {
-    expect(Record.keys(Record({ a: 1, b: 2 }))).toRecordEqual(Tuple("a", "b"));
-    expect(Record.keys(Record({ b: 1, a: 2 }))).toRecordEqual(Tuple("a", "b"));
-    expect(Record.keys(Record({ b: 1, a: 2, 0: 3 }))).toRecordEqual(Tuple("0", "a", "b"));
-    expect(Record.keys(Record({ b: 1, a: 2, 0: 3 }))).toRecordEqual(Tuple("0", "a", "b"));
+    expect(Record.keys(Record({ a: 1, b: 2 }))).toRecordIsEqual(Tuple("a", "b"));
+    expect(Record.keys(Record({ b: 1, a: 2 }))).toRecordIsEqual(Tuple("a", "b"));
+    expect(Record.keys(Record({ b: 1, a: 2, 0: 3 }))).toRecordIsEqual(Tuple("0", "a", "b"));
+    expect(Record.keys(Record({ b: 1, a: 2, 0: 3 }))).toRecordIsEqual(Tuple("0", "a", "b"));
 
     const sym1 = Symbol();
     const sym2 = Symbol();
@@ -57,33 +57,47 @@ test("Record function creates objects with keys in sorted order", () => {
 });
 
 test("records with the same structural equality will be equal", () => {
-    expect(Record({ a: 1 })).toRecordEqual(Record({ a: 1 }));
-    expect(Record({ a: 1, b: 2 })).toRecordEqual(Record({ a: 1, b: 2 }));
-    expect(Record({ b: 2, a: 1 })).toRecordEqual(Record({ a: 1, b: 2 }));
-    expect(Record({ 0: 0, 1: 1, 2: 2 })).toRecordEqual(Record({ 1: 1, 0: 0, 2: 2 }));
-    expect(Record({ a: Record({ b: 2 }) })).toRecordEqual(Record({ a: Record({ b: 2 }) }));
+    expect(Record({ a: 1 })).toRecordIsEqual(Record({ a: 1 }));
+    expect(Record({ a: 1, b: 2 })).toRecordIsEqual(Record({ a: 1, b: 2 }));
+    expect(Record({ b: 2, a: 1 })).toRecordIsEqual(Record({ a: 1, b: 2 }));
+    expect(Record({ 0: 0, 1: 1, 2: 2 })).toRecordIsEqual(Record({ 1: 1, 0: 0, 2: 2 }));
+    expect(Record({ a: Record({ b: 2 }) })).toRecordIsEqual(Record({ a: Record({ b: 2 }) }));
 
     const sym1 = Symbol();
     const sym2 = Symbol();
-    expect(Record({ [sym1]: 1, [sym2]: 2 })).toRecordEqual(Record({ [sym2]: 2, [sym1]: 1 }));
+    expect(Record({ [sym1]: 1, [sym2]: 2 })).toRecordIsEqual(Record({ [sym2]: 2, [sym1]: 1 }));
 
 
-    expect(Record({ a: 1 })).not.toRecordEqual(Record({ a: 2 }));
-    expect(Record({ a: 1 })).not.toRecordEqual(Record({ b: 1 }));
-    expect(Record({ [sym1]: 1 })).not.toRecordEqual(Record({ [sym2]: 1 }));
+    expect(Record({ a: 1 })).not.toRecordIsEqual(Record({ a: 2 }));
+    expect(Record({ a: 1 })).not.toRecordIsEqual(Record({ b: 1 }));
+    expect(Record({ [sym1]: 1 })).not.toRecordIsEqual(Record({ [sym2]: 1 }));
+});
+
+test("Record equality handles -/+0 and NaN correctly", () => {
+    expect(Record({ a: -0 })).toRecordIsEqual(Record({ a: -0 }));
+    expect(Record({ a: +0 })).toRecordIsEqual(Record({ a: +0 }));
+    expect(Record({ a: -0 })).not.toRecordIsEqual(Record({ a: +0 }));
+    expect(Record({ a: +0 })).not.toRecordIsEqual(Record({ a: -0 }));
+    expect(Record({ a: NaN })).toRecordIsEqual(Record({ a: NaN }));
+
+    expect(Record({ a: -0 })).toRecordStrictEqual(Record({ a: -0 }));
+    expect(Record({ a: +0 })).toRecordStrictEqual(Record({ a: +0 }));
+    expect(Record({ a: -0 })).toRecordStrictEqual(Record({ a: +0 }));
+    expect(Record({ a: +0 })).toRecordStrictEqual(Record({ a: -0 }));
+    expect(Record({ a: NaN })).not.toRecordStrictEqual(Record({ a: NaN }));
 });
 
 test("Record.entries", () => {
-    expect(Record.entries(Record({ a: 1 }))).toRecordEqual(Tuple(Tuple("a", 1)));
-    expect(Record.entries(Record({ a: 1, b: 2 }))).toRecordEqual(Tuple(Tuple("a", 1), Tuple("b", 2)));
-    expect(Record.entries(Record({ b: 2, a: 1 }))).toRecordEqual(Tuple(Tuple("a", 1), Tuple("b", 2)));
+    expect(Record.entries(Record({ a: 1 }))).toRecordIsEqual(Tuple(Tuple("a", 1)));
+    expect(Record.entries(Record({ a: 1, b: 2 }))).toRecordIsEqual(Tuple(Tuple("a", 1), Tuple("b", 2)));
+    expect(Record.entries(Record({ b: 2, a: 1 }))).toRecordIsEqual(Tuple(Tuple("a", 1), Tuple("b", 2)));
 });
 test("Record.fromEntries", () => {
-    expect(Record.fromEntries([["a", 1], ["b", 2]])).toRecordEqual(Record({ a: 1, b: 2 }));
-    expect(Record.fromEntries([["b", 2], ["a", 1]])).toRecordEqual(Record({ a: 1, b: 2 }));
+    expect(Record.fromEntries([["a", 1], ["b", 2]])).toRecordIsEqual(Record({ a: 1, b: 2 }));
+    expect(Record.fromEntries([["b", 2], ["a", 1]])).toRecordIsEqual(Record({ a: 1, b: 2 }));
 });
 test("Record.values", () => {
-    expect(Record.values(Record({ a: 1, b: 2 }))).toRecordEqual(Tuple(1, 2));
-    expect(Record.values(Record({ b: 1, a: 2 }))).toRecordEqual(Tuple(2, 1));
+    expect(Record.values(Record({ a: 1, b: 2 }))).toRecordIsEqual(Tuple(1, 2));
+    expect(Record.values(Record({ b: 1, a: 2 }))).toRecordIsEqual(Tuple(2, 1));
 });
 // TODO: Record prototype

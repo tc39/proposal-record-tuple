@@ -3,6 +3,34 @@ import syntaxRecordAndTuple from "@babel/plugin-syntax-record-and-tuple";
 import { types as t } from "@babel/core";
 import { addNamed, isModule } from "@babel/helper-module-imports";
 
+function isEquality(operator) {
+  return operator === "===" ||
+         operator === "==" ||
+         operator === "!==" ||
+         operator === "!=";
+}
+
+function isAbstract(operator) {
+  return operator === "==" || operator === "!=";
+}
+
+function isDoesNotEqual(operator) {
+  return operator === "!==" || operator == "!=";
+}
+
+function equalityTransformToPolyfillFunction(val, operator) {
+  const abstract = isAbstract(operator);
+
+  if (val === "strict") {
+    return abstract ? "abstractStrictEqual" : "strictEqual";
+  } else if (val === "is") {
+    return abstract ? "abstractIsEqual" : "isEqual";
+  }
+  else {
+    throw new Error(`invalid equalityTransform value ${val}`);
+  }
+}
+
 export default declare((api, options) => {
   api.assertVersion(7);
 
@@ -10,8 +38,15 @@ export default declare((api, options) => {
     options.polyfillModuleName || "record-and-tuple-polyfill";
 
     if ((options.hash === true && options.bar === true) || (options.hash !== true && options.bar !== true)) {
-      throw new Error("babel-plugin-proposal-record-and-tuple requires exactly one of 'hash' or 'bar' to be set to true")
+      throw new Error("babel-plugin-proposal-record-and-tuple requires exactly one of 'hash' or 'bar' to be set to true");
     }
+
+  const equalityTransform = options.equalityTransform || "off";
+  const validEqualityTransformValues = ["strict", "is", "off"];
+
+  if (!validEqualityTransformValues.includes(equalityTransform)) {
+      throw new Error("babel-plugin-proposal-record-and-tuple option 'equalityTransform' requires a value of 'strict', 'is', or 'off'");
+  }
 
   return {
     name: "proposal-record-and-tuple",
@@ -45,6 +80,22 @@ export default declare((api, options) => {
 
         const object = t.objectExpression(path.node.properties);
         const wrapped = t.callExpression(record, [object]);
+        path.replaceWith(wrapped);
+      },
+      BinaryExpression(path) {
+        const { operator, left, right } = path.node;
+
+        if (!isEquality(operator)) return;
+        if (equalityTransform === "off") return;
+
+        const invert = isDoesNotEqual(operator);
+        const func = this.addNamedImport(
+          polyfillModuleName,
+          equalityTransformToPolyfillFunction(equalityTransform, operator),
+        );
+        const equal = t.callExpression(func, [left, right]);
+
+        const wrapped = invert ? t.unaryExpression("!", equal) : equal;
         path.replaceWith(wrapped);
       },
       TupleExpression(path) {

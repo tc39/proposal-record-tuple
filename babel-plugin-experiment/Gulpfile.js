@@ -83,6 +83,6 @@ gulp.task("watch-repl", () => {
 
 gulp.task("build", gulp.series("build-infra", "build-repl"));
 
-gulp.task("watch-infra", gulp.series("build", function () {
+gulp.task("watch-infra", gulp.series("build-infra", function () {
     watch(sources, { debounceDelay: 200 }, gulp.task("build-infra"));
 }));

@@ -46,23 +46,73 @@ const CONSOLE_STYLES = {
     TREENODE_LINE_HEIGHT: "41px",
 };
 
-const DEFAULT_PREFIX = String.raw`import { equal, Record, Tuple } from "record-and-tuple-polyfill";
+const DEFAULT_PREFIX = String.raw`import { Record, Tuple } from "record-and-tuple-polyfill";
 const log = console.log;
+const nl = () => log(" ");
 `;
 
 const DEFAULT_HASH = DEFAULT_PREFIX + String.raw`
 const record = #{ prop: 1 };
 const tuple = #[1, 2, 3];
 
-log(equal(#{ a: 1 }, #{ a: 1 }));
+// Simple Equality
+log("simple",
+    #{ a: 1 } === #{ a:1 },
+    #[1] === #[1]);
+
+nl();
+
+// Nested Equality
+log("nested", #{ a: #{ b: 123 }} === #{ a: #{ b: 123 }});
+
+nl();
+
+// Order Independent
+log("!order", #{ a: 1, b: 2 } === #{ b: 2, a: 1});
+
+nl();
+
+// -0, +0
+log("-0 === +0", -0 === +0);
+log("#[-0] === #[+0]", #[-0] === #[+0]);
+
+nl();
+
+// NaN
+log("NaN === NaN", NaN === NaN);
+log("#[NaN] === #[NaN]", #[NaN] === #[NaN]);
 `;
 
 const DEFAULT_BAR = DEFAULT_PREFIX + String.raw`
-
 const record = {| prop: 1 |};
 const tuple = [|1, 2, 3|];
 
-log(equal(record, tuple));
+// Simple Equality
+log("simple",
+    {| a: 1 |} === {| a:1 |},
+    [|1|] === [|1|]);
+
+nl();
+
+// Nested Equality
+log("nested", {| a: {| b: 123 |}|} === {| a: {| b: 123 |}|});
+
+nl();
+
+// Order Independent
+log("!order", {| a: 1, b: 2 |} === {| b: 2, a: 1|});
+
+nl();
+
+// -0, +0
+log("-0 === +0", -0 === +0);
+log("[|-0|] === [|+0|]", [|-0|] === [|+0|]);
+
+nl();
+
+// NaN
+log("NaN === NaN", NaN === NaN);
+log("[|NaN|] === [|NaN|]", [|NaN|] === [|NaN|]);
 `;
 
 class App extends React.Component {
@@ -71,11 +121,13 @@ class App extends React.Component {
         this.state = {
             output: "",
             syntax: "hash",
+            equalityTransform: "strict",
             logs: [],
         };
 
         this.onChange = debounce(this.onChange.bind(this), 500);
         this.onSyntaxChange = this.onSyntaxChange.bind(this);
+        this.onEqualityTransformChange = this.onEqualityTransformChange.bind(this);
         this.update = this.update.bind(this);
 
         this.value = DEFAULT_HASH;
@@ -119,6 +171,12 @@ class App extends React.Component {
                             <option value="hash">hash</option>
                             <option value="bar">bar</option>
                         </select>
+                        <span>Equality Transform:</span>
+                        <select onChange={this.onEqualityTransformChange} value={this.state.equalityTransform}>
+                            <option value="strict">===</option>
+                            <option value="is">Object.is</option>
+                            <option value="off">off</option>
+                        </select>
                     </div>
                     <div className="right">
                         <span>Record and Tuple Playground</span>
@@ -134,13 +192,13 @@ class App extends React.Component {
                         onChange={this.onChange} />
                 </div>
                 <div className="outputWrapper">
-                    <div style={{ float: "right", width: "100%", height: "60%" }}>
+                    <div style={{ float: "right", width: "100%", height: "50%" }}>
                         <MonacoEditor
                             ref={this.outputEditor}
                             value={this.state.output}
                             options={outputOptions} />
                     </div>
-                    <div style={{ borderTop: "2px solid #303030", float: "right", width: "100%", height: "40%" }}>
+                    <div style={{ borderTop: "2px solid #303030", float: "right", width: "100%", height: "50%" }}>
                         <Console
                             styles={CONSOLE_STYLES}
                             variant="dark"
@@ -168,6 +226,16 @@ class App extends React.Component {
         });
     }
 
+    onEqualityTransformChange(event) {
+        const equalityTransform = event.target.value;
+        this.setState({
+            equalityTransform,
+            output: "",
+        }, () => {
+            this.update();
+        });
+    }
+
     update() {
         this.transform(this.value, (err, result) => {
             const output = err ? err.toString() : result;
@@ -186,7 +254,11 @@ class App extends React.Component {
     }
 
     transform(code, callback) {
-        const pluginOptions = this.state.syntax === "hash" ? { hash: true } : { bar: true };
+        const syntaxOptions = this.state.syntax === "hash" ? { hash: true } : { bar: true };
+
+        const pluginOptions = Object.assign({
+            equalityTransform: this.state.equalityTransform,
+        }, syntaxOptions);
 
         const options = {
             presets: [PresetEnv],

@@ -39,7 +39,7 @@ function unbox(v) {
     }
 }
 
-function recordEqual(a, b) {
+function recordEqual(a, b, equalFunc) {
     const aKeys = Object.keys(a);
     const bKeys = Object.keys(b);
     const aSymbols = getOwnEnumerablePropertySymbols(a);
@@ -70,14 +70,14 @@ function recordEqual(a, b) {
         if (aKey !== bKey) {
             return false;
         }
-        if (!equal(a[aKey], b[bKey])) {
+        if (!equalFunc(a[aKey], b[bKey])) {
             return false;
         }
     }
 
     for (let i = 0; i < aSymbols.length; i++) {
         const aSymbol = aSymbols[i];
-        if (!equal(a[aSymbol], b[aSymbol])) {
+        if (!equalFunc(a[aSymbol], b[aSymbol])) {
             return false;
         }
     }
@@ -85,36 +85,64 @@ function recordEqual(a, b) {
     return true;
 }
 
-function tupleEqual(a, b) {
+function tupleEqual(a, b, equalFunc) {
     if (a.length !== b.length) {
         return false;
     }
 
     for (let i = 0; i < a.length; i++) {
-        if (!equal(a[i], b[i])) {
+        if (!equalFunc(a[i], b[i])) {
             return false;
         }
     }
     return true;
 }
 
-export function equal(a, b) {
-    if (Object.is(a, b))
-        return true;
-
+export function baseEqual(a, b, equalFunc) {
     const isRecordA = isRecord(a);
     const isRecordB = isRecord(b);
     if (isRecordA && isRecordB) {
-        return recordEqual(a, b);
+        return recordEqual(a, b, equalFunc);
     }
 
     const isTupleA = isTuple(a);
     const isTupleB = isTuple(b);
     if (isTupleA && isTupleB) {
-        return tupleEqual(a, b);
+        return tupleEqual(a, b, equalFunc);
     }
 
     return false;
+}
+
+function isEqualInternal(a, b) {
+    if (Object.is(a, b))
+        return true;
+    return baseEqual(a, b, isEqualInternal);
+}
+
+export function isEqual(a, b) {
+    if (typeof a === "number" && typeof b === "number")
+        return a === b;
+    else
+        return isEqualInternal(a, b);
+}
+
+export function strictEqual(a, b) {
+    if (a === b)
+        return true;
+    return baseEqual(a, b, strictEqual);
+}
+
+export function abstractIsEqual(a, b) {
+    if (a == b)
+        return true;
+    return baseEqual(a, b, isEqual);
+}
+
+export function abstractStrictEqual(a, b) {
+    if (a == b)
+        return true;
+    return baseEqual(a, b, strictEqual);
 }
 
 function validateProperty(value) {

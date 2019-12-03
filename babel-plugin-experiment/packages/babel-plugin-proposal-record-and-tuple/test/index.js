@@ -1,3 +1,3 @@
-import runner from "@babel/helper-plugin-test-runner";
+const runner = require("@babel/helper-plugin-test-runner");
 
-runner(__dirname);
+runner.default(__dirname);
