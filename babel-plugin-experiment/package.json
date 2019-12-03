@@ -4,18 +4,33 @@
   "devDependencies": {
     "@babel/core": "^7.7.5",
     "@babel/preset-env": "^7.7.5",
+    "@babel/preset-react": "^7.7.5",
+    "babel-loader": "^8.0.6",
+    "copy-webpack-plugin": "^5.0.5",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-watch": "^5.0.1",
+    "jest-diff": "^24.9.0",
     "lerna": "^3.18.3",
+    "merge-stream": "^2.0.0",
     "through2": "^3.0.1",
-    "jest-diff": "^24.9.0"
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-stream": "^5.2.1"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "gulp build",
-    "watch": "gulp watch",
+    "build-prod": "NODE_ENV='production' gulp build",
+    "watch": "gulp watch-infra",
+    "watch-repl": "gulp watch-repl",
     "test": "jest",
     "test-watch": "jest --watch"
+  },
+  "dependencies": {
+    "css-loader": "^3.2.0",
+    "monaco-editor": "^0.18.1",
+    "monaco-editor-webpack-plugin": "^1.7.0",
+    "style-loader": "^1.0.0"
   }
 }

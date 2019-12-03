@@ -1,0 +1,28 @@
+{
+  "name": "record-and-tuple-repl",
+  "version": "0.0.1",
+  "main": "lib/index.js",
+  "dependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.5",
+    "babel-plugin-proposal-record-and-tuple": "^0.0.1",
+    "console-feed": "^2.8.10",
+    "monaco-editor": "^0.18.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-monaco-editor": "^0.32.1",
+    "record-and-tuple-polyfill": "^0.0.1"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-watch": "^5.0.1",
+    "lerna": "^3.18.3"
+  },
+  "scripts": {
+    "test": "true",
+    "test-watch": "true",
+    "build": "gulp build",
+    "watch": "gulp watch"
+  }
+}
