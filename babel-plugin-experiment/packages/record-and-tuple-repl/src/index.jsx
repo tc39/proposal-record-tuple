@@ -48,7 +48,6 @@ const CONSOLE_STYLES = {
 
 const DEFAULT_PREFIX = String.raw`import { Record, Tuple } from "record-and-tuple-polyfill";
 const log = console.log;
-const nl = () => log(" ");
 `;
 
 const DEFAULT_HASH = DEFAULT_PREFIX + String.raw`
@@ -60,23 +59,15 @@ log("simple",
     #{ a: 1 } === #{ a:1 },
     #[1] === #[1]);
 
-nl();
-
 // Nested Equality
 log("nested", #{ a: #{ b: 123 }} === #{ a: #{ b: 123 }});
-
-nl();
 
 // Order Independent
 log("!order", #{ a: 1, b: 2 } === #{ b: 2, a: 1});
 
-nl();
-
 // -0, +0
 log("-0 === +0", -0 === +0);
 log("#[-0] === #[+0]", #[-0] === #[+0]);
-
-nl();
 
 // NaN
 log("NaN === NaN", NaN === NaN);
@@ -92,23 +83,15 @@ log("simple",
     {| a: 1 |} === {| a:1 |},
     [|1|] === [|1|]);
 
-nl();
-
 // Nested Equality
 log("nested", {| a: {| b: 123 |}|} === {| a: {| b: 123 |}|});
-
-nl();
 
 // Order Independent
 log("!order", {| a: 1, b: 2 |} === {| b: 2, a: 1|});
 
-nl();
-
 // -0, +0
 log("-0 === +0", -0 === +0);
 log("[|-0|] === [|+0|]", [|-0|] === [|+0|]);
-
-nl();
 
 // NaN
 log("NaN === NaN", NaN === NaN);
@@ -173,9 +156,8 @@ class App extends React.Component {
                         </select>
                         <span>Equality Transform:</span>
                         <select onChange={this.onEqualityTransformChange} value={this.state.equalityTransform}>
-                            <option value="strict">===</option>
-                            <option value="is">Object.is</option>
-                            <option value="off">off</option>
+                            <option value="strict">Strict</option>
+                            <option value="is">SameValue</option>
                         </select>
                     </div>
                     <div className="right">
