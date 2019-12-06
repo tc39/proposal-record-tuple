@@ -1,0 +1,4 @@
+{
+  "plugins": [["../../../../", { "bar": true }]],
+  "throws": "Unexpected token, expected \",\""
+}

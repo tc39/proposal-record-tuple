@@ -1,0 +1,4 @@
+{
+  "plugins": [["../../../../", { "hash": true }]],
+  "throws": "Unexpected token, expected \",\""
+}
