@@ -5,6 +5,6 @@
 3. link babel packages and install deps:
 
 ```bash
-npm install lerna
+npm install
 npm run bootstrap
 ```
