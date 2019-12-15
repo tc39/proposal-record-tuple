@@ -1,0 +1,23 @@
+{
+  "name": "proposal-record-tuple",
+  "version": "0.1.0",
+  "description": "Record and Tuple value types for JS",
+  "scripts": {
+    "prebuild:spec": "mkdirp out",
+    "build:spec": "ecmarkup spec.html out/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tc39/proposal-record-tuple.git"
+  },
+  "author": "Robin Ricard <rricard2@bloomberg.net>",
+  "license": "https://tc39.github.io/ecma262/#sec-copyright-and-software-license",
+  "bugs": {
+    "url": "https://github.com/tc39/proposal-record-tuple/issues"
+  },
+  "homepage": "https://github.com/tc39/proposal-record-tuple#readme",
+  "dependencies": {
+    "ecmarkup": "^3.16.0",
+    "mkdirp": "^0.5.1"
+  }
+}
