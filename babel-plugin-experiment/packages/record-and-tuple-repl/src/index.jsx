@@ -1,7 +1,9 @@
+import { patch, patchLanguage } from "./patch";
+patch();
+
 import * as Babel from "@babel/core";
 import RecordAndTuple from "babel-plugin-proposal-record-and-tuple";
 import PresetEnv from "@babel/preset-env";
-import * as Polyfill from "record-and-tuple-polyfill";
 
 import React from "react";
 import { render } from "react-dom";
@@ -10,14 +12,6 @@ import MonacoEditor from "react-monaco-editor";
 
 import Normalize from "./normalize.css";
 import Skeleton from "./skeleton.css";
-
-// dirty hack to not require bundling of the output of babel
-window.require = function(path) {
-    if (path !== "record-and-tuple-polyfill") {
-        throw new Error("unexpected");
-    }
-    return Polyfill;
-}
 
 function debounce(func, wait, immediate) {
     let timeout;
@@ -39,11 +33,11 @@ function debounce(func, wait, immediate) {
 const CONSOLE_STYLES = {
     LOG_ICON_WIDTH: "0px",
     LOG_ICON_HEIGHT: "0px",
-    BASE_FONT_SIZE: "30px",
-    BASE_LINE_HEIGHT: "41px",
-    ARROW_FONT_SIZE: "30px",
-    TREENODE_FONT_SIZE: "30px",
-    TREENODE_LINE_HEIGHT: "41px",
+    BASE_FONT_SIZE: "18px",
+    BASE_LINE_HEIGHT: "32px",
+    ARROW_FONT_SIZE: "18px",
+    TREENODE_FONT_SIZE: "18px",
+    TREENODE_LINE_HEIGHT: "32px",
 };
 
 const DEFAULT_PREFIX = String.raw`import { Record, Tuple } from "record-and-tuple-polyfill";
@@ -53,6 +47,9 @@ const log = console.log;
 const DEFAULT_HASH = DEFAULT_PREFIX + String.raw`
 const record = #{ prop: 1 };
 const tuple = #[1, 2, 3];
+
+log("isRecord", Record.isRecord(record));
+log("isRecord", Record.isRecord({ prop: 1 }));
 
 // Simple Equality
 log("simple",
@@ -77,6 +74,9 @@ log("#[NaN] === #[NaN]", #[NaN] === #[NaN]);
 const DEFAULT_BAR = DEFAULT_PREFIX + String.raw`
 const record = {| prop: 1 |};
 const tuple = [|1, 2, 3|];
+
+log("isRecord", Record.isRecord(record));
+log("isRecord", Record.isRecord({ prop: 1 }));
 
 // Simple Equality
 log("simple",
@@ -108,6 +108,7 @@ class App extends React.Component {
             logs: [],
         };
 
+        this.onEditorMounted = this.onEditorMounted.bind(this);
         this.onChange = debounce(this.onChange.bind(this), 500);
         this.onSyntaxChange = this.onSyntaxChange.bind(this);
         this.onEqualityTransformChange = this.onEqualityTransformChange.bind(this);
@@ -121,6 +122,25 @@ class App extends React.Component {
             obj[m] = () => undefined;
             return obj;
          }, {})
+
+        this.inputModel = monaco.editor.createModel(this.value, "javascript", "file:///index.js");
+        this.editorOptions = {
+            fontSize: 18,
+            theme: "vs-dark",
+            automaticLayout: true,
+            codeLens: false,
+            minimap: {
+                enabled: false,
+            },
+            model: this.inputModel,
+            language: "rt",
+        };
+
+        this.outputOptions = Object.assign({}, this.editorOptions, {
+            model: undefined,
+            language: "javascript",
+            readOnly: true,
+        });
     }
 
     componentDidMount() {
@@ -130,20 +150,7 @@ class App extends React.Component {
     }
 
     render() {
-        const editorOptions = {
-            fontSize: 30,
-            language: "javascript",
-            theme: "vs-dark",
-            automaticLayout: true,
-            codeLens: false,
-            minimap: {
-                enabled: false,
-            }
-        };
 
-        const outputOptions = Object.assign({}, editorOptions, {
-            readOnly: true,
-        });
 
         return (
             <div className="container">
@@ -168,17 +175,17 @@ class App extends React.Component {
                 </div>
                 <div className="inputWrapper">
                     <MonacoEditor
-                        options={editorOptions}
+                        options={this.editorOptions}
                         value={this.value}
-                        editorDidMount={this.update}
+                        editorDidMount={this.onEditorMounted}
                         onChange={this.onChange} />
                 </div>
                 <div className="outputWrapper">
                     <div style={{ float: "right", width: "100%", height: "50%" }}>
                         <MonacoEditor
                             ref={this.outputEditor}
-                            value={this.state.output}
-                            options={outputOptions} />
+                            options={this.outputOptions}
+                            value={this.state.output} />
                     </div>
                     <div style={{ borderTop: "2px solid #303030", float: "right", width: "100%", height: "50%" }}>
                         <Console
@@ -189,6 +196,11 @@ class App extends React.Component {
                 </div>
             </div>
         );
+    }
+
+    onEditorMounted(editor, monaco) {
+        this.update();
+        patchLanguage();
     }
 
     onChange(newValue) {
@@ -236,11 +248,10 @@ class App extends React.Component {
     }
 
     transform(code, callback) {
-        const syntaxOptions = this.state.syntax === "hash" ? { hash: true } : { bar: true };
-
-        const pluginOptions = Object.assign({
+        const pluginOptions = {
             equalityTransform: this.state.equalityTransform,
-        }, syntaxOptions);
+            syntaxType: this.state.syntax,
+        };
 
         const options = {
             presets: [PresetEnv],

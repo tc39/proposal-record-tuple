@@ -37,10 +37,6 @@ export default declare((api, options) => {
   const polyfillModuleName =
     options.polyfillModuleName || "record-and-tuple-polyfill";
 
-    if ((options.hash === true && options.bar === true) || (options.hash !== true && options.bar !== true)) {
-      throw new Error("babel-plugin-proposal-record-and-tuple requires exactly one of 'hash' or 'bar' to be set to true");
-    }
-
   const equalityTransform = options.equalityTransform || "off";
   const validEqualityTransformValues = ["strict", "is", "off"];
 

@@ -27,6 +27,8 @@ const webpackConfig = {
     context: path.resolve("./packages/record-and-tuple-repl"),
     entry: {
         "index": "./src/index.jsx",
+        "editor.worker": 'monaco-editor/esm/vs/editor/editor.worker.js',
+        "ts.worker": "./src/monaco-typescript-rt/ts.worker.js",
     },
     output: {
         filename: "[name].js",
@@ -47,11 +49,8 @@ const webpackConfig = {
             },
         ],
     },
-    plugins: [new MonacoWebpackPlugin({
-        languages: ["javascript"],
-    }), new CopyPlugin([
-        { from: "src/index.html", to: "index.html" }
-    ])],
+    plugins: [new CopyPlugin([ { from: "src/index.html", to: "index.html" } ])],
+    node: { fs: "empty" },
 };
 
 gulp.task("build-infra", () => {
@@ -84,5 +83,5 @@ gulp.task("watch-repl", () => {
 gulp.task("build", gulp.series("build-infra", "build-repl"));
 
 gulp.task("watch-infra", gulp.series("build-infra", function () {
-    watch(source.map(pkgToSource), { debounceDelay: 200 }, gulp.task("build-infra"));
+    watch(sources.map(pkgToSource), { debounceDelay: 200 }, gulp.task("build-infra"));
 }));
