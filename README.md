@@ -328,6 +328,12 @@ JSON.stringify(#{ a: #[1, 2, 3] }); // '{"a":[1,2,3]}'
 JSON.stringify(#[true, #{ a: #[1, 2, 3] }]); // '[true,{"a":[1,2,3]}]'
 ```
 
+## JSON.parseImmutable
+
+We propose to add `JSON.parseImmutable` so we can extract a Record/Tuple type out of a JSON string instead of an Object/Array.
+
+The signature of `JSON.parseImmutable` is identical to `JSON.parse` with the only change being in the return type that is now a Record or a Tuple.
+
 ## `Record` prototype
 
 The `Record` prototype is an empty object.
