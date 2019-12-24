@@ -153,6 +153,14 @@ At runtime, attempting to create a `Record` with a key that is not a `string` or
 
 At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `symbol`, `boolean`, `bigint`, `undefined`, or `null`.
 
+However whenever the engine can figure out at parse time that something is wrong, it should fail at that moment:
+
+```js
+const r1 = { obj: {} }; // fails at parse time because an object declaration in a record is obviously going to be an error
+const r2 = { obj: true ? {} : #{} }; // will fail at runtime as it's not obvious from the parser's perspective that we should fail
+const r3 = { method() {} }; // fails at parse time
+```
+
 # Equality
 
 Instances of `Record` and `Tuple` are deeply immutable, so their equality works like that of other JS primitive value types like `boolean` and `string` instances:
