@@ -156,9 +156,9 @@ At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any t
 However whenever the engine can figure out at parse time that something is wrong, it should fail at that moment:
 
 ```js
-const r1 = { obj: {} }; // fails at parse time because an object declaration in a record is obviously going to be an error
-const r2 = { obj: true ? {} : #{} }; // will fail at runtime as it's not obvious from the parser's perspective that we should fail
-const r3 = { method() {} }; // fails at parse time
+const r1 = #{ obj: {} }; // fails at parse time because an object declaration in a record is obviously going to be an error
+const r2 = #{ obj: true ? {} : #{} }; // will fail at runtime as it's not obvious from the parser's perspective that we should fail
+const r3 = #{ method() {} }; // fails at parse time
 ```
 
 # Equality
