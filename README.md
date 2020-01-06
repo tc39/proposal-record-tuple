@@ -72,10 +72,9 @@ assert(record1["a"] === 1);
 assert(record1 !== record2);
 assert(record2 === #{ a: 1, c: 3, b: 5 });
 assert(record1?.a === 1);
-assert(1 === record1?.a);
 assert(record1?.d === undefined);
 assert(record1?.d ?? 5 === 5);
-assert(3 === record1?.d ?? 3);
+assert(record1.d?.a === undefined);
 ```
 
 #### `Tuple`
@@ -344,6 +343,10 @@ JSON.stringify(#[true, #{ a: #[1, 2, 3] }]); // '[true,{"a":[1,2,3]}]'
 We propose to add `JSON.parseImmutable` so we can extract a Record/Tuple type out of a JSON string instead of an Object/Array.
 
 The signature of `JSON.parseImmutable` is identical to `JSON.parse` with the only change being in the return type that is now a Record or a Tuple.
+
+## JSON.stringify
+
+Stringifying a record or a tuple should output object or array syntax that corresponds recursively.
 
 ## `Record` prototype
 
