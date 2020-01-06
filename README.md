@@ -71,6 +71,10 @@ assert(record1.a === 1);
 assert(record1["a"] === 1);
 assert(record1 !== record2);
 assert(record2 === #{ a: 1, c: 3, b: 5 });
+assert(record1?.a === 1);
+assert(record1?.d === undefined);
+assert(record1?.d ?? 5 === 5);
+assert(record1.d?.a === undefined);
 ```
 
 #### `Tuple`
@@ -150,6 +154,8 @@ At runtime, if a non-value type is placed inside a `Record` or `Tuple`, it is a 
 At runtime, attempting to create a `Record` with a key that is not a `string` or `symbol` is a `TypeError`.
 
 At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `symbol`, `boolean`, `bigint`, `undefined`, or `null`.
+
+If you try to use a method definitions as part of a Record, the same behavior is expected, it should fail at runtime (even if we could fail at compile time).
 
 # Equality
 
@@ -325,6 +331,12 @@ assert.deepEqual(Object.from(#{ a: #[1, 2, 3] }), { a: #[1, 2, 3] });
 JSON.stringify(#{ a: #[1, 2, 3] }); // '{"a":[1,2,3]}'
 JSON.stringify(#[true, #{ a: #[1, 2, 3] }]); // '[true,{"a":[1,2,3]}]'
 ```
+
+## JSON.parseImmutable
+
+We propose to add `JSON.parseImmutable` so we can extract a Record/Tuple type out of a JSON string instead of an Object/Array.
+
+The signature of `JSON.parseImmutable` is identical to `JSON.parse` with the only change being in the return type that is now a Record or a Tuple.
 
 ## `Record` prototype
 
