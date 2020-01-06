@@ -155,13 +155,7 @@ At runtime, attempting to create a `Record` with a key that is not a `string` or
 
 At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `symbol`, `boolean`, `bigint`, `undefined`, or `null`.
 
-However whenever the engine can figure out at parse time that something is wrong, it should fail at that moment:
-
-```js
-const r1 = #{ obj: {} }; // fails at parse time because an object declaration in a record is obviously going to be an error
-const r2 = #{ obj: true ? {} : #{} }; // will fail at runtime as it's not obvious from the parser's perspective that we should fail
-const r3 = #{ method() {} }; // fails at parse time
-```
+If you try to use a method definitions as part of a Record, the same behavior is expected, it should fail at runtime (even if we could fail at compile time).
 
 # Equality
 
@@ -343,10 +337,6 @@ JSON.stringify(#[true, #{ a: #[1, 2, 3] }]); // '[true,{"a":[1,2,3]}]'
 We propose to add `JSON.parseImmutable` so we can extract a Record/Tuple type out of a JSON string instead of an Object/Array.
 
 The signature of `JSON.parseImmutable` is identical to `JSON.parse` with the only change being in the return type that is now a Record or a Tuple.
-
-## JSON.stringify
-
-Stringifying a record or a tuple should output object or array syntax that corresponds recursively.
 
 ## `Record` prototype
 
