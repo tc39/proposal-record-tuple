@@ -70,7 +70,7 @@ const vdom = #{
 console.log(vdom);
 console.log(allocator.deref(vdom.children[0].props.onClick));
 
-allocator.removeRef(vdom.children[0].props.onClick);
+allocator.removeRef(clickHandlerRef);
 
 console.log(vdom);
 console.log(allocator.deref(vdom.children[0].props.onClick));
