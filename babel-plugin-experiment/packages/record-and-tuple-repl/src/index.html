@@ -43,14 +43,18 @@
             margin-left: 20px;
         }
 
-        .inputWrapper {
-            float: left;
-            width: 50%;
-            height: calc(100% - 110px);
+        .topBar button {
+            margin-left: 20px;
+            color: white;
         }
-        .outputWrapper {
-            float: right;
-            width: 50%;
+        .topBar button:hover {
+            margin-left: 20px;
+            color: white;
+        }
+
+        .editorWrapper {
+            float: left;
+            width: 60%;
             height: calc(100% - 110px);
         }
 
@@ -58,6 +62,21 @@
             margin-left: 10px;
             color: black;
             padding-top: 2px;
+        }
+
+        .console {
+            background-color: rgb(30, 30, 30);
+            border-top: 2px solid #303030;
+            float: right;
+            width: 40%;
+            height: calc(100% - 110px);
+            overflow-y: scroll;
+        }
+
+        .console li {
+            background-color: rgb(30, 30, 30) !important;
+            font-size: 18px !important;
+            margin-bottom: 5px;
         }
     </style>
 </head>

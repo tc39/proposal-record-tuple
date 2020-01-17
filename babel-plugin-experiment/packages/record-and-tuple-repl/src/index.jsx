@@ -1,5 +1,7 @@
 import { patch, patchLanguage } from "./patch";
+import "regenerator-runtime/runtime";
 patch();
+patchLanguage();
 
 import * as Babel from "@babel/core";
 import RecordAndTuple from "babel-plugin-proposal-record-and-tuple";
@@ -7,8 +9,8 @@ import PresetEnv from "@babel/preset-env";
 
 import React from "react";
 import { render } from "react-dom";
-import { Hook, Console, Decode } from "console-feed";
 import MonacoEditor from "react-monaco-editor";
+import { ObjectInspector } from "react-inspector";
 
 import Normalize from "./normalize.css";
 import Skeleton from "./skeleton.css";
@@ -102,24 +104,31 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isError: false,
             output: "",
-            syntax: "hash",
-            equalityTransform: "strict",
+            syntax: props.syntax || "hash",
+            equalityTransform: props.equalityTransform || "strict",
             logs: [],
+            showOutput: false,
         };
 
         this.onEditorMounted = this.onEditorMounted.bind(this);
         this.onChange = debounce(this.onChange.bind(this), 500);
         this.onSyntaxChange = this.onSyntaxChange.bind(this);
         this.onEqualityTransformChange = this.onEqualityTransformChange.bind(this);
+        this.onToggleShowOutput = this.onToggleShowOutput.bind(this);
         this.update = this.update.bind(this);
 
-        this.value = DEFAULT_HASH;
+        this.value = props.content || "";
         this.outputEditor = React.createRef();
 
         const methods = ["log", "warn", "error", "info", "debug", "command", "result"];
         this.fakeConsole = methods.reduce((obj, m) => {
-            obj[m] = () => undefined;
+            obj[m] = (...args) => {
+                this.setState(state => ({
+                    logs: [...state.logs, { level: m, data: args }],
+                }));
+            };
             return obj;
          }, {})
 
@@ -141,17 +150,20 @@ class App extends React.Component {
             language: "javascript",
             readOnly: true,
         });
-    }
 
-    componentDidMount() {
-        Hook(this.fakeConsole, log => {
-            this.setState(({ logs }) => ({ logs: [...logs, Decode(log)] }));
+        this.errorOptions = Object.assign({}, this.editorOptions, {
+            lineNumbers: "off",
+            glyphMargins: false,
+            folding: false,
+            lineDecoratorsWidth: 0,
+            lineNumbersMinChars: 0,
+            model: undefined,
+            language: "javascript",
+            readOnly: true,
         });
     }
 
     render() {
-
-
         return (
             <div className="container">
                 <div className="topBar">
@@ -166,6 +178,8 @@ class App extends React.Component {
                             <option value="strict">Strict</option>
                             <option value="is">SameValue</option>
                         </select>
+                        <button className={this.state.showOutput ? "button-primary" : ""}
+                            onClick={this.onToggleShowOutput}>Show Output</button>
                     </div>
                     <div className="right">
                         <span>Record and Tuple Playground</span>
@@ -173,34 +187,34 @@ class App extends React.Component {
                         <span><a href="https://github.com/tc39/proposal-record-tuple/blob/rb/babel-experiment/babel-plugin-experiment/packages/record-and-tuple-polyfill/src/index.js">Polyfill</a></span>
                     </div>
                 </div>
-                <div className="inputWrapper">
-                    <MonacoEditor
-                        options={this.editorOptions}
-                        value={this.value}
-                        editorDidMount={this.onEditorMounted}
-                        onChange={this.onChange} />
-                </div>
-                <div className="outputWrapper">
-                    <div style={{ float: "right", width: "100%", height: "50%" }}>
-                        <MonacoEditor
+                <div className="editorWrapper">
+                    {!this.state.showOutput ?
+                        (<MonacoEditor
+                            options={this.editorOptions}
+                            value={this.value}
+                            editorDidMount={this.onEditorMounted}
+                            onChange={this.onChange} />) : null}
+                    {this.state.showOutput ?
+                        (<MonacoEditor
                             ref={this.outputEditor}
                             options={this.outputOptions}
-                            value={this.state.output} />
-                    </div>
-                    <div style={{ borderTop: "2px solid #303030", float: "right", width: "100%", height: "50%" }}>
-                        <Console
-                            styles={CONSOLE_STYLES}
-                            variant="dark"
-                            filter={["log", "info", "error"]} logs={this.state.logs} />
-                    </div>
+                            value={this.state.output} />) : null}
+                </div>
+                <div className="console">
+                    {this.state.isError ? 
+                        (<MonacoEditor
+                            options={this.errorOptions}
+                            value={this.state.output} />) :
+                        this.state.logs.map((l, i) =>
+                            <ObjectInspector key={i} theme="chromeDark" data={l.data.length === 1 ? l.data[0] : l.data}/>)}
                 </div>
             </div>
         );
     }
 
     onEditorMounted(editor, monaco) {
+        console.log("editor mounted");
         this.update();
-        patchLanguage();
     }
 
     onChange(newValue) {
@@ -230,21 +244,42 @@ class App extends React.Component {
         });
     }
 
+    onToggleShowOutput() {
+        this.setState({
+            showOutput: !this.state.showOutput,
+        });
+    }
+
     update() {
         this.transform(this.value, (err, result) => {
             const output = err ? err.toString() : result;
-            this.setState({ output, logs: [], }, () => {
-                this.outputEditor.current.editor.setSelection({
-                    startLineNumber: 1,
-                    startColumn: 1,
-                    endLineNumber: 1,
-                    endColumn: 1,
-                });
+            const isError = Boolean(err);
+            this.setState({ isError, output, logs: [], }, () => {
+                if (this.outputEditor.current) {
+                    this.outputEditor.current.editor.setSelection({
+                        startLineNumber: 1,
+                        startColumn: 1,
+                        endLineNumber: 1,
+                        endColumn: 1,
+                    });
+                }
                 if (!err) {
                     this.run();
                 }
+                this.updateHash();
             });
         });
+    }
+
+    updateHash() {
+        const content = this.value;
+        const syntax = this.state.syntax;
+        const equalityTransform = this.state.equalityTransform;
+        const data = { content, syntax, equalityTransform };
+        const json = JSON.stringify(data);
+        const hash = btoa(json);
+        console.log("updating hash with new state " + hash);
+        window.location.hash = hash; 
     }
 
     transform(code, callback) {
@@ -275,7 +310,28 @@ class App extends React.Component {
     }
 }
 
+const hash = window.location.hash;
+console.log("loading from hash " + hash);
+let content = DEFAULT_HASH;
+let syntax = "hash";
+let equalityTransform = "strict";
+
+try {
+    if (hash) {
+        const json = atob(hash.slice(1));
+        const data = JSON.parse(json);
+
+        content = data.content || content;
+        syntax = data.syntax || syntax;
+        equalityTransform = data.equalityTransform || equalityTransform;
+        console.log("loading content: " + content);
+        console.log("loading syntax: " + syntax);
+        console.log("loading equalityTransform: " + equalityTransform);
+    }
+} catch (e) {
+    console.error(e);
+}
 render(
-    <App />,
+    <App content={content} syntax={syntax} equalityTransform={equalityTransform} />,
     document.getElementById("root"),
 );

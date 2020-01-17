@@ -1,5 +1,6 @@
 import * as Polyfill from "record-and-tuple-polyfill";
 import * as Monaco from "monaco-editor";
+import { LanguageConfigurationRegistry } from "monaco-editor/esm/vs/editor/common/modes/languageConfigurationRegistry";
 import { conf, language } from "./patch-language";
 
 const POLYFILL_DTS = `
@@ -53,14 +54,18 @@ export function patch() {
     }
 }
 
-let patched = false;
 export function patchLanguage() {
-    if (!patched) {
-
-        patched = true;
-        Monaco.languages.typescript.getJavaScriptWorker().then(() => {
-            Monaco.languages.setLanguageConfiguration("javascript", conf);
-            Monaco.languages.setMonarchTokensProvider("javascript", language);
-        });
+    function doPatch() {
+        console.log("patching javascript language support");
+        Monaco.languages.setLanguageConfiguration("javascript", conf);
+        Monaco.languages.setMonarchTokensProvider("javascript", language);
     }
+
+    let patched = false;
+    LanguageConfigurationRegistry.onDidChange(() => {
+        if (!patched) {
+            patched = true;
+            doPatch();
+        }
+    });
 }

@@ -158,6 +158,20 @@ function validateProperty(value) {
 export function Record(value) {
     return createRecordFromObject(value);
 }
+Record.prototype = Object.create(null);
+Object.defineProperty(Record.prototype, "constructor", {
+    writable: true,
+    configurable: true,
+    enumerable: false,
+    value: Record,
+});
+Object.defineProperty(Record.prototype, "toString", {
+    writable: true,
+    configurable: true,
+    enumerable: false,
+    value: () => "[object Record]",
+});
+
 Record.isRecord = isRecord;
 Record.assign = function assign(...args) {
     return createRecordFromObject(Object.assign(...args));
@@ -189,7 +203,7 @@ export function createRecordFromObject(value) {
     // with the same description
     const propertySymbols = getOwnEnumerablePropertySymbols(unboxed);
 
-    const record = {};
+    const record = Object.create(Record.prototype);
     for (const name of propertyNames) {
         record[name] = validateProperty(unboxed[name]);
     }
