@@ -159,18 +159,6 @@ export function Record(value) {
     return createRecordFromObject(value);
 }
 Record.prototype = Object.create(null);
-Object.defineProperty(Record.prototype, "constructor", {
-    writable: true,
-    configurable: true,
-    enumerable: false,
-    value: Record,
-});
-Object.defineProperty(Record.prototype, "toString", {
-    writable: true,
-    configurable: true,
-    enumerable: false,
-    value: () => "[object Record]",
-});
 
 Record.isRecord = isRecord;
 Record.assign = function assign(...args) {
