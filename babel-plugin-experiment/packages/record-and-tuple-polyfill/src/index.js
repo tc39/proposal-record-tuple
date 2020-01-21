@@ -28,8 +28,8 @@ function unbox(v) {
         return Boolean.prototype.valueOf.call(v);
     } else if (v instanceof Number) {
         return Number.prototype.valueOf.call(v);
-    } else if (v instanceof BigInt) {
-        return BigInt.prototype.valueOf.call(v);
+    } else if ("BigInt" in globalThis && v instanceof globalThis["BigInt"]) {
+        return globalThis["BigInt"].prototype.valueOf.call(v);
     } else if (v instanceof String) {
         return String.prototype.valueOf.call(v);
     } else if (v instanceof Symbol) {
