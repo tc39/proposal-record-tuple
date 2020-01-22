@@ -102,13 +102,16 @@ assert(tuple5 === #[2, 2, 3, 4]);
 #### Computed access
 
 ```js
-const record = #{ a: 1, b: 2, c: 3 };
-const tuple = #[1, 2, 3, 4];
-
 const k = "b";
-const i = 1;
-
+const record = #{ a: 1, b: 2, c: 3 };
 assert(#{ ...record, [k]: 5 } === #{ a: 1, c: 3, b: 5 });
+
+const record2 = #{ [true]: 1, [9 + 10]: 19 }
+assert(record2 === #{ true: 1, ['19']: 19 })
+assert(record2['true'] === 1)
+
+const i = 1;
+const tuple = #[1, 2, 3, 4];
 assert(tuple.with(i, 1) === #[1, 1, 3, 4]);
 ```
 
