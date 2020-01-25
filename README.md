@@ -99,20 +99,45 @@ const tuple5 = tuple4.popped();
 assert(tuple5 === #[2, 2, 3, 4]);
 ```
 
-#### Computed access
+#### Record initialization
+
+Computed keys are supported, similar to [computed property names](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names) in object literals.
 
 ```js
-const k = "b";
-const record = #{ a: 1, b: 2, c: 3 };
-assert(#{ ...record, [k]: 5 } === #{ a: 1, c: 3, b: 5 });
+const key = "a";
+assert(#{ [key]: 1 } === #{ a: 1 })
+assert(#{ [key.toUpperCase()]: 1 } === #{ A: 1 })
+```
 
-const record2 = #{ [true]: 1, [9 + 10]: 19 }
-assert(record2 === #{ true: 1, ['19']: 19 })
-assert(record2['true'] === 1)
+Non-string keys are coerced to strings.
 
-const i = 1;
-const tuple = #[1, 2, 3, 4];
-assert(tuple.with(i, 1) === #[1, 1, 3, 4]);
+```js
+assert(#{ [true]: 1 } === #{ true: 1 })
+assert(#{ [true]: 1 } === #{ ["true"]: 1 })
+
+assert(#{ [1 + 1]: "two" } === #{ 2: "two" })
+assert(#{ [9 + 1]: "ten" } === #{ ["10"]: "ten" })
+
+assert(#{ [window.location]: 1 } === #{ [String(window.location)]: 1 })
+```
+
+[Shorthand notation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#New_notations_in_ECMAScript_2015) is supported.
+
+```js
+const url = "https://github.com/tc39/proposal-record-tuple";
+const record = #{ url }
+console.log(record.url) // https://github.com/tc39/proposal-record-tuple
+```
+
+The spread operator can be used to specify keys and their values.
+
+```js
+const formData = #{ title: "Implement all the things" }
+const taskNow = #{ id: 42, status: "WIP", ...formData }
+const taskLater = #{ ...task, status: "DONE" }
+
+// A reminder: The ordering of keys in record literals does not affect equality (and is not retained)
+assert(taskLater === #{ status: "DONE", title: formData.title, id: 42 })
 ```
 
 #### Forbidden cases
