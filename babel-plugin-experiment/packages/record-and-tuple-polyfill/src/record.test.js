@@ -3,7 +3,7 @@ import { Record, Tuple } from "record-and-tuple-polyfill";
 test("Record function throws when presented a non-plain object", () => {
     expect(() => Record(true)).toThrow();
     expect(() => Record(1)).toThrow();
-    //expect(() => Record(1n)).toThrow(); // bigint
+    expect(() => Record(BigInt(1))).toThrow();
     expect(() => Record("test")).toThrow();
     expect(() => Record(Symbol())).toThrow();
     expect(() => Record(function() {})).toThrow();
@@ -87,6 +87,15 @@ test("Record equality handles -/+0 and NaN correctly", () => {
     expect(Record({ a: NaN })).not.toRecordStrictEqual(Record({ a: NaN }));
 });
 
+test("Record.assign", () => {
+    expect(() => Record.assign(Record({ a: 1}), { b: 2 })).toThrow();
+    expect(() => Record.assign({ b: 2 }, Record({ a: 1}))).toThrow();
+
+    expect(() => Record.assign(Record({ a: 1}), Record({ b: 2 })))
+		.toRecordIsEqual(Record({ a: 1, b: 2 }));
+	expect(() => Record.assign(Record({ a: 1}), Record({ a: 2 })))
+		.toRecordIsEqual(Record({ a: 2 }));
+});
 test("Record.entries", () => {
     expect(Record.entries(Record({ a: 1 }))).toRecordIsEqual(Tuple(Tuple("a", 1)));
     expect(Record.entries(Record({ a: 1, b: 2 }))).toRecordIsEqual(Tuple(Tuple("a", 1), Tuple("b", 2)));
@@ -96,8 +105,11 @@ test("Record.fromEntries", () => {
     expect(Record.fromEntries([["a", 1], ["b", 2]])).toRecordIsEqual(Record({ a: 1, b: 2 }));
     expect(Record.fromEntries([["b", 2], ["a", 1]])).toRecordIsEqual(Record({ a: 1, b: 2 }));
 });
+test("Record.keys", () => {
+    expect(Record.keys(Record({ a: 1, b: 2 }))).toRecordIsEqual(Tuple("a", "b"));
+    expect(Record.keys(Record({ b: 1, a: 2 }))).toRecordIsEqual(Tuple("a", "b"));
+});
 test("Record.values", () => {
     expect(Record.values(Record({ a: 1, b: 2 }))).toRecordIsEqual(Tuple(1, 2));
     expect(Record.values(Record({ b: 1, a: 2 }))).toRecordIsEqual(Tuple(2, 1));
 });
-// TODO: Record prototype

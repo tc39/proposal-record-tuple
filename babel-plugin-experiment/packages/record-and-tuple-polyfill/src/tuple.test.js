@@ -36,12 +36,28 @@ test("tuples are correctly identified as tuples", () => {
     expect(Tuple.isTuple(Symbol())).toBe(false);
 });
 
-test("Tuple function creates deeply frozen arrays", () => {
+test("Tuple function creates frozen objects with a non-{enumerable/configurable/writable} length property", () => {
     expect(Object.isFrozen(Tuple(1,2,3))).toBe(true);
-    expect(Array.isArray(Tuple(1,2,3))).toBe(true);
+
+    expect(Object.getOwnPropertyDescriptor(Tuple(1,2,3), "length")).toEqual({
+        configurable: false,
+        enumerable: false,
+        value: 3,
+        writable: false,
+    });
 
     expect(Object.isFrozen(Tuple(1,2,Tuple(3))[2])).toBe(true);
-    expect(Array.isArray(Tuple(1,2,Tuple(3))[2])).toBe(true);
+});
+test("Tuples are iterable", () => {
+    expect(Array.from(Tuple(1,2,3))).toEqual([1,2,3]);
+
+    const tuple = Tuple(1,2,3);
+    const iterator = tuple[Symbol.iterator]();
+
+    expect(iterator.next()).toEqual({ value: 1, done: false });
+    expect(iterator.next()).toEqual({ value: 2, done: false });
+    expect(iterator.next()).toEqual({ value: 3, done: false });
+    expect(iterator.next()).toEqual({ value: undefined, done: true });
 });
 
 test("createTupleFromIterableObject only accepts iterable arguments", () => {

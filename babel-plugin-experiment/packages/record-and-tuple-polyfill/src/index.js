@@ -11,6 +11,24 @@ function isIterableObject(v) {
     return isObject(v) && typeof (v[Symbol.iterator]) === "function";
 }
 
+// 7.1.21
+function isCanonicalNumericIndexString(str) {
+    if (typeof str !== "string") return false;
+    if (str === "-0") return true;
+
+    const n = Number(str);
+    return String(n) === str;
+}
+// 6.1.7
+function isArrayIndex(str) {
+    if (!isCanonicalNumericIndexString(str)) {
+        return false;
+    }
+    const n = Number(str);
+
+    return Object.is(n, +0) || (Math.floor(n) === n && n < Number.MAX_SAFE_INTEGER);
+}
+
 function getOwnEnumerablePropertySymbols(object) {
     return Object.getOwnPropertySymbols(object)
         .filter(symbol => Object.prototype.propertyIsEnumerable.call(object, symbol));
@@ -49,18 +67,27 @@ function recordEqual(a, b, equalFunc) {
         return false;
     }
 
-    const aSymbolsSet = new Set(aSymbols);
-    const bSymbolsSet = new Set(bSymbols);
-
-    if (aSymbolsSet.size !== bSymbolsSet.size) {
+    if (aSymbols.length !== bSymbols.length) {
         return false;
     }
-    for (const aSymbol of aSymbolsSet) {
-        if (!bSymbolsSet.has(aSymbol)) {
-            return false;
+
+    if (aSymbols.length > 0) {
+        // because both arrays of symbols are the same length
+        // we can check to see if they contain the same symbols 
+        // without sorting them by wrapping them in sets
+        // and checking that one is a subset of another.
+        const aSymbolsSet = new Set(aSymbols);
+        const bSymbolsSet = new Set(bSymbols);
+        for (const aSymbol of aSymbolsSet) {
+            if (!bSymbolsSet.has(aSymbol)) {
+                return false;
+            } else if (!equalFunc(a[aSymbol], b[aSymbol])) {
+                return false;
+            }
         }
     }
 
+    // delay sorting these keys until needed
     aKeys.sort();
     bKeys.sort();
 
@@ -71,13 +98,6 @@ function recordEqual(a, b, equalFunc) {
             return false;
         }
         if (!equalFunc(a[aKey], b[bKey])) {
-            return false;
-        }
-    }
-
-    for (let i = 0; i < aSymbols.length; i++) {
-        const aSymbol = aSymbols[i];
-        if (!equalFunc(a[aSymbol], b[aSymbol])) {
             return false;
         }
     }
@@ -158,10 +178,22 @@ function validateProperty(value) {
 export function Record(value) {
     return createRecordFromObject(value);
 }
+// ensure that Record.name is "Record" even if this
+// source is aggressively minified or bundled.
+if (Record.name !== "Record") {
+    Object.defineProperty(Record, "name", { value: "Record" });
+}
 Record.prototype = Object.create(null);
+Record.prototype.constructor = Record;
 
 Record.isRecord = isRecord;
 Record.assign = function assign(...args) {
+	for (const arg of args) {
+		if (!isRecord(arg)) {
+			throw new TypeError("Cannot copy properties from or two an object using Record.assign");
+		}
+	}
+
     return createRecordFromObject(Object.assign(...args));
 }
 Record.entries = function entries(record) {
@@ -184,7 +216,12 @@ export function createRecordFromObject(value) {
         throw new Error("invalid value, expected an object as the argument.");
     }
 
+    // sort all property names by the order specified by
+    // the argument's OwnPropertyKeys internal slot
+    // Object.keys - 19.1.2.17
+    // EnumerableOwnPropertyNames - 7.3.22
     const propertyNames = Object.keys(unboxed).sort();
+
     // own property symbols are currently unsorted
     // as there isn't really a way to sort them other than by their
     // description, which doesn't distinguish between two unique symbols
@@ -206,6 +243,28 @@ export function createRecordFromObject(value) {
 export function Tuple(...values) {
     return createTupleFromIterableObject(values);
 }
+// ensure that Tuple.name is "Tuple" even if this
+// source is aggressively minified or bundled.
+if (Tuple.name !== "Tuple") {
+    Object.defineProperty(Tuple, "name", { value: "Tuple" });
+}
+Tuple.prototype = Object.create(null);
+Tuple.prototype.constructor = Tuple;
+Tuple.prototype[Symbol.iterator] = function() {
+    let index = 0;
+    return {
+        next: () => {
+            if (index < this.length) {
+                const result = { value: this[index], done: false };
+                index++;
+                return result;
+            } else {
+                return { value: undefined, done: true };
+            }
+        }
+    };
+}
+
 Tuple.from = function from(arrayLike, mapFn, thisArg) {
     return createTupleFromIterableObject(Array.from(arrayLike, mapFn, thisArg));
 }
@@ -221,7 +280,26 @@ export function createTupleFromIterableObject(value) {
         throw new Error("invalid value, expected an array or iterable as the argument.");
     }
 
-    const tuple = Array.from(unboxed, validateProperty);
+    let length = 0;
+
+    const iterator = unboxed[Symbol.iterator]();
+
+    const tuple = Object.create(Tuple.prototype);
+    while (true) {
+        const result = iterator.next();
+        if (result.done) break;
+
+        tuple[length] = validateProperty(result.value);
+        length++;
+    }
+
+    Object.defineProperty(tuple, "length", {
+        value: length,
+        writable: false,
+        enumerable: false,
+        configurable: false,
+    });
+
     TUPLE_WEAK_MAP.set(tuple, true);
     return Object.freeze(tuple);
 }
