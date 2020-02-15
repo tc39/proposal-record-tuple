@@ -117,8 +117,20 @@ assert(#{ [true]: 1 } === #{ ["true"]: 1 })
 
 assert(#{ [1 + 1]: "two" } === #{ 2: "two" })
 assert(#{ [9 + 1]: "ten" } === #{ ["10"]: "ten" })
+```
 
-assert(#{ [window.location]: 1 } === #{ [String(window.location)]: 1 })
+`toString()` overrides are invoked.
+
+```js
+const obj = {
+  value: 'a',
+  toString() { return this.value }
+}
+
+assert(#{ [obj]: 1 } === #{ a: 1 })
+
+obj.value = 'b'
+assert(#{ [obj]: 1 } !== #{ a: 1 })
 ```
 
 [Shorthand notation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#New_notations_in_ECMAScript_2015) is supported.
