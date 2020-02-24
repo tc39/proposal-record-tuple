@@ -4,7 +4,7 @@
 module.exports = {
   testEnvironment: "node",
   testMatch: [
-    "**/lib/*.test.[tj]s?(x)",
+    "**/src/*.test.[tj]s?(x)",
     "**/test/**/*.[tj]s?(x)",
   ],
   testPathIgnorePatterns: [
@@ -15,4 +15,7 @@ module.exports = {
   setupFilesAfterEnv: [
     "./jest.setup.js"
   ],
+  transform: {
+    "^.+\\.[t|j]sx?$": "babel-jest"
+  },
 };

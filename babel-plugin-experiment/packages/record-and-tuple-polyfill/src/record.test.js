@@ -91,9 +91,9 @@ test("Record.assign", () => {
     expect(() => Record.assign(Record({ a: 1}), { b: 2 })).toThrow();
     expect(() => Record.assign({ b: 2 }, Record({ a: 1}))).toThrow();
 
-    expect(() => Record.assign(Record({ a: 1}), Record({ b: 2 })))
+    expect(Record.assign(Record({ a: 1}), Record({ b: 2 })))
 		.toRecordIsEqual(Record({ a: 1, b: 2 }));
-	expect(() => Record.assign(Record({ a: 1}), Record({ a: 2 })))
+	expect(Record.assign(Record({ a: 1}), Record({ a: 2 })))
 		.toRecordIsEqual(Record({ a: 2 }));
 });
 test("Record.entries", () => {

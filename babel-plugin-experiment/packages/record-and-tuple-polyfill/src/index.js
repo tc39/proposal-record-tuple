@@ -188,13 +188,13 @@ Record.prototype.constructor = Record;
 
 Record.isRecord = isRecord;
 Record.assign = function assign(...args) {
-	for (const arg of args) {
-		if (!isRecord(arg)) {
-			throw new TypeError("Cannot copy properties from or two an object using Record.assign");
-		}
-	}
+    for (const arg of args) {
+        if (!isRecord(arg)) {
+            throw new TypeError("Cannot copy properties from or two an object using Record.assign");
+        }
+    }
 
-    return createRecordFromObject(Object.assign(...args));
+    return createRecordFromObject(Object.assign({}, ...args));
 }
 Record.entries = function entries(record) {
     return createTupleFromIterableObject(Object.entries(record).map(createTupleFromIterableObject));
