@@ -20,6 +20,8 @@ ECMAScript proposal for the Record and Tuple value types.
 
 **Stage:** 1
 
+### [Try out Record and Tuple in the playground!](https://rickbutton.github.io/record-tuple-playground)
+
 # Overview
 
 The goal of this proposal is to introduce new value types that are deeply immutable to JavaScript. It has multiple objectives:
