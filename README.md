@@ -261,6 +261,8 @@ Most users will not have to think about `Record` and `Tuple` wrapper objects. Th
 
 `Tuple.prototype` is an ordinary object, is not a `Tuple` instance, and its prototype is `Object.prototype`. `tuple` values are not instances of the `Tuple` prototype.
 
+> Note: Like all other primitives, records and tuples adopt their `[[Prototype]]` from the current realm.
+
 Accessing a member expression of a tuple or record via `.` or `[]` follows the standard [`GetValue`](https://tc39.es/ecma262/#sec-getvalue) semantics, and implicitly converts to an instance of the corresponding wrapper type.
 
 An instance of `Record` has the same keys and values as the `record` value it was created from. These keys are all `writable: false, enumerable: true, configurable: false`.
