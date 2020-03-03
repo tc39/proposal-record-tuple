@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<meta charset="utf8" />
+
+<emu-clause id="sec-ecmascript-language-expressions">
+  <h1>ECMAScript Language: Expressions</h1>
+  <emu-clause id="sec-primary-expression">
+    <h1>Primary Expression</h1>
+    <h2>Syntax</h2>
+    <emu-grammar type="definition">
+      PrimaryExpression[Yield, Await] :
+        `this`
+        IdentifierReference[?Yield, ?Await]
+        Literal
+        ArrayLiteral[?Yield, ?Await]
+        ObjectLiteral[?Yield, ?Await]
+        <ins>
+        RecordLiteral[?Yield, ?Await]
+        TupleLiteral[?Yield, ?Await]
+        </ins>
+        FunctionExpression
+        ClassExpression[?Yield, ?Await]
+        GeneratorExpression
+        AsyncFunctionExpression
+        AsyncGeneratorExpression
+        RegularExpressionLiteral
+        TemplateLiteral[?Yield, ?Await, ~Tagged]
+        CoverParenthesizedExpressionAndArrowParameterList[?Yield, ?Await] #parencover
+    </emu-grammar>
+    <emu-clause id="sec-record-initializer">
+      <h1>Record Initializer</h1>
+      <h2>Syntax</h2>
+      <emu-grammar type="definition">
+        RecordLiteral[Yield, Await] :
+          `#{` `}`
+          `#{` PropertyDefinitionList[?Yield, ?Await] `}`
+          `#{` PropertyDefinitionList[?Yield, ?Await] `,` `}`
+      </emu-grammar>
+    </emu-clause>
+    <emu-clause id="sec-tuple-initializer">
+      <h1>Tuple Initializer</h1>
+      <h2>Syntax</h2>
+      <emu-grammar type="definition">
+        TupleLiteral[Yield, Await] :
+          `#[` `]`
+          `#[` TupleElementList[?Yield, ?Await] `]`
+          `#[` TupleElementList[?Yield, ?Await] `,` `]`
+
+        TupleElementList[Yield, Await] :
+          AssignmentExpression[+In, ?Yield, ?Await]
+          SpreadElement[?Yield, ?Await]
+          TupleElementList[?Yield, ?Await] `,` AssignmentExpression[+In, ?Yield, ?Await]
+          TupleElementList[?Yield, ?Await] `,` SpreadElement[?Yield, ?Await]
+
+      </emu-grammar>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>
