@@ -4,7 +4,9 @@
   "description": "Record and Tuple value types for JS",
   "scripts": {
     "prebuild:spec": "mkdirp out",
-    "build:spec": "ecmarkup spec.html out/index.html"
+    "prewatch:spec": "mkdirp out",
+    "build:spec": "ecmarkup spec.html out/index.html",
+    "watch:spec": "ecmarkup --watch spec.html out/index.html"
   },
   "repository": {
     "type": "git",
