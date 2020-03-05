@@ -121,19 +121,33 @@ assert(#{ [1 + 1]: "two" } === #{ 2: "two" })
 assert(#{ [9 + 1]: "ten" } === #{ ["10"]: "ten" })
 ```
 
-`toString()` overrides are invoked.
+`@@toPrimitive`, `toString()`, and `valueOf()` overrides are invoked as neccesary.
+
+```js
+const obj = {
+  value: 'xyz',
+  [Symbol.toPrimitive]() { return this.value }
+};
+assert(#{ [obj]: 1 } === #{ xyz: 1 })
+```
 
 ```js
 const obj = {
   value: 'a',
   toString() { return this.value }
-}
-
+};
 assert(#{ [obj]: 1 } === #{ a: 1 })
-
-obj.value = 'b'
-assert(#{ [obj]: 1 } !== #{ a: 1 })
 ```
+
+```js
+const obj = {
+  value: 123,
+  valueOf() { return this.value }
+}
+assert(#{ [obj]: 1 } === #{ 123: 1 })
+```
+
+> Note: `@@toPrimitive`, `toString()` and `valueOf()` are invoked in the expected order of priority according to [7.1.19 ToPropertyKey](https://tc39.es/ecma262/#sec-topropertykey)
 
 [Shorthand notation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#New_notations_in_ECMAScript_2015) is supported.
 
