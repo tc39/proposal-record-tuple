@@ -149,6 +149,20 @@ We define a record or tuple expression by using the `#` modifier in front of oth
 #[1, 2, #{ a: 3 }]
 ```
 
+#### Early Errors
+
+Holes are prevented in syntax, unlike Arrays, which allow holes. See [issue #84](https://github.com/tc39/proposal-record-tuple/issues/84) for more discussion.
+```js
+const x = #[,]; // SyntaxError, holes are disallowed by syntax
+```
+
+Using the `__proto__` identifier as a property is prevented in syntax. See [issue #46](https://github.com/tc39/proposal-record-tuple/issues/46) for more discussion.
+```js
+const x = #{ __proto__: foo }; // SyntaxError, __proto__ identifier prevented by syntax
+
+const y = #{ "__proto__": foo }; // valid, creates a record with a "__proto__" property.
+```
+
 #### Runtime verification
 
 At runtime, if a non-value type is placed inside a `Record` or `Tuple`, it is a `TypeError`. This means that a `Record` or `Tuple` expression can only contain value types.
