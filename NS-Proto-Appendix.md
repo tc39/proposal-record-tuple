@@ -14,7 +14,7 @@ Returns all of the entries in a Record as a Tuple of 2-values Tuples (key, value
 
 ## `Record.fromEntries(iterator: Iterator): Record`
 
-Takes an iterator of 2-values Tuples (key, value) and creates a record out of it. If the iterator returns something else than a 2-values tuple, a TypeError will be raised.
+Takes an iterator of 2-element array-like values and creates a record out of it. If the iterator returns something other than an array-like tuple, a TypeError will be raised.
 
 ## `Record.keys(record: Record) -> Tuple`
 
