@@ -154,6 +154,44 @@ const taskLater = #{ ...task, status: "DONE" }
 assert(taskLater === #{ status: "DONE", title: formData.title, id: 42 })
 ```
 
+#### Destructuring
+
+```js
+const { a, b } = #{ a: 1, b: 2 };
+assert(a === 1);
+assert(b === 2);
+
+const [a, b] = #[1, 2];
+assert(a === 1);
+assert(b === 2);
+```
+
+A "spread" on the `lhs` will create an object or array, not a record or tuple. See issue [#77](https://github.com/tc39/proposal-record-tuple/issues/77) for more discussion.
+
+```js
+const { a, ...rest } = #{ a: 1, b: 2, c: 3 };
+assert(a === 1);
+assert(typeof rest === "object");
+assert(rest.b === 2);
+assert(rest.c === 3);
+
+const [a, ...rest] = #[1, 2, 3];
+assert(a === 1);
+assert(Array.isArray(rest));
+assert(rest[0] === 2);
+assert(rest[1] === 3);
+```
+
+Using a record or tuple literal on the `lhs` is a `SyntaxError`
+
+```js
+// SyntaxError
+const #{ a, b } = #{ a: 1, b: 2 };
+
+// SyntaxError
+const #[a, b] = #[1, 2];
+```
+
 #### Forbidden cases
 
 ```js
