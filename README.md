@@ -229,11 +229,9 @@ We define a record or tuple expression by using the `#` modifier in front of oth
 
 #### Runtime verification
 
-At runtime, if a non-value type is placed inside a `Record` or `Tuple`, it is a `TypeError`. This means that a `Record` or `Tuple` expression can only contain value types.
+At runtime, attempting to create a `Record` with a `symbol` key is a `TypeError`.
 
-At runtime, attempting to create a `Record` with a key that is not a `string` or `symbol` is a `TypeError`.
-
-At runtime, it is a `TypeError` to add a value to a `Record` or `Tuple` of any type except the following: `Record`, `Tuple`, `string`, `number`, `symbol`, `boolean`, `bigint`, `undefined`, or `null`.
+At runtime, attempting to create a `Record` or `Tuple` that contains any type except the following: `Record`, `Tuple`, `string`, `number`, `symbol`, `boolean`, `bigint`, `undefined`, or `null` is a `TypeError`.
 
 If you try to use a method definitions as part of a Record, the same behavior is expected, it should fail at runtime (even if we could fail at compile time).
 
