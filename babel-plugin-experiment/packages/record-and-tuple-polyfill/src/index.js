@@ -163,7 +163,7 @@ Record.isRecord = isRecord;
 Record.assign = function assign(...args) {
     for (const arg of args) {
         if (!isRecord(arg)) {
-            throw new TypeError("Cannot copy properties from or two an object using Record.assign");
+            throw new TypeError("Cannot assign properties from an object using Record.assign");
         }
     }
 
@@ -214,7 +214,7 @@ if (Tuple.name !== "Tuple") {
 }
 Tuple.prototype = Object.create(null);
 Tuple.prototype.constructor = Tuple;
-Tuple.prototype[Symbol.iterator] = function() {
+Tuple.prototype[Symbol.iterator] = function TupleIterator() {
     let index = 0;
     return {
         next: () => {
