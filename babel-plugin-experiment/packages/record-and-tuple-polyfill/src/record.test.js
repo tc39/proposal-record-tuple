@@ -47,13 +47,6 @@ test("Record function creates objects with keys in sorted order", () => {
     expect(Record.keys(Record({ b: 1, a: 2 }))).toRecordIsEqual(Tuple("a", "b"));
     expect(Record.keys(Record({ b: 1, a: 2, 0: 3 }))).toRecordIsEqual(Tuple("0", "a", "b"));
     expect(Record.keys(Record({ b: 1, a: 2, 0: 3 }))).toRecordIsEqual(Tuple("0", "a", "b"));
-
-    const sym1 = Symbol();
-    const sym2 = Symbol();
-    expect(Object.getOwnPropertySymbols(Record({ [sym1]: 1, [sym2]: 2 }))).toStrictEqual([sym1, sym2]);
-    // TODO: break this test? Currently don't know how, as there is no observable ordering
-    // for symbols
-    expect(Object.getOwnPropertySymbols(Record({ [sym2]: 1, [sym1]: 2 }))).toStrictEqual([sym2, sym1]);
 });
 
 test("records with the same structural equality will be equal", () => {
@@ -63,14 +56,8 @@ test("records with the same structural equality will be equal", () => {
     expect(Record({ 0: 0, 1: 1, 2: 2 })).toRecordIsEqual(Record({ 1: 1, 0: 0, 2: 2 }));
     expect(Record({ a: Record({ b: 2 }) })).toRecordIsEqual(Record({ a: Record({ b: 2 }) }));
 
-    const sym1 = Symbol();
-    const sym2 = Symbol();
-    expect(Record({ [sym1]: 1, [sym2]: 2 })).toRecordIsEqual(Record({ [sym2]: 2, [sym1]: 1 }));
-
-
     expect(Record({ a: 1 })).not.toRecordIsEqual(Record({ a: 2 }));
     expect(Record({ a: 1 })).not.toRecordIsEqual(Record({ b: 1 }));
-    expect(Record({ [sym1]: 1 })).not.toRecordIsEqual(Record({ [sym2]: 1 }));
 });
 
 test("Record equality handles -/+0 and NaN correctly", () => {

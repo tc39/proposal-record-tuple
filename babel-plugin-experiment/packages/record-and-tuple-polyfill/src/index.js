@@ -29,11 +29,6 @@ function isArrayIndex(str) {
     return Object.is(n, +0) || (Math.floor(n) === n && n < Number.MAX_SAFE_INTEGER);
 }
 
-function getOwnEnumerablePropertySymbols(object) {
-    return Object.getOwnPropertySymbols(object)
-        .filter(symbol => Object.prototype.propertyIsEnumerable.call(object, symbol));
-}
-
 function objectFromEntries(iterable) {
     return [...iterable].reduce((obj, [key, val]) => {
         obj[key] = val;
@@ -60,31 +55,9 @@ function unbox(v) {
 function recordEqual(a, b, equalFunc) {
     const aKeys = Object.keys(a);
     const bKeys = Object.keys(b);
-    const aSymbols = getOwnEnumerablePropertySymbols(a);
-    const bSymbols = getOwnEnumerablePropertySymbols(b);
 
     if (aKeys.length !== bKeys.length) {
         return false;
-    }
-
-    if (aSymbols.length !== bSymbols.length) {
-        return false;
-    }
-
-    if (aSymbols.length > 0) {
-        // because both arrays of symbols are the same length
-        // we can check to see if they contain the same symbols 
-        // without sorting them by wrapping them in sets
-        // and checking that one is a subset of another.
-        const aSymbolsSet = new Set(aSymbols);
-        const bSymbolsSet = new Set(bSymbols);
-        for (const aSymbol of aSymbolsSet) {
-            if (!bSymbolsSet.has(aSymbol)) {
-                return false;
-            } else if (!equalFunc(a[aSymbol], b[aSymbol])) {
-                return false;
-            }
-        }
     }
 
     // delay sorting these keys until needed
@@ -222,18 +195,9 @@ export function createRecordFromObject(value) {
     // EnumerableOwnPropertyNames - 7.3.22
     const propertyNames = Object.keys(unboxed).sort();
 
-    // own property symbols are currently unsorted
-    // as there isn't really a way to sort them other than by their
-    // description, which doesn't distinguish between two unique symbols
-    // with the same description
-    const propertySymbols = getOwnEnumerablePropertySymbols(unboxed);
-
     const record = Object.create(Record.prototype);
     for (const name of propertyNames) {
         record[name] = validateProperty(unboxed[name]);
-    }
-    for (const symbol of propertySymbols) {
-        record[symbol] = validateProperty(unboxed[symbol]);
     }
 
     RECORD_WEAK_MAP.set(record, true);
