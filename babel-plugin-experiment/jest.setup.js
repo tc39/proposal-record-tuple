@@ -1,4 +1,4 @@
-const { isEqual, strictEqual } = require("./packages/record-and-tuple-polyfill/src/index");
+import { isEqual, strictEqual } from "record-and-tuple-polyfill";
 const diff = require("jest-diff");
 
 expect.extend({
