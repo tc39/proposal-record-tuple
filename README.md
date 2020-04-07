@@ -468,11 +468,11 @@ assert(typeof #{ a: 1 } === "record");
 assert(typeof #[1, 2]   === "tuple");
 ```
 
-## Usage in {`Map`|`Set`|`WeakMap`}
+## Usage in {`Map`|`Set`|`WeakMap`|`WeakSet`}
 
 It is possible to use a `Record` or `Tuple` as a key in a `Map`, and as a value in a `Set`. When using a `Record` or `Tuple` in this way, key/value equality behaves as expected.
 
-It is not possible to use a `Record` or `Tuple` as a key in a `WeakMap`, because `Records` and `Tuple`s are not `Objects`, and their lifetime is not observable. Attempting to set a value in a WeakMap using a `Record` or `Tuple` as the key will result in a `TypeError`.
+It is not possible to use a `Record` or `Tuple` as a key in a `WeakMap` or as a value in a `WeakSet`, because `Records` and `Tuple`s are not `Objects`, and their lifetime is not observable. Attempting to set a value in a WeakMap using a `Record` or `Tuple` as the key will result in a `TypeError`. Similarly, attempting to add a `Record` or `Tuple` to a `WeakSet` will result in a `TypeError`.
 
 ### Examples
 
@@ -507,6 +507,16 @@ const weakMap = new WeakMap();
 
 // TypeError: Can't use a Record as the key in a WeakMap
 weakMap.set(record, true);
+```
+
+#### WeakSet
+
+```js
+const record = #{ a: 1, b: 2 };
+const weakSet = new WeakSet();
+
+// TypeError: Can't add a Record to a WeakSet
+weakSet.add(record);
 ```
 
 # FAQ
