@@ -217,11 +217,11 @@ const constContainer = #{
 
 const tuple = #[1, 2, 3];
 
-tuple.map(x => new MyClass(x));
-// TypeError: Expected value type as return
+tuple.with(0, new MyClass(tuple[0]));
+// TypeError: Can't assign a non-value type
 
 // The following should work:
-Array.from(tuple).map(x => new MyClass(x))
+Array.from(tuple)[0] = new MyClass(tuple[0]);
 ```
 
 # Syntax
