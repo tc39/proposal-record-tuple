@@ -244,11 +244,13 @@ We define a record or tuple expression by using the `#` modifier in front of oth
 #### Early Errors
 
 Holes are prevented in syntax, unlike Arrays, which allow holes. See [issue #84](https://github.com/tc39/proposal-record-tuple/issues/84) for more discussion.
+
 ```js
 const x = #[,]; // SyntaxError, holes are disallowed by syntax
 ```
 
 Using the `__proto__` identifier as a property is prevented in syntax. See [issue #46](https://github.com/tc39/proposal-record-tuple/issues/46) for more discussion.
+
 ```js
 const x = #{ __proto__: foo }; // SyntaxError, __proto__ identifier prevented by syntax
 
@@ -536,7 +538,57 @@ This proposal is designed to enable classical optimizations for purely functiona
 
 These optimizations are analogous to the way that modern JavaScript engines handle string concatenation, with various different internal types of strings. The validity of these optimizations rests on the unobservability of the identity of records and tuples. It's not expected that all engines will act identically with respect to these optimizations, but rather, they will each make decisions about particular heuristics to use. Before Stage 4 of this proposal, we plan to publish a guide for best practices for cross-engine optimizable use of Records and Tuples, based on the implementation experience that we will have at that point.
 
-## Why #{}/#[] syntax? What about an existing or new keyword?
+## Why introduce new syntax? Why not just introduce the Record and Tuple globals?
+
+There are two reasons why we think that the proposed syntax has significant value.
+
+First, this proposal is not the first attempt to introduce immutable data structures to JavaScript. There are many userland libraries (for example: immer, Immutable.js) that implement immutable data structures without additional syntax. The intent of this proposal is not to provide a "standard" alternative to those userland libraries, but instead to provide well rounded **value types** that are easier to use and solve existing use cases.
+
+Second, the proposed syntax significantly improves the ergonomics of using `Record` and `Tuple` in code. For example:
+
+```js
+// with the proposed syntax
+const record = #{
+  a: #{
+    foo: "string",
+  },
+  b: #{
+    bar: 123,
+  },
+  c: #{
+    baz: #{
+      hello: #[
+        1,
+        2,
+        3,
+      ],
+    },
+  },
+};
+
+// with only the Record/Tuple globals
+const record = Record({
+  a: Record({
+    foo: "string",
+  }),
+  b: Record({
+    bar: 123,
+  }),
+  c: Record({
+    baz: Record({
+      hello: Tuple(
+        1,
+        2,
+        3,
+      ),
+    }),
+  }),
+});
+```
+
+The proposed syntax is intended to be simpler and easier to understand, because it is intentionally similar to syntax for object and array literals. This takes advantage of the user's existing familiarity with objects and arrays. Additionally, the second example introduces additional temporary object literals, which adds to complexity of the expression.
+
+## Why **specifically** the #{}/#[] syntax? What about an existing or new keyword?
 
 Using a keyword as a prefix to the standard object/array literal syntax presents issues around
 backwards compatibility. Additionally, re-using existing keywords can introduce ambiguity.
@@ -551,12 +603,11 @@ a similar concept (variable reference immutability) while this proposal intends 
 While immutability is the common thread between these two features, there has been significant community feedback that
 indicates that using `const` in both contexts is undesirable.
 
-Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible alternatives. For example:
+Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible alternatives. However, the champion group has strong preference for `#{}` and `#[]` over that alternative.
 
-```js
-const first = {| a: 1, b: 2 |};
-const second = [|1, 2, 3|];
-```
+## Why introduce new value types, why not use objects?
+
+A `record`/`tuple` is a value type for several reasons. First, it should be possible to compare these values deeply via the `===` operator, which means that they cannot be objects, as `===` compares object identity. Because `record` and `tuple` are not objects, they do not identity, and do not have this problem. Second, records and tuples are deeply immutable; while it is possible to `Object.freeze` an existing object, objects are explicitly mutable before being frozen.
 
 ## What about const classes?
 
@@ -568,7 +619,15 @@ You can see an attempt at defining them in an [earlier version of this proposal]
 
 As this proposal adds a new concept to the language, we expect that other proposals might use this proposal to extend an another orthogonal feature.
 
-We consider exploring the following proposals once this one gets considered for higher stages:
+There are several use cases that can be better assisted with the introduction of these follow-on proposals:
+
+- [Deep Path Properties for Records](https://github.com/rickbutton/proposal-deep-path-properties-for-record)
+- [RefCollection](https://github.com/rricard/proposal-refcollection/)
+
+We intend to synergize the API surface of this proposal and the [Readonly Collections](https://github.com/tc39/proposal-readonly-collections). Currently, there aren't any common collections between the two proposals, but if there are in the future, we intend to synergize
+where possible.
+
+We will consider exploring the following proposals once this proposal gets considered for higher stages:
 
 - "Computed" and "Deep" update by copy operation (see [previous version of this proposal](https://github.com/rricard/proposal-const-value-types/blob/1c5925ca1235a5b8294cbf0018baa3ef7cf9bd5d/README.md) with the `with` keyword integrated)
 - Value type classes
@@ -581,7 +640,6 @@ If value type classes are standardized, features like [Temporal Proposal](https:
 A previous version of this proposal included `with` syntax for creating new const value types. The community has suggested alernative syntax that could be
 considered in a follow up proposal.
 
-- [Deep Property Definitions for Records](./Deep-Spread.md)
 - ["Set-builder inspired notation"](https://github.com/rricard/proposal-const-value-types/issues/44)
 
 # Glossary
