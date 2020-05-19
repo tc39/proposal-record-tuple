@@ -1,3 +1,8 @@
 {
-    "editor.formatOnSave": true
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Default text formatting
+  "prettier.tabWidth": 2,
+  "prettier.trailingComma": "es5"
 }
