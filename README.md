@@ -5,12 +5,12 @@ ECMAScript proposal for the Record and Tuple value types.
 **Authors:**
 
 - Robin Ricard (Bloomberg)
-- Richard Button (Bloomberg)
+- Rick Button (Bloomberg)
 
 **Champions:**
 
 - Robin Ricard (Bloomberg)
-- Richard Button (Bloomberg)
+- Rick Button (Bloomberg)
 
 **Advisors**
 
