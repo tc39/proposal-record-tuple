@@ -427,7 +427,7 @@ The signature of `JSON.parseImmutable` is identical to `JSON.parse` with the onl
 - Operations which mutate the Array are replaced by operations which return a new, modified Array. Because it has a different signature, there's a different name, e.g., `Tuple.prototype.pushed` in parallel to `Array.prototype.push`.
 - We added `Tuple.prototype.with()` that returns a new tuple with a value changed at a given index
 
-The [appendix](./NS-Proto-Appendix.md) contains a full description of `Tuple`'s prototype.
+The [appendix](./NS-Proto-Appendix.md#tuple-prototype) contains a full description of `Tuple`'s prototype.
 
 ## `typeof`
 
