@@ -4,6 +4,10 @@
 
 Converts shallowly an object to a record. If the object has a non-const value, a TypeError will be thrown.
 
+## `Record.isRecord(value) -> boolean`
+
+Checks whether the parameter is either a Record primitive or Record wrapper.
+
 ## `Record.assign(...args: Record[]) -> Record`
 
 Merges all records passed as arguments into one **new** record returned by the function. The latest argument will override arguments before when merging.
