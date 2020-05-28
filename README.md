@@ -233,6 +233,11 @@ Concise methods are disallowed in Record syntax.
 
 Records may only have String keys, not Symbol keys, due to the issues described in [https://github.com/tc39/proposal-record-tuple/issues/15](#15). Creating a Record with a Symbol key is a `TypeError`.
 
+```js
+const record = #{ [Symbol()]: #{} };
+// TypeError: Record may only have string as keys
+```
+
 Records and Tuples may only contain primitives and other Records and Tuples. Attempting to create a `Record` or `Tuple` that contains any type except the following: `Record`, `Tuple`, `String`, `Number`, `Symbol`, `Boolean`, `Bigint`, `undefined`, or `null` is a `TypeError`.
 
 # Equality
