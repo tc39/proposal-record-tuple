@@ -231,7 +231,7 @@ Concise methods are disallowed in Record syntax.
 
 #### Runtime errors
 
-Records may only have String keys, not Symbol keys, due to the issues described in [https://github.com/tc39/proposal-record-tuple/issues/15](#15). Creating a Record with a Symbol key is a `TypeError`.
+Records may only have String keys, not Symbol keys, due to the issues described in [#15](https://github.com/tc39/proposal-record-tuple/issues/15). Creating a Record with a Symbol key is a `TypeError`.
 
 ```js
 const record = #{ [Symbol()]: #{} };
