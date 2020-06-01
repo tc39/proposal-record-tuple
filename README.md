@@ -315,11 +315,11 @@ Accessing of a Record or Tuple via `.` or `[]` follows the typical [`GetValue`](
 
 (One could imagine that `new Record` or `new Tuple` could create these wrappers, like `new Number` and `new String` do, but Records and Tuples follow the newer convention set by Symbol and BigInt, making these cases throw, as it's not the path we want to encourage programmers to take.)
 
-Record and Tuple wrapper objects have all of their own properties with the attributes `writable: false, enumerable: true, configurable: false`. The wrapper object is not extensible. All put together, they behave as a frozen objects. This is different from existing wrapper objects in JavaScript, but is necessary to give the kinds of errors you'd expect from ordinary manipulations on Records and Tuples.
+Record and Tuple wrapper objects have all of their own properties with the attributes `writable: false, enumerable: true, configurable: false`. The wrapper object is not extensible. All put together, they behave as frozen objects. This is different from existing wrapper objects in JavaScript, but is necessary to give the kinds of errors you'd expect from ordinary manipulations on Records and Tuples.
 
 An instance of `Record` has the same keys and values as the underlying `record` value.  The `__proto__` of each of these Record wrapper objects is `null` (discussion: [#71](https://github.com/tc39/proposal-record-tuple/issues/71)).
 
-An instance of `Tuple` has keys that are `${index}` for each index in the underlying `tuple` value. The value for each of these keys is the corresponding value in the original `tuple`. In addition, there is a non-enumerable `length` key. Overall, these properties matche those of the `String` wrapper object. That is, `Object.getOwnPropertyDescriptors(Object(#["a", "b"]))` and `Object.getOwnPropertyDescriptors(new String("ab"))` each return an object that looks like this:
+An instance of `Tuple` has keys that are `${index}` for each index in the underlying `tuple` value. The value for each of these keys is the corresponding value in the original `tuple`. In addition, there is a non-enumerable `length` key. Overall, these properties match those of the `String` wrapper object. That is, `Object.getOwnPropertyDescriptors(Object(#["a", "b"]))` and `Object.getOwnPropertyDescriptors(new String("ab"))` each return an object that looks like this:
 
 ```json
 {
@@ -576,7 +576,7 @@ Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible a
 
 ## Why introduce new primitive types? Why not just use objects in an immutable data structure library?
 
-One core benefit of the Records and Tuples proposal is that they are compared by their contents, not their identity. At the same time, `===` in JavaScript on objects has very clear, consistent semantics: to compare the objects by identity. Making Records and Tuples primitives enables comparison baesd on their values. 
+One core benefit of the Records and Tuples proposal is that they are compared by their contents, not their identity. At the same time, `===` in JavaScript on objects has very clear, consistent semantics: to compare the objects by identity. Making Records and Tuples primitives enables comparison based on their values. 
 
 At a high level, the object/primitive distinction helps form a hard line between the deeply immutable, context-free, identity-free world and the world of mutable objects above it. This category split makes the design and mental model clearer.
 
