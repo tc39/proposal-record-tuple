@@ -266,30 +266,38 @@ Object.keys(#{ a: 1, b: 2 })  // ["a", "b"]
 Object.keys(#{ b: 2, a: 1 })  // ["a", "b"]
 ```
 
-If their structure and contents are deeply identical, then `Record` and `Tuple` values considered equal according to all of the equality operations: `Object.is`, `==`, `===`, and the internal SameValueZero algorithm used for Maps and Sets. See further discussion in [#65](https://github.com/rricard/proposal-const-value-types/issues/65).
+If their structure and contents are deeply identical, then `Record` and `Tuple` values considered equal according to all of the equality operations: `Object.is`, `==`, `===`, and the internal SameValueZero algorithm (used for comparing keys of Maps and Sets). They differ in terms of how `-0` is treated:
+- `Object.is` treats `-0` and `0` as unequal
+- `==`, `===` and SameValueZero treat `-0` with `0` as equal
+
+Note that `==` and `===` are more direct about other kinds of values nested in Records and Tuples--returning `true` if and only if the contents are identical (with the exception of `0`/`-0`). This directness has implications for `NaN` as well as comparisons across types. See examples below.
+
+See further discussion in [#65](https://github.com/rricard/proposal-const-value-types/issues/65).
 
 ```js
 assert(#{ a:  1 } === #{ a: 1 });
 assert(#[1] === #[1]);
 
-assert(#{ a: -0 } !== #{ a: +0 });
-assert(#[-0] !== #[+0]);
+assert(#{ a: -0 } === #{ a: +0 });
+assert(#[-0] === #[+0]);
 assert(#{ a: NaN } === #{ a: NaN });
 assert(#[NaN] === #[NaN]);
 
-assert(#{ a: -0 } != #{ a: +0 });
-assert(#[-0] != #[+0]);
+assert(#{ a: -0 } == #{ a: +0 });
+assert(#[-0] == #[+0]);
 assert(#{ a: NaN } == #{ a: NaN });
 assert(#[NaN] == #[NaN]);
+assert(#[1] != #["1"]);
 
 assert(!Object.is(#{ a: -0 }, #{ a: +0 }));
 assert(!Object.is(#[-0], #[+0]));
 assert(Object.is(#{ a: NaN }, #{ a: NaN }));
 assert(Object.is(#[NaN], #[NaN]));
 
-// SameValueZero
+// Map keys are compared with the SameValueZero algorithm
 assert(new Map().set(#{ a: 1 }, true).get(#{ a: 1 }));
 assert(new Map().set(#[1], true).get(#[1]));
+assert(new Map().set(#[-0], true).get(#[0]));
 ```
 
 # The object model of `Record` and `Tuple`
