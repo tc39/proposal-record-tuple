@@ -293,6 +293,7 @@ assert(Object.is(#[NaN], #[NaN]));
 // SameValueZero
 assert(new Map().set(#{ a: 1 }, true).get(#{ a: 1 }));
 assert(new Map().set(#[1], true).get(#[1]));
+assert(new Map().set(#[-0], true).get(#[0]));
 ```
 
 # The object model of `Record` and `Tuple`
