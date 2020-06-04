@@ -266,21 +266,24 @@ Object.keys(#{ a: 1, b: 2 })  // ["a", "b"]
 Object.keys(#{ b: 2, a: 1 })  // ["a", "b"]
 ```
 
-If their structure and contents are deeply identical, then `Record` and `Tuple` values considered equal according to all of the equality operations: `Object.is`, `==`, `===`, and the internal SameValueZero algorithm used for Maps and Sets. See further discussion in [#65](https://github.com/rricard/proposal-const-value-types/issues/65).
+If their structure and contents are deeply identical, then `Record` and `Tuple` values considered equal according to all of the equality operations: `Object.is`, `==`, `===`, and the internal SameValueZero algorithm used for Maps and Sets.
+
+The `==`, `===` and SameValueZero algorithms consider the Numbers `0` and `-0` to be equal to each other. This equality filters up through Records and Tuples, whereas they are not considered the same by `Object.is`. Overall, `==` and `===` in Records and Tuples recursively performs the SameValueZero algorithm recursively on contents, in order to unify the two values, while maintaining other desirable properties of comparison operators. See further discussion in [#65](https://github.com/rricard/proposal-const-value-types/issues/65).
 
 ```js
 assert(#{ a:  1 } === #{ a: 1 });
 assert(#[1] === #[1]);
 
-assert(#{ a: -0 } !== #{ a: +0 });
-assert(#[-0] !== #[+0]);
+assert(#{ a: -0 } === #{ a: +0 });
+assert(#[-0] === #[+0]);
 assert(#{ a: NaN } === #{ a: NaN });
 assert(#[NaN] === #[NaN]);
 
-assert(#{ a: -0 } != #{ a: +0 });
-assert(#[-0] != #[+0]);
+assert(#{ a: -0 } == #{ a: +0 });
+assert(#[-0] == #[+0]);
 assert(#{ a: NaN } == #{ a: NaN });
 assert(#[NaN] == #[NaN]);
+assert(#[1] != #["1"]);
 
 assert(!Object.is(#{ a: -0 }, #{ a: +0 }));
 assert(!Object.is(#[-0], #[+0]));
