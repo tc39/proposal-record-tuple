@@ -6,26 +6,111 @@
 
   <emu-clause id="sec-record-objects">
     <h1>Record Objects</h1>
-    <p>TBD</p>
     <emu-clause id="sec-record-constructor">
       <h1>The Record Constructor</h1>
-      <p>TBD</p>
+      <p>The Record constructor:</p>
+      <ul>
+        <li>is the intrinsic object <dfn>%record%</dfn>.</li>
+        <li>is the initial value of the *"Record"* property of the global object.</li>
+        <li>creates and initializes a new Record object when called as a function.</li>
+        <li>is not intended to be used with the `new` operator.</li>
+        <li>is designed to be subclassable. It may be used as the value of an `extends` clause of a class definition. Subclass constructors that intend to inherit the exotic Record behaviour must include a `super` call to the Record constructor to create and initialize the subclass instances with a [[RecordData]] internal slot.</li>
+      </ul>
       <emu-clause id="sec-record-constructor-record-value">
         <h1>Record ( _value_ )</h1>
         <p>TBD</p>
+      </emu-clause>
+    </emu-clause>
+    <emu-clause id="sec-properties-of-the-record-constructor">
+      <h1>Properties of the Record Constructor</h1>
+      <p>The Record constructor:</p>
+      <ul>
+        <li>has a [[Prototype]] internal slot whose value is %Record.prototype%.</li>
+        <li>has the following properties:</li>
+      </ul>
+      <emu-clause id="sec-record.isrecord">
+        <h1>Record.isRecord ()</h1>
+      </emu-clause>
+      <emu-clause id="sec-record.assign">
+        <h1>Record.assign ()</h1>
+      </emu-clause>
+      <emu-clause id="sec-record.entries">
+        <h1>Record.entries ()</h1>
+      </emu-clause>
+      <emu-clause id="sec-record.fromEntries">
+        <h1>Record.fromEntries ()</h1>
+      </emu-clause>
+      <emu-clause id="sec-record.keys">
+        <h1>Record.keys ()</h1>
+      </emu-clause>
+      <emu-clause id="sec-record.values">
+        <h1>Record.values ()</h1>
       </emu-clause>
     </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-tuple-objects">
     <h1>Tuple Objects</h1>
-    <p>TBD</p>
     <emu-clause id="sec-tuple-constructor">
       <h1>The Tuple Constructor</h1>
-      <p>TBD</p>
-      <emu-clause id="sec-tuple-constructor-tuple-value">
-        <h1>Tuple ( _value_ )</h1>
-        <p>TBD</p>
+      <p>The Tuple constructor:</p>
+      <ul>
+        <li>is the intrinsic object <dfn>%Tuple%</dfn>.</li>
+        <li>is the initial value of the *"Tuple"* property of the global object.</li>
+        <li>creates and initializes a new Tuple object when called as a function.</li>
+        <li>is not intended to be used with the `new` operator.</li>
+        <li>is designed to be subclassable. It may be used as the value of an `extends` clause of a class definition. Subclass constructors that intend to inherit the exotic Tuple behaviour must include a `super` call to the Tuple constructor to create and initialize the subclass instances with a [[TupleData]] internal slot.</li>
+      </ul>
+      <emu-clause id="sec-tuple-items">
+        <h1>Tuple ( ..._items_ )</h1>
+        <p>When the `Tuple` function is called, the following steps are taken:</p>
+        <emu-alg>
+          1. Let _elements_ be a List containing the arguments passed to this function.
+          1. Let _length_ to be the number of elements in _elements_.
+          1. Let _tuple_ be ? TupleCreate(_elements_)
+          1. Assert: The value of _tuple_'s *"length"* property is _length_.
+          1. Return _tuple_.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+    <emu-clause id="sec-properties-of-the-tuple-constructor">
+      <h1>Properties of the Tuple Constructor</h1>
+      <p>The Tuple constructor:</p>
+      <ul>
+        <li>has a [[Prototype]] internal slot whose value is %Tuple.prototype%.</li>
+        <li>has the following properties:</li>
+      </ul>
+      <emu-clause id="sec-tuple.from">
+        <h1>Tuple.from ( _items_ [ , _mapFn_ [, _thisArg_ ] ] )</h1>
+      </emu-clause>
+
+      <emu-clause id="sec-tuple.istuple">
+        <h1>Tuple.isTuple ( _arg_ )</h1>
+        <p>The *isTuple* function takes one argument _arg_, and performs the following steps:</p>
+        <emu-alg>
+          1. Return ? IsTuple(_arg_).
+        </emu-alg>
+      </emu-clause>
+      <emu-clause id="sec-tuple.of">
+        <h1>Tuple.of ( ..._items_ )</h1>
+        <p>The *of* method takes any number of arguments, and performs the following steps:</p>
+        <emu-alg>
+          1. Let _len_ be the actual number of arguments passed to this function.
+          1. Let _items_ be the List of arguments passed to this function.
+          1. Let _C_ be the *this* value.
+          1. If IsConstructor(_C_) is *true*, then
+            1. Let _A_ be ? Construct(_C_, &laquo; _len_ &raquo;).
+          1. Else,
+            1. Let _A_ be ? ArrayCreate(_len_).
+          1. Let _k_ be 0.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _kValue_ be _items_[_k_].
+            1. Let _Pk_ be ! ToString(_k_).
+            1. Perform ? CreateDataPropertyOrThrow(_A_, _Pk_, _kValue_).
+            1. Set _k_ to _k_ + 1.
+          1. Perform ? Set(_A_, *"length"*, _len_, *true*).
+          1. Return _A_.
+        </emu-alg>
       </emu-clause>
     </emu-clause>
   </emu-clause>
