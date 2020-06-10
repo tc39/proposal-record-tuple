@@ -50,6 +50,21 @@
         </emu-alg>
       </emu-clause>
 
+      <emu-clause id="sec-recordcreate" aoid="RecordCreate">
+        <h1>RecordCreate ( _value_ )</h1>
+        <p>This abstract operation RecordCreate takes a _value_ argument. It is used to specify the creation of new Record exotic objects. It performs the following steps when called:</p>
+        <emu-alg>
+            1. Assert: Type(_value_) is Record.
+            1. Let _R_ be ! MakeBasicObject(&laquo; [[RecordData]] &raquo;).
+            1. Set _R_.[[RecordData]] to _value_
+            1. Set _R_.[[GetOwnProperty]] as specified in <emu-xref href="#sec-record-exotic-objects-getownproperty-p"></emu-xref>.
+            1. Set _R_.[[DefineOwnProperty]] as specified in <emu-xref href="#sec-record-exotic-objects-defineownproperty-p-desc"></emu-xref>.
+            1. Set _R_.[[OwnPropertyKeys]] as specified in <emu-xref href="#sec-record-exotic-objects-ownpropertykeys"></emu-xref>.
+            1. Return _R_
+            
+        </emu-alg>
+      </emu-clause>
+
       <emu-clause id="sec-recordgetownproperty-r-p" aoid="RecordGetOwnProperty">
         <h1>RecordGetOwnProperty ( _R_, _P_ )</h1>
         <p>This abstract operation RecordGetOwnProperty takes arguments _R_ and _P_. It performs the following steps when called:</p>
