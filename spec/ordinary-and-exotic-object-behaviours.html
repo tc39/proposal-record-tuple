@@ -40,22 +40,33 @@
         <emu-alg>
           1. Let _keys_ be a new empty List.
           1. Let _rec_ be _R_.[[RecordData]].
-          1. Assert: Type(_rec_) is Rec.
-          1. TODO: will need to come back when what is in the internal slot is properly defined
+          1. Assert: Type(_rec_) is Record.
+          1. Let _len_ be the length of _rec_.
+          1. For each primitive data property _pdp_, do
+            1. Let _key_ be the String key value of _pdp_
+            1. Assert: Type(_key_) is String
+            1. Add _key_ to _keys_
+          1. Return _keys_
         </emu-alg>
       </emu-clause>
 
       <emu-clause id="sec-recordgetownproperty-r-p" aoid="RecordGetOwnProperty">
         <h1>RecordGetOwnProperty ( _R_, _P_ )</h1>
-        <p>This abstract operation RecordGetOwnProperty takes arguments _S_ and _P_. It performs the following steps when called:</p>
+        <p>This abstract operation RecordGetOwnProperty takes arguments _R_ and _P_. It performs the following steps when called:</p>
         <emu-alg>
             1. Assert: _R_ is an Object that has [[RecordData]] internal slot.
             1. Assert: Type(_P_) is String.
             1. Let _rec_ be _R_.[[RecordData]]
             1. Assert Type(rec) is Record
-            1. If _rec_ does not have value associated to the _P_ key, return *undefined*
-            1. TODO: next step is approximative, will need to come back when what is in the internal slot is properly defined
-            1. Let _resultPrim_ be the primitive value from _rec_ associated to the _P_ key in the Record value
+            1. Let _len_ be the length of _rec_.
+            1. Let _resultPrim_ be *undefined*
+            1. For each primitive data property _pdp_, do
+              1. Let _key_ be the String key value of _pdp_
+              1. Let _prim_ be the associated value of _pdp_
+              1. Assert: Type(_key_) is String
+              1. Assert: Type(_prim_) is not Object
+              1. If _key_ == _P_, let _resultPrim_ be _prim_
+            1. If _resultPrim_ is *undefined*, return *undefined*
             1. Return the PropertyDescriptor { [[Value]]: _resultPrim_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
         </emu-alg>
       </emu-clause>
