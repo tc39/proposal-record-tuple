@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<meta charset="utf8" />
+
+<emu-clause id="sec-ordinary-and-exotic-objects-behaviours">
+  <h1>Ordinary and Exotic Objects Behaviours</h1>
+
+  <emu-clause id="sec-built-in-exotic-object-internal-methods-and-slots">
+    <h1>Built-in Exotic Object Internal Methods and Slots</h1>
+    <emu-clause id="sec-record-exotic-objects">
+      <h1>Record Exotic Objects</h1>
+      <p>A Record object is an exotic object that encapsuates a Record value and exposes virtual string-indexed data properties corresponding to the individual keys set on the underlying Record value. All keys properties are non-writable and non-configurable.</p>
+
+      <p>An object is a <dfn id="record-exotic-object">Record exotic object</dfn> (or simply, a Record object) if its [[GetOwnPoperty]], [[DefineOwnProperty]], and [[OwnPropertyKeys]] internal methods.</p>
+
+      <p>Record exotic objects have the same internal slots as ordinary objects. They also have a [[RecordData]] internal slot.</p>
+
+
+      <emu-clause id="sec-record-exotic-objects-getownproperty-p">
+        <h1>[[GetOwnProperty]] ( _P_ )</h1>
+        <p>When the [[GetOwnProperty]] internal method of a Record exotic object _R_ is called with property key _P_, the following steps are taken:</p>
+        <emu-alg>
+          1. Assert: IsPropertyKey(_P_) is *true*.
+          1. If Type(_P_) is a Symbol, throw a *TypeError* exception.
+          1. Return ! RecordGetOwnProperty(_R_, _P_).
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-record-exotic-objects-defineownproperty-p-desc">
+        <h1>[[DefineOwnProperty]] ( _P_, _Desc_ )</h1>
+        <p>When the [[DefineOwnProperty]] internal method of a Record exotic object _R_ is called with property key _P_, and Property Descriptor _Desc_ the following steps are taken:</p>
+        <emu-alg>
+          1. Assert: IsPropertyKey(_P_) is *true*.
+          1. Throw a *TypeError* exception.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-record-exotic-objects-ownpropertykeys">
+        <h1>[[OwnPropertyKeys]] ( )</h1>
+        <p>When the [[OwnPropertyKeys]] internal method of a Record exotic object _R_ is called, the following steps are taken:</p>
+        <emu-alg>
+          1. Let _keys_ be a new empty List.
+          1. Let _rec_ be _R_.[[RecordData]].
+          1. Assert: Type(_rec_) is Rec.
+          1. TODO: will need to come back when what is in the internal slot is properly defined
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-recordgetownproperty-r-p" aoid="RecordGetOwnProperty">
+        <h1>RecordGetOwnProperty ( _R_, _P_ )</h1>
+        <p>This abstract operation RecordGetOwnProperty takes arguments _S_ and _P_. It performs the following steps when called:</p>
+        <emu-alg>
+            1. Assert: _R_ is an Object that has [[RecordData]] internal slot.
+            1. Assert: Type(_P_) is String.
+            1. Let _rec_ be _R_.[[RecordData]]
+            1. Assert Type(rec) is Record
+            1. If _rec_ does not have value associated to the _P_ key, return *undefined*
+            1. TODO: next step is approximative, will need to come back when what is in the internal slot is properly defined
+            1. Let _resultPrim_ be the primitive value from _rec_ associated to the _P_ key in the Record value
+            1. Return the PropertyDescriptor { [[Value]]: _resultPrim_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>
