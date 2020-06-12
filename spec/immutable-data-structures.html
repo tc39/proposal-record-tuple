@@ -323,7 +323,13 @@
         <p>The initial value of the *Tuple.prototype.lastIndexOf* is the *"lastIndexOf"* property of the intrinsic object %Array.prototype%.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.entries">
-        <h1>Tuple.prototype.entries ()</h1>
+        <h1>Tuple.prototype.entries ( )</h1>
+        <p>When the *entries* method is called, it returns an iterator over the entries of the tuple.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Return CreateTupleIterator(_T_, ~key+value~).
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.every">
         <h1>Tuple.prototype.every</h1>
@@ -345,7 +351,13 @@
         <p>The initial value of the *Tuple.prototype.forEach* is the *"forEach"* property of the intrinsic object %Array.prototype%.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.keys">
-        <h1>Tuple.prototype.keys ()</h1>
+        <h1>Tuple.prototype.keys ( )</h1>
+        <p>When the *keys* method is called, it returns an iterator over the keys of the tuple.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Return CreateTupleIterator(_T_, ~key~).
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.map">
         <h1>Tuple.prototype.map ()</h1>
@@ -382,12 +394,27 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.values">
         <h1>Tuple.prototype.values ()</h1>
+        <p>When the *values* method is called, it returns an iterator over the values of the tuple.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Return CreateTupleIterator(_T_, ~value~).
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype-@@iterator">
         <h1>Tuple.prototype [ @@iterator ] ()</h1>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.with">
-        <h1>Tuple.prototype.with ()</h1>
+        <h1>Tuple.prototype.with ( _index_, _value_ )</h1>
+        <p>When the *with* method is called with two arguments, it returns a new tuple with the element at index _index_ replaced with value _value_.</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          2. Let _list_ be CreateListFromTuple(_T_).
+          3. Let _length_ be the length of list _list_.
+          4. If _index_ &lt; 0 or _index_ >= _length_, throw a *TypeError* exception.
+          5. Set _list_[_index_] to _value_.
+          6. Return ? CreateTupleFromList(_list_).
+        </emu-alg>
       </emu-clause>
     </emu-clause>
   </emu-clause>
