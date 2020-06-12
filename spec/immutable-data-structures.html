@@ -56,7 +56,7 @@
         <emu-alg>
           1. Let _obj_ be ? ToObject(_O_)
           2. Let _nameList_ be ? EnumerableOwnPropertyNames(_obj_, ~key~).
-          3. Return TupleCreate(_nameList_).
+          3. Return CreateTupleFromList(_nameList_).
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-record.values">
@@ -65,7 +65,7 @@
         <emu-alg>
           1. Let _obj_ be ? ToObject(_O_)
           2. Let _nameList_ be ? EnumerableOwnPropertyNames(_obj_, ~value~).
-          3. Return TupleCreate(_nameList_).
+          3. Return CreateTupleFromList(_nameList_).
         </emu-alg>
       </emu-clause>
     </emu-clause>
@@ -108,7 +108,7 @@
           1. If NewTarget is not *undefined*, throw a *TypeError* exception.
           1. Let _elements_ be a List containing the arguments passed to this function.
           1. Let _length_ to be the number of elements in _elements_.
-          1. Let _tuple_ be ? TupleCreate(_elements_)
+          1. Let _tuple_ be ? CreateTupleFromList(_elements_)
           1. Assert: The value of _tuple_'s *"length"* property is _length_.
           1. Return _tuple_.
         </emu-alg>
@@ -140,7 +140,7 @@
                 1. Return ? IteratorClose(_iteratorRecord_, _error_).
               1. Let _next_ be ? IteratorStep(_iteratorRecord_).
               1. If _next_ is *false*, then
-                1. Return ? TupleCreate(_list_)
+                1. Return ? CreateTupleFromList(_list_)
               1. Let _nextValue_ be ? IteratorValue(_next_).
               1. If _mapping_ is *true*, then
                 1. Let _mappedValue_ be Call(_mapfn_, _thisArg_, &laquo; _nextValue_, _k_ &raquo;).
@@ -161,7 +161,7 @@
             1. Else, let _mappedValue_ be _kValue_.
             1. Append _mappedValue_ to _list_.
             1. Set _k_ to _k_ + 1.
-          1. Return ? TupleCreate(_list_)
+          1. Return ? CreateTupleFromList(_list_)
         </emu-alg>
       </emu-clause>
 
@@ -178,7 +178,7 @@
         <emu-alg>
           1. Let _elements_ be a List containing the arguments passed to this function.
           1. Let _length_ to be the number of elements in _elements_.
-          1. Let _tuple_ be ? TupleCreate(_elements_)
+          1. Let _tuple_ be ? CreateTupleFromList(_elements_)
           1. Assert: The value of _tuple_'s *"length"* property is _length_.
           1. Return _tuple_.
         </emu-alg>
