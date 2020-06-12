@@ -241,9 +241,32 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.reversed">
         <h1>Tuple.prototype.reversed ()</h1>
+        <p>When the *reversed* method is called, it returns a tuple containing the elements of the tuple, in reverse order.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _oldList_ be ? CreateListFromTuple(_T_)
+          1. Let _newList_ be a new empty List.
+          1. Repeat, while _oldList_ is not empty,
+            1. Remove the first element from _oldList_, and let _E_ be the value of the element.
+            1. Append _E_ to the end of list _newList_.
+          1. Return ? CreateTupleFromList(_newList_).
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.shifted">
         <h1>Tuple.prototype.shifted ()</h1>
+        <p>When the *shifted* method is called, it returns a tuple containing the elements of the tuple, except for the first value.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _list_ be ? CreateListFromTuple(_T_)
+          1. Let _length_ be the number of elements in _list_.
+          1. If _length_ is 0,
+            1. Return _T_.
+          1. Remove the first element of _list_.
+          1. Return ? CreateTupleFromList(_list_).
+        </emu-alg>
+
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.sorted">
         <h1>Tuple.prototype.sorted ()</h1>
@@ -330,6 +353,29 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.some">
         <h1>Tuple.prototype.some ()</h1>
+      </emu-clause>
+      <emu-clause id="sec-tuple.prototype.unshifted">
+        <h1>Tuple.prototype.unshifted ( ..._args_ )</h1>
+        <p>When the *unshifted* method is called, it returns a tuple containing the elements of the tuple, with the arguments to the function invocation prepended.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _argsList_ be a List containing the arguments passed to this function invocation.
+          1. Let _tupleList_ be ? CreateListFromTuple(_T_)
+          1. Let _list_ be a new empty List.
+          1. Let _n_ be 0.
+          1. Repeat, while _argsList_ is not empty,
+            1. If _n_ + 1 &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+            1. Remove the first element from _argsList_, and let _E_ be the value of the element.
+            1. Append _E_ to the end of list _list_.
+            1. Set _n_ to _n_ + 1.
+          1. Repeat, while _tupleList_ is not empty,
+            1. If _n_ + 1 &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+            1. Remove the first element from _tupleList_, and let _E_ be the value of the element.
+            1. Append _E_ to the end of list _list_.
+            1. Set _n_ to _n_ + 1.
+          1. Return ? CreateTupleFromList(_list_).
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.values">
         <h1>Tuple.prototype.values ()</h1>
