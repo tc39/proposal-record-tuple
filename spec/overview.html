@@ -44,22 +44,10 @@
   <emu-clause id="sec-terms-and-definitions">
     <h1>Terms and Definitions</h1>
 
-    <emu-clause id="sec-coumpound-primitive-value">
-      <h1>coumpound primimitive value</h1>
-      <p>
-        member of one of the types Record or Tuple as defined in clause <emu-xref href="#sec-ecmascript-data-types-and-values"></emu-xref>
-      </p>
-      <emu-note>
-        <p>
-          a coumpound primitive value can be represented as a collection of datums that are represented at the lowest level of the language implementation.
-        </p>
-      </emu-note>
-    </emu-clause>
     <emu-clause id="sec-record-value">
       <h1>Record value</h1>
       <p>
-        primitive value that is a structure mapping a set of string values to
-        any other primitive values
+        primitive value that is a sorted list of data. Each item of the list has a String value key and a primitive value and the list is itself sorted by key.
       </p>
       <emu-note>
         <p>
@@ -96,7 +84,7 @@
     <emu-clause id="sec-tuple-value">
       <h1>Tuple value</h1>
       <p>
-        primitive value that is a sequence of primitive values
+        primitive value that is an ordered sequence of primitive values
       </p>
       <emu-note>
         <p>

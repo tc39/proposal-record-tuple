@@ -7,15 +7,19 @@
 
     <emu-clause id="sec-ecmascript-language-types-record-type">
       <h1>The Record Type</h1>
-      <p>The Record type is a coumpound primitive type. It is an ordered collection of primitive data properties.</p>
-      <p>A <dfn>primitive data property</dfn> associates a String key value with a primitive value or a coumpound primitive value called associated value.</p>
-      <p>Properties are identified using String key values. A String property key value is strictly an ECMAScript String value.</p>
-      <p>The collection is ordered (TODO: define order used) using the String key values regardless of the associated value. Therefore, there can't be more than one associated value for a given String key.</p>
+      <p>
+        The Record type is the set of all sorted sequences of zero or more pairs of key and data up to a maximum length of 2<sup>53</sup> - 1 elements. Pairs have the form { [[Key]], [[Value]] }, where [[Key]] is a String and [[Value]] is any primitive (including Record and Tuple). Pairs are sorted by [[Key]] in code unit order. Operations which create Record values are responsible for setting this up appropriately. The List of pairs is never modified.
+      </p>
+      <p>
+        The Record type is used to represent the association of multiple primitive values together. Each pair is regarded as occupying a position within the sequence. These positions are indexed with nonnegative integers. The first pair (if any) is at index 0, the next element (if any) at index 1, and so on. The length of a Record is the number of pairs within it. The empty Record has length zero and therefore contains no elements.
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-ecmascript-language-types-tuple-type">
       <h1>The Tuple Type</h1>
-      <p>TBD</p>
+      <p>
+        The Tuple type is the set of all ordered sequences of zero or more primitive type values up to a maximum length of 2<sup>53</sup> - 1 elements. Those primitive type values can include record and tuple values. The Tuple type is used to represent a series of multiple primitive values together. Each element is regarded as occupying a position within the sequence. These positions are indexed with nonnegative integers. The first element (if any) is at index 0, the next element (if any) at index 1, and so on. The length of a Tuple is the number of elements (i.e., primitive values) within it. The empty Tuple has length zero and therefore contains no elements.
+      </p>
     </emu-clause>
   </emu-clause>
 </emu-clause>
