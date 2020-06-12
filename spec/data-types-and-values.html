@@ -15,8 +15,9 @@
         <h1>MakeRecordValue ( _keysList_, _valuesList_ )</h1>
         <p>This abstract operation MakeRecordValue takes a _keysList_ and a _valuesList_ argument. It is used to specify the creation of new Record value types. It performs the following steps when called:</p>
         <emu-alg>
-            1. Assert: Type(_keysList_) is a List of Strings.
-            1. Assert: Type(_valuesList_) is a List of primitive values.
+            1. Assert: _keysList_ is a List of Strings.
+            1. Assert: _valuesList_ is a List of primitive values.
+
             1. Assert: _valuesList_.length == _keysList_.length
             1. Let _L_ be an empty List.
             1. For each _i_ from 0 to _keysList_.length:
