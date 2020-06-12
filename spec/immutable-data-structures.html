@@ -12,7 +12,7 @@
       <ul>
         <li>is the intrinsic object <dfn>%Record%</dfn>.</li>
         <li>is the initial value of the *"Record"* property of the global object.</li>
-        <li>creates and initializes a new Record object when called as a function.</li>
+        <li>creates and initializes a new Record value when called as a function.</li>
         <li>is not intended to be used with the `new` operator or to be subclassed. It may be used as the value of an *extends* clause of a class definition but a *super* call to the Record constructor will cause an exception.</li>
       </ul>
       <emu-clause id="sec-record-constructor-record-value">
@@ -34,53 +34,40 @@
           1. Return ? IsRecord(_arg_).
         </emu-alg>
       </emu-clause>
-      <emu-clause id="sec-record.assign">
-        <h1>Record.assign ()</h1>
-        <p>TODO</p>
-      </emu-clause>
-      <emu-clause id="sec-record.entries">
-        <h1>Record.entries ()</h1>
-        <p>TODO</p>
-      </emu-clause>
-      <emu-clause id="sec-record.fromEntries">
-        <h1>Record.fromEntries ( _iterable_ )</h1>
-        <p>When the *fromEntries* method is called with argument _iterable_, the following steps are taken:</p>
-        <emu-alg>
-          1. Perform ? RequireObjectCoercible(_iterable_).
-          1. TODO: convert _iterable_ to List of Entries?
-        </emu-alg>
-      </emu-clause>
-      <emu-clause id="sec-record.keys">
-        <h1>Record.keys ( _O_ )</h1>
-        <p>When the *keys* function is called with argument _O_, the following steps are taken:</p>
-        <emu-alg>
-          1. Let _obj_ be ? ToObject(_O_)
-          2. Let _nameList_ be ? EnumerableOwnPropertyNames(_obj_, ~key~).
-          3. Return CreateTupleFromList(_nameList_).
-        </emu-alg>
-      </emu-clause>
-      <emu-clause id="sec-record.values">
-        <h1>Record.values ( _O_ )</h1>
-        <p>When the *values* function is called with argument _O_, the following steps are taken:</p>
-        <emu-alg>
-          1. Let _obj_ be ? ToObject(_O_)
-          2. Let _nameList_ be ? EnumerableOwnPropertyNames(_obj_, ~value~).
-          3. Return CreateTupleFromList(_nameList_).
-        </emu-alg>
+      <emu-clause id="sec-record.prototype">
+        <h1>Record.prototype</h1>
+        <p>The initial vlaue of *Record.prototype* is %Record.prototype%</p>
+        <p>This property has the attributes { [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false }.</p>
       </emu-clause>
     </emu-clause>
     <emu-clause id="sec-properties-of-the-record-prototype-object">
       <h1>Properties of the Record Prototype Object</h1>
       <p>The record prototype object:</p>
       <ul>
+        <li>is the intrinsic object <dfn>%Record.prototype%</dfn></li>
         <li>is an ordinary object.</li>
         <li>is not a Record object; it does not have a [[RecordData]] internal slot.</li>
         <li>has a [[Prototype]] internal slot whose value is the value *null*.</li>
       </ul>
-      <p>TODO: this entire section</p>
+      <p>The abstract operation <dfn id="sec-thisrecordvalue" aoid="thisRecordValue">thisRecordValue</dfn> takes argument _value_. It performs the following steps when called:</p>
+      <emu-alg>
+        1. If Type(_value_) is Record, return _value_.
+        1. If Type(_value_) is Object and _value_ has a [[RecordData]] internal slot, then
+          1. Let _r_ be _value_.[[RecordData]].
+          1. Assert: Type(_r_) is Record.
+          1. Return _r_.
+        1. Throw a *TypeError* exception.
+      </emu-alg>
       <emu-clause id="sec-record.prototype.constructor">
         <h1>Record.prototype.constructor</h1>
         <p>The initial value of *Record.prototype.constructor* is the intrinsic object %Record%</p>
+      </emu-clause>
+      <emu-clause id="sec-record.prototype.valueof">
+        <h1>Record.prototype.valueOf ( )</h1>
+        <p>When the `valueOf` function is called, the following steps are taken:</p>
+        <emu-alg>
+          1. Return ? thisRecordValue(*this* value)
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-record.prototype-@@toStringTag">
         <h1>Record.prototype [ @@toStringTag ]</h1>
@@ -121,6 +108,13 @@
         <li>has a [[Prototype]] internal slot whose value is %Tuple.prototype%.</li>
         <li>has the following properties:</li>
       </ul>
+      <emu-clause id="sec-tuple.istuple">
+        <h1>Tuple.isTuple ( _arg_ )</h1>
+        <p>The *isTuple* function takes one argument _arg_, and performs the following steps:</p>
+        <emu-alg>
+          1. Return ? IsTuple(_arg_).
+        </emu-alg>
+      </emu-clause>
       <emu-clause id="sec-tuple.from">
         <h1>Tuple.from ( _items_ [ , _mapFn_ [, _thisArg_ ] ] )</h1>
         <p>When the `from` method is called with argument _items_ and optional arguments _mapfn_ and _thisArg_, the following steps are taken:</p>
@@ -164,14 +158,6 @@
           1. Return ? CreateTupleFromList(_list_)
         </emu-alg>
       </emu-clause>
-
-      <emu-clause id="sec-tuple.istuple">
-        <h1>Tuple.isTuple ( _arg_ )</h1>
-        <p>The *isTuple* function takes one argument _arg_, and performs the following steps:</p>
-        <emu-alg>
-          1. Return ? IsTuple(_arg_).
-        </emu-alg>
-      </emu-clause>
       <emu-clause id="sec-tuple.of">
         <h1>Tuple.of ( ..._items_ )</h1>
         <p>The *of* method takes any number of arguments, and performs the following steps:</p>
@@ -183,6 +169,11 @@
           1. Return _tuple_.
         </emu-alg>
       </emu-clause>
+      <emu-clause id="sec-tuple.prototype">
+        <h1>Tuple.prototype</h1>
+        <p>The initial vlaue of *Tuple.prototype* is %Tuple.prototype%</p>
+        <p>This property has the attributes { [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false }.</p>
+      </emu-clause>
     </emu-clause>
     <emu-clause id="sec-properties-of-the-tuple-prototype-object">
       <h1>Properties of the Tuple Prototype Object</h1>
@@ -192,45 +183,80 @@
         <li>is not a Tuple object; it does not have a [[TupleData]] internal slot.</li>
         <li>has a [[Prototype]] internal slot whose value is the value *null*.</li>
       </ul>
-      <p>TODO: this entire section</p>
+      <p>The abstract operation <dfn id="sec-thistuplevalue" aoid="thisTupleValue">thisTupleValue</dfn> takes argument _value_. It performs the following steps when called:</p>
+      <emu-alg>
+        1. If Type(_value_) is Tuple, return _value_.
+        1. If Type(_value_) is Object and _value_ has a [[TupleData]] internal slot, then
+          1. Let _t_ be _value_.[[TupleValue]].
+          1. Assert: Type(_t_) is Tuple.
+          1. Return _t_.
+        1. Throw a *TypeError* exception.
+      </emu-alg>
       <emu-clause id="sec-tuple.prototype.constructor">
         <h1>Tuple.prototype.constructor</h1>
         <p>The initial value of *Tuple.prototype.constructor* is the intrinsic object %Tuple%</p>
+      </emu-clause>
+      <emu-clause id="sec-tuple.prototype.valueof">
+        <h1>Tuple.prototype.valueOf ( )</h1>
+        <p>When the `valueOf` function is called, the following steps are taken:</p>
+        <emu-alg>
+          1. Return ? thisTupleValue(*this* value)
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype-@@toStringTag">
         <h1>Tuple.prototype [ @@toStringTag ]</h1>
         <p>The initial value of the *Tuple.prototype[@@toStringTag]* is the String value *"Tuple"*.</p>
         <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
       </emu-clause>
-      <emu-clause id="sec-tuple.prototype.pop">
-        <h1>Tuple.prototype.pop ()</h1>
-      </emu-clause>
       <emu-clause id="sec-tuple.prototype.popped">
         <h1>Tuple.prototype.popped ()</h1>
-      </emu-clause>
-      <emu-clause id="sec-tuple.prototype.push">
-        <h1>Tuple.prototype.push ()</h1>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.pushed">
         <h1>Tuple.prototype.pushed ()</h1>
       </emu-clause>
-      <emu-clause id="sec-tuple.prototype.reverse">
-        <h1>Tuple.prototype.reverse ()</h1>
-      </emu-clause>
-      <emu-clause id="sec-tuple.prototype.shift">
-        <h1>Tuple.prototype.shift ()</h1>
+      <emu-clause id="sec-tuple.prototype.reversed">
+        <h1>Tuple.prototype.reversed ()</h1>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.shifted">
         <h1>Tuple.prototype.shifted ()</h1>
       </emu-clause>
-      <emu-clause id="sec-tuple.prototype.sort">
-        <h1>Tuple.prototype.sort ()</h1>
+      <emu-clause id="sec-tuple.prototype.sorted">
+        <h1>Tuple.prototype.sorted ()</h1>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.splice">
         <h1>Tuple.prototype.splice ()</h1>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.concat">
-        <h1>Tuple.prototype.concat ()</h1>
+        <h1>Tuple.prototype.concat ( ..._args_ )</h1>
+        <p>When the *concat* method is called with zero or more arguments, it returns a tuple containing the elements of the tuple followed by the elements of each argument in order.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _list_ be a new empty List.
+          1. Let _n_ be 0.
+          1. Let _items_ be a List whose first element is _T_ and whose subsequent element are, in left to right order, the arguments that were passed to this function invocation.
+          1. Repeat, while _items_ is not empty,
+            1. Remove the first element from _items_ and let _E_ be the value of the element.
+            1. Let _spreadable_ be ? IsConcatSpreadable(_E_).
+            1. If _spreadable_ is *true*, then
+              1. Let _k_ be 0.
+              1. Let _len_ be ? LengthOfArrayLike(_E_).
+              1. If _n_ + _len_ &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+              1. Repeat, while _k_ &lt; _len_,
+                1. Let _P_ be ! ToString(_k_).
+                1. Let _exists_ be ? HasProperty(_E_, _P_).
+                1. If _exists_ is *true*, then
+                  1. Let _subElement_ be ? Get(_E_, _P_).
+                  1. Append _subElement_ to the end of list _list_.
+                1. Set _n_ to _n_ + 1.
+                1. Set _k_ to _k_ + 1.
+            1. Else,
+              1. NOTE: _E_ is added as a single item rather than spread.
+              1. If _n_ &ge; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+              1. Append _E_ to the end of list _list_.
+              1. Set _n_ to _n_ + 1.
+          1. Return ? CreateTupleFromList(_list_).
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.includes">
         <h1>Tuple.prototype.includes ()</h1>
