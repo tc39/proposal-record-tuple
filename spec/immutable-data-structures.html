@@ -269,13 +269,74 @@
         </emu-alg>
 
       </emu-clause>
+      <emu-clause id="sec-tuple.prototype.sliced">
+        <h1>Tuple.prototype.sliced ( _start_, _end_ )</h1>
+        <p>When the `sliced` method is called with two arguments, _start_ and _end_, and returns a tuple containing the elements of the tuple from element _start_ up to, but not including, element _end_ (or through the end of the tuple if _end_ is *undefined*). If _start_ is negative, it is treated as <emu-eqn>_length_ + _start_</emu-eqn> where _length_ is the length of the tuple. If _end_ is negative, it is treated as <emu-eqn>_length_ + _end_</emu-eqn> where _length_ is the length of the tuple.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _list_ be ? CreateListFromTuple(_T_)
+          1. Let _len_ be the number of elements in _list_.
+          1. Let _relativeStart_ be ? ToInteger(_start_).
+          1. If _relativeStart_ &lt; 0, let _k_ be max((_len_ + _relativeStart_), 0); else let _k_ be min(_relativeStart_, _len_).
+          1. If _end_ is *undefined*, let _relativeEnd_ be _len_; else let _relativeEnd_ be ? ToInteger(_end_).
+          1. If _relativeEnd_ &lt; 0, let _final_ be max((_len_ + _relativeEnd_), 0); else let _final_ be min(_relativeEnd_, _len_).
+          1. Let _count_ be max(_final_ - _k_, 0).
+          1. Let _newList_ be a new empty List.
+          1. Let _n_ be 0.
+          1. Repeat, while _k_ &lt; _final_,
+            1. Let _kValue_ be _list_[_k_].
+            1. Append _kValue_ to the end of _newList_.
+            1. Set _k_ to _k_ + 1.
+            1. Set _n_ to _n_ + 1.
+          1. Return ? CreateTupleFromList(_newList_).
+        </emu-alg>
+      </emu-clause>
       <emu-clause id="sec-tuple.prototype.sorted">
         <h1>Tuple.prototype.sorted ()</h1>
         <p>TODO</p>
       </emu-clause>
-      <emu-clause id="sec-tuple.prototype.splice">
-        <h1>Tuple.prototype.splice ()</h1>
-        <p>TODO</p>
+      <emu-clause id="sec-tuple.prototype.spliced">
+        <h1>Tuple.prototype.spliced ( _start_, _deleteCount_, ..._items_ )</h1>
+        <p>When the `spliced` method is called with two or more arguments _start_, _deleteCount_ and zero or more _items_, a new tuple is returned where the _deleteCount_ elements of the tuple starting at integer index _start_ are replaced by the arguments _items_.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _list_ be ? CreateListFromTuple(_T_)
+          1. Let _len_ be the number of elements in _list_.
+          1. Let _relativeStart_ be ? ToInteger(_start_).
+          1. If _relativeStart_ &lt; 0, let _actualStart_ be max((_len_ + _relativeStart_), 0); else let _actualStart_ be min(_relativeStart_, _len_).
+          1. If the number of actual arguments is 0, then
+            1. Let _insertCount_ be 0.
+            1. Let _actualDeleteCount_ be 0.
+          1. Else if the number of actual arguments is 1, then
+            1. Let _insertCount_ be 0.
+            1. Let _actualDeleteCount_ be _len_ - _actualStart_.
+          1. Else,
+            1. Let _insertCount_ be the number of actual arguments minus 2.
+            1. Let _dc_ be ? ToInteger(_deleteCount_).
+            1. Let _actualDeleteCount_ be min(max(_dc_, 0), _len_ - _actualStart_).
+          1. If _len_ + _insertCount_ - _actualDeleteCount_ &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+          1. Let _k_ be 0.
+          1. Let _items_ be a List whose elements are, in left to right order, the portion of the actual argument list starting with the third argument. The list is empty if fewer than three arguments were passed.
+          1. Let _itemCount_ be the number of elements in _items_.
+          1. Let _newList_ be a new empty List.
+          1. Repeat, while _k_ &lt; _actualStart_,
+            1. Let _E_ be _list_[_k_].
+            1. Append _E_ to the end of list _newList_.
+            1. Set _k_ to _k_ + 1.
+          1. Let _itemK_ be 0.
+          1. Repeat, while _itemK_ &lt; _itemCount_.
+            1. Let _E_ be _items_[_itemK_].
+            1. Append _E_ to the end of _newList_.
+            1. Set _itemK_ to _itemK_ + 1.
+          1. Set _k_ to _actualStart_ + _actualDeleteCount_.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _E_ be _list_[_k_].
+            1. Append _E_ to the end of _newList_.
+            1. Set _k_ to _k_ + 1.
+          1. Return ? CreateTupleFromList(_newList_).
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.concat">
         <h1>Tuple.prototype.concat ( ..._args_ )</h1>
