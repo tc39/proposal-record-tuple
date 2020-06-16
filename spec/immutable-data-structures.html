@@ -517,7 +517,7 @@
           1. Let _T_ be ? thisTupleValue(*this* value).
           2. Let _list_ be CreateListFromTuple(_T_).
           3. Let _length_ be the length of list _list_.
-          4. If _index_ &lt; 0 or _index_ >= _length_, throw a *TypeError* exception.
+          4. If _index_ &lt; 0 or _index_ >= _length_, throw a *RangeError* exception.
           5. Set _list_[_index_] to _value_.
           6. Return ? CreateTupleFromList(_list_).
         </emu-alg>
