@@ -36,7 +36,7 @@
           1. If _Desc_.[[Writable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
-          1. If _Desc_.[[Value]] is present, return SameValueZero(_Desc_.[[Value]], _current_.[[Value]]).
+          1. If _Desc_.[[Value]] is present, return SameValue(_Desc_.[[Value]], _current_.[[Value]]).
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -49,8 +49,8 @@
           1. Let _rec_ be _R_.[[RecordData]].
           1. Assert: Type(_rec_) is Record.
           1. Let _len_ be the length of _rec_.
-          1. For each primitive data property _pdp_, do
-            1. Let _key_ be the String key value of _pdp_
+          1. For each pair _p_ of _rec_.[[Fields]], do
+            1. Let _key_ be _p_.[[Key]]
             1. Assert: Type(_key_) is String
             1. Add _key_ to _keys_
           1. Return _keys_
@@ -82,9 +82,9 @@
             1. Assert Type(rec) is Record
             1. Let _len_ be the length of _rec_.
             1. Let _resultPrim_ be ~empty~
-            1. For each primitive data property _pdp_, do
-              1. Let _key_ be the String key value of _pdp_
-              1. Let _prim_ be the associated value of _pdp_
+            1. For each pair _p_ of _rec_.[[Fields]], do
+              1. Let _key_ be _p_.[[Key]]
+              1. Let _prim_ be _p_.[[Value]]
               1. Assert: Type(_key_) is String
               1. Assert: Type(_prim_) is not Object
               1. If _key_ == _P_, let _resultPrim_ be _prim_

@@ -8,15 +8,12 @@
     <emu-clause id="sec-ecmascript-language-types-record-type">
       <h1>The Record Type</h1>
       <p>
-        The Record type is the set of all sorted sequences of zero or more pairs of key and data up to a maximum length of 2<sup>53</sup> - 1 elements. Pairs have the form { [[Key]], [[Value]] }, where [[Key]] is a String and [[Value]] is any primitive (including Record and Tuple). Pairs are sorted by [[Key]] in code unit order. Operations which create Record values are responsible for setting this up appropriately. The List of pairs is never modified.
-      </p>
-      <p>
-        The Record type is used to represent the association of multiple primitive values together. Each pair is regarded as occupying a position within the sequence. These positions are indexed with nonnegative integers. The first pair (if any) is at index 0, the next element (if any) at index 1, and so on. The length of a Record is the number of pairs within it. The empty Record has length zero and therefore contains no elements.
-      </p>
+        The Record type is the set of all finite mappings from Strings to ECMAScript primitive values including Record and Tuple. Each record value holds an associated [[Fields]] List value which is a list of pairs of the form { [[Key]], [[Value]] } where the [[Key]] is a String and [[Value]] is any primitive value. Entries of [[Fields]] are sorted by [[Key]] in code unit order. The [[Fields]] List and its entries are never modified.
+     </p>
 
-      <emu-clause id="sec-recordtypecreate" aoid="RecordTypeCreate">
-        <h1>RecordTypeCreate ( _keysList_, _valuesList_ )</h1>
-        <p>This abstract operation RecordTypeCreate takes a _keysList_ and a _valuesList_ argument. It is used to specify the creation of new Record value types. It performs the following steps when called:</p>
+      <emu-clause id="sec-makerecordvalue" aoid="MakeRecordValue">
+        <h1>MakeRecordValue ( _keysList_, _valuesList_ )</h1>
+        <p>This abstract operation MakeRecordValue takes a _keysList_ and a _valuesList_ argument. It is used to specify the creation of new Record value types. It performs the following steps when called:</p>
         <emu-alg>
             1. Assert: Type(_keysList_) is a List of Strings.
             1. Assert: Type(_valuesList_) is a List of primitive values.
@@ -25,7 +22,7 @@
             1. For each _i_ from 0 to _keysList_.length:
               1. Add { [[Key]]: _keysList_[_i_], [[Value]]: _valuesList_[_i_] } to _L_
             1. Sort _L_ by [[Key]] using code unit order
-            1. Return _L_
+            1. Return a new Record value whose [[Fields]] value is _L_
         </emu-alg>
       </emu-clause>
     </emu-clause>
@@ -33,7 +30,7 @@
     <emu-clause id="sec-ecmascript-language-types-tuple-type">
       <h1>The Tuple Type</h1>
       <p>
-        The Tuple type is the set of all ordered sequences of zero or more primitive type values up to a maximum length of 2<sup>53</sup> - 1 elements. Those primitive type values can include record and tuple values. The Tuple type is used to represent a series of multiple primitive values together. Each element is regarded as occupying a position within the sequence. These positions are indexed with nonnegative integers. The first element (if any) is at index 0, the next element (if any) at index 1, and so on. The length of a Tuple is the number of elements (i.e., primitive values) within it. The empty Tuple has length zero and therefore contains no elements.
+        The Tuple type is the set of all finite and ordered sequences of ECMAScript primitive values including Record and Tuple. Each tuple value holds an associated [[Sequence]] List which is a list of primitive values. Each element of [[Sequence]] is regarded as occupying a position within the sequence. These positions are indexed with nonnegative integers. The first element (if any) is at index 0, the next element (if any) at index 1, and so on. The length of a Tuple is the number of elements (i.e., primitive values) within it. The empty Tuple has a [[Sequence]] of length zero and therefore contains no elements.
       </p>
     </emu-clause>
   </emu-clause>
