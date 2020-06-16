@@ -415,7 +415,6 @@
           1. Let _newList_ be a new empty List.
           1. Let _k_ be 0.
           1. Repeat, while _k_ &lt; _len_,
-            1. Let _Pk_ be ! ToString(_k_).
             1. Let _kValue_ be _list_[_k_].
             1. Let _selected_ be ! ToBoolean(? Call(_callbackfn_, _thisArg_, &laquo; _kValue_, _k_, _T_ &raquo;)).
             1. If _selected_ is *true*, then
@@ -446,8 +445,27 @@
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.map">
-        <h1>Tuple.prototype.map ()</h1>
-        <p>TODO</p>
+        <h1>Tuple.prototype.map ( _callbackfn_ [ , _thisArg_ ] )</h1>
+        <emu-note>
+          <p>_callbackfn_ should be a function that accepts three arguments. `map` calls _callbackfn_ once for each element in the tuple, in ascending order, and constructs a new tuple from the results. </p>
+          <p>If a _thisArg_ parameter is provided, it will be used as the *this* value for each invocation of _callbackfn_. If it is not provided, *undefined* is used instead.</p>
+          <p>_callbackfn_ is called with three arguments: the value of the element, the index of the element, and the tuple being traversed.</p>
+        </emu-note>
+        <p>When the `map` method is called with one or two arguments, the following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _list_ be ? CreateListFromTuple(_T_)
+          1. Let _len_ be the number of elements in _list_.
+          1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
+          1. Let _newList_ be a new empty List.
+          1. Let _k_ be 0.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _kValue_ be _list_[_k_].
+            1. Let _mappedValue_ be ? Call(_callbackfn_, _thisArg_, &laquo; _kValue_, _k_, _T_ &raquo;).
+            1. Append _mappedValue_ to the end of list _newList_.
+            1. Set _k_ to _k_ + 1.
+          1. Return ? CreateTupleFromList(_newList_).
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.reduceRight">
         <h1>Tuple.prototype.reduceRight ()</h1>
