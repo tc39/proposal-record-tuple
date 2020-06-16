@@ -17,13 +17,14 @@
         <emu-alg>
             1. Assert: _keysList_ is a List of Strings.
             1. Assert: _valuesList_ is a List of primitive values.
-
             1. Assert: _valuesList_.length == _keysList_.length
-            1. Let _L_ be an empty List.
+            1. Let _entries_ be an empty List.
             1. For each _i_ from 0 to _keysList_.length:
-              1. Add { [[Key]]: _keysList_[_i_], [[Value]]: _valuesList_[_i_] } to _L_
-            1. Sort _L_ by [[Key]] using code unit order
-            1. Return a new Record value whose [[Fields]] value is _L_
+              1. Add { [[Key]]: _keysList_[_i_], [[Value]]: _valuesList_[_i_] } to _entries_
+            1. Let _sortedEntries_ be a new List containing the same values as the list _entries_ where the values are ordered as if an Array of the same values had been sorted using `Array.prototype.sort` using *undefined* as _comparefn_.
+            1. Let _R_ be an empty Record
+            1. Set _R_.[[Field]] to _sortedEntries_
+            1. Return _R_
         </emu-alg>
       </emu-clause>
     </emu-clause>
