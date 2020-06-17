@@ -391,8 +391,8 @@
         <p>When the *entries* method is called, it returns an iterator over the entries of the tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
-          1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Return CreateTupleIterator(_T_, ~key+value~).
+          1. Let _O_ be ? ToObject(*this* value).
+          1. Return CreateArrayIterator(_O_, ~key+value~).
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.every">
@@ -440,8 +440,8 @@
         <p>When the *keys* method is called, it returns an iterator over the keys of the tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
-          1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Return CreateTupleIterator(_T_, ~key~).
+          1. Let _O_ be ? ToObject(*this* value).
+          1. Return CreateArrayIterator(_O_, ~key~).
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.map">
@@ -502,8 +502,8 @@
         <p>When the *values* method is called, it returns an iterator over the values of the tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
-          1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Return CreateTupleIterator(_T_, ~value~).
+          1. Let _O_ be ? ToObject(*this* value).
+          1. Return CreateArrayIterator(_O_, ~value~).
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype-@@iterator">
@@ -521,110 +521,6 @@
           1. Set _list_[_index_] to _value_.
           1. Return ? CreateTupleFromList(_list_).
         </emu-alg>
-      </emu-clause>
-    </emu-clause>
-    <emu-clause id="sec-tuple-iterator-objects">
-      <h1>Tuple Iterator Objects</h1>
-      <p>A Tuple Iterator is an object, that represents a specific iteration over some specific Tuple instance object. There is not a named constructor for Tuple Iterator objects. Instead, Tuple iterator objects are created by calling certain methods of Tuple instance objects.</p>
-
-      <emu-clause id="sec-createtupleiterator" aoid="CreateTupleIterator">
-        <h1>CreateTupleIterator ( _tuple_, _kind_ )</h1>
-        <p>The abstract operation CreateTupleIterator takes arguments _tuple_ and _kind_. This operation is used to create iterator objects for Tuple methods that return such iterators. It performs the following steps when called:</p>
-        <emu-alg>
-          1. Assert: Type(_Tuple_) is Tuple.
-          1. Assert: _kind_ is ~key+value~, ~key~, or ~value~.
-          1. Let _iterator_ be OrdinaryObjectCreate(%TupleIteratorPrototype%, &laquo; [[IteratedTuple]], [[TupleNextIndex]], [[TupleIterationKind]] &raquo;).
-          1. Set _iterator_.[[IteratedTuple]] to _tuple_.
-          1. Set _iterator_.[[TupleNextIndex]] to 0.
-          1. Set _iterator_.[[TupleIterationKind]] to _kind_.
-          1. Return _iterator_.
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-%tupleiteratorprototype%-object">
-        <h1>The %TupleIteratorPrototype% Object</h1>
-        <p>The <dfn>%TupleIteratorPrototype%</dfn> object:</p>
-        <ul>
-          <li>has properties that are inherited by all Tuple Iterator Objects.</li>
-          <li>is an ordinary object.</li>
-          <li>has a [[Prototype]] internal slot whose value is %IteratorPrototype%.</li>
-          <li>has the following properties:</li>
-        </ul>
-
-        <emu-clause id="sec-%tupleiteratorprototype%.next">
-          <h1>%TupleIteratorPrototype%.next ( )</h1>
-          <emu-alg>
-            1. Let _O_ be the *this* value.
-            1. If Type(_O_) is not Object, throw a *TypeError* exception.
-            1. If _O_ does not have all of the internal slots of an Tuple Iterator Instance (<emu-xref href="#sec-properties-of-tuple-iterator-instances"></emu-xref>), throw a *TypeError* exception.
-            1. Let _t_ be _O_.[[IteratedTuple]].
-            1. If _t_ is *undefined*, return CreateIterResultObject(*undefined*, *true*).
-            1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
-            1. Let _index_ be _O_.[[TupleNextIndex]].
-            1. Let _itemKind_ be _O_.[[TupleIterationKind]].
-            1. Let _len_ be the length of list _list_.
-            1. If _index_ &ge; _len_, then
-              1. Set _O_.[[IteratedTuple]] to *undefined*.
-              1. Return CreateIterResultObject(*undefined*, *true*).
-            1. Set _O_.[[TupleNextIndex]] to _index_ + 1.
-            1. If _itemKind_ is ~key~, return CreateIterResultObject(_index_, *false*).
-            1. Let _elementValue_ be _list_[_index_].
-            1. If _itemKind_ is ~value~, let _result_ be _elementValue_.
-            1. Else,
-              1. Assert: _itemKind_ is ~key+value~.
-              1. Let _result_ be ! CreateTupleFromList(&laquo; _index_, _elementValue_ &raquo;).
-            1. Return CreateIterResultObject(_result_, *false*).
-          </emu-alg>
-        </emu-clause>
-
-        <emu-clause id="sec-%tupleiteratorprototype%-@@tostringtag">
-          <h1>%TupleIteratorPrototype% [ @@toStringTag ]</h1>
-          <p>The initial value of the @@toStringTag property is the String value *"Tuple Iterator"*.</p>
-          <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
-        </emu-clause>
-      </emu-clause>
-
-      <emu-clause id="sec-properties-of-tuple-iterator-instances">
-        <h1>Properties of Tuple Iterator Instances</h1>
-        <p>Tuple Iterator instances are ordinary objects that inherit properties from the %TupleIteratorPrototype% intrinsic object. Tuple Iterator instances are initially created with the internal slots listed in <emu-xref href="#table-48"></emu-xref>.</p>
-        <emu-table id="table-48" caption="Internal Slots of Tuple Iterator Instances">
-          <table>
-            <tbody>
-            <tr>
-              <th>
-                Internal Slot
-              </th>
-              <th>
-                Description
-              </th>
-            </tr>
-            <tr>
-              <td>
-                [[IteratedTuple]]
-              </td>
-              <td>
-                The tuple that is being iterated.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                [[TupleNextIndex]]
-              </td>
-              <td>
-                The integer index of the next element to be examined by this iterator.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                [[TupleIterationKind]]
-              </td>
-              <td>
-                A String value that identifies what is returned for each element of the iteration. The possible values are: ~key~, ~value~, ~key+value~.
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </emu-table>
       </emu-clause>
     </emu-clause>
   </emu-clause>
