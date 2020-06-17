@@ -36,44 +36,9 @@
       </emu-clause>
       <emu-clause id="sec-record.prototype">
         <h1>Record.prototype</h1>
-        <p>The initial value of *Record.prototype* is %Record.prototype%</p>
+        <p>The initial value of *Record.prototype* is the value *null*.</p>
 
         <p>This property has the attributes { [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false }.</p>
-      </emu-clause>
-    </emu-clause>
-    <emu-clause id="sec-properties-of-the-record-prototype-object">
-      <h1>Properties of the Record Prototype Object</h1>
-      <p>The record prototype object:</p>
-      <ul>
-        <li>is the intrinsic object <dfn>%Record.prototype%</dfn></li>
-        <li>is an ordinary object.</li>
-        <li>is not a Record object; it does not have a [[RecordData]] internal slot.</li>
-        <li>has a [[Prototype]] internal slot whose value is the value *null*.</li>
-      </ul>
-      <p>The abstract operation <dfn id="sec-thisrecordvalue" aoid="thisRecordValue">thisRecordValue</dfn> takes argument _value_. It performs the following steps when called:</p>
-      <emu-alg>
-        1. If Type(_value_) is Record, return _value_.
-        1. If Type(_value_) is Object and _value_ has a [[RecordData]] internal slot, then
-          1. Let _r_ be _value_.[[RecordData]].
-          1. Assert: Type(_r_) is Record.
-          1. Return _r_.
-        1. Throw a *TypeError* exception.
-      </emu-alg>
-      <emu-clause id="sec-record.prototype.constructor">
-        <h1>Record.prototype.constructor</h1>
-        <p>The initial value of *Record.prototype.constructor* is the intrinsic object %Record%</p>
-      </emu-clause>
-      <emu-clause id="sec-record.prototype.valueof">
-        <h1>Record.prototype.valueOf ( )</h1>
-        <p>When the `valueOf` function is called, the following steps are taken:</p>
-        <emu-alg>
-          1. Return ? thisRecordValue(*this* value)
-        </emu-alg>
-      </emu-clause>
-      <emu-clause id="sec-record.prototype-@@toStringTag">
-        <h1>Record.prototype [ @@toStringTag ]</h1>
-        <p>The initial value of the *Record.prototype[@@toStringTag]* is the String value *"Record"*.</p>
-        <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
       </emu-clause>
     </emu-clause>
   </emu-clause>
