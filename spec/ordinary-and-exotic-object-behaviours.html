@@ -10,7 +10,7 @@
       <h1>Record Exotic Objects</h1>
       <p>A Record object is an exotic object that encapsuates a Record value and exposes virtual string-indexed data properties corresponding to the individual keys set on the underlying Record value. All keys properties are non-writable and non-configurable.</p>
 
-      <p>An object is a <dfn id="record-exotic-object">Record exotic object</dfn> (or simply, a Record object) if its [[GetOwnPoperty]], [[DefineOwnProperty]], and [[OwnPropertyKeys]] internal methods.</p>
+      <p>An object is a <dfn id="record-exotic-object">Record exotic object</dfn> (or simply, a Record object) if its [[GetOwnPoperty]], [[DefineOwnProperty]], and [[OwnPropertyKeys]] internal methods use the following implementations, and its other essential internal methods use the definitions found in <emu-xref href="#sec-ordinary-object-internal-methods-and-internal-slots"></emu-xref>. These methods are installed in RecordCreate.</p>
 
       <p>Record exotic objects have the same internal slots as ordinary objects. They also have a [[RecordData]] internal slot.</p>
 
@@ -20,7 +20,7 @@
         <p>When the [[GetOwnProperty]] internal method of a Record exotic object _R_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, throw a *TypeError* exception.
+          1. If Type(_P_) is a Symbol, return *undefined*.
           1. Return ! RecordGetOwnProperty(_R_, _P_).
         </emu-alg>
       </emu-clause>
@@ -33,7 +33,7 @@
           1. Let _current_ be ? _R_.[[GetOwnProperty]](_P_).
           1. If _current_ is *undefined* return *false*.
           1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
-          1. If _Desc_.[[Writable]] is present and has value *false*, return *false*.
+          1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
           1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
           1. If _Desc_.[[Value]] is present, return SameValue(_Desc_.[[Value]], _current_.[[Value]]).
@@ -86,7 +86,7 @@
               1. Let _prim_ be _p_.[[Value]]
               1. Assert: Type(_key_) is String
               1. Assert: Type(_prim_) is not Object
-              1. If _key_ == _P_, let _resultPrim_ be _prim_
+              1. If SameValue(_key_, _P_), let _resultPrim_ be _prim_
             1. If _resultPrim_ is ~empty~, return *undefined*
             1. Return the PropertyDescriptor { [[Value]]: _resultPrim_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
         </emu-alg>
