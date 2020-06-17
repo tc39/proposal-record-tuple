@@ -73,7 +73,9 @@
         <h1>[[Get]] ( _P_, _Receiver_ )</h1>
         <p>When the [[Get]] internal method of a Record exotic object _R_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
         <emu-alg>
-          1. TODO
+          1. Let _ownProperty_ be ? RecordGetOwnProperty( _R_, _P_ ).
+          1. If _ownProperty_ is *undefined*, return *undefined*.
+          1. Return _ownProperty_.[[Value]].
         </emu-alg>
       </emu-clause>
 
