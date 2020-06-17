@@ -247,7 +247,7 @@
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
+          1. Let _list_ be _T_'s [[Sequence]] value.
           1. Let _len_ be the number of elements in _list_.
           1. Let _relativeStart_ be ? ToInteger(_start_).
           1. If _relativeStart_ &lt; 0, let _k_ be max((_len_ + _relativeStart_), 0); else let _k_ be min(_relativeStart_, _len_).
@@ -275,7 +275,7 @@
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
+          1. Let _list_ be _T_'s [[Sequence]] value.
           1. Let _len_ be the number of elements in _list_.
           1. Let _relativeStart_ be ? ToInteger(_start_).
           1. If _relativeStart_ &lt; 0, let _actualStart_ be max((_len_ + _relativeStart_), 0); else let _actualStart_ be min(_relativeStart_, _len_).
@@ -385,7 +385,7 @@
         <p>When the `filter` method is called with one or two arguments, the following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
+          1. Let _list_ be _T_'s [[Sequence]] value.
           1. Let _len_ be the number of elements in _list_.
           1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
           1. Let _newList_ be a new empty List.
@@ -430,7 +430,7 @@
         <p>When the `map` method is called with one or two arguments, the following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
+          1. Let _list_ be _T_'s [[Sequence]] value.
           1. Let _len_ be the number of elements in _list_.
           1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
           1. Let _newList_ be a new empty List.
