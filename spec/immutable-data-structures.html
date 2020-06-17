@@ -61,7 +61,9 @@
           1. If NewTarget is not *undefined*, throw a *TypeError* exception.
           1. Let _elements_ be a List containing the arguments passed to this function.
           1. Let _length_ to be the number of elements in _elements_.
-          1. Let _tuple_ be ? CreateTupleFromList(_elements_)
+          1. For each element _e_ of _elements_,
+            1. If Type(_e_) is Object, throw a *TypeError* exception.
+          1. Let _tuple_ be a new Tuple value whose [[Sequence]] is _elements_.
           1. Assert: The value of _tuple_'s *"length"* property is _length_.
           1. Return _tuple_.
         </emu-alg>
@@ -100,13 +102,14 @@
                 1. Return ? IteratorClose(_iteratorRecord_, _error_).
               1. Let _next_ be ? IteratorStep(_iteratorRecord_).
               1. If _next_ is *false*, then
-                1. Return ? CreateTupleFromList(_list_)
+                1. Return a new Tuple value whose [[Sequence]] is _list_.
               1. Let _nextValue_ be ? IteratorValue(_next_).
               1. If _mapping_ is *true*, then
                 1. Let _mappedValue_ be Call(_mapfn_, _thisArg_, &laquo; _nextValue_, _k_ &raquo;).
                 1. If _mappedValue_ is an abrupt completion, return ? IteratorClose(_iteratorRecord_, _mappedValue_).
                 1. Set _mappedValue_ to _mappedValue_.[[Value]].
               1. Else, let _mappedValue_ be _nextValue_.
+              1. If Type(_mappedValue_) is Object, throw a *TypeError* exception.
               1. Append _mappedValue_ to _list_.
               1. Set _k_ to _k_ + 1.
           1. NOTE: _items_ is not an Iterable so assume it is an array-like object.
@@ -119,9 +122,10 @@
             1. If _mapping_ is *true*, then
               1. Let _mappedValue_ be ? Call(_mapfn_, _thisArg_, &laquo; _kValue_, _k_ &raquo;).
             1. Else, let _mappedValue_ be _kValue_.
+            1. If Type(_mappedValue_) is Object, throw a *TypeError* exception.
             1. Append _mappedValue_ to _list_.
             1. Set _k_ to _k_ + 1.
-          1. Return ? CreateTupleFromList(_list_)
+          1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.of">
@@ -130,7 +134,9 @@
         <emu-alg>
           1. Let _elements_ be a List containing the arguments passed to this function.
           1. Let _length_ to be the number of elements in _elements_.
-          1. Let _tuple_ be ? CreateTupleFromList(_elements_)
+          1. For each element _e_ of _elements_,
+            1. If Type(_e_) is Object, throw a *TypeError* exception.
+          1. Let _tuple_ be a new Tuple value whose [[Sequence]] is _elements_.
           1. Assert: The value of _tuple_'s *"length"* property is _length_.
           1. Return _tuple_.
         </emu-alg>
@@ -185,7 +191,7 @@
           1. If _length_ is 0,
             1. Return _T_.
           1. Remove the last element of _list_.
-          1. Return ? CreateTupleFromList(_list_).
+          1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.pushed">
@@ -200,9 +206,10 @@
           1. Repeat, while _argsList_ is not empty,
             1. Remove the first element from _argsList_, and let _E_ be the value of the element.
             1. If _n_ + 1 &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+            1. If Type(_E_) is Object, throw a *TypeError* exception.
             1. Append _E_ to the end of list _list_.
             1. Set _n_ to _n_ + 1.
-          1. Return ? CreateTupleFromList(_list_).
+          1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.reversed">
@@ -216,7 +223,7 @@
           1. Repeat, while _oldList_ is not empty,
             1. Remove the first element from _oldList_, and let _E_ be the value of the element.
             1. Append _E_ to the end of list _newList_.
-          1. Return ? CreateTupleFromList(_newList_).
+          1. Return a new Tuple value whose [[Sequence]] is _newList_.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.shifted">
@@ -230,7 +237,7 @@
           1. If _length_ is 0,
             1. Return _T_.
           1. Remove the first element of _list_.
-          1. Return ? CreateTupleFromList(_list_).
+          1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
 
       </emu-clause>
@@ -251,10 +258,11 @@
           1. Let _n_ be 0.
           1. Repeat, while _k_ &lt; _final_,
             1. Let _kValue_ be _list_[_k_].
+            1. If Type(_kValue_) is Object, throw a *TypeError* exception.
             1. Append _kValue_ to the end of _newList_.
             1. Set _k_ to _k_ + 1.
             1. Set _n_ to _n_ + 1.
-          1. Return ? CreateTupleFromList(_newList_).
+          1. Return a new Tuple value whose [[Sequence]] is _newList_.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.sorted">
@@ -293,6 +301,7 @@
           1. Let _itemK_ be 0.
           1. Repeat, while _itemK_ &lt; _itemCount_.
             1. Let _E_ be _items_[_itemK_].
+            1. If Type(_E_) is Object, throw a *TypeError* exception.
             1. Append _E_ to the end of _newList_.
             1. Set _itemK_ to _itemK_ + 1.
           1. Set _k_ to _actualStart_ + _actualDeleteCount_.
@@ -300,7 +309,7 @@
             1. Let _E_ be _list_[_k_].
             1. Append _E_ to the end of _newList_.
             1. Set _k_ to _k_ + 1.
-          1. Return ? CreateTupleFromList(_newList_).
+          1. Return a new Tuple value whose [[Sequence]] is _newList_.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.concat">
@@ -324,15 +333,17 @@
                 1. Let _exists_ be ? HasProperty(_E_, _P_).
                 1. If _exists_ is *true*, then
                   1. Let _subElement_ be ? Get(_E_, _P_).
+                  1. If Type(_subElement_) is Object, throw a *TypeError* exception.
                   1. Append _subElement_ to the end of list _list_.
                 1. Set _n_ to _n_ + 1.
                 1. Set _k_ to _k_ + 1.
             1. Else,
               1. NOTE: _E_ is added as a single item rather than spread.
               1. If _n_ &ge; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+              1. If Type(_E_) is Object, throw a *TypeError* exception.
               1. Append _E_ to the end of list _list_.
               1. Set _n_ to _n_ + 1.
-          1. Return ? CreateTupleFromList(_list_).
+          1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.includes">
@@ -385,7 +396,7 @@
             1. If _selected_ is *true*, then
               1. Append _kValue_ to the end of list _newList_.
             1. Set _k_ to _k_ + 1.
-          1. Return ? CreateTupleFromList(_newList_).
+          1. Return a new Tuple value whose [[Sequence]] is _newList_.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.find">
@@ -427,9 +438,10 @@
           1. Repeat, while _k_ &lt; _len_,
             1. Let _kValue_ be _list_[_k_].
             1. Let _mappedValue_ be ? Call(_callbackfn_, _thisArg_, &laquo; _kValue_, _k_, _T_ &raquo;).
+            1. If Type(_mappedValue_) is Object, throw a *TypeError* exception.
             1. Append _mappedValue_ to the end of list _newList_.
             1. Set _k_ to _k_ + 1.
-          1. Return ? CreateTupleFromList(_newList_).
+          1. Return a new Tuple value whose [[Sequence]] is _newList_.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.reduceRight">
@@ -452,6 +464,7 @@
           1. Repeat, while _argsList_ is not empty,
             1. If _n_ + 1 &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.
             1. Remove the first element from _argsList_, and let _E_ be the value of the element.
+            1. If Type(_E_) is Object, throw a *TypeError* exception.
             1. Append _E_ to the end of list _list_.
             1. Set _n_ to _n_ + 1.
           1. Repeat, while _tupleList_ is not empty,
@@ -459,7 +472,7 @@
             1. Remove the first element from _tupleList_, and let _E_ be the value of the element.
             1. Append _E_ to the end of list _list_.
             1. Set _n_ to _n_ + 1.
-          1. Return ? CreateTupleFromList(_list_).
+          1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.values">
@@ -483,8 +496,9 @@
           1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
           1. Let _length_ be the length of list _list_.
           1. If _index_ &lt; 0 or _index_ >= _length_, throw a *RangeError* exception.
+          1. If Type(_value_) is Object, throw a *TypeError* exception.
           1. Set _list_[_index_] to _value_.
-          1. Return ? CreateTupleFromList(_list_).
+          1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
       </emu-clause>
     </emu-clause>
