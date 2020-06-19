@@ -16,8 +16,20 @@
         <li>is not intended to be used with the `new` operator or to be subclassed. It may be used as the value of an *extends* clause of a class definition but a *super* call to the Record constructor will cause an exception.</li>
       </ul>
       <emu-clause id="sec-record-constructor-record-value">
-        <h1>Record ( _value_ )</h1>
-        <p>TODO</p>
+        <h1>Record ( _arg_ )</h1>
+        <p>When the `Record` function is called, the following steps are taken:</p>
+        <emu-alg>
+          1. If NewTarget is not *undefined*, throw a *TypeError* exception.
+          1. Let _obj_ be ? ToObject(_arg_).
+          1. Let _nameList_ be ? EnumerableOwnPropertyNames(_obj_, ~key~).
+          1. Let _fields_ be a new empty List.
+          1. For each element _name_ of _nameList_,
+            1. Let _value_ be ? GetV(_obj_, _name_).
+            1. If Type(_value_) is Object, throw a *TypeError* exception.
+            1. Let _field_ be { [[Key]]: _name_, [[Value]]: _value_ }.
+            1. Append _field_ to the end of list _fields_.
+          1. Return a new Record value whose [[Fields]] is _fields_.
+        </emu-alg>
       </emu-clause>
     </emu-clause>
     <emu-clause id="sec-properties-of-the-record-constructor">
@@ -27,6 +39,32 @@
         <li>has a [[Prototype]] internal slot whose value is %Record.prototype%.</li>
         <li>has the following properties:</li>
       </ul>
+      <emu-clause id="sec-record.fromentries">
+        <h1>Record.fromEntries ( _iterable_ )</h1>
+        <p>The *fromEntries* function takes one argument _iterable_, and performs the following steps:</p>
+        <emu-alg>
+          1. Perform ? RequireObjectCoercible(_iterable_).
+          1. Let _fields_ be a new empty List.
+          1. Let _iteratorRecord_ be ? GetIterator(_iterable_).
+          1. Repeat,
+            1. Let _next_ be ? IteratorStep(_iteratorRecord_).
+            1. If _next_ is *false*,
+              1. Return a new Record whose [[Fields]] is _fields_.
+            1. Let _nextItem_ be ? IteratorValue(_next_).
+            1. If Type(_nextItem_) is not Object, then
+              1. Let _error_ be ThrowCompletion(a newly created *TypeError* object).
+              1. Return ? IteratorClose(_iteratorRecord_, _error_).
+            1. Let _k_ be Get(_nextItem_, *"0"*).
+            1. If _k_ is an abrupt completion, return ? IteratorClose(_iteratorRecord_, _k_).
+            1. Let _v_ be Get(_nextItem_, *"1"*).
+            1. If _v_ is an abrupt completion, return ? IteratorClose(_iteratorRecord_, _v_).
+            1. Let _field_ be { [[Key]]: _k_, [[Value]]: _v_ }.
+            1. Append _field_ to the end of list _fields_.
+        </emu-alg>
+        <emu-note>
+          <p>The parameter _iterable_ is expected to be an object that implements an @@iterator method that returns an iterator object that produces a two element array-like object whose first element is a value that will be used as a Map key and whose second element is the value to associate with that key.</p>
+        </emu-note>
+      </emu-clause>
       <emu-clause id="sec-record.isrecord">
         <h1>Record.isRecord ( _arg_ )</h1>
         <p>The *isRecord* function takes one argument _arg_, and performs the following steps:</p>
