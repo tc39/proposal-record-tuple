@@ -21,10 +21,11 @@
         <emu-alg>
           1. If NewTarget is not *undefined*, throw a *TypeError* exception.
           1. Let _obj_ be ? ToObject(_arg_).
-          1. Let _nameList_ be ? EnumerableOwnPropertyNames(_obj_, ~key~).
+          1. Let _props_ be ? EnumerableOwnPropertyNames(_obj_, ~key+value~).
           1. Let _fields_ be a new empty List.
-          1. For each element _name_ of _nameList_,
-            1. Let _value_ be ? GetV(_obj_, _name_).
+          1. For each element _prop_ of _props_,
+            1. Let _name_ be ? GetV(_obj_, `"0"`).
+            1. Let _value_ be ? GetV(_obj_, `"1"`).
             1. If Type(_value_) is Object, throw a *TypeError* exception.
             1. Let _field_ be { [[Key]]: _name_, [[Value]]: _value_ }.
             1. Append _field_ to the end of list _fields_.
