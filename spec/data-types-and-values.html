@@ -12,22 +12,38 @@
      </p>
 
       <emu-clause id="sec-makerecordvalue" aoid="MakeRecordValue">
-        <h1>MakeRecordValue ( _keysList_, _valuesList_ )</h1>
-        <p>This abstract operation MakeRecordValue takes a _keysList_ and a _valuesList_ argument. It is used to specify the creation of new Record value types. It performs the following steps when called:</p>
+        <h1>MakeRecordValue ( _entries_ )</h1>
+        <p>This abstract operation MakeRecordValue takes a _entries_ argument. It is used to specify the creation of new Record value types. It performs the following steps when called:</p>
         <emu-alg>
-            1. Assert: _keysList_ is a List of Strings.
-            1. Assert: _valuesList_ is a List of primitive values.
-            1. Assert: _valuesList_.length == _keysList_.length
-            1. Let _entries_ be an empty List.
-            1. For each _i_ from 0 to _keysList_.length:
-              1. Add { [[Key]]: _keysList_[_i_], [[Value]]: _valuesList_[_i_] } to _entries_
-            1. Let _sortedEntries_ be a new List containing the same values as the list _entries_ where the values are ordered as if an Array of the same values had been sorted using `Array.prototype.sort` using *undefined* as _comparefn_.
+            1. Assert: _entries_ is a List.
+            1. Let _uniqueEntries_ be an empty Set.
+            1. For each _kv_ in _entries_:
+              1. Assert: _kv_.[[Key]] is a String.
+              1. Assert: _kv_.[[Value]] is a primitive type.
+              1. For each _existing_ in _uniqueEntries_:
+                1. If SameValue(_existing_.[[Key]], _kv_.[[Key]]
+                  1. Remove _existing_ from _uniqueEntries_
+                  1. Break
+              1. Add _kv_ to _uniqueEntries_
+            1. Let _sortedEntries_ be a new List containing the same values as the list _entries_ where the values are ordered as if an Array of the same values had been sorted using `Array.prototype.sort` using <emu-xref href="#sec-recordentrycompare">RecordEntryCompare</emu-xref> as _comparefn_.
             1. Let _R_ be an empty Record
             1. Set _R_.[[Field]] to _sortedEntries_
             1. Return _R_
         </emu-alg>
       </emu-clause>
     </emu-clause>
+    
+    <emu-clause id="sec-recordentrycompare" aoid="RecordEntryCompare">
+      <h1>RecordEntryCompare ( _kv1_, _kv2_ )</h1>
+      <p>This abstract operation RecordEntryCompare takes a _kv1 and _kv2_ argument. It is used to sort record entries when creating a record. It performs the following steps when called:</p>
+      <emu-alg>
+          1. Assert: _kv1_.[[Key]] is a String.
+          1. Assert: _kv2_.[[Key]] is a String.
+          1. Return SortCompare(_kv1_.[[Key]], _kv2_.[[Key]])
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
 
     <emu-clause id="sec-ecmascript-language-types-tuple-type">
       <h1>The Tuple Type</h1>
