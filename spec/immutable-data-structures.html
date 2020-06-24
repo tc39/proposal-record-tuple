@@ -47,25 +47,16 @@
           1. Perform ? RequireObjectCoercible(_iterable_).
           1. Let _fields_ be a new empty List.
           1. Let _iteratorRecord_ be ? GetIterator(_iterable_).
-          1. Let _stepsDefine_ be the algorithm steps defined in <emu-xref href="#sec-append-record-field-to-list-functions" title></emu-xref>.
-          1. Let _adder_ be ! CreateBuiltinFunction(_stepsDefine_, &laquo; &raquo;).
-          1. Perform ! AddEntriesFromIterable(_fields_, _iterable_, _adder_).
+          1. Let _adder_ be a new Abstract Closure with parameters (_key_, _value_) that captures _fields_ and performs the following steps when called:
+            1. If Type(_value_) is Object, throw a *TypeError* exception.
+            1. Let _field_ be { [[Key]]: _key_, [[Value]]: _value_ }.
+            1. Append _field_ to the end of list _fields_.
+          1. Perform ! AddEntriesFromIterable(`undefined`, _iterable_, _adder_).
           1. Return a new Record value whose [[Fields]] is _fields_.
         </emu-alg>
         <emu-note>
           <p>The parameter _iterable_ is expected to be an object that implements an @@iterator method that returns an iterator object that produces a two element array-like object whose first element is a value that will be used as a Map key and whose second element is the value to associate with that key.</p>
         </emu-note>
-      </emu-clause>
-      <emu-clause id="sec-append-record-field-to-list-functions">
-        <h1>AppendRecordFieldToList Functions</h1>
-        <p>An AppendRecordFieldToList function is an anonymous built-in function. When an AppendRecordFieldtoList function is called with arguments _key_ and _value_, the following steps are taken:</p>
-        <emu-alg>
-            1. Let _list_ be the *this* value.
-            1. Assert: Type(_list_) is List.
-            1. If Type(_value_) is Object, throw a *TypeError* exception.
-            1. Let _field_ be { [[Key]]: _key_, [[Value]]: _value_ }.
-            1. Append _field_ to the end of list _list_.
-        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-record.isrecord">
         <h1>Record.isRecord ( _arg_ )</h1>
