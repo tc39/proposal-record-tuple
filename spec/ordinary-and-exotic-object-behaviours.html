@@ -202,7 +202,13 @@
         <p>When the [[GetOwnProperty]] internal method of a Tuple exotic object _T_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. TODO (https://tc39.es/ecma262/#sec-integer-indexed-exotic-objects-getownproperty-p)
+          1. If Type(_P_) is a String, then
+            1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
+            1. If _numericIndex_ is not *undefined*, then
+              1. Let _value_ be ? TupleGet(_T_, _numericIndex_)
+              1. If _value_ is *undefined*, return *undefined*.
+              1. Return the PropertyDescriptor { [[Value]]: _value_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
+          1. Return *undefined*
         </emu-alg>
       </emu-clause>
 
@@ -254,6 +260,44 @@
         <p>When the [[OwnPropertyKeys]] internal method of a Record exotic object _R_ is called, the following steps are taken:</p>
         <emu-alg>
           1. TODO (https://tc39.es/ecma262/#sec-integer-indexed-exotic-objects-ownpropertykeys)
+        </emu-alg>
+      </emu-clause>
+
+      
+      <emu-clause id="sec-tuplecreate" aoid="TupleCreate">
+        <h1>TupleCreate ( _value_ )</h1>
+        <p>This abstract operation TupleCreate takes a _value_ argument. It is used to specify the creation of new Tuple exotic objects. It performs the following steps when called:</p>
+        <emu-alg>
+            1. Assert: Type(_value_) is a Tuple.
+            1. Assert: Type(_value_.[[Sequence]]) is a List.
+            1. Let _T_ be ! MakeBasicObject(&laquo; [[TupleData]] &raquo;).
+            1. Set _T_'s essential internal methods to the definitions specified in <emu-xref href="#sec-tuple-exotic-objects"></emu-xref>.
+            1. Set _T_.[[Prototype]] to *null*.
+            1. Set _T_.[[TupleData]] to _value_.
+            1. OrdinaryPreventExtensions(_T_).
+            1. Return _T_
+            
+        </emu-alg>
+      </emu-clause>
+      
+      <emu-clause id="sec-tuplehasproperty-r-p" aoid="TupleHasProperty">
+        <h1>TupleHasProperty ( _T_, _P_ )</h1>
+        <p>This abstract operation TupleHasProperty takes arguments _T_ and _P_. It performs the following steps when called:</p>
+        <emu-alg>
+          1. Assert: IsPropertyKey(_P_) is *true*.
+          1. If Type(_P_) is a Symbol, return *false*.
+          1. TODO
+        </emu-alg>
+      </emu-clause>
+      
+      <emu-clause id="sec-tupleget-r-p" aoid="TupleGet">
+        <h1>TupleGet ( _T_, _P_ )</h1>
+        <p>This abstract operation TupleGet takes arguments _T_ and _P_. It performs the following steps when called:</p>
+        <emu-alg>
+          1. Assert: _T_ is an Object that has [[TupleData]] internal slot.
+          1. Assert: Type(_P_) is a String.
+          1. Let _tup_ be _T_.[[TupleData]].
+          1. TODO
         </emu-alg>
       </emu-clause>
     </emu-clause>
