@@ -6,7 +6,9 @@
     "prebuild:spec": "mkdirp out",
     "prewatch:spec": "mkdirp out",
     "build:spec": "ecmarkup spec.html out/index.html",
-    "watch:spec": "ecmarkup --watch spec.html out/index.html"
+    "watch:spec": "ecmarkup --watch spec.html out/index.html",
+    "watch:browser": "browser-sync start --server --ss=\"out\" --directory --files=\"out/*.html\"",
+    "watch": "concurrently npm:watch:spec npm:watch:browser"
   },
   "repository": {
     "type": "git",
@@ -19,7 +21,9 @@
   },
   "homepage": "https://github.com/tc39/proposal-record-tuple#readme",
   "dependencies": {
-    "ecmarkup": "^3.16.0",
+    "browser-sync": "^2.26.7",
+    "concurrently": "^5.2.0",
+    "ecmarkup": "^3.23.0",
     "mkdirp": "^0.5.1"
   }
 }
