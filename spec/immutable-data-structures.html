@@ -46,7 +46,6 @@
         <emu-alg>
           1. Perform ? RequireObjectCoercible(_iterable_).
           1. Let _fields_ be a new empty List.
-          1. Let _iteratorRecord_ be ? GetIterator(_iterable_).
           1. Let _adder_ be a new Abstract Closure with parameters (_key_, _value_) that captures _fields_ and performs the following steps when called:
             1. If Type(_value_) is Object, throw a *TypeError* exception.
             1. Let _field_ be { [[Key]]: _key_, [[Value]]: _value_ }.
@@ -122,34 +121,25 @@
         <p>When the `from` method is called with argument _items_ and optional arguments _mapfn_ and _thisArg_, the following steps are taken:</p>
         <emu-alg>
           1. If _mapfn_ is *undefined*, let _mapping_ be *false*.
-          1. Let _list_ be a new empty List.
           1. Else,
             1. If IsCallable(_mapfn_) is *false*, throw a *TypeError* exception.
             1. Let _mapping_ be *true*.
+          1. Let _list_ be a new empty List.
+          1. Let _k_ be 0.
           1. Let _usingIterator_ be ? GetMethod(_items_, @@iterator).
           1. If _usingIterator_ is not *undefined*, then
-            1. Let _iteratorRecord_ be ? GetIterator(_items_, ~sync~, _usingIterator_).
-            1. Let _k_ be 0.
-            1. Repeat,
-              1. If _k_ &ge; 2<sup>53</sup> - 1, then
-                1. Let _error_ be ThrowCompletion(a newly created *TypeError* object).
-                1. Return ? IteratorClose(_iteratorRecord_, _error_).
-              1. Let _next_ be ? IteratorStep(_iteratorRecord_).
-              1. If _next_ is *false*, then
-                1. Return a new Tuple value whose [[Sequence]] is _list_.
-              1. Let _nextValue_ be ? IteratorValue(_next_).
+            1. Let _adder_ be a new Abstract Closure with parameters (_key_, _value_) that captures (_list_, _mapFn_, _thisArg_, _mapping_, _k_) and performs the following steps when called:
               1. If _mapping_ is *true*, then
-                1. Let _mappedValue_ be Call(_mapfn_, _thisArg_, &laquo; _nextValue_, _k_ &raquo;).
-                1. If _mappedValue_ is an abrupt completion, return ? IteratorClose(_iteratorRecord_, _mappedValue_).
-                1. Set _mappedValue_ to _mappedValue_.[[Value]].
-              1. Else, let _mappedValue_ be _nextValue_.
+                1. Let _mappedValue_ be ? Call(_mapfn_, _thisArg_, &laquo; _value_, _k_ &raquo;).
+              1. Else, let _mappedValue_ be _value_.
               1. If Type(_mappedValue_) is Object, throw a *TypeError* exception.
               1. Append _mappedValue_ to _list_.
               1. Set _k_ to _k_ + 1.
+            1. Perform ! AddEntriesFromIterable(`undefined`, _iterable_, _adder_).
+            1. Return a new Tuple value whose [[Sequence]] is _list_.
           1. NOTE: _items_ is not an Iterable so assume it is an array-like object.
           1. Let _arrayLike_ be ! ToObject(_items_).
           1. Let _len_ be ? LengthOfArrayLike(_arrayLike_).
-          1. Let _k_ be 0.
           1. Repeat, while _k_ &lt; _len_,
             1. Let _Pk_ be ! ToString(_k_).
             1. Let _kValue_ be ? Get(_arrayLike_, _Pk_).
