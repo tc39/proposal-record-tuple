@@ -48,8 +48,22 @@
     <emu-clause id="sec-ecmascript-language-types-tuple-type">
       <h1>The Tuple Type</h1>
       <p>
-        The Tuple type is the set of all finite and ordered sequences of ECMAScript primitive values including Record and Tuple. Each tuple value holds an associated [[Sequence]] List which is a list of primitive values. The [[Sequence]] List is integer-indexed.
+        The Tuple type is the set of all finite and ordered sequences of ECMAScript primitive values including Record and Tuple. Each tuple value holds an associated [[Sequence]] List which is a list of primitive values. The [[Sequence]] List is integer-indexed. The [[Sequence]] List and its values are never modified.
       </p>
     </emu-clause>
+
+    <emu-clause id="sec-maketuplevalue" aoid="MakeTupleValue">
+      <h1>MakeTupleValue ( _values_ )</h1>
+      <p>This abstract operation MakeTupleValue takes a _values_ argument. It is used to specify the creation of new Tuple value types. It performs the following steps when called:</p>
+      <emu-alg>
+          1. Assert: _values_ is a List.
+          1. For each _value_ in _values_:
+            1. Assert: _value_ is a primitive type.
+          1. Let _T_ be an empty Tuple
+          1. Set _T_.[[Sequence]] to _values_
+          1. Return _T_
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
   </emu-clause>
 </emu-clause>
