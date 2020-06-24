@@ -71,7 +71,9 @@
         <h1>Record.isRecord ( _arg_ )</h1>
         <p>The *isRecord* function takes one argument _arg_, and performs the following steps:</p>
         <emu-alg>
-          1. Return ? IsRecord(_arg_).
+          1. If Type(_arg_) is Record, return `true`.
+          1. If Type(_arg_) is Object and _arg_ has a [[RecordData]] internal slot, return `true`.
+          1. Return `false`.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-record.prototype">
@@ -119,7 +121,9 @@
         <h1>Tuple.isTuple ( _arg_ )</h1>
         <p>The *isTuple* function takes one argument _arg_, and performs the following steps:</p>
         <emu-alg>
-          1. Return ? IsTuple(_arg_).
+          1. If Type(_arg_) is Tuple, return `true`.
+          1. If Type(_arg_) is Object and _arg_ has a [[TupleData]] internal slot, return `true`.
+          1. Return `false`.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.from">
