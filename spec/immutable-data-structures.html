@@ -235,7 +235,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.reversed">
         <h1>Tuple.prototype.reversed ()</h1>
-        <p>When the *reversed* method is called, it returns a tuple containing the elements of the tuple, in reverse order.</p>
+        <p>When the *reversed* method is called, it returns a Tuple containing the elements of the Tuple, in reverse order.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
@@ -249,7 +249,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.shifted">
         <h1>Tuple.prototype.shifted ()</h1>
-        <p>When the *shifted* method is called, it returns a tuple containing the elements of the tuple, except for the first value.</p>
+        <p>When the *shifted* method is called, it returns a Tuple containing the elements of the Tuple, except for the first value.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
@@ -264,7 +264,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.sliced">
         <h1>Tuple.prototype.sliced ( _start_, _end_ )</h1>
-        <p>When the `sliced` method is called with two arguments, _start_ and _end_, and returns a tuple containing the elements of the tuple from element _start_ up to, but not including, element _end_ (or through the end of the tuple if _end_ is *undefined*). If _start_ is negative, it is treated as <emu-eqn>_length_ + _start_</emu-eqn> where _length_ is the length of the tuple. If _end_ is negative, it is treated as <emu-eqn>_length_ + _end_</emu-eqn> where _length_ is the length of the tuple.</p>
+        <p>When the `sliced` method is called with two arguments, _start_ and _end_, and returns a Tuple containing the elements of the Tuple from element _start_ up to, but not including, element _end_ (or through the end of the tuple if _end_ is *undefined*). If _start_ is negative, it is treated as <emu-eqn>_length_ + _start_</emu-eqn> where _length_ is the length of the tuple. If _end_ is negative, it is treated as <emu-eqn>_length_ + _end_</emu-eqn> where _length_ is the length of the tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
@@ -288,7 +288,7 @@
       </emu-clause>
       <emu-clause id="sec-array.prototype.sort">
         <h1>Tuple.prototype.sorted ( _comparefn_ )</h1>
-        <p>A new tuple the elements from the original tuple is returned, where the elements are sorted. The sort must be stable (that is, elements that compare equal must remain in their original order). If _comparefn_ is not *undefined*, it should be a function that accepts two arguments _x_ and _y_ and returns a negative value if _x_ &lt; _y_, zero if _x_ = _y_, or a positive value if _x_ &gt; _y_.</p>
+        <p>A new Tuple the elements from the original Tuple is returned, where the elements are sorted. The sort must be stable (that is, elements that compare equal must remain in their original order). If _comparefn_ is not *undefined*, it should be a function that accepts two arguments _x_ and _y_ and returns a negative value if _x_ &lt; _y_, zero if _x_ = _y_, or a positive value if _x_ &gt; _y_.</p>
         <p>Upon entry, the following steps are performed to initialize evaluation of the `sorted` function:</p>
         <emu-alg>
           1. If _comparefn_ is not *undefined* and IsCallable(_comparefn_) is *false*, throw a *TypeError* exception.
@@ -342,7 +342,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.spliced">
         <h1>Tuple.prototype.spliced ( _start_, _deleteCount_, ..._items_ )</h1>
-        <p>When the `spliced` method is called with two or more arguments _start_, _deleteCount_ and zero or more _items_, a new tuple is returned where the _deleteCount_ elements of the tuple starting at integer index _start_ are replaced by the arguments _items_.</p>
+        <p>When the `spliced` method is called with two or more arguments _start_, _deleteCount_ and zero or more _items_, a new Tuple is returned where the _deleteCount_ elements of the Tuple starting at integer index _start_ are replaced by the arguments _items_.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
@@ -385,7 +385,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.concat">
         <h1>Tuple.prototype.concat ( ..._args_ )</h1>
-        <p>When the *concat* method is called with zero or more arguments, it returns a tuple containing the elements of the tuple followed by the elements of each argument in order.</p>
+        <p>When the *concat* method is called with zero or more arguments, it returns a Tuple containing the elements of the Tuple followed by the elements of each argument in order.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
@@ -435,7 +435,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.entries">
         <h1>Tuple.prototype.entries ( )</h1>
-        <p>When the *entries* method is called, it returns an iterator over the entries of the tuple.</p>
+        <p>When the *entries* method is called, it returns an iterator over the entries of the Tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _O_ be ? ToObject(*this* value).
@@ -451,7 +451,7 @@
         <emu-note>
           <p>_callbackfn_ should be a function that accepts three arguments and returns a value that is coercible to the Boolean value *true* or *false*. `filter` calls _callbackfn_ once for each element in the tuple, in ascending order, and constructs a new tuple of all the values for which _callbackfn_ returns *true*.</p>
           <p>If a _thisArg_ parameter is provided, it will be used as the *this* value for each invocation of _callbackfn_. If it is not provided, *undefined* is used instead.</p>
-          <p>_callbackfn_ is called with three arguments: the value of the element, the index of the element, and the tuple being traversed.</p>
+          <p>_callbackfn_ is called with three arguments: the value of the element, the index of the element, and the Tuple being traversed.</p>
         </emu-note>
         <p>When the `filter` method is called with one or two arguments, the following steps are taken:</p>
         <emu-alg>
@@ -484,7 +484,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.keys">
         <h1>Tuple.prototype.keys ( )</h1>
-        <p>When the *keys* method is called, it returns an iterator over the keys of the tuple.</p>
+        <p>When the *keys* method is called, it returns an iterator over the keys of the Tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _O_ be ? ToObject(*this* value).
@@ -494,9 +494,9 @@
       <emu-clause id="sec-tuple.prototype.map">
         <h1>Tuple.prototype.map ( _callbackfn_ [ , _thisArg_ ] )</h1>
         <emu-note>
-          <p>_callbackfn_ should be a function that accepts three arguments. `map` calls _callbackfn_ once for each element in the tuple, in ascending order, and constructs a new tuple from the results. </p>
+          <p>_callbackfn_ should be a function that accepts three arguments. `map` calls _callbackfn_ once for each element in the Tuple, in ascending order, and constructs a new tuple from the results. </p>
           <p>If a _thisArg_ parameter is provided, it will be used as the *this* value for each invocation of _callbackfn_. If it is not provided, *undefined* is used instead.</p>
-          <p>_callbackfn_ is called with three arguments: the value of the element, the index of the element, and the tuple being traversed.</p>
+          <p>_callbackfn_ is called with three arguments: the value of the element, the index of the element, and the Tuple being traversed.</p>
         </emu-note>
         <p>When the `map` method is called with one or two arguments, the following steps are taken:</p>
         <emu-alg>
@@ -524,7 +524,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.unshifted">
         <h1>Tuple.prototype.unshifted ( ..._args_ )</h1>
-        <p>When the *unshifted* method is called, it returns a tuple containing the elements of the tuple, with the arguments to the function invocation prepended.</p>
+        <p>When the *unshifted* method is called, it returns a Tuple containing the elements of the Tuple, with the arguments to the function invocation prepended.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
@@ -548,7 +548,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.values">
         <h1>Tuple.prototype.values ()</h1>
-        <p>When the *values* method is called, it returns an iterator over the values of the tuple.</p>
+        <p>When the *values* method is called, it returns an iterator over the values of the Tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _O_ be ? ToObject(*this* value).
@@ -561,7 +561,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.with">
         <h1>Tuple.prototype.with ( _index_, _value_ )</h1>
-        <p>When the *with* method is called with two arguments, it returns a new tuple with the element at index _index_ replaced with value _value_.</p>
+        <p>When the *with* method is called with two arguments, it returns a new Tuple with the element at index _index_ replaced with value _value_.</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
