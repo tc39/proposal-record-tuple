@@ -24,10 +24,10 @@
           1. Let _props_ be ? EnumerableOwnPropertyNames(_obj_, ~key+value~).
           1. Let _fields_ be a new empty List.
           1. For each element _prop_ of _props_,
-            1. Let _name_ be ? GetV(_obj_, `"0"`).
-            1. Let _value_ be ? GetV(_obj_, `"1"`).
+            1. Let _name_ be ! GetV(_obj_, `"0"`).
+            1. Let _value_ be ! GetV(_obj_, `"1"`).
             1. If Type(_value_) is Object, throw a *TypeError* exception.
-            1. Let _field_ be { [[Key]]: _name_, [[Value]]: _value_ }.
+            1. Let _field_ be the Record { [[Key]]: _name_, [[Value]]: _value_ }.
             1. Append _field_ to the end of list _fields_.
           1. Return a new Record value whose [[Fields]] is _fields_.
         </emu-alg>
@@ -91,10 +91,10 @@
         <p>When the `Tuple` function is called, the following steps are taken:</p>
         <emu-alg>
           1. If NewTarget is not *undefined*, throw a *TypeError* exception.
-          1. Let _elements_ be a List containing the arguments passed to this function.
-          1. For each element _e_ of _elements_,
+          1. Let _items_ be the List of arguments passed to this function.
+          1. For each element _e_ of _items_,
             1. If Type(_e_) is Object, throw a *TypeError* exception.
-          1. Let _tuple_ be a new Tuple value whose [[Sequence]] is _elements_.
+          1. Let _tuple_ be a new Tuple value whose [[Sequence]] is _items_.
           1. Return _tuple_.
         </emu-alg>
       </emu-clause>
@@ -155,16 +155,16 @@
         <h1>Tuple.of ( ..._items_ )</h1>
         <p>The *of* method takes any number of arguments, and performs the following steps:</p>
         <emu-alg>
-          1. Let _elements_ be a List containing the arguments passed to this function.
-          1. For each element _e_ of _elements_,
+          1. Let _items_ be the List of arguments passed to this function.
+          1. For each element _e_ of _items_,
             1. If Type(_e_) is Object, throw a *TypeError* exception.
-          1. Let _tuple_ be a new Tuple value whose [[Sequence]] is _elements_.
+          1. Let _tuple_ be a new Tuple value whose [[Sequence]] is _items_.
           1. Return _tuple_.
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype">
         <h1>Tuple.prototype</h1>
-        <p>The initial vlaue of *Tuple.prototype* is %Tuple.prototype%</p>
+        <p>The initial value of *Tuple.prototype* is %Tuple.prototype%</p>
         <p>This property has the attributes { [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false }.</p>
       </emu-clause>
     </emu-clause>
@@ -174,7 +174,7 @@
       <ul>
         <li>is an ordinary object.</li>
         <li>is not a Tuple object; it does not have a [[TupleData]] internal slot.</li>
-        <li>has a [[Prototype]] internal slot whose value is the value *null*.</li>
+        <li>has a [[Prototype]] internal slot whose value is *null*.</li>
       </ul>
       <p>The abstract operation <dfn id="sec-thistuplevalue" aoid="thisTupleValue">thisTupleValue</dfn> takes argument _value_. It performs the following steps when called:</p>
       <emu-alg>
@@ -203,7 +203,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.popped">
         <h1>Tuple.prototype.popped ()</h1>
-        <p>When the *popped* method is called, it returns a tuple containing the elements of the tuple, except for the last value.</p>
+        <p>When the *popped* method is called, it returns a Tuple containing the elements of the Tuple, except for the last value.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
@@ -217,7 +217,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.pushed">
         <h1>Tuple.prototype.pushed ( ..._args_ )</h1>
-        <p>When the *pushed* method is called, it returns a tuple containing the elements of the tuple, followed by the arguments in order.</p>
+        <p>When the *pushed* method is called, it returns a Tuple containing the elements of the Tuple, followed by the arguments in order.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
@@ -228,7 +228,7 @@
             1. Remove the first element from _argsList_, and let _E_ be the value of the element.
             1. If _n_ + 1 &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.
             1. If Type(_E_) is Object, throw a *TypeError* exception.
-            1. Append _E_ to the end of list _list_.
+            1. Append _E_ to the end of List _list_.
             1. Set _n_ to _n_ + 1.
           1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
@@ -243,7 +243,7 @@
           1. Let _newList_ be a new empty List.
           1. Repeat, while _oldList_ is not empty,
             1. Remove the first element from _oldList_, and let _E_ be the value of the element.
-            1. Append _E_ to the end of list _newList_.
+            1. Append _E_ to the end of List _newList_.
           1. Return a new Tuple value whose [[Sequence]] is _newList_.
         </emu-alg>
       </emu-clause>
