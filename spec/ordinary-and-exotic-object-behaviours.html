@@ -53,7 +53,7 @@
           1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
           1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
-          1. If _Desc_.[[Value]] is present, return SameValue(_Desc_.[[Value]], _current_).
+          1. If _Desc_.[[Value]] is present, return ! SameValue(_Desc_.[[Value]], _current_).
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -140,7 +140,7 @@
           1. Assert Type(_rec_) is a Record.
           1. For each _entry_ of _rec_.[[Fields]], do
             1. Let _key_ be _entry_.[[Key]]
-            1. If SameValue(_key_, _P_), return *true*.
+            1. If ! SameValue(_key_, _P_), return *true*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -233,7 +233,7 @@
               1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
               1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
               1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
-              1. If _Desc_.[[Value]] is present, return SameValue(_Desc_.[[Value]], _current_).
+              1. If _Desc_.[[Value]] is present, return ! SameValue(_Desc_.[[Value]], _current_).
           1. Return *false*.
         </emu-alg>
       </emu-clause>
