@@ -16,18 +16,14 @@
         <p>This abstract operation MakeRecordValue takes a _entries_ argument. It is used to specify the creation of new Record value types. It performs the following steps when called:</p>
         <emu-alg>
             1. Assert: _entries_ is a List.
-            1. Let _uniqueEntries_ be an empty Set.
-            1. For each _kv_ in _entries_:
-              1. Assert: _kv_.[[Key]] is a String.
-              1. Assert: _kv_.[[Value]] is a primitive type.
-              1. For each _existing_ in _uniqueEntries_:
-                1. If SameValue(_existing_.[[Key]], _kv_.[[Key]]
-                  1. Remove _existing_ from _uniqueEntries_
-                  1. Break
-              1. Add _kv_ to _uniqueEntries_
-            1. Let _sortedEntries_ be a new List containing the same values as the list _entries_ where the values are ordered as if an Array of the same values had been sorted using `Array.prototype.sort` using <emu-xref href="#sec-recordentrycompare">RecordEntryCompare</emu-xref> as _comparefn_.
-            1. Let _R_ be an empty Record
-            1. Set _R_.[[Field]] to _sortedEntries_
+            1. Let _reversedEntries_ be a new List containing the same values as the list _entries_ where the values are ordered as an Array of the same values has been sorted using `Array.prototype.reverse`.
+            1. Let _uniqueEntries_ be an empty List.
+            1. For each _kv_ in _reversedEntries_:
+              1. Assert: Type(_kv_.[[Key]]) is String.
+              1. Assert: Type(_kv_.[[Value]]) is not Object.
+              1. If there is no entry _existing_ in _uniqueEntries_ such that _existing_.[[Key]] is _kv_.[[Key]], append _kv_ to _uniqueEntries_.
+            1. Let _sortedEntries_ be a new List containing the same values as the list _uniqueEntries_ where the values are ordered as if an Array of the same values had been sorted using `Array.prototype.sort` using <emu-xref href="#sec-recordentrycompare">RecordEntryCompare</emu-xref> as _comparefn_.
+            1. Let _R_ be a Record value whose [[Fields]] value is _sortedEntries_
             1. Return _R_
         </emu-alg>
       </emu-clause>
@@ -58,7 +54,7 @@
       <emu-alg>
           1. Assert: _values_ is a List.
           1. For each _value_ in _values_:
-            1. Assert: _value_ is a primitive type.
+            1. Assert: Type(_value_) is not Object.
           1. Let _T_ be an empty Tuple
           1. Set _T_.[[Sequence]] to _values_
           1. Return _T_

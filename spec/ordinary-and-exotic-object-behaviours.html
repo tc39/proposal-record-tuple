@@ -36,7 +36,9 @@
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *undefined*.
-          1. Return ! RecordGetOwnProperty(_R_, _P_).
+          1. Let _getResult_ be ! RecordGet(_R_, _P_).
+          1. If _getResult_ is *undefined*, return *undefined*.
+          1. Return the PropertyDescriptor { [[Value]]: _getResult_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
         </emu-alg>
       </emu-clause>
 
@@ -90,6 +92,8 @@
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *true*.
+          1. Let _hasProperty_ ? RecordHasProperty( _R_, _P_ ).
+          1. Return *true* if _hasProperty_ is *false*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -102,8 +106,8 @@
           1. Let _rec_ be _R_.[[RecordData]].
           1. Assert: Type(_rec_) is Record.
           1. Let _len_ be the length of _rec_.
-          1. For each pair _p_ of _rec_.[[Fields]], do
-            1. Let _key_ be _p_.[[Key]]
+          1. For each _entry_ of _rec_.[[Fields]], do
+            1. Let _key_ be _entry_.[[Key]]
             1. Assert: Type(_key_) is String
             1. Add _key_ to _keys_
           1. Return _keys_
@@ -116,11 +120,11 @@
         <emu-alg>
             1. Assert: Type(_value_) is a Record.
             1. Assert: Type(_value_.[[Fields]]) is a List.
-            1. Let _R_ be ! MakeBasicObject(&laquo; [[RecordData]] &raquo;).
+            1. Let _R_ be ! MakeBasicObject(&laquo; [[RecordData]], [[Prototype]] &raquo;).
             1. Set _R_'s essential internal methods to the definitions specified in <emu-xref href="#sec-record-exotic-objects"></emu-xref>.
             1. Set _R_.[[Prototype]] to *null*.
             1. Set _R_.[[RecordData]] to _value_.
-            1. OrdinaryPreventExtensions(_R_).
+            
             1. Return _R_
             
         </emu-alg>
@@ -134,8 +138,8 @@
           1. If Type(_P_) is a Symbol, return *false*.
           1. Let _rec_ be _R_.[[RecordData]].
           1. Assert Type(_rec_) is a Record.
-          1. For each pair _p_ of _rec_.[[Fields]], do
-            1. Let _key_ be _p_.[[Key]]
+          1. For each _entry_ of _rec_.[[Fields]], do
+            1. Let _key_ be _entry_.[[Key]]
             1. If SameValue(_key_, _P_), return *true*.
           1. Return *false*.
         </emu-alg>
@@ -150,24 +154,12 @@
           1. Let _rec_ be _R_.[[RecordData]].
           1. Assert Type(_rec_) is a Record.
           1. Let _len_ be the length of _rec_.
-          1. Let _resValue_ be *undefined*.
-          1. For each pair _p_ of _rec_.[[Fields]], do:
-            1. Let _key_ be _p_.[[Key]].
-            1. Let _val_ be _p_.[[Value]].
+          1. For each _entry_ of _rec_.[[Fields]], do:
+            1. Let _key_ be _entry_.[[Key]].
+            1. Let _val_ be _entry_.[[Value]].
             1. Assert: Type(_key_) is a String.
             1. Assert: Type(_val_) is not an Object.
-            1. If SameValue(_key_, _P_), let _resValue_ be _val_.
-          1. Return _resValue_.
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-recordgetownproperty-r-p" aoid="RecordGetOwnProperty">
-        <h1>RecordGetOwnProperty ( _R_, _P_ )</h1>
-        <p>This abstract operation RecordGetOwnProperty takes arguments _R_ and _P_. It performs the following steps when called:</p>
-        <emu-alg>
-            1. Let _getResult_ be ! RecordGet(_R_, _P_).
-            1. If _getResult_ is *undefined*, return *undefined*.
-            1. Return the PropertyDescriptor { [[Value]]: _getResult_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
+            1. Return _val_.
         </emu-alg>
       </emu-clause>
     </emu-clause>
@@ -287,12 +279,11 @@
         <emu-alg>
             1. Assert: Type(_value_) is a Tuple.
             1. Assert: Type(_value_.[[Sequence]]) is a List.
-            1. Let _T_ be ! MakeBasicObject(&laquo; [[TupleData]] &raquo;).
+            1. Let _T_ be ! MakeBasicObject(&laquo; [[TupleData]], [[Prototype]] &raquo;).
             1. Let _T_.[[TupleLength]] be _value_.[[Sequence]].length
             1. Set _T_'s essential internal methods to the definitions specified in <emu-xref href="#sec-tuple-exotic-objects"></emu-xref>.
             1. Set _T_.[[Prototype]] to *null*.
             1. Set _T_.[[TupleData]] to _value_.
-            1. OrdinaryPreventExtensions(_T_).
             1. Return _T_
             
         </emu-alg>
