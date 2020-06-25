@@ -212,9 +212,7 @@
           1. If Type(_P_) is String, then
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, then
-              1. Let _value_ be ? TupleGet(_T_, _numericIndex_)
-              1. If _value_ is *undefined*, return *false*.
-              1. Return *true*.
+              1. Return ? IsValidTupleIndex(_T_, _numericIndex_)
           1. Return *false*
         </emu-alg>
       </emu-clause>
@@ -227,7 +225,7 @@
           1. If Type(_P_) is String, then
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, then
-              1. Let _current_ be ! TupleGet(_T_, _numericIndex_)
+              1. Let _current_ be ? TupleGet(_T_, _numericIndex_)
               1. If _current_ is *undefined* return *false*.
               1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
               1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
@@ -308,8 +306,9 @@
           1. Assert: _T_ is an Object that has [[TupleData]] internal slot.
           1. Assert: Type(_numericIndex_) is an integer.
           1. Let _tup_ be _T_.[[TupleData]].
-          1. If ! IsValidTupleIndex(_integerIndex_) is *false*, return *undefined*.
-          1. TODO ...
+          1. If ! IsValidTupleIndex(_numericIndex_) is *false*, return *undefined*.
+          1. Let _value_ be the element with index _numericIndex_ in _tup_.[[Sequence]]
+          1. Return _value_
         </emu-alg>
       </emu-clause>
     </emu-clause>
