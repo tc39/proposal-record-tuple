@@ -92,7 +92,6 @@
         <emu-alg>
           1. If NewTarget is not *undefined*, throw a *TypeError* exception.
           1. Let _elements_ be a List containing the arguments passed to this function.
-          1. Let _length_ to be the number of elements in _elements_.
           1. For each element _e_ of _elements_,
             1. If Type(_e_) is Object, throw a *TypeError* exception.
           1. Let _tuple_ be a new Tuple value whose [[Sequence]] is _elements_.
@@ -157,7 +156,6 @@
         <p>The *of* method takes any number of arguments, and performs the following steps:</p>
         <emu-alg>
           1. Let _elements_ be a List containing the arguments passed to this function.
-          1. Let _length_ to be the number of elements in _elements_.
           1. For each element _e_ of _elements_,
             1. If Type(_e_) is Object, throw a *TypeError* exception.
           1. Let _tuple_ be a new Tuple value whose [[Sequence]] is _elements_.
@@ -195,7 +193,7 @@
         <h1>Tuple.prototype.valueOf ( )</h1>
         <p>When the `valueOf` function is called, the following steps are taken:</p>
         <emu-alg>
-          1. Return ? thisTupleValue(*this* value)
+          1. Return ? thisTupleValue(*this* value).
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype-@@toStringTag">
