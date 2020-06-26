@@ -568,6 +568,40 @@
           1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
       </emu-clause>
+      <emu-clause id="sec-array.prototype.tolocalestring">
+        <h1>Tuple.prototype.toLocaleString ( [ _reserved1_ [ , _reserved2_ ] ] )</h1>
+        <p>An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Tuple.prototype.toLocaleString` method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `toLocaleString` method is used.</p>
+        <p>The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.</p>
+        <p>When the *toLocaleString* method is called, The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _separator_ be the String value for the list-separator String appropriate for the host environment's current locale (this is derived in an implementation-defined way).
+          1. Let _steps_ be the algorithm steps defined in <emu-xref href="#sec-tuple-element-tolocalestring-functions" title></emu-xref>.
+          1. Let _mapper_ be ! CreateBuiltinFunction(_steps_, &laquo; &raquo;).
+          1. Return ? TupleToString(_T_, _separator_, _mapper_).
+        </emu-alg>
+
+        <emu-clause id="sec-tuple-element-tolocalestring-functions">
+          <h1>TupleElementToLocaleString Functions</h1>
+          <p>A TupleElementToLocaleString function is an anonymous built-in function. When a TupleElementToLocaleString function is called with argument _item_, the following steps are taken:</p>
+          <emu-alg>
+            1. If Type(_item_) is Record,
+              1. Return ! ToString(_item_).
+            1. Return ? ToString(? Invoke(_item_, *"toLocaleString"*)).
+          </emu-alg>
+          <emu-note>
+            <p>TupleElementToLocaleString is used in order to handle Record values inside of the Tuple. Because a Record has a *null* prototype, it does not have a *toLocaleString* method. TupleElementToLocaleString ensures that an error will not be thrown when calling *toLocaleString* on a Tuple containing a Record.</p>
+          </emu-note>
+        </emu-clause>
+      </emu-clause>
+      <emu-clause id="sec-tuple.prototype.tostring">
+        <h1>Tuple.prototype.toString ()</h1>
+        <p>When the *toString* method is called, it returns the String format of the Tuple. It performs the following steps:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Return ? TupleToString(_T_).
+        </emu-alg>
+      </emu-clause>
       <emu-clause id="sec-tuple.prototype.values">
         <h1>Tuple.prototype.values ()</h1>
         <p>When the *values* method is called, it returns an iterator over the values of the Tuple.</p>
