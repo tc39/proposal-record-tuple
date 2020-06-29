@@ -35,7 +35,7 @@
             1. Let _yKey_ be _yField_.[[Key]].
             1. Let _xValue_ be _xField_.[[Value]].
             1. Let _yValue_ be _yField_.[[Value]].
-            1. If ! SameValueNonNumeric(_xKey_, _yKey_) is *false*, Return *false*.
+            1. If ! SameValueNonGeneric(_xKey_, _yKey_) is *false*, Return *false*.
             1. If ! ToBoolean(! Call(_elementEqual_, *undefined*, &laquo; _xValue_, _yValue_ &raquo; ) ) is *false*, Return *false*.
             1. Set _k_ to _k_ + 1.
           1. Return *true*.

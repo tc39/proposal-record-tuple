@@ -626,7 +626,8 @@
         1. If Type(_x_) is different from Type(_y_), return *false*.
         1. If Type(_x_) is <del>Number or BigInt</del><ins>Number, BigInt, Record, or Tuple</ins>, then
           1. Return ! Type(_x_)::sameValue(_x_, _y_).
-        1. Return ! SameValueNonNumeric(_x_, _y_).
+        1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
+        1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
       <emu-note>
         <p>This algorithm differs from the Strict Equality Comparison Algorithm in its treatment of signed zeroes and NaNs.</p>
@@ -640,11 +641,30 @@
         1. If Type(_x_) is different from Type(_y_), return *false*.
         1. If Type(_x_) is <del>Number or BigInt</del><ins>Number, BigInt, Record, or Tuple</ins>, then
           1. Return ! Type(_x_)::sameValueZero(_x_, _y_).
-        1. Return ! SameValueNonNumeric(_x_, _y_).
+        1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
+        1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
       <emu-note>
         <p>SameValueZero differs from SameValue only in its treatment of *+0* and *-0*.</p>
       </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-samevaluenongeneric" aoid="SameValueNonGeneric" oldids="sec-samevaluenongeneric">
+      <h1><del>SameValueNonNumeric</del><ins>SameValueNonGeneric</ins> ( _x_, _y_ )</h1>
+      <p>The abstract operation <del>SameValueNonNumeric</del><ins>SameValueNonGeneric</ins> takes arguments _x_ (an ECMAScript language value) and _y_ (an ECMAScript language value) and returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean. It performs the following steps when called:</p>
+      <emu-alg>
+        1. Assert: Type(_x_) is not Number or BigInt.
+        1. Assert: Type(_x_) is the same as Type(_y_).
+        1. If Type(_x_) is Undefined, return *true*.
+        1. If Type(_x_) is Null, return *true*.
+        1. If Type(_x_) is String, then
+          1. If _x_ and _y_ are exactly the same sequence of code units (same length and same code units at corresponding indices), return *true*; otherwise, return *false*.
+        1. If Type(_x_) is Boolean, then
+          1. If _x_ and _y_ are both *true* or both *false*, return *true*; otherwise, return *false*.
+        1. If Type(_x_) is Symbol, then
+          1. If _x_ and _y_ are both the same Symbol value, return *true*; otherwise, return *false*.
+        1. If _x_ and _y_ are the same Object value, return *true*. Otherwise, return *false*.
+      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-abstract-equality-comparison" aoid="Abstract Equality Comparison">
@@ -682,7 +702,8 @@
           1. Return ! Type(_x_)::equal(_x_, _y_).
         1. <ins>If Type(_x_) is Record or Tuple, then</ins>
           1. <ins>Return ! Type(_x_)::sameValueZero(_x_, _y_).</ins>
-        1. Return ! SameValueNonNumeric(_x_, _y_).
+        1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
+        1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
       <emu-note>
         <p>This algorithm differs from the SameValue Algorithm in its treatment of signed zeroes and NaNs.</p>
