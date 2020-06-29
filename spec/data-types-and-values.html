@@ -25,11 +25,9 @@
 
       <emu-clause id="sec-tupletostring" aoid="TupleToString">
         <h1>TupleToString ( _argument_, [ _separator_, [ _mapper_ ] ] )</h1>
-        <p>The abstract operation TupleToString takes arguments _argument_, _separator_, and _mapper_ (a function object). _mapper_ will be invoked with *undefined* as the receiver. It performs the following steps when called:</p>
+        <p>The abstract operation TupleToString takes arguments _argument_ (a Tuple), _separator_ (a String), and _mapper_ (a function object). _mapper_ will be invoked with *undefined* as the receiver. It performs the following steps when called:</p>
         <emu-alg>
-            1. Assert: Type(_argument_) is Tuple.
             1. Assert: _mapper_ is *undefined* or IsCallable(_mapper_) is *true*.
-            1. Assert: Type(_separator_) is Undefined or String.
             1. Let _list_ be _argument_'s [[Sequence]] value.
             1. Let _len_ be the length of List _list_.
             1. Let _k_ be 0.
