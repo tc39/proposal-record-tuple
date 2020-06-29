@@ -642,7 +642,7 @@
           1. <ins>Repeat, while _k_ &lt; _xLen_,</ins>
             1. <ins>Let _xItem_ be _xList_[_k_].</ins>
             1. <ins>Let _yItem_ be _yList_[_k_].</ins>
-            1. <ins>Let _same_ be ! SameValueZero(_xItem_, _yItem_).</ins>
+            1. <ins>Let _same_ be ! SameValue(_xItem_, _yItem_).</ins>
             1. <ins>If _same_ is *false*, Return *false*.</ins>
             1. <ins>Set _k_ to _k_ + 1.</ins>
           1. <ins>Return *true*.</ins>
@@ -662,7 +662,7 @@
             1. <ins>Let _yValue_ be _yField_.[[Value]].</ins>
             1. <ins>Let _sameKey_ be ! SameValueNonNumeric(_xKey_, _yKey_).</ins>
             1. <ins>If _sameKey_ is *false*, Return *false*.</ins>
-            1. <ins>Let _sameValue_ be ! SameValueZero(_xValue_, _yValue_).</ins>
+            1. <ins>Let _sameValue_ be ! SameValue(_xValue_, _yValue_).</ins>
             1. <ins>If _sameValue_ is *false*, Return *false*.</ins>
             1. <ins>Set _k_ to _k_ + 1.</ins>
           1. <ins>Return *true*.</ins>
