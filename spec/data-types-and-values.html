@@ -24,30 +24,10 @@
       <p>TBD</p>
 
       <emu-clause id="sec-tupletostring" aoid="TupleToString">
-        <h1>TupleToString ( _argument_, [ _separator_, [ _mapper_ ] ] )</h1>
-        <p>The abstract operation TupleToString takes arguments _argument_ (a Tuple), _separator_ (a String), and _mapper_ (a function object). _mapper_ will be invoked with *undefined* as the receiver. It performs the following steps when called:</p>
+        <h1>TupleToString ( _argument_, [ _separator_ ] )</h1>
+        <p>The abstract operation TupleToString takes arguments _argument_ (a Tuple), and _separator_ (a String). It performs the following steps when called:</p>
         <emu-alg>
-            1. Assert: _mapper_ is *undefined* or IsCallable(_mapper_) is *true*.
-            1. Let _list_ be _argument_'s [[Sequence]] value.
-            1. Let _len_ be the length of List _list_.
-            1. Let _k_ be 0.
-            1. Let _R_ be the empty String.
-            1. If _separator_ is *undefined*,
-              1. Let _realSep_ be *","*.
-            1. Else,
-              1. Let _realSep_ be _separator_.
-            1. Repeat, while _k_ &lt; _len_,
-              1. If _k_ &gt; 0, then
-                1. Set _R_ to the string-concatenation of _R_ and _realSep_.
-              1. Let _item_ be _list_[_k_].
-              If _mapper_
-              1. If _mapper_ is *undefined*,
-                1. Let _S_ be ? ToString(? Call(_mapper_, *undefined*, &laquo; _item_ &raquo;)).
-              1. Else,
-                1. Let _S_ be ? ToString(_item_).
-              1. Set _R_ to the string-concatenation of _R_ and _S_.
-              1. Set _k_ to _k_ + 1.
-            1. Return _R_.
+            1. Return ? Call(%Array.prototype.join%, _argument_, &laquo; _separator_ &raquo;).
         </emu-alg>
       </emu-clause>
     </emu-clause>
