@@ -633,8 +633,8 @@
         1. If Type(_x_) is Symbol, then
           1. If _x_ and _y_ are both the same Symbol value, return *true*; otherwise, return *false*.
         1. <ins>If Type(_x_) is Tuple, then</ins>
-          1. <ins>Let _xList_ be _x_'s [[Sequence]] value.</ins>
-          1. <ins>Let _yList_ be _y_'s [[Sequence]] value.</ins>
+          1. <ins>Let _xList_ be _x_.[[Sequence]].</ins>
+          1. <ins>Let _yList_ be _y_.[[Sequence]].</ins>
           1. <ins>Let _xLen_ be the length of List _xList_.</ins>
           1. <ins>Let _yLen_ be the length of List _yList_.</ins>
           1. <ins>If _xLen_ &ne; _yLen_, Return *false*.</ins>
@@ -646,8 +646,8 @@
             1. <ins>Set _k_ to _k_ + 1.</ins>
           1. <ins>Return *true*.</ins>
         1. <ins>If Type(_x_) is Record, then</ins>
-          1. <ins>Let _xList_ be a new List containing the same values as _x_'s [[Fields]] value.</ins>
-          1. <ins>Let _yList_ be a new List containing the same values as _y_'s [[Fields]] value.</ins>
+          1. <ins>Let _xList_ be a new List containing the same values as _x_.[[Fields]].</ins>
+          1. <ins>Let _yList_ be a new List containing the same values as _y_.[[Fields]].</ins>
           1. <ins>Let _xLen_ be the length of List _xList_.</ins>
           1. <ins>Let _yLen_ be the length of List _yList_.</ins>
           1. <ins>If _xLen_ &ne; _yLen_, Return *false*.</ins>

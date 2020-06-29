@@ -229,7 +229,7 @@
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
+          1. Let _list_ be a new List containing the elements of _T_.[[Sequence]].
           1. Let _length_ be the number of elements in _list_.
           1. If _length_ is 0,
             1. Return _T_.
@@ -243,7 +243,7 @@
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
+          1. Let _list_ be a new List containing the elements of _T_.[[Sequence]].
           1. Let _argsList_ be a List containing the arguments passed to this function invocation.
           1. Let _n_ be the number of elements in _list_.
           1. Repeat, while _argsList_ is not empty,
@@ -261,7 +261,7 @@
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _oldList_ be a new List containing the elements of _T_'s [[Sequence]] value.
+          1. Let _oldList_ be a new List containing the elements of _T_.[[Sequence]].
           1. Let _newList_ be a new empty List.
           1. Repeat, while _oldList_ is not empty,
             1. Remove the first element from _oldList_, and let _E_ be the value of the element.
@@ -275,7 +275,7 @@
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
+          1. Let _list_ be a new List containing the elements of _T_.[[Sequence]].
           1. Let _length_ be the number of elements in _list_.
           1. If _length_ is 0,
             1. Return _T_.
@@ -290,7 +290,7 @@
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be _T_'s [[Sequence]] value.
+          1. Let _list_ be _T_.[[Sequence]].
           1. Let _len_ be the number of elements in _list_.
           1. Let _relativeStart_ be ? ToInteger(_start_).
           1. If _relativeStart_ &lt; 0, let _k_ be max((_len_ + _relativeStart_), 0); else let _k_ be min(_relativeStart_, _len_).
@@ -315,7 +315,7 @@
         <emu-alg>
           1. If _comparefn_ is not *undefined* and IsCallable(_comparefn_) is *false*, throw a *TypeError* exception.
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
+          1. Let _list_ be a new List containing the elements of _T_.[[Sequence]].
           1. Let _len_ be the number of elements in _list_.
         </emu-alg>
         <p>The <em>sort order</em> is the ordering, after completion of this function, of the elements of _list_. The result of the `sort` function is then determined as follows:</p>
@@ -368,7 +368,7 @@
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be _T_'s [[Sequence]] value.
+          1. Let _list_ be _T_.[[Sequence]].
           1. Let _len_ be the number of elements in _list_.
           1. Let _relativeStart_ be ? ToInteger(_start_).
           1. If _relativeStart_ &lt; 0, let _actualStart_ be max((_len_ + _relativeStart_), 0); else let _actualStart_ be min(_relativeStart_, _len_).
@@ -478,7 +478,7 @@
         <p>When the `filter` method is called with one or two arguments, the following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be _T_'s [[Sequence]] value.
+          1. Let _list_ be _T_.[[Sequence]].
           1. Let _len_ be the number of elements in _list_.
           1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
           1. Let _newList_ be a new empty List.
@@ -523,7 +523,7 @@
         <p>When the `map` method is called with one or two arguments, the following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be _T_'s [[Sequence]] value.
+          1. Let _list_ be _T_.[[Sequence]].
           1. Let _len_ be the number of elements in _list_.
           1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
           1. Let _newList_ be a new empty List.
@@ -556,7 +556,7 @@
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _argsList_ be a List containing the arguments passed to this function invocation.
-          1. Let _tupleList_ be a new List containing the elements of _T_'s [[Sequence]] value.
+          1. Let _tupleList_ be a new List containing the elements of _T_.[[Sequence]].
           1. Let _list_ be a new empty List.
           1. Let _n_ be 0.
           1. Repeat, while _argsList_ is not empty,
@@ -603,7 +603,7 @@
         <p>When the *with* method is called with two arguments, it returns a new Tuple with the element at index _index_ replaced with value _value_.</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _list_ be a new List containing the elements of _T_'s [[Sequence]] value.
+          1. Let _list_ be a new List containing the elements of _T_.[[Sequence]].
           1. Let _length_ be the length of list _list_.
           1. If _index_ &lt; 0 or _index_ >= _length_, throw a *RangeError* exception.
           1. If Type(_value_) is Object, throw a *TypeError* exception.
