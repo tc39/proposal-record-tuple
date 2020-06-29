@@ -22,8 +22,8 @@
         <h1>Record::equal ( _x_, _y_, _elementEqual_ )</h1>
         <p>The abstract operation Record::equal takes arguments _x_ (a Record), _y_ (a Record), and _elementEqual_ (a function object). _elementEqual_ will be invoked, with *undefined* as the receiver. It performs the following steps when called:</p>
         <emu-alg>
-          1. Let _xList_ be a new List containing the same values as _x_.[[Fields]].
-          1. Let _yList_ be a new List containing the same values as _y_.[[Fields]].
+          1. Let _xList_ be _x_.[[Fields]].
+          1. Let _yList_ be _y_.[[Fields]].
           1. Let _xLen_ be the length of List _xList_.
           1. Let _yLen_ be the length of List _yList_.
           1. If _xLen_ &ne; _yLen_, Return *false*.
