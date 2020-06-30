@@ -37,7 +37,7 @@
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *undefined*.
           1. Let _getResult_ be ! RecordGet(_R_, _P_).
-          1. If _getResult_ is *undefined*, return *undefined*.
+          1. If _getResult_ is ~empty~, return *undefined*.
           1. Return the PropertyDescriptor { [[Value]]: _getResult_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
         </emu-alg>
       </emu-clause>
@@ -47,12 +47,12 @@
         <p>When the [[DefineOwnProperty]] internal method of a Record exotic object _R_ is called with property key _P_, and Property Descriptor _Desc_ the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. Let _current_ be ! RecordGet(_R_, _P_).
-          1. If _current_ is *undefined* return *false*.
-          1. Assert: IsDataDescriptor(_Desc_) is *true*.
           1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
           1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
+          1. Let _current_ be ! RecordGet(_R_, _P_).
+          1. If _current_ is ~empty~ return *false*.
+          1. Assert: IsDataDescriptor(_Desc_) is *true*.
           1. If _Desc_.[[Value]] is present, return ! SameValue(_Desc_.[[Value]], _current_).
           1. Return *false*.
         </emu-alg>
@@ -74,7 +74,9 @@
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *undefined*.
-          1. Return ! RecordGet( _R_, _P_ ).
+          1. Let _value_ be ! RecordGet( _R_, _P_ ).
+          1. If _value_ is ~empty~, return *undefined*.
+          1. Return _value_
         </emu-alg>
       </emu-clause>
 
@@ -159,7 +161,8 @@
             1. Let _val_ be _entry_.[[Value]].
             1. Assert: Type(_key_) is String.
             1. Assert: Type(_val_) is not Object.
-            1. Return _val_.
+            1. If _key_ is _P_, return _val_.
+          1.Return ~empty~.
         </emu-alg>
       </emu-clause>
     </emu-clause>
@@ -198,7 +201,7 @@
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, then
               1. Let _value_ be ? TupleGet(_T_, _numericIndex_)
-              1. If _value_ is *undefined*, return *undefined*.
+              1. If _value_ is ~empty~, return *undefined*.
               1. Return the PropertyDescriptor { [[Value]]: _value_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
           1. Return *undefined*
         </emu-alg>
@@ -213,6 +216,8 @@
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, then
               1. Return ? IsValidTupleIndex(_T_, _numericIndex_)
+            1. If _numericIndex_ is *undefined*, then
+              1. TODO: fallback to prototype
           1. Return *false*
         </emu-alg>
       </emu-clause>
@@ -222,15 +227,15 @@
         <p>When the [[DefineOwnProperty]] internal method of a Tuple exotic object _T_ is called with property key _P_, and Property Descriptor _Desc_ the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
+          1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
+          1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
+          1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
           1. If Type(_P_) is String, then
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, then
               1. Let _current_ be ? TupleGet(_T_, _numericIndex_)
-              1. If _current_ is *undefined* return *false*.
+              1. If _current_ is ~empty~ return *false*.
               1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
-              1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
-              1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
-              1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
               1. If _Desc_.[[Value]] is present, return ! SameValue(_Desc_.[[Value]], _current_).
           1. Return *false*.
         </emu-alg>
@@ -244,7 +249,11 @@
           1. If Type(_P_) is String, then
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, then
-              1. Return ? TupleGet(_T_, _numericIndex_)
+              1. Let _value_ be ? TupleGet(_T_, _numericIndex_).
+              1. If _value_ is ~empty~, return *undefined*.
+              2. Return _value_.
+            1. If _numericIndex_ is *undefined*, then
+              1. TODO: fallback to prototype
           1. Return *undefined*
         </emu-alg>
       </emu-clause>
@@ -263,7 +272,7 @@
         <emu-alg>
           1. Let _keys_ be a new empty List.
           1. Assert _T_ is Tuple exotic object.
-          1. Let _len_ be _T_.[[TupleLength]].
+          1. Let _len_ be the length of _T_.[[TupleData]].[[Sequence]].
           1. For each integer _i_ starting with 0 such that _i_ &lt; _len_ in ascending order, do
             1. Add ! ToString(_i_) to _keys_.
           1. Return _keys_
@@ -278,9 +287,8 @@
             1. Assert: Type(_value_) is Tuple.
             1. Assert: Type(_value_.[[Sequence]]) is List.
             1. Let _T_ be ! MakeBasicObject(&laquo; [[TupleData]], [[Prototype]] &raquo;).
-            1. Let _T_.[[TupleLength]] be _value_.[[Sequence]].length
             1. Set _T_'s essential internal methods to the definitions specified in <emu-xref href="#sec-tuple-exotic-objects"></emu-xref>.
-            1. Set _T_.[[Prototype]] to *null*.
+            1. Set _T_.[[Prototype]] to %Tuple.prototype%.
             1. Set _T_.[[TupleData]] to _value_.
             1. Return _T_
             
@@ -294,7 +302,7 @@
           1. Assert: _T_ is an Object that has [[TupleData]] internal slot.
           1. Assert: Type(_numericIndex_) is an integer.
           1. If _numericIndex_ is *-0*, return *false*
-          1. If _numericIndex_ &lt; 0 or index &gte; _T_.[[TupleLength]], return *false*.
+          1. If _numericIndex_ &lt; 0 or _numericIndex_ &gte; the length of _T_.[[TupleData]].[[Sequence]], return *false*.
           1. Return *true*.
         </emu-alg>
       </emu-clause>
@@ -306,7 +314,7 @@
           1. Assert: _T_ is an Object that has [[TupleData]] internal slot.
           1. Assert: Type(_numericIndex_) is an integer.
           1. Let _tup_ be _T_.[[TupleData]].
-          1. If ! IsValidTupleIndex(_numericIndex_) is *false*, return *undefined*.
+          1. If ! IsValidTupleIndex(_numericIndex_) is *false*, return ~empty~.
           1. Let _value_ be the element with index _numericIndex_ in _tup_.[[Sequence]]
           1. Return _value_
         </emu-alg>
