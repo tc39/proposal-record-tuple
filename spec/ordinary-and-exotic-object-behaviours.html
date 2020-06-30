@@ -216,9 +216,8 @@
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, then
               1. Return ? IsValidTupleIndex(_T_, _numericIndex_)
-            1. If _numericIndex_ is *undefined*, then
-              1. TODO: fallback to prototype
-          1. Return *false*
+          1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
+          1. Return ? _parent_.[[HasProperty]](_P_, _Receiver_).
         </emu-alg>
       </emu-clause>
 
@@ -252,9 +251,8 @@
               1. Let _value_ be ? TupleGet(_T_, _numericIndex_).
               1. If _value_ is ~empty~, return *undefined*.
               2. Return _value_.
-            1. If _numericIndex_ is *undefined*, then
-              1. TODO: fallback to prototype
-          1. Return *undefined*
+          1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
+          1. Return ? _parent_.[[Get]](_P_, _Receiver_).
         </emu-alg>
       </emu-clause>
 
