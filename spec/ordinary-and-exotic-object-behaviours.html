@@ -166,7 +166,7 @@
       <h1>Tuple Exotic Objects</h1>
       <p>A Tuple object is an exotic object that encapsuates a Tuple value and exposes virtual integer-indexed data properties corresponding to the individual entries set on the underlying Tuple value. All keys properties are non-writable and non-configurable.</p>
 
-      <p>An object is a <dfn id="tuple-exotic-object">Tuple exotic object</dfn> (or simply, a Record object) if its following internal methods use the following implementations and is an <emu-xref href="#sec-immutable-prototype-exotic-objects">Immutable Prototype Exotic Object</emu-xref>..</p>
+      <p>An object is a <dfn id="tuple-exotic-object">Tuple exotic object</dfn> (or simply, a Tuple object) if its following internal methods use the following implementations and is an <emu-xref href="#sec-immutable-prototype-exotic-objects">Immutable Prototype Exotic Object</emu-xref>..</p>
 
       <p>Tuple exotic objects have the same internal slots as ordinary objects. They also have a [[TupleData]] internal slot.</p>
 
@@ -264,7 +264,7 @@
       
       <emu-clause id="sec-tuple-exotic-objects-ownpropertykeys">
         <h1>[[OwnPropertyKeys]] ( )</h1>
-        <p>When the [[OwnPropertyKeys]] internal method of a Record exotic object _R_ is called, the following steps are taken:</p>
+        <p>When the [[OwnPropertyKeys]] internal method of a Record exotic object _T_ is called, the following steps are taken:</p>
         <emu-alg>
           1. Let _keys_ be a new empty List.
           1. Let _tup_ be _T_.[[TupleData]].
@@ -274,7 +274,7 @@
           1. Repeat, while _index_ &lt; _len_,
             1. Add ! ToString(_index_) to _keys_.
             1. Set _index_ to _index_ + 1.
-          1. Let _ordinaryProps_ be ? OrdinaryOwnPropertyKeys (_R_).
+          1. Let _ordinaryProps_ be ? OrdinaryOwnPropertyKeys (_T_).
           1. For each _key_ of _ordinaryProps_, do
             1. If Type(_key_) is Symbol, add _key_ to _keys_.
           1. Return _keys_
