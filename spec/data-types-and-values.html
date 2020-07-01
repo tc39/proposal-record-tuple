@@ -39,7 +39,7 @@
       <p>This abstract operation MakeTupleValue takes a _values_ argument. It is used to specify the creation of new Tuple value types. It performs the following steps when called:</p>
       <emu-alg>
           1. Assert: _values_ is a List.
-          1. For each _value_ in _values_:
+          1. For each _value_ in _values_,
             1. Assert: Type(_value_) is not Object.
           1. Let _T_ be a Tuple value whose [[Sequence]] value is _values_.
           1. Return _T_.
