@@ -185,25 +185,10 @@
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return ! OrdinaryGetOwnProperty(_T_, _P_).
           1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
-          1. If _numericIndex_ is not *undefined*, then
-            1. Let _value_ be ? TupleGet(_T_, _numericIndex_)
-            1. If _value_ is ~empty~, return *undefined*.
-            1. Return the PropertyDescriptor { [[Value]]: _value_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
-          1. Return *undefined*
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-tuple-exotic-objects-hasproperty-p">
-        <h1>[[HasProperty]] ( _P_ )</h1>
-        <p>When the [[HasProperty]] internal method of a Tuple exotic object _T_ is called with property key _P_, the following steps are taken:</p>
-        <emu-alg>
-          1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinaryHasProperty (_T_, _P_).
-          1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
-          1. If _numericIndex_ is not *undefined*, then
-            1. Return ? IsValidTupleIndex(_T_, _numericIndex_)
-          1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
-          1. Return ? _parent_.[[HasProperty]](_P_, _Receiver_).
+          1. If _numericIndex_ is *undefined*, return *undefined*.
+          1. Let _value_ be ? TupleGet(_T_, _numericIndex_)
+          1. If _value_ is ~empty~, return *undefined*.
+          1. Return the PropertyDescriptor { [[Value]]: _value_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
         </emu-alg>
       </emu-clause>
 
@@ -217,15 +202,27 @@
           1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
           1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
-          1. If _numericIndex_ is not *undefined*, then
-            1. Let _current_ be ? TupleGet(_T_, _numericIndex_)
-            1. If _current_ is ~empty~ return *false*.
-            1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
-            1. If _Desc_.[[Value]] is present, return ! SameValue(_Desc_.[[Value]], _current_).
+          1. If _numericIndex_ is *undefined*, return *false*.
+          1. Let _current_ be ? TupleGet(_T_, _numericIndex_)
+          1. If _current_ is ~empty~ return *false*.
+          1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
+          1. If _Desc_.[[Value]] is present, return ! SameValue(_Desc_.[[Value]], _current_).
           1. Return *false*.
         </emu-alg>
       </emu-clause>
       
+      <emu-clause id="sec-tuple-exotic-objects-hasproperty-p">
+        <h1>[[HasProperty]] ( _P_ )</h1>
+        <p>When the [[HasProperty]] internal method of a Tuple exotic object _T_ is called with property key _P_, the following steps are taken:</p>
+        <emu-alg>
+          1. Assert: IsPropertyKey(_P_) is *true*.
+          1. If Type(_P_) is a Symbol, return ! OrdinaryHasProperty (_T_, _P_).
+          1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
+          1. If _numericIndex_ is not *undefined*, return ? IsValidTupleIndex(_T_, _numericIndex_)
+          1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
+          1. Return ? _parent_.[[HasProperty]](_P_, _Receiver_).
+        </emu-alg>
+      </emu-clause>
             
       <emu-clause id="sec-tuple-exotic-objects-get-p-receiver">
         <h1>[[Get]] ( _P_, _Receiver_ )</h1>
@@ -259,7 +256,7 @@
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return ! OrdinaryDelete (_T_, _P_).
-          1. Let _isValidIndex_ ? IsValidTupleIndex( _R_, _P_ ).
+          1. Let _isValidIndex_ ? IsValidTupleIndex( _T_, _P_ ).
           1. If _isValidIndex_ is *false*, return *true*.
           1. Return *false*.
         </emu-alg>
