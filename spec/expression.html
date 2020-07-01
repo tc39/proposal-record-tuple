@@ -44,6 +44,93 @@
           PropertyName[?Yield, ?Await] `:` AssignmentExpression[+In, ?Yield, ?Await]
           `...` AssignmentExpression[+In, ?Yield, ?Await]
       </emu-grammar>
+
+      <emu-clause id="sec-record-initializer-static-semantics-propname">
+        <h1>Static Semantics: PropName</h1>
+        <emu-see-also-para op="PropName"></emu-see-also-para>
+        <emu-grammar>RecordPropertyDefinition : IdentifierReference</emu-grammar>
+        <emu-alg>
+          1. Return StringValue of |IdentifierReference|.
+        </emu-alg>
+        <emu-grammar>RecordPropertyDefinition : `...` AssignmentExpression</emu-grammar>
+        <emu-alg>
+          1. Return ~empty~.
+        </emu-alg>
+        <emu-grammar>RecordPropertyDefinition : PropertyName `:` AssignmentExpression</emu-grammar>
+        <emu-alg>
+          1. Return PropName of |PropertyName|.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-record-semantics-propertynamelist">
+        <h1>Static Semantics: PropertyNameList</h1>
+        <emu-grammar>RecordPropertyDefinitionList : RecordPropertyDefinition</emu-grammar>
+        <emu-alg>
+          1. If PropName of |RecordPropertyDefinition| is ~empty~, return a new empty List.
+          1. Return a new List containing PropName of |RecordPropertyDefinition|.
+        </emu-alg>
+        <emu-grammar>RecordPropertyDefinitionList : RecordPropertyDefinitionList `,` RecordPropertyDefinition</emu-grammar>
+        <emu-alg>
+          1. Let _list_ be PropertyNameList of |RecordPropertyDefinitionList|.
+          1. If PropName of |RecordPropertyDefinition| is ~empty~, return _list_.
+          1. Append PropName of |RecordPropertyDefinition| to the end of _list_.
+          1. Return _list_.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-record-initializer-runtime-semantics-evaluation">
+        <h1>Runtime Semantics: Evaluation</h1>
+        <emu-grammar>ObjectLiteral : `{` `}`</emu-grammar>
+        <emu-alg>
+          1. Return OrdinaryObjectCreate(%Object.prototype%).
+        </emu-alg>
+        <emu-grammar>
+          ObjectLiteral :
+            `#{` RecordPropertyDefinitionList `}`
+            `#{` RecordPropertyDefinitionList `,` `}`
+        </emu-grammar>
+        <emu-alg>
+          1. Let _entries_ be an empty List.
+          1. Perform ? RecordPropertyDefinitionEvaluation of |RecordPropertyDefinitionList| with argument _entries_.
+          1. Let _rec_ be MakeRecordValue(_entries_).
+          1. Return _rec_.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-record-initializer-runtime-semantics-recordpropertydefinitionevaluation">
+        <h1>Runtime Semantics: RecordPropertyDefinitionEvaluation</h1>
+        <p>With parameter _entries_.</p>
+        <emu-see-also-para op="RecordPropertyDefinitionEvaluation"></emu-see-also-para>
+        <emu-grammar>RecordPropertyDefinitionList : RecordPropertyDefinitionList `,` RecordPropertyDefinition</emu-grammar>
+        <emu-alg>
+          1. Perform ? RecordPropertyDefinition of |RecordPropertyDefinitionList| with argument _entries_.
+          1. Return the result of performing RecordPropertyDefinitionEvaluation of |RecordPropertyDefinition| with argument _entries_.
+        </emu-alg>
+        <emu-grammar>RecordPropertyDefinition : `...` AssignmentExpression</emu-grammar>
+        <emu-alg>
+          1. Let _exprValue_ be the result of evaluating |AssignmentExpression|.
+          1. Let _fromValue_ be ? GetValue(_exprValue_).
+          1. Return ? CopyPropertiesIntoRecordEntriesList(_entries_, _fromValue_).
+        </emu-alg>
+        <emu-grammar>RecordPropertyDefinition : IdentifierReference</emu-grammar>
+        <emu-alg>
+          1. Let _propName_ be StringValue of |IdentifierReference|.
+          1. Let _exprValue_ be the result of evaluating |IdentifierReference|.
+          1. Let _propValue_ be ? GetValue(_exprValue_).
+          1. Return ! AddPropertyIntoRecordEntriesList(_record_, _propName_, _propValue_).
+        </emu-alg>
+        <emu-grammar>RecordPropertyDefinition : PropertyName `:` AssignmentExpression</emu-grammar>
+        <emu-alg>
+          1. Let _propKey_ be the result of evaluating |PropertyName|.
+          1. ReturnIfAbrupt(_propKey_).
+          1. If IsAnonymousFunctionDefinition(|AssignmentExpression|) is *true*, then
+            1. Let _propValue_ be NamedEvaluation of |AssignmentExpression| with argument _propKey_.
+          1. Else,
+            1. Let _exprValueRef_ be the result of evaluating |AssignmentExpression|.
+            1. Let _propValue_ be ? GetValue(_exprValueRef_).
+          1. Return ! AddPropertyIntoRecordEntriesList(_record_, _propKey_, _propValue_).
+        </emu-alg>
+      </emu-clause>
     </emu-clause>
     <emu-clause id="sec-tuple-initializer">
       <h1>Tuple Initializer</h1>
@@ -61,6 +148,67 @@
           TupleElementList[?Yield, ?Await] `,` SpreadElement[?Yield, ?Await]
 
       </emu-grammar>
+      
+      <emu-clause id="sec-tuple-accumulation-runtime-semantics-evaluation">
+        <h1>Runtime Semantics: TupleSequenceAccumulation</h1>
+        <p>With parameter _sequence_.</p>
+        <emu-grammar>TupleElementList : AssignmentExpression</emu-grammar>
+        <emu-alg>
+          1. Let _initResult_ be the result of evaluating |AssignmentExpression|.
+          1. Let _initValue_ be ? GetValue(_initResult_).
+          1. Return ! AddValueToTupleSequenceList(_sequence_, _value_).
+        </emu-alg>
+        <emu-grammar>TupleElementList : SpreadElement</emu-grammar>
+        <emu-alg>
+          1. Return the Result of performing TupleSequenceAccumulation for |SpreadElement| with argument _sequence_.
+        </emu-alg>
+        <emu-grammar>TupleElementList : TupleElementList `,` AssignmentExpression</emu-grammar>
+        <emu-alg>
+          1. Perform TupleSequenceAccumulation for |TupleElementList| with argument _sequence_.
+          1. Let _initResult_ be the result of evaluating |AssignmentExpression|.
+          1. Let _initValue_ be ? GetValue(_initResult_).
+          1. Return ! AddValueToTupleSequenceList(_sequence_, _value_).
+        </emu-alg>
+        <emu-grammar>TupleElementList : TupleElementList `,` SpreadElement</emu-grammar>
+        <emu-alg>
+          1. Perform TupleSequenceAccumulation for |TupleElementList| with argument _sequence_.
+          1. Return the Result of performing TupleSequenceAccumulation for |SpreadElement| with argument _sequence_.
+        </emu-alg>
+        <emu-grammar>SpreadElement : `...` AssignmentExpression</emu-grammar>
+        <emu-alg>
+          1. Let _spreadRef_ be the result of evaluating |AssignmentExpression|.
+          1. Let _spreadObj_ be ? GetValue(_spreadRef_).
+          1. Let _iteratorRecord_ be ? GetIterator(_spreadObj_).
+          1. Repeat,
+            1. Let _next_ be ? IteratorStep(_iteratorRecord_).
+            1. If _next_ is *false*, return _sequence_.
+            1. Let _nextValue_ be ? IteratorValue(_next_).
+            1. Perform ! AddValueToTupleSequenceList(_sequence_, _nextValue_).
+        </emu-alg>
+      </emu-clause>
+      
+      <emu-clause id="sec-tuple-initializer-runtime-semantics-evaluation">
+        <h1>Runtime Semantics: Evaluation</h1>
+        <emu-grammar>TupleLiteral : `#[` `]`</emu-grammar>
+        <emu-alg>
+          1. Let _sequence_ be an empty List.
+          1. Let _tup_ be ? MakeTupleValue(_sequence_).
+          1. Return _tup_.
+        </emu-alg>
+        <emu-grammar>
+          TupleLiteral :
+            `#[` TupleElementList `]`
+            `#[` TupleElementList `,` `]`
+        </emu-grammar>
+        <emu-alg>
+          1. Let _sequence_ be an empty List.
+          1. Perform ? TupleSequenceAccumulation for |TupleElementList| with argument _sequence_.
+          1. Let _tup_ be ? MakeTupleValue(_sequence_).
+          1. Return _tup_.
+        </emu-alg>
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
     </emu-clause>
   </emu-clause>
 
