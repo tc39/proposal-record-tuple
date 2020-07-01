@@ -7,13 +7,11 @@
 
     <emu-clause id="sec-ecmascript-language-types-record-type">
       <h1>The Record Type</h1>
-      <p>
-        The Record type is the set of all finite mappings from Strings to ECMAScript primitive values including Record and Tuple. Each record value holds an associated [[Fields]] List value which is a list of pairs of the form { [[Key]], [[Value]] } where the [[Key]] is a String and [[Value]] is any primitive value. Entries of [[Fields]] are sorted by [[Key]] in code unit order. The [[Fields]] List and its entries are never modified.
-     </p>
+      <p>The Record type is the set of all finite mappings from Strings to ECMAScript primitive values including Record and Tuple. Each record value holds an associated [[Fields]] List value which is a list of pairs of the form { [[Key]], [[Value]] } where the [[Key]] is a String and [[Value]] is any primitive value. Entries of [[Fields]] are sorted by [[Key]] in code unit order. The [[Fields]] List and its entries are never modified.</p>
 
       <emu-clause id="sec-makerecordvalue" aoid="MakeRecordValue">
         <h1>MakeRecordValue ( _entries_ )</h1>
-        <p>This abstract operation MakeRecordValue takes a _entries_ argument. It is used to specify the creation of new Record value types. It performs the following steps when called:</p>
+        <p>This abstract operation MakeRecordValue takes an _entries_ argument. It is used to specify the creation of new Record value types. It performs the following steps when called:</p>
         <emu-alg>
             1. Assert: _entries_ is a List.
             1. Let _reversedEntries_ be _entries_ in reverse.
@@ -33,9 +31,7 @@
 
     <emu-clause id="sec-ecmascript-language-types-tuple-type">
       <h1>The Tuple Type</h1>
-      <p>
-        The Tuple type is the set of all finite and ordered sequences of ECMAScript primitive values including Record and Tuple. Each tuple value holds an associated [[Sequence]] List which is a list of primitive values. The [[Sequence]] List is integer-indexed. The [[Sequence]] List and its values are never modified.
-      </p>
+      <p>The Tuple type is the set of all finite and ordered sequences of ECMAScript primitive values including Record and Tuple. Each tuple value holds an associated [[Sequence]] List which is a list of primitive values. The [[Sequence]] List is integer-indexed. The [[Sequence]] List and its values are never modified.</p>
     </emu-clause>
 
     <emu-clause id="sec-maketuplevalue" aoid="MakeTupleValue">
@@ -45,8 +41,8 @@
           1. Assert: _values_ is a List.
           1. For each _value_ in _values_:
             1. Assert: Type(_value_) is not Object.
-          1. Let _T_ be a Tuple value whose [[Sequence]] value is _values_
-          1. Return _T_
+          1. Let _T_ be a Tuple value whose [[Sequence]] value is _values_.
+          1. Return _T_.
       </emu-alg>
     </emu-clause>
   </emu-clause>

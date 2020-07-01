@@ -126,9 +126,7 @@
             1. Set _R_'s essential internal methods to the definitions specified in <emu-xref href="#sec-record-exotic-objects"></emu-xref>.
             1. Set _R_.[[Prototype]] to *null*.
             1. Set _R_.[[RecordData]] to _value_.
-            
-            1. Return _R_
-            
+            1. Return _R_.
         </emu-alg>
       </emu-clause>
       
@@ -142,7 +140,7 @@
           1. Assert Type(_rec_) is a Record.
           1. For each _entry_ of _rec_.[[Fields]], do
             1. Let _key_ be _entry_.[[Key]]
-            1. If ! SameValue(_key_, _P_), return *true*.
+            1. If ! SameValue(_key_, _P_) is *true*, return *true*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -288,8 +286,7 @@
             1. Set _T_'s essential internal methods to the definitions specified in <emu-xref href="#sec-tuple-exotic-objects"></emu-xref>.
             1. Set _T_.[[Prototype]] to %Tuple.prototype%.
             1. Set _T_.[[TupleData]] to _value_.
-            1. Return _T_
-            
+            1. Return _T_.
         </emu-alg>
       </emu-clause>
       
@@ -298,8 +295,8 @@
         <p>This abstract operation IsValidTupleIndex takes arguments _T_ and _numericIndex_. It performs the following steps when called:</p>
         <emu-alg>
           1. Assert: _T_ is an Object that has [[TupleData]] internal slot.
-          1. Assert: Type(_numericIndex_) is an integer.
-          1. If _numericIndex_ is *-0*, return *false*
+          1. Assert: ! IsInteger(_numericIndex_) is *true*.
+          1. If _numericIndex_ is *-0*, return *false*.
           1. If _numericIndex_ &lt; 0 or _numericIndex_ &gte; the length of _T_.[[TupleData]].[[Sequence]], return *false*.
           1. Return *true*.
         </emu-alg>
@@ -313,8 +310,8 @@
           1. Assert: Type(_numericIndex_) is an integer.
           1. Let _tup_ be _T_.[[TupleData]].
           1. If ! IsValidTupleIndex(_numericIndex_) is *false*, return ~empty~.
-          1. Let _value_ be the element with index _numericIndex_ in _tup_.[[Sequence]]
-          1. Return _value_
+          1. Let _value_ be the element with index _numericIndex_ in _tup_.[[Sequence]].
+          1. Return _value_.
         </emu-alg>
       </emu-clause>
     </emu-clause>
