@@ -25,6 +25,59 @@
             1. Return _R_.
         </emu-alg>
       </emu-clause>
+
+      <emu-clause id="sec-immutable-types-record-tostring">
+        <h1>Record::toString ( _argument_ )</h1>
+        <p>The abstract operation Record::toString takes argument _argument_ (a Record) and convertes _argument_ to a String. It performs the following steps when called:</p>
+        <emu-alg>
+            1. Assert: Type(_argument_) is Record.
+            1. Return *"[record]"*.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-immutable-types-record-equal">
+        <h1>Record::equal ( _x_, _y_, _elementEqual_ )</h1>
+        <p>The abstract operation Record::equal takes arguments _x_ (a Record), _y_ (a Record), and _elementEqual_ (a function object). _elementEqual_ will be invoked, with *undefined* as the receiver. It performs the following steps when called:</p>
+        <emu-alg>
+          1. Let _xList_ be _x_.[[Fields]].
+          1. Let _yList_ be _y_.[[Fields]].
+          1. Let _xLen_ be the length of List _xList_.
+          1. Let _yLen_ be the length of List _yList_.
+          1. If _xLen_ &ne; _yLen_, return *false*.
+          1. Let _k_ be 0.
+          1. Repeat, while _k_ &lt; _xLen_,
+            1. Let _xField_ be _xList_[_k_].
+            1. Let _yField_ be _yList_[_k_].
+            1. Let _xKey_ be _xField_.[[Key]].
+            1. Let _yKey_ be _yField_.[[Key]].
+            1. Let _xValue_ be _xField_.[[Value]].
+            1. Let _yValue_ be _yField_.[[Value]].
+            1. If ! SameValueNonGeneric(_xKey_, _yKey_) is *false*, Return *false*.
+            1. If ! ToBoolean(! Call(_elementEqual_, *undefined*, &laquo; _xValue_, _yValue_ &raquo; ) ) is *false*, Return *false*.
+            1. Set _k_ to _k_ + 1.
+          1. Return *true*.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-immutable-types-record-sameValue">
+        <h1>Record::sameValue ( _x_, _y_ )</h1>
+        <p>The abstract operation Record::sameValue takes arguments _x_ (a Record) and _y_ (a Record). It performs the following steps when called:</p>
+        <emu-alg>
+          1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
+            1. Return ! SameValue(_elementX_, _elementY_).
+          1. Return ! Record::equal(_x_, _y_, _elementEqual_).
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-immutable-types-record-sameValueZero">
+        <h1>Record::sameValueZero ( _x_, _y_ )</h1>
+        <p>The abstract operation Record::sameValueZero takes arguments _x_ (a Record) and _y_ (a Record). It performs the following steps when called:</p>
+        <emu-alg>
+          1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
+            1. Return ! SameValueZero(_elementX_, _elementY_).
+          1. Return ! Record::equal(_x_, _y_, _elementEqual_).
+        </emu-alg>
+      </emu-clause>
     </emu-clause>
 
 
@@ -43,6 +96,52 @@
             1. Return _T_.
         </emu-alg>
       </emu-clause>
+
+      <emu-clause id="sec-immutable-types-tuple-tostring">
+        <h1>Tuple::toString ( _argument_, [ _separator_ ] )</h1>
+        <p>The abstract operation Tuple::toString takes arguments _argument_ (a Tuple), and _separator_ (a String). It performs the following steps when called:</p>
+        <emu-alg>
+            1. Return ? Call(%Array.prototype.join%, _argument_, &laquo; _separator_ &raquo;).
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-immutable-types-tuple-equal">
+        <h1>Tuple::equal ( _x_, _y_, _elementEqual_ )</h1>
+        <p>The abstract operation Tuple::equal takes arguments _x_ (a Tuple), _y_ (a Tuple), and _elementEqual_ (a function object). _elementEqual_ will be invoked, with *undefined* as the receiver. It performs the following steps when called:</p>
+        <emu-alg>
+          1. Let _xList_ be _x_.[[Sequence]].
+          1. Let _yList_ be _y_.[[Sequence]].
+          1. Let _xLen_ be the length of List _xList_.
+          1. Let _yLen_ be the length of List _yList_.
+          1. If _xLen_ &ne; _yLen_, Return *false*.
+          1. Let _k_ be 0.
+          1. Repeat, while _k_ &lt; _xLen_,
+            1. Let _xItem_ be _xList_[_k_].
+            1. Let _yItem_ be _yList_[_k_].
+            1. If ! ToBoolean(? Call(_elementEqual_, *undefined*, &laquo; _xItem_, _yItem_ &raquo; ) ) is *false*, Return *false*.
+            1. Set _k_ to _k_ + 1.
+          1. Return *true*.
+        </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-immutable-types-tuple-sameValue">
+        <h1>Tuple::sameValue ( _x_, _y_ )</h1>
+        <p>The abstract operation Tuple::sameValue takes arguments _x_ (a Tuple) and _y_ (a Tuple). It performs the following steps when called:</p>
+        <emu-alg>
+          1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
+            1. Return ! SameValue(_elementX_, _elementY_).
+          1. Return ! Tuple::equal(_x_, _y_, _elementEqual_).
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-immutable-types-tuple-sameValueZero">
+        <h1>Tuple::sameValueZero ( _x_, _y_ )</h1>
+        <p>The abstract operation Tuple::sameValueZero takes arguments _x_ (a Tuple) and _y_ (a Tuple). It performs the following steps when called:</p>
+        <emu-alg>
+          1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
+            1. Return ! SameValueZero(_elementX_, _elementY_).
+          1. Return ! Tuple::equal(_x_, _y_, _elementEqual_).
+        </emu-alg>
+      </emu-clause>
   </emu-clause>
 </emu-clause>

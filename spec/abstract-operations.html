@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<meta charset="utf8" />
+
+
+<emu-clause id="sec-abstract-operations">
+  <h1>Abstract Operations</h1>
+  <emu-clause id="sec-type-conversion">
+    <h1>Type Conversion</h1>
+    <p>The ECMAScript language implicitly performs automatic type conversion as needed. To clarify the semantics of certain constructs it is useful to define a set of conversion abstract operations. The conversion abstract operations are polymorphic; they can accept a value of any ECMAScript language type. But no other specification types are used with these operations.</p>
+    <p>The BigInt <ins>, Record, and Tuple</ins> type<ins>s</ins> <del>has</del><ins>have</ins> no implicit conversions in the ECMAScript language; programmers must call BigInt <ins>, Record, or Tuple</ins> explicitly to convert values from other types.</p>
+
+    <emu-clause id="sec-toboolean" aoid="ToBoolean">
+      <h1>ToBoolean ( _argument_ )</h1>
+      <p>The abstract operation ToBoolean takes argument _argument_. It converts _argument_ to a value of type Boolean according to <emu-xref href="#table-10"></emu-xref>:</p>
+      <emu-table id="table-10" caption="ToBoolean Conversions">
+        <table>
+          <tbody>
+          <tr>
+            <th>
+              Argument Type
+            </th>
+            <th>
+              Result
+            </th>
+          </tr>
+          <tr>
+            <td>
+              Undefined
+            </td>
+            <td>
+              Return *false*.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Null
+            </td>
+            <td>
+              Return *false*.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Boolean
+            </td>
+            <td>
+              Return _argument_.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Number
+            </td>
+            <td>
+              If _argument_ is *+0*, *-0*, or *NaN*, return *false*; otherwise return *true*.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              String
+            </td>
+            <td>
+              If _argument_ is the empty String (its length is zero), return *false*; otherwise return *true*.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Symbol
+            </td>
+            <td>
+              Return *true*.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              BigInt
+            </td>
+            <td>
+              If _argument_ is *0n*, return *false*; otherwise return *true*.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Record</ins>
+            </td>
+            <td>
+              <ins>Return *true*.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Tuple</ins>
+            </td>
+            <td>
+              <ins>Return *true*.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Object
+            </td>
+            <td>
+              Return *true*.
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+
+    <emu-clause id="sec-tonumber" aoid="ToNumber">
+      <h1>ToNumber ( _argument_ )</h1>
+      <p>The abstract operation ToNumber takes argument _argument_. It converts _argument_ to a value of type Number according to <emu-xref href="#table-11"></emu-xref>:</p>
+      <emu-table id="table-11" caption="ToNumber Conversions">
+        <table>
+          <tbody>
+          <tr>
+            <th>
+              Argument Type
+            </th>
+            <th>
+              Result
+            </th>
+          </tr>
+          <tr>
+            <td>
+              Undefined
+            </td>
+            <td>
+              Return *NaN*.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Null
+            </td>
+            <td>
+              Return *+0*.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Boolean
+            </td>
+            <td>
+              If _argument_ is *true*, return 1. If _argument_ is *false*, return *+0*.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Number
+            </td>
+            <td>
+              Return _argument_ (no conversion).
+            </td>
+          </tr>
+          <tr>
+            <td>
+              String
+            </td>
+            <td>
+              See grammar and conversion algorithm below.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Symbol
+            </td>
+            <td>
+              Throw a *TypeError* exception.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              BigInt
+            </td>
+            <td>
+              Throw a *TypeError* exception.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Record</ins>
+            </td>
+            <td>
+              <ins>Throw a *TypeError* exception.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Tuple</ins>
+            </td>
+            <td>
+              <ins>Throw a *TypeError* exception.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Object
+            </td>
+            <td>
+              <p>Apply the following steps:</p>
+              <emu-alg>
+                1. Let _primValue_ be ? ToPrimitive(_argument_, hint Number).
+                1. Return ? ToNumber(_primValue_).
+              </emu-alg>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+
+    <emu-clause id="sec-tobigint" aoid="ToBigInt">
+      <h1>ToBigInt ( _argument_ )</h1>
+      <p>The abstract operation ToBigInt takes argument _argument_. It converts _argument_ to a BigInt value, or throws if an implicit conversion from Number would be required. It performs the following steps when called:</p>
+      <emu-alg>
+        1. Let _prim_ be ? ToPrimitive(_argument_, hint Number).
+        1. Return the value that _prim_ corresponds to in <emu-xref href="#table-tobigint"></emu-xref>.
+      </emu-alg>
+      <emu-table id="table-tobigint" caption="BigInt Conversions">
+        <table>
+          <tbody>
+            <tr>
+              <th>
+                Argument Type
+              </th>
+              <th>
+                Result
+              </th>
+            </tr>
+            <tr>
+              <td>
+                Undefined
+              </td>
+              <td>
+                Throw a *TypeError* exception.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Null
+              </td>
+              <td>
+                Throw a *TypeError* exception.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Boolean
+              </td>
+              <td>
+                Return `1n` if _prim_ is *true* and `0n` if _prim_ is *false*.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                BigInt
+              </td>
+              <td>
+                Return _prim_.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Number
+              </td>
+              <td>
+                Throw a *TypeError* exception.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                String
+              </td>
+              <td>
+                <emu-alg>
+                  1. Let _n_ be ! StringToBigInt(_prim_).
+                  1. If _n_ is *NaN*, throw a *SyntaxError* exception.
+                  1. Return _n_.
+                </emu-alg>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Symbol
+              </td>
+              <td>
+                Throw a *TypeError* exception.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ins>Record</ins>
+              </td>
+              <td>
+                <ins>Throw a *TypeError* exception.</ins>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ins>Tuple</ins>
+              </td>
+              <td>
+                <ins>Throw a *TypeError* exception.</ins>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+    <emu-clause id="sec-tostring" aoid="ToString">
+      <h1>ToString ( _argument_ )</h1>
+      <p>The abstract operation ToString takes argument _argument_. It converts _argument_ to a value of type String according to <emu-xref href="#table-12"></emu-xref>:</p>
+      <emu-table id="table-12" caption="ToString Conversions">
+        <table>
+          <tbody>
+          <tr>
+            <th>
+              Argument Type
+            </th>
+            <th>
+              Result
+            </th>
+          </tr>
+          <tr>
+            <td>
+              Undefined
+            </td>
+            <td>
+              Return *"undefined"*.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Null
+            </td>
+            <td>
+              Return *"null"*.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Boolean
+            </td>
+            <td>
+              <p>If _argument_ is *true*, return *"true"*.</p>
+              <p>If _argument_ is *false*, return *"false"*.</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Number
+            </td>
+            <td>
+              Return ! Number::toString(_argument_).
+            </td>
+          </tr>
+          <tr>
+            <td>
+              String
+            </td>
+            <td>
+              Return _argument_.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Symbol
+            </td>
+            <td>
+              Throw a *TypeError* exception.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              BigInt
+            </td>
+            <td>
+              Return ! BigInt::toString(_argument_).
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Record</ins>
+            </td>
+            <td>
+              <ins>Return ! Record::toString(_argument_).</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Tuple</ins>
+            </td>
+            <td>
+              <ins>Return ! Tuple::toString(_argument_).</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Object
+            </td>
+            <td>
+              <p>Apply the following steps:</p>
+              <emu-alg>
+                1. Let _primValue_ be ? ToPrimitive(_argument_, hint String).
+                1. Return ? ToString(_primValue_).
+              </emu-alg>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+    <emu-clause id="sec-toobject" aoid="ToObject">
+      <h1>ToObject ( _argument_ )</h1>
+      <p>The abstract operation ToObject takes argument _argument_. It converts _argument_ to a value of type Object according to <emu-xref href="#table-13"></emu-xref>:</p>
+      <emu-table id="table-13" caption="ToObject Conversions">
+        <table>
+          <tbody>
+          <tr>
+            <th>
+              Argument Type
+            </th>
+            <th>
+              Result
+            </th>
+          </tr>
+          <tr>
+            <td>
+              Undefined
+            </td>
+            <td>
+              Throw a *TypeError* exception.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Null
+            </td>
+            <td>
+              Throw a *TypeError* exception.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Boolean
+            </td>
+            <td>
+              Return a new Boolean object whose [[BooleanData]] internal slot is set to _argument_. See <emu-xref href="#sec-boolean-objects"></emu-xref> for a description of Boolean objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Number
+            </td>
+            <td>
+              Return a new Number object whose [[NumberData]] internal slot is set to _argument_. See <emu-xref href="#sec-number-objects"></emu-xref> for a description of Number objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              String
+            </td>
+            <td>
+              Return a new String object whose [[StringData]] internal slot is set to _argument_. See <emu-xref href="#sec-string-objects"></emu-xref> for a description of String objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Symbol
+            </td>
+            <td>
+              Return a new Symbol object whose [[SymbolData]] internal slot is set to _argument_. See <emu-xref href="#sec-symbol-objects"></emu-xref> for a description of Symbol objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              BigInt
+            </td>
+            <td>
+              Return a new BigInt object whose [[BigIntData]] internal slot is set to _argument_. See <emu-xref href="#sec-bigint-objects"></emu-xref> for a description of BigInt objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Record</ins>
+            </td>
+            <td>
+              <ins>Return a new Record object whose [[RecordData]] internal slot is set to _argument_. See <emu-xref href="#sec-record-objects"></emu-xref> for a description of Record objects.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Tuple</ins>
+            </td>
+            <td>
+              <ins>Return a new Tuple object whose [[TupleData]] internal slot is set to _argument_. See <emu-xref href="#sec-tuple-objects"></emu-xref> for a description of Tuple objects.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Object
+            </td>
+            <td>
+              Return _argument_.
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </emu-table>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-testing-and-comparison-operations">
+    <h1>Testing and Comparison Operations</h1>
+
+    <emu-clause id="sec-requireobjectcoercible" aoid="RequireObjectCoercible">
+      <h1>RequireObjectCoercible ( _argument_ )</h1>
+      <p>The abstract operation RequireObjectCoercible takes argument _argument_. It throws an error if _argument_ is a value that cannot be converted to an Object using ToObject. It is defined by <emu-xref href="#table-14"></emu-xref>:</p>
+      <emu-table id="table-14" caption="RequireObjectCoercible Results">
+        <table>
+          <tbody>
+          <tr>
+            <th>
+              Argument Type
+            </th>
+            <th>
+              Result
+            </th>
+          </tr>
+          <tr>
+            <td>
+              Undefined
+            </td>
+            <td>
+              Throw a *TypeError* exception.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Null
+            </td>
+            <td>
+              Throw a *TypeError* exception.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Boolean
+            </td>
+            <td>
+              Return _argument_.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Number
+            </td>
+            <td>
+              Return _argument_.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              String
+            </td>
+            <td>
+              Return _argument_.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Symbol
+            </td>
+            <td>
+              Return _argument_.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              BigInt
+            </td>
+            <td>
+              Return _argument_.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Record</ins>
+            </td>
+            <td>
+              <ins>Return _argument_.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Tuple</ins>
+            </td>
+            <td>
+              <ins>Return _argument_.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Object
+            </td>
+            <td>
+              Return _argument_.
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </emu-table>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-samevalue" aoid="SameValue">
+      <h1>SameValue ( _x_, _y_ )</h1>
+      <p>The abstract operation SameValue takes arguments _x_ (an ECMAScript language value) and _y_ (an ECMAScript language value) and returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean. It performs the following steps when called:</p>
+      <emu-alg>
+        1. If Type(_x_) is different from Type(_y_), return *false*.
+        1. If Type(_x_) is <del>Number or BigInt</del><ins>Number, BigInt, Record, or Tuple</ins>, then
+          1. Return ! Type(_x_)::sameValue(_x_, _y_).
+        1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
+        1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
+      </emu-alg>
+      <emu-note>
+        <p>This algorithm differs from the Strict Equality Comparison Algorithm in its treatment of signed zeroes and NaNs.</p>
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-samevaluezero" aoid="SameValueZero">
+      <h1>SameValueZero ( _x_, _y_ )</h1>
+      <p>The abstract operation SameValueZero takes arguments _x_ (an ECMAScript language value) and _y_ (an ECMAScript language value) and returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean. It performs the following steps when called:</p>
+      <emu-alg>
+        1. If Type(_x_) is different from Type(_y_), return *false*.
+        1. If Type(_x_) is <del>Number or BigInt</del><ins>Number, BigInt, Record, or Tuple</ins>, then
+          1. Return ! Type(_x_)::sameValueZero(_x_, _y_).
+        1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
+        1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
+      </emu-alg>
+      <emu-note>
+        <p>SameValueZero differs from SameValue only in its treatment of *+0* and *-0*.</p>
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-samevaluenongeneric" aoid="SameValueNonGeneric" oldids="sec-samevaluenongeneric">
+      <h1><del>SameValueNonNumeric</del><ins>SameValueNonGeneric</ins> ( _x_, _y_ )</h1>
+      <p>The abstract operation <del>SameValueNonNumeric</del><ins>SameValueNonGeneric</ins> takes arguments _x_ (an ECMAScript language value) and _y_ (an ECMAScript language value) and returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean. It performs the following steps when called:</p>
+      <emu-alg>
+        1. Assert: Type(_x_) is not Number or BigInt.
+        1. Assert: Type(_x_) is the same as Type(_y_).
+        1. If Type(_x_) is Undefined, return *true*.
+        1. If Type(_x_) is Null, return *true*.
+        1. If Type(_x_) is String, then
+          1. If _x_ and _y_ are exactly the same sequence of code units (same length and same code units at corresponding indices), return *true*; otherwise, return *false*.
+        1. If Type(_x_) is Boolean, then
+          1. If _x_ and _y_ are both *true* or both *false*, return *true*; otherwise, return *false*.
+        1. If Type(_x_) is Symbol, then
+          1. If _x_ and _y_ are both the same Symbol value, return *true*; otherwise, return *false*.
+        1. If _x_ and _y_ are the same Object value, return *true*. Otherwise, return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-abstract-equality-comparison" aoid="Abstract Equality Comparison">
+      <h1>Abstract Equality Comparison</h1>
+      <p>The comparison _x_ == _y_, where _x_ and _y_ are values, produces *true* or *false*. Such a comparison is performed as follows:</p>
+      <emu-alg>
+        1. If Type(_x_) is the same as Type(_y_), then
+          1. Return the result of performing Strict Equality Comparison _x_ === _y_.
+        1. If _x_ is *null* and _y_ is *undefined*, return *true*.
+        1. If _x_ is *undefined* and _y_ is *null*, return *true*.
+        1. If Type(_x_) is Number and Type(_y_) is String, return the result of the comparison _x_ == ! ToNumber(_y_).
+        1. If Type(_x_) is String and Type(_y_) is Number, return the result of the comparison ! ToNumber(_x_) == _y_.
+        1. If Type(_x_) is BigInt and Type(_y_) is String, then
+          1. Let _n_ be ! StringToBigInt(_y_).
+          1. If _n_ is *NaN*, return *false*.
+          1. Return the result of the comparison _x_ == _n_.
+        1. If Type(_x_) is String and Type(_y_) is BigInt, return the result of the comparison _y_ == _x_.
+        1. If Type(_x_) is Boolean, return the result of the comparison ! ToNumber(_x_) == _y_.
+        1. If Type(_y_) is Boolean, return the result of the comparison _x_ == ! ToNumber(_y_).
+        1. If Type(_x_) is either String, Number, BigInt<ins>, Record, Tuple</ins>, or Symbol and Type(_y_) is Object, return the result of the comparison _x_ == ? ToPrimitive(_y_).
+        1. If Type(_x_) is Object and Type(_y_) is either String, Number, BigInt<ins>, Record, Tuple</ins>, or Symbol, return the result of the comparison ? ToPrimitive(_x_) == _y_.
+        1. If Type(_x_) is BigInt and Type(_y_) is Number, or if Type(_x_) is Number and Type(_y_) is BigInt, then
+          1. If _x_ or _y_ are any of *NaN*, *+&infin;*, or *-&infin;*, return *false*.
+          1. If the mathematical value of _x_ is equal to the mathematical value of _y_, return *true*; otherwise return *false*.
+        1. Return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-strict-equality-comparison" aoid="Strict Equality Comparison">
+      <h1>Strict Equality Comparison</h1>
+      <p>The comparison _x_ === _y_, where _x_ and _y_ are values, produces *true* or *false*. Such a comparison is performed as follows:</p>
+      <emu-alg>
+        1. If Type(_x_) is different from Type(_y_), return *false*.
+        1. If Type(_x_) is Number or BigInt, then
+          1. Return ! Type(_x_)::equal(_x_, _y_).
+        1. <ins>If Type(_x_) is Record or Tuple, then</ins>
+          1. <ins>Return ! Type(_x_)::sameValueZero(_x_, _y_).</ins>
+        1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
+        1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
+      </emu-alg>
+      <emu-note>
+        <p>This algorithm differs from the SameValue Algorithm in its treatment of signed zeroes and NaNs.</p>
+      </emu-note>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>

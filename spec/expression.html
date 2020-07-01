@@ -63,4 +63,126 @@
       </emu-grammar>
     </emu-clause>
   </emu-clause>
+
+  <emu-clause id="sec-unary-operators">
+    <h1>Unary Operators</h1>
+
+    <emu-clause id="sec-typeof-operator">
+      <h1>The `typeof` Operator</h1>
+
+      <emu-clause id="sec-typeof-operator-runtime-semantics-evaluation">
+        <h1>Runtime Semantics: Evaluation</h1>
+        <emu-grammar>UnaryExpression : `typeof` UnaryExpression</emu-grammar>
+        <emu-alg>
+          1. Let _val_ be the result of evaluating |UnaryExpression|.
+          1. If Type(_val_) is Reference, then
+            1. If IsUnresolvableReference(_val_) is *true*, return *"undefined"*.
+          1. Set _val_ to ? GetValue(_val_).
+          1. Return a String according to <emu-xref href="#table-35"></emu-xref>.
+        </emu-alg>
+        <emu-table id="table-35" caption="typeof Operator Results">
+          <table>
+            <tbody>
+            <tr>
+              <th>
+                Type of _val_
+              </th>
+              <th>
+                Result
+              </th>
+            </tr>
+            <tr>
+              <td>
+                Undefined
+              </td>
+              <td>
+                *"undefined"*
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Null
+              </td>
+              <td>
+                *"object"*
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Boolean
+              </td>
+              <td>
+                *"boolean"*
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Number
+              </td>
+              <td>
+                *"number"*
+              </td>
+            </tr>
+            <tr>
+              <td>
+                String
+              </td>
+              <td>
+                *"string"*
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Symbol
+              </td>
+              <td>
+                *"symbol"*
+              </td>
+            </tr>
+            <tr>
+              <td>
+                BigInt
+              </td>
+              <td>
+                *"bigint"*
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ins>Record</ins>
+              </td>
+              <td>
+                <ins>*"record"*</ins>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ins>Tuple</ins>
+              </td>
+              <td>
+                <ins>*"tuple"*</ins>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Object (does not implement [[Call]])
+              </td>
+              <td>
+                *"object"*
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Object (implements [[Call]])
+              </td>
+              <td>
+                *"function"*
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </emu-table>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
 </emu-clause>
