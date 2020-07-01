@@ -269,8 +269,10 @@
           1. Let _keys_ be a new empty List.
           1. Assert _T_ is Tuple exotic object.
           1. Let _len_ be the length of _T_.[[TupleData]].[[Sequence]].
-          1. For each integer _i_ starting with 0 such that _i_ &lt; _len_ in ascending order, do
-            1. Add ! ToString(_i_) to _keys_.
+          1. Let _index_ be 0.
+          1. Repeat, while _index_ &lt; _len_,
+            1. Add ! ToString(_index_) to _keys_.
+            1. Set _index_ to _index_ + 1.
           1. Return _keys_
         </emu-alg>
       </emu-clause>
