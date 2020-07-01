@@ -46,8 +46,8 @@
         <h1>Record::sameValue ( _x_, _y_ )</h1>
         <p>The abstract operation Record::sameValue takes arguments _x_ (a Record) and _y_ (a Record). It performs the following steps when called:</p>
         <emu-alg>
-          1. Let _steps_ be the algorithm steps defined in <emu-xref href="#sec-samevalue" title></emu-xref>.
-          1. Let _elementEqual_ be ! CreateBuiltinFunction(_steps_, &laquo; &raquo;).
+          1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
+            1. Return ! SameValue(_elementX_, _elementY_).
           1. Return ! Record::equal(_x_, _y_, _elementEqual_).
         </emu-alg>
       </emu-clause>
@@ -56,8 +56,8 @@
         <h1>Record::sameValueZero ( _x_, _y_ )</h1>
         <p>The abstract operation Record::sameValueZero takes arguments _x_ (a Record) and _y_ (a Record). It performs the following steps when called:</p>
         <emu-alg>
-          1. Let _steps_ be the algorithm steps defined in <emu-xref href="#sec-samevaluezero" title></emu-xref>.
-          1. Let _elementEqual_ be ! CreateBuiltinFunction(_steps_, &laquo; &raquo;).
+          1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
+            1. Return ! SameValueZero(_elementX_, _elementY_).
           1. Return ! Record::equal(_x_, _y_, _elementEqual_).
         </emu-alg>
       </emu-clause>
@@ -98,8 +98,8 @@
         <h1>Tuple::sameValue ( _x_, _y_ )</h1>
         <p>The abstract operation Tuple::sameValue takes arguments _x_ (a Tuple) and _y_ (a Tuple). It performs the following steps when called:</p>
         <emu-alg>
-          1. Let _steps_ be the algorithm steps defined in <emu-xref href="#sec-samevalue" title></emu-xref>.
-          1. Let _elementEqual_ be ! CreateBuiltinFunction(_steps_, &laquo; &raquo;).
+          1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
+            1. Return ! SameValue(_elementX_, _elementY_).
           1. Return ! Tuple::equal(_x_, _y_, _elementEqual_).
         </emu-alg>
       </emu-clause>
@@ -108,8 +108,8 @@
         <h1>Tuple::sameValueZero ( _x_, _y_ )</h1>
         <p>The abstract operation Tuple::sameValueZero takes arguments _x_ (a Tuple) and _y_ (a Tuple). It performs the following steps when called:</p>
         <emu-alg>
-          1. Let _steps_ be the algorithm steps defined in <emu-xref href="#sec-samevaluezero" title></emu-xref>.
-          1. Let _elementEqual_ be ! CreateBuiltinFunction(_steps_, &laquo; &raquo;).
+          1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
+            1. Return ! SameValueZero(_elementX_, _elementY_).
           1. Return ! Tuple::equal(_x_, _y_, _elementEqual_).
         </emu-alg>
       </emu-clause>
