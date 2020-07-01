@@ -20,7 +20,7 @@
               1. Assert: Type(_kv_.[[Key]]) is String.
               1. Assert: Type(_kv_.[[Value]]) is not Object.
               1. If there is no entry _existing_ in _uniqueEntries_ such that _existing_.[[Key]] is _kv_.[[Key]], append _kv_ to _uniqueEntries_.
-            1. Let _sortedEntries_ be _uniqueEntries_ sorted such that, for any entry two entries _a_ preceding _b_, then the result of performing Abstract Relational Comparison _a_.[[Key]] < _b_.[[Key]] is *true*.
+            1. Let _sortedEntries_ be _uniqueEntries_ sorted such that, for any entry two entries _a_ and _b_, _a_ will be placed before _b_ if the result of performing Abstract Relational Comparison _a_.[[Key]] < _b_.[[Key]] is *true*.
             1. Let _R_ be a Record value whose [[Fields]] value is _sortedEntries_.
             1. Return _R_.
         </emu-alg>
