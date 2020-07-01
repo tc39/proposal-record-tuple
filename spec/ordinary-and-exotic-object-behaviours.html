@@ -10,17 +10,9 @@
       <h1>Record Exotic Objects</h1>
       <p>A Record object is an exotic object that encapsuates a Record value and exposes virtual string-indexed data properties corresponding to the individual keys set on the underlying Record value. All keys properties are non-writable and non-configurable.</p>
 
-      <p>An object is a <dfn id="record-exotic-object">Record exotic object</dfn> (or simply, a Record object) if its following internal methods use the following implementations. These methods are installed in RecordCreate.</p>
+      <p>An object is a <dfn id="record-exotic-object">Record exotic object</dfn> (or simply, a Record object) if its following internal methods use the following implementations and is an <emu-xref href="#sec-immutable-prototype-exotic-objects">Immutable Prototype Exotic Object</emu-xref>. These methods are installed in RecordCreate.</p>
 
       <p>Record exotic objects have the same internal slots as ordinary objects. They also have a [[RecordData]] internal slot.</p>
-
-      <emu-clause id="sec-record-exotic-objects-setprototypeof-v">
-        <h1>[[SetPrototypeOf]] ( _V_ )</h1>
-        <p>When the [[SetPrototypeOf]] internal method of a Record exotic object _R_ is called with argument _V_, the following steps are taken:</p>
-        <emu-alg>
-          1. Return ! SetImmutablePrototype(_R_, _V_).
-        </emu-alg>
-      </emu-clause>
       
       <emu-clause id="sec-record-exotic-objects-isextensible">
         <h1>[[IsExtensible]] ()</h1>
@@ -169,19 +161,10 @@
       <h1>Tuple Exotic Objects</h1>
       <p>A Tuple object is an exotic object that encapsuates a Tuple value and exposes virtual integer-indexed data properties corresponding to the individual entries set on the underlying Tuple value. All keys properties are non-writable and non-configurable.</p>
 
-      <p>An object is a <dfn id="tuple-exotic-object">Tuple exotic object</dfn> (or simply, a Record object) if its following internal methods use the following implementations.</p>
+      <p>An object is a <dfn id="tuple-exotic-object">Tuple exotic object</dfn> (or simply, a Record object) if its following internal methods use the following implementations and is an <emu-xref href="#sec-immutable-prototype-exotic-objects">Immutable Prototype Exotic Object</emu-xref>..</p>
 
       <p>Tuple exotic objects have the same internal slots as ordinary objects. They also have a [[TupleData]] internal slot.</p>
 
-      
-      <emu-clause id="sec-tuple-exotic-objects-setprototypeof-v">
-        <h1>[[SetPrototypeOf]] ( _V_ )</h1>
-        <p>When the [[SetPrototypeOf]] internal method of a Tuple exotic object _T_ is called with argument _V_, the following steps are taken:</p>
-        <emu-alg>
-          1. Return ! SetImmutablePrototype(_T, _V_).
-        </emu-alg>
-      </emu-clause>
-      
       <emu-clause id="sec-tuple-exotic-objects-isextensible">
         <h1>[[IsExtensible]] ()</h1>
         <p>When the [[IsExtensible]] internal method of a Tuple exotic object _T_ is called, the following steps are taken:</p>
