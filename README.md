@@ -20,6 +20,8 @@
 
 ### [Try out Record and Tuple in the playground!](https://rickbutton.github.io/record-tuple-playground)
 
+### [Spec Text](https://tc39.es/proposal-record-tuple/)
+
 # Overview
 
 This proposal introduces two new deeply immutable data structures to JavaScript:
