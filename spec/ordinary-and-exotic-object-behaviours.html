@@ -27,7 +27,7 @@
         <p>When the [[GetOwnProperty]] internal method of a Record exotic object _R_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinaryGetOwnProperty(_R_, _P_).
+          1. If Type(_P_) is a Symbol, return *undefined*.
           1. Let _getResult_ be ! RecordGet(_R_, _P_).
           1. If _getResult_ is ~empty~, return *undefined*.
           1. Return the PropertyDescriptor { [[Value]]: _getResult_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
@@ -39,7 +39,7 @@
         <p>When the [[DefineOwnProperty]] internal method of a Record exotic object _R_ is called with property key _P_, and Property Descriptor _Desc_ the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinaryDefineOwnProperty(_R_, _P_).
+          1. If Type(_P_) is a Symbol, return *false*.
           1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
           1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
@@ -56,7 +56,7 @@
         <p>When the [[HasProperty]] internal method of a Record exotic object _R_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinaryHasProperty (_R_, _P_).
+          1. If Type(_P_) is a Symbol, return *false*.
           1. Return ! RecordHasProperty(_R_, _P_).
         </emu-alg>
       </emu-clause>
@@ -66,7 +66,7 @@
         <p>When the [[Get]] internal method of a Record exotic object _R_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinaryGet (_R_, _P_, _Receiver_).
+          1. If Type(_P_) is a Symbol, return *undefined*.
           1. Let _value_ be ! RecordGet( _R_, _P_ ).
           1. If _value_ is ~empty~, return *undefined*.
           1. Return _value_
@@ -78,7 +78,7 @@
         <p>When the [[Set]] internal method of a Record exotic object _R_ is called with Property Key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinarySet (_R_, _P_, _Receiver_).
+          1. If Type(_P_) is a Symbol, return *false*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -88,7 +88,7 @@
         <p>When the [[Delete]] internal method of a Record exotic object _R_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinaryDelete (_R_, _P_).
+          1. If Type(_P_) is a Symbol, return *true*.
           1. Let _hasProperty_ ? RecordHasProperty( _R_, _P_ ).
           1. Return *true* if _hasProperty_ is *false*.
           1. Return *false*.
@@ -106,9 +106,6 @@
             1. Let _key_ be _entry_.[[Key]]
             1. Assert: Type(_key_) is String
             1. Append _key_ to _keys_.
-          1. Let _ordinaryProps_ be ? OrdinaryOwnPropertyKeys (_R_).
-          1. For each _key_ of _ordinaryProps_, do
-            1. If Type(_key_) is Symbol, add _key_ to _keys_.
           1. Return _keys_
         </emu-alg>
       </emu-clause>
@@ -183,7 +180,7 @@
         <p>When the [[GetOwnProperty]] internal method of a Tuple exotic object _T_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinaryGetOwnProperty(_T_, _P_).
+          1. If Type(_P_) is a Symbol, return *false*.
           1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
           1. If _numericIndex_ is *undefined*, return *undefined*.
           1. Let _value_ be ? TupleGet(_T_, _numericIndex_)
@@ -197,7 +194,7 @@
         <p>When the [[DefineOwnProperty]] internal method of a Tuple exotic object _T_ is called with property key _P_, and Property Descriptor _Desc_ the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinaryDefineOwnProperty(_T_, _P_).
+          1. If Type(_P_) is a Symbol, return *false*.
           1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
           1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
@@ -216,7 +213,7 @@
         <p>When the [[HasProperty]] internal method of a Tuple exotic object _T_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinaryHasProperty (_T_, _P_).
+          1. If Type(_P_) is a Symbol, return *false*.
           1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
           1. If _numericIndex_ is not *undefined*, return ? IsValidTupleIndex(_T_, _numericIndex_)
           1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
@@ -229,7 +226,7 @@
         <p>When the [[Get]] internal method of a Tuple exotic object _T_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinaryGet (_T_, _P_, _Receiver_).
+          1. If Type(_P_) is a Symbol, return *undefined*.
           1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
           1. If _numericIndex_ is not *undefined*, then
             1. Let _value_ be ? TupleGet(_T_, _numericIndex_).
@@ -245,7 +242,6 @@
         <p>When the [[Set]] internal method of a Tuple exotic object _T_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinarySet (_T_, _P_, _Receiver_).
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -255,7 +251,7 @@
         <p>When the [[Delete]] internal method of a Tuple exotic object _T_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return ! OrdinaryDelete (_T_, _P_).
+          1. If Type(_P_) is a Symbol, return *true*.
           1. Let _isValidIndex_ ? IsValidTupleIndex( _T_, _P_ ).
           1. If _isValidIndex_ is *false*, return *true*.
           1. Return *false*.
@@ -274,9 +270,6 @@
           1. Repeat, while _index_ &lt; _len_,
             1. Add ! ToString(_index_) to _keys_.
             1. Set _index_ to _index_ + 1.
-          1. Let _ordinaryProps_ be ? OrdinaryOwnPropertyKeys (_T_).
-          1. For each _key_ of _ordinaryProps_, do
-            1. If Type(_key_) is Symbol, add _key_ to _keys_.
           1. Return _keys_
         </emu-alg>
       </emu-clause>
