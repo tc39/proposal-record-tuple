@@ -117,7 +117,7 @@
           1. Let _propName_ be StringValue of |IdentifierReference|.
           1. Let _exprValue_ be the result of evaluating |IdentifierReference|.
           1. Let _propValue_ be ? GetValue(_exprValue_).
-          1. Return ! AddPropertyIntoRecordEntriesList(_record_, _propName_, _propValue_).
+          1. Return ? AddPropertyIntoRecordEntriesList(_record_, _propName_, _propValue_).
         </emu-alg>
         <emu-grammar>RecordPropertyDefinition : PropertyName `:` AssignmentExpression</emu-grammar>
         <emu-alg>
@@ -128,7 +128,7 @@
           1. Else,
             1. Let _exprValueRef_ be the result of evaluating |AssignmentExpression|.
             1. Let _propValue_ be ? GetValue(_exprValueRef_).
-          1. Return ! AddPropertyIntoRecordEntriesList(_record_, _propKey_, _propValue_).
+          1. Return ? AddPropertyIntoRecordEntriesList(_record_, _propKey_, _propValue_).
         </emu-alg>
       </emu-clause>
     </emu-clause>
@@ -156,7 +156,7 @@
         <emu-alg>
           1. Let _initResult_ be the result of evaluating |AssignmentExpression|.
           1. Let _initValue_ be ? GetValue(_initResult_).
-          1. Return ! AddValueToTupleSequenceList(_sequence_, _value_).
+          1. Return ? AddValueToTupleSequenceList(_sequence_, _value_).
         </emu-alg>
         <emu-grammar>TupleElementList : SpreadElement</emu-grammar>
         <emu-alg>
@@ -167,7 +167,7 @@
           1. Perform TupleSequenceAccumulation for |TupleElementList| with argument _sequence_.
           1. Let _initResult_ be the result of evaluating |AssignmentExpression|.
           1. Let _initValue_ be ? GetValue(_initResult_).
-          1. Return ! AddValueToTupleSequenceList(_sequence_, _value_).
+          1. Return ? AddValueToTupleSequenceList(_sequence_, _value_).
         </emu-alg>
         <emu-grammar>TupleElementList : TupleElementList `,` SpreadElement</emu-grammar>
         <emu-alg>
@@ -183,7 +183,7 @@
             1. Let _next_ be ? IteratorStep(_iteratorRecord_).
             1. If _next_ is *false*, return _sequence_.
             1. Let _nextValue_ be ? IteratorValue(_next_).
-            1. Perform ! AddValueToTupleSequenceList(_sequence_, _nextValue_).
+            1. Perform ? AddValueToTupleSequenceList(_sequence_, _nextValue_).
         </emu-alg>
       </emu-clause>
       
