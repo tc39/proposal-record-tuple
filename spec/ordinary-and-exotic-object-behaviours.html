@@ -213,7 +213,7 @@
         <p>When the [[HasProperty]] internal method of a Tuple exotic object _T_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is not a Symbol, then
+          1. If Type(_P_) is not Symbol, then
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, return ? IsValidTupleIndex(_T_, _numericIndex_)
           1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
@@ -226,7 +226,7 @@
         <p>When the [[Get]] internal method of a Tuple exotic object _T_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is not a Symbol, then
+          1. If Type(_P_) is not Symbol, then
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, then
               1. Let _value_ be ? TupleGet(_T_, _numericIndex_).
