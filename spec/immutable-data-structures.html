@@ -92,7 +92,8 @@
         <p>When the `Tuple` function is called with exactly one argument, the following steps are taken:</p>
         <emu-alg>
           1. Let _numberOfArgs_ be the number of arguments passed to this function call.
-          1. Assert: _numberOfArgs_ = 1.
+          1. Assert: _numberOfArgs_ = 0 or _numberOfArgs_ = 1.
+          1. If _numberOfArgs_ is 0, return a new Tuple whose [[Sequence]] is an empty List.
           1. Let _list_ be a new empty List.
           1. If Type(_len_) is not Number, then
             1. Append _len_ to the end of List _list_.
