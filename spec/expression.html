@@ -92,7 +92,14 @@
         <emu-alg>
           1. Let _entries_ be an empty List.
           1. Perform ? RecordPropertyDefinitionEvaluation of |RecordPropertyDefinitionList| with argument _entries_.
-          1. Let _rec_ be MakeRecordValue(_entries_).
+          1. Let _reversedEntries_ be _entries_ in reverse.
+          1. Let _uniqueEntries_ be an empty List.
+          1. For each _kv_ in _reversedEntries_:
+            1. Assert: Type(_kv_.[[Key]]) is String.
+            1. Assert: Type(_kv_.[[Value]]) is not Object.
+            1. If there is no entry _existing_ in _uniqueEntries_ such that _existing_.[[Key]] is _kv_.[[Key]], append _kv_ to _uniqueEntries_.
+          1. Let _sortedEntries_ be a new List containing the values of _uniqueEntries_ sorted such that, for any entry two entries _a_ and _b_, _a_ will be placed before _b_ if the result of performing Abstract Relational Comparison _a_.[[Key]] < _b_.[[Key]] is *true*.
+          1. Let _rec_ be a Record value whose [[Fields]] value is _sortedEntries_.
           1. Return _rec_.
         </emu-alg>
       </emu-clause>
@@ -109,8 +116,14 @@
         <emu-grammar>RecordPropertyDefinition : `...` AssignmentExpression</emu-grammar>
         <emu-alg>
           1. Let _exprValue_ be the result of evaluating |AssignmentExpression|.
-          1. Let _fromValue_ be ? GetValue(_exprValue_).
-          1. Return ? CopyPropertiesIntoRecordEntriesList(_entries_, _fromValue_).
+          1. Let _source_ be ? GetValue(_exprValue_).
+          1. If _source_ is *undefined* or *null*, return _entries_.
+          1. Let _from_ be ! ToObject(_source_).
+          1. Let _keys_ be ? _from_.[[OwnPropertyKeys]]().
+          1. For each element _nextKey_ of _keys_ in List order, do
+            1. Let _value_ be _from_.[[Get]](_nextKey_).
+            1. Perform ? AddPropertyIntoRecordEntriesList(_entries_, _nextKey_, _value_).
+          1. Return _entries_.
         </emu-alg>
         <emu-grammar>RecordPropertyDefinition : IdentifierReference</emu-grammar>
         <emu-alg>
@@ -194,7 +207,7 @@
         <emu-grammar>TupleLiteral : `#[` `]`</emu-grammar>
         <emu-alg>
           1. Let _sequence_ be an empty List.
-          1. Let _tup_ be ? MakeTupleValue(_sequence_).
+          1. Let _tup_ be a Tuple value whose [[Sequence]] value is _sequence_.
           1. Return _tup_.
         </emu-alg>
         <emu-grammar>
@@ -205,7 +218,9 @@
         <emu-alg>
           1. Let _sequence_ be an empty List.
           1. Perform ? TupleSequenceAccumulation for |TupleElementList| with argument _sequence_.
-          1. Let _tup_ be ? MakeTupleValue(_sequence_).
+          1. For each _value_ in _sequence_,
+            1. Assert: Type(_value_) is not Object.
+          1. Let _tup_ be a Tuple value whose [[Sequence]] value is _sequence_.
           1. Return _tup_.
         </emu-alg>
         </emu-alg>
