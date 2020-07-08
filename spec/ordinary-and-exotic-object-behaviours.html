@@ -231,7 +231,7 @@
             1. If _numericIndex_ is not *undefined*, then
               1. Let _value_ be ? TupleGet(_T_, _numericIndex_).
               1. If _value_ is ~empty~, return *undefined*.
-              2. Return _value_.
+              1. Return _value_.
           1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
           1. Return ? _parent_.[[Get]](_P_, _Receiver_).
         </emu-alg>

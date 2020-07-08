@@ -183,7 +183,9 @@
             1. Let _next_ be ? IteratorStep(_iteratorRecord_).
             1. If _next_ is *false*, return _sequence_.
             1. Let _nextValue_ be ? IteratorValue(_next_).
-            1. Perform ? AddValueToTupleSequenceList(_sequence_, _nextValue_).
+            1. Let _completion_ be AddValueToTupleSequenceList(_sequence_, _nextValue_).
+            1. If _completion_ is an abrupt completion, then
+              1. Return IteratorClose(_iteratorRecord_, _completion_).
         </emu-alg>
       </emu-clause>
       
