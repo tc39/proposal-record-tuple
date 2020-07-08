@@ -713,22 +713,6 @@
   <emu-clause id="sec-operations-on-records">
     <h1>Operations on Records</h1>
 
-    <emu-clause id="sec-makerecordvalue" aoid="MakeRecordValue">
-      <h1>MakeRecordValue ( _entries_ )</h1>
-      <p>This abstract operation MakeRecordValue takes an _entries_ argument. It is used to specify the creation of new Record value types. It performs the following steps when called:</p>
-      <emu-alg>
-          1. Assert: _entries_ is a List.
-          1. Let _reversedEntries_ be _entries_ in reverse.
-          1. Let _uniqueEntries_ be an empty List.
-          1. For each _kv_ in _reversedEntries_:
-            1. Assert: Type(_kv_.[[Key]]) is String.
-            1. Assert: Type(_kv_.[[Value]]) is not Object.
-            1. If there is no entry _existing_ in _uniqueEntries_ such that _existing_.[[Key]] is _kv_.[[Key]], append _kv_ to _uniqueEntries_.
-          1. Let _sortedEntries_ be a new List containing the values of _uniqueEntries_ sorted such that, for any entry two entries _a_ and _b_, _a_ will be placed before _b_ if the result of performing Abstract Relational Comparison _a_.[[Key]] < _b_.[[Key]] is *true*.
-          1. Let _R_ be a Record value whose [[Fields]] value is _sortedEntries_.
-          1. Return _R_.
-      </emu-alg>
-    </emu-clause>
     <emu-clause id="sec-addpropertyintorecordentrieslist" aoid="AddPropertyIntoRecordEntriesList">
       <h1>AddPropertyIntoRecordEntriesList ( _entries_, _propName_, _value_ )</h1>
       <p>This abstract operation AddPropertyIntoRecordEntriesList takes _entries_, _propName_ and _value_ arguments. It is used during a single assignment into a Record literal expression. It performs the following steps when called:</p>
@@ -741,36 +725,11 @@
           1. Return _entries_.
       </emu-alg>
     </emu-clause>
-    <emu-clause id="sec-copypropertiesintorecordentrieslist" aoid="CopyPropertiesIntoRecordEntriesList">
-      <h1>CopyPropertiesIntoRecordEntriesList ( _entries_, _source_ )</h1>
-      <p>This abstract operation CopyPropertiesIntoRecordEntriesList takes _entries_ and _source_ arguments. It is used during a spread in a Record literal expression. It performs the following steps when called:</p>
-      <emu-alg>
-          1. Assert: Type(_entries_) is List.
-          1. If _source_ is *undefined* or *null*, return _entries_.
-          1. Let _from_ be ! ToObject(_source_).
-          1. Let _keys_ be ? _from_.[[OwnPropertyKeys]]().
-          1. For each element _nextKey_ of _keys_ in List order, do
-            1. Let _value_ be _from_.[[Get]](_nextKey_).
-            1. Perform ? AddPropertyIntoRecordEntriesList(_entries_, _nextKey_, _value_).
-          1. Return _entries_.
-      </emu-alg>
-    </emu-clause>
   </emu-clause>
 
 
   <emu-clause id="sec-operations-on-tuples">
     <h1>Operations on Tuples</h1>
-    <emu-clause id="sec-maketuplevalue" aoid="MakeTupleValue">
-      <h1>MakeTupleValue ( _values_ )</h1>
-      <p>This abstract operation MakeTupleValue takes a _values_ argument. It is used to specify the creation of new Tuple value types. It performs the following steps when called:</p>
-      <emu-alg>
-          1. Assert: _values_ is a List.
-          1. For each _value_ in _values_,
-            1. Assert: Type(_value_) is not Object.
-          1. Let _T_ be a Tuple value whose [[Sequence]] value is _values_.
-          1. Return _T_.
-      </emu-alg>
-    </emu-clause>
     
     <emu-clause id="sec-addvaluetotuplesequencelist" aoid="AddValueToTupleSequenceList">
       <h1>AddValueToTupleSequenceList ( _sequence_, _value_ )</h1>
