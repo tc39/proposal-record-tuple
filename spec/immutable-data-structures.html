@@ -50,7 +50,7 @@
             1. If Type(_value_) is Object, throw a *TypeError* exception.
             1. Let _field_ be { [[Key]]: _key_, [[Value]]: _value_ }.
             1. Append _field_ to the end of list _fields_.
-          1. Perform ! AddEntriesFromIterable(`undefined`, _iterable_, _adder_).
+          1. Perform ! AddEntriesFromIterable(*undefined*, _iterable_, _adder_).
           1. Return a new Record value whose [[Fields]] is _fields_.
         </emu-alg>
         <emu-note>
@@ -156,7 +156,7 @@
               1. If Type(_mappedValue_) is Object, throw a *TypeError* exception.
               1. Append _mappedValue_ to _list_.
               1. Set _k_ to _k_ + 1.
-            1. Perform ! AddEntriesFromIterable(`undefined`, _iterable_, _adder_).
+            1. Perform ! AddEntriesFromIterable(*undefined*, _iterable_, _adder_).
             1. Return a new Tuple value whose [[Sequence]] is _list_.
           1. NOTE: _items_ is not an Iterable so assume it is an array-like object.
           1. Let _arrayLike_ be ! ToObject(_items_).
