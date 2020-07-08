@@ -751,7 +751,7 @@
           1. Let _keys_ be ? _from_.[[OwnPropertyKeys]]().
           1. For each element _nextKey_ of _keys_ in List order, do
             1. Let _value_ be _from_.[[Get]](_nextKey_).
-            1. Perform ! AddPropertyIntoRecordEntriesList(_entries_, _nextKey_, _value_).
+            1. Perform ? AddPropertyIntoRecordEntriesList(_entries_, _nextKey_, _value_).
           1. Return _entries_.
       </emu-alg>
     </emu-clause>
