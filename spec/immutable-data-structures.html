@@ -212,6 +212,15 @@
         <p>The initial value of *Tuple.prototype.constructor* is the intrinsic object %Tuple%</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.valueof">
+        <h1>get Tuple.prototype.length</h1>
+        <p>*Tuple.prototype.length* is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _size_ be the length of _T_.[[Sequence]].
+          1. Return _size_.
+        </emu-alg>
+      </emu-clause>
+      <emu-clause id="sec-tuple.prototype.valueof">
         <h1>Tuple.prototype.valueOf ( )</h1>
         <p>When the `valueOf` function is called, the following steps are taken:</p>
         <emu-alg>
