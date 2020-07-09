@@ -21,6 +21,7 @@
 <h1 id="table-of-contents">Table of contents</h1>
 <ul>
 <li><a href="#introduction">Introduction</a></li>
+<li><a href="#managing-state-with-record--tuple">Managing State with Record &amp; Tuple</a></li>
 </ul>
 <hr>
 <h1 id="introduction">Introduction</h1>
@@ -88,6 +89,204 @@ console.log(milesCard === {
     numero: 123456,
 }); // =&gt; false</code></pre>
 <p>As we can see, records get matched by value instead of by identity as seen with the <code>milesCard</code>.</p>
+<h2 id="introduction-looking-back">Introduction, looking back!</h2>
+<p>We finally have a quick idea of what Record &amp; Tuple are for but it might be a non-trivial to know what they would be used for... We are going to explore that very soon in the next part, starting with state management!</p>
+<hr>
+<h1 id="managing-state-with-record--tuple">Managing State with Record &amp; Tuple</h1>
+<p>Record &amp; Tuple are great for representing state (especially shared state). For instance you could use Record &amp; Tuple to manage your <a href="https://redux.js.org/">Redux</a> state as you would use <a href="https://immutable-js.github.io/immutable-js/">Immutable.js</a> for the same thing!</p>
+<h2 id="representing-immutable-state">Representing immutable state</h2>
+<p>Let&#39;s start with a simple example where you store some shared state and use some functions able to lookup that state:</p>
+<pre><code class="language-js">let appState = #{
+    // a list of strings representing the name of each user for each visit
+    userByVisit: #[
+        &quot;alice&quot;,
+        &quot;mike&quot;,
+        &quot;alice&quot;,
+    ],
+    // a mapping of user to their number of visits
+    visitsByUser: #{
+        alice: 2,
+        mike: 1,
+    },
+};
+
+function getNbVisits() {
+    // accessing a record and a tuple is the same as accessing objects and arrays
+    return appState.userByVisit.length;
+}
+
+function getNbVisitByUser(username) {
+    // computed properties work as you would expect them to!
+    return appState.visitsByUser[username];
+}
+
+console.log(&quot;nb visits&quot;, getNbVisits()); // 3
+console.log(&quot;nb visits by alice&quot;, getNbVisitByUser(&quot;alice&quot;)); // 2</code></pre>
+<p>As we can see we have some denormalized state that is useful for the kind of lookups we want to do. Maintaining that state up to date can be hard if anyone can go and change it partially. This can happen in large codebases with mutable datastructures. Here, we can&#39;t change the datastructure so we have to mutate the state atomically, at once:</p>
+<pre><code class="language-js">let appState = #{
+    userByVisit: #[],
+    visitsByUser: #{},
+};
+
+function getNbVisits() {
+    return appState.userByVisit.length;
+}
+
+function getNbVisitByUser(username) {
+    return appState.visitsByUser[username];
+}
+
+function visit(username) {
+    // we swap our state with the new one
+    appState = #{
+        // We use pushed() to return the new appState.userByVisit record
+        // after pushing a new element to it
+        userByVisit: appState.userByVisit.pushed(username),
+        visitsByUser: #{
+            // We use the spread operation to put back the keys
+            // that we had originally
+            ...appState.visitsByUser,
+            // But for the one that we need to change, we override it with
+            // a new incremented value
+            [username]: (appState.visitsByUser[username] || 0) + 1,
+        }
+    };
+}
+
+visit(&quot;alice&quot;);
+visit(&quot;mark&quot;);
+visit(&quot;alice&quot;);
+
+console.log(&quot;nb visits&quot;, getNbVisits()); // 3
+console.log(&quot;nb visits by alice&quot;, getNbVisitByUser(&quot;alice&quot;)); // 2</code></pre>
+<blockquote>
+<p>Note: We use an assignment to reassign the state: this is ok because the variable can have its value changed unlike the contents of the value it holds. You can try doing an assignment inside, it will fail:</p>
+<pre><code class="language-js">let appState = #{
+    userByVisit: #[],
+    visitsByUser: #{},
+};
+appState.userByVisit.push(&quot;jose&quot;); // TypeError
+appState.visitsByUser[&quot;jose&quot;] = 1; // TypeError (if you remove the line before)</code></pre>
+</blockquote>
+<blockquote>
+<p>Note: using spreads to do deep reassignments can be a cumbersome task. That is why, once <a href="https://github.com/tc39/proposal-deep-path-properties-for-record/">Deep Path Properties for Record</a> advances more stages, we&#39;ll be able to feature it in this cookbook!</p>
+</blockquote>
+<h2 id="keeping-track-of-immutable-state-and-comparing-it">Keeping track of immutable state and comparing it</h2>
+<p>Now that we have a good idea of how we want to maintain our state, we can immediately start using more of the immutability property: we can now keep around copies of our state to restore it back for later or debugging:</p>
+<pre><code class="language-js">// We store our history of states in a normal array
+const appStateHistory = [#{
+    userByVisit: #[],
+    visitsByUser: #{},
+}];
+
+// utility to get the last state in our history
+function getLastState() {
+    return appStateHistory[appStateHistory.length - 1];
+}
+
+function getNbVisits(appState = getLastState()) {
+    return appState.userByVisit.length;
+}
+
+function getNbVisitByUser(username, appState = getLastState()) {
+    return appState.visitsByUser[username];
+}
+
+function visit(username) {
+    const last = getLastState();
+    // we push to the array now
+    appStateHistory.push(#{
+        userByVisit: last.userByVisit.pushed(username),
+        visitsByUser: #{
+            ...last.visitsByUser,
+            [username]: (last.visitsByUser[username] || 0) + 1,
+        }
+    });
+}
+
+visit(&quot;alice&quot;);
+visit(&quot;mark&quot;);
+visit(&quot;alice&quot;);
+
+console.log(&quot;nb visits&quot;, getNbVisits()); // 3
+console.log(&quot;nb visits by alice&quot;, getNbVisitByUser(&quot;alice&quot;)); // 2
+// let&#39;s travel in time!
+console.log(&quot;nb visits (at state 1)&quot;, getNbVisits(appStateHistory[1])); // 1
+console.log(
+    &quot;nb visits by alice (at state 1)&quot;,
+    getNbVisitByUser(&quot;alice&quot;, appStateHistory[1])
+); // 1</code></pre>
+<p>Now that we can keep track of the past, let&#39;s see how we can use it with the comparison to be more efficient. We change a bit the state here and just keep track of two different pieces of state in one central state, changing one part of the state should normally not affect the rest of our app:</p>
+<pre><code class="language-js">const appStateHistory = [#{
+    profile: #{
+        username: &quot;alice&quot;,
+        fullName: &quot;Alice Ritchie&quot;,
+    },
+    status: #{
+        message: &quot;Feeling sleepy&quot;,
+        emotion: &quot;zZz&quot;,
+    },
+}];
+
+
+function getLastState() {
+    return appStateHistory[appStateHistory.length - 1];
+}
+// utility to get the state coming before our last state in history
+// be careful! it can be undefined
+function getLastLastState() {
+    return appStateHistory[appStateHistory.length - 2];
+}
+
+function updateStatus(message, emotion) {
+    const last = getLastState();
+    appStateHistory.push(#{
+        ...last,
+        status: #{ message, emotion },
+    });
+}
+
+function updateFullName(fullName) {
+    const last = getLastState();
+    appStateHistory.push(#{
+        ...last,
+        profile: #{
+            ...last.profile,
+            fullName,
+        },
+    });
+}
+
+function getStatusString(appState = getLastState()) {
+    return `Status: ${appState.status.message} (${appState.status.emotion})`;
+}
+
+function getProfileString(appState = getLastState()) {
+    return `Profile: ${appState.profile.fullName} (${appState.profile.username})`;
+}
+
+// Simulate rendering some UI (by printing in the console)
+function render(prevState = getLastLastState(), newState = getLastState()) {
+    console.log(&quot;=== Render Start ===&quot;);
+    // Only update the profile UI if it changed!
+    if (!prevState || prevState.profile !== newState.profile) {
+        console.log(getProfileString());
+    }
+    // Only update the status UI if it changed!
+    if (!prevState || prevState.status !== newState.status) {
+        console.log(getStatusString());
+    }
+    console.log(&quot;=== Render End ===&quot;);
+}
+
+render(); // Will show both Profile and Status strings
+updateStatus(&quot;Feeling Energetic!&quot;, &quot;:D&quot;);
+render(); // Will only show Status string
+updateFullName(&quot;Allie Ri&quot;);
+render(); // Will only show Profile string</code></pre>
+<p>Now we can only do expensive operations (like updating our UI) when the piece of state we&#39;re looking at changed!</p>
+<h2 id="state-management-looking-back">State management, looking back!</h2>
+<p>We only scratched the surface of what is possible! As we&#39;ve seen before you might want to use a state management solution like <a href="https://redux.js.org/">Redux</a> to do this. However, <a href="https://redux.js.org/">Redux</a> is not meant to give you comparison operations, you usually have to do it yourself and it is hard to get it right. With Record &amp; Tuple, comparison is done by the JavaScript engine so you don&#39;t have to do it!</p>
 
 
 <hr/>
