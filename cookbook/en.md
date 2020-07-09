@@ -12,6 +12,7 @@ This small website will guide you through the [Record & Tuple ECMAScript proposa
 # Table of contents
 
 - [Introduction](#introduction)
+- [Compound values](#compound-values)
 - [Managing State with Record & Tuple](#managing-state-with-record--tuple)
 
 ---
@@ -108,15 +109,15 @@ As we can see, records get matched by value instead of by identity as seen with 
 
 ## Introduction, looking back!
 
-We finally have a quick idea of what Record & Tuple are for but it might be a non-trivial to know what they would be used for... We are going to explore that very soon in the next part, starting with coumpound values!
+We finally have a quick idea of what Record & Tuple are for but it might be a non-trivial to know what they would be used for... We are going to explore that very soon in the next part, starting with compound values!
 
 ---
 
-# Coumpound values
+# Compound values
 
-This part is there to introduce you to the posibility to build coumpound values easily and how to use them.
+This part is there to introduce you to the posibility to build compound values easily and how to use them.
 
-## Using strings to coumpound values
+## Using strings to compound values
 
 What we're going to do here is already possible with strings. However the ergonomics are not great.
 
@@ -146,7 +147,7 @@ console.log("at 0:0x0", grid["0:0x0"]); // undefined
 
 Changing our number representation made it impossible for us to find the location, yet, we know that `0 === 0x0`.
 
-Strings let us coumpound values together but will leave us with their arbitrary constraints.
+Strings let us compound values together but will leave us with their arbitrary constraints.
 
 Let's look at another way we could have done this:
 
