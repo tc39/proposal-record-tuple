@@ -33,7 +33,6 @@ export function bootstrapCodeSnippets(openInPlaygroundLabel) {
             const uri = `${PLAYGROUND_LINK}#${createB64PlaygroundHash(source)}`
             window.open(uri, '_blank');
         };
-        preRoot.appendChild(linkToSource);
-        
+        preRoot.parentNode.insertBefore(linkToSource, preRoot.nextSibling);
     }
 }
