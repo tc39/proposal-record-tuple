@@ -1,4 +1,4 @@
-name: Publish the spec to gh-pages
+name: Publish the spec & cookbook to gh-pages
 on:
   push:
     branches: [ master ]
@@ -11,6 +11,8 @@ jobs:
       run: npm install
     - name: Build the spec
       run: npm run build:spec
+    - name: Build the cookbook
+      run: npm run build:cookbook
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
