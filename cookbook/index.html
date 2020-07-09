@@ -1,0 +1,101 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record & Tuple Cookbook</title>
+    <link rel="stylesheet" href="./watercss/light.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        code, pre {
+            font-family:'Roboto Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+
+<h1 id="record--tuple-cookbook">Record &amp; Tuple Cookbook</h1>
+<p>This small website will guide you through the <a href="https://github.com/tc39/proposal-record-tuple">Record &amp; Tuple ECMAScript proposal</a>.</p>
+<p>🌐 <strong>en</strong> | <a href="./fr.html">fr</a></p>
+<hr>
+<h1 id="table-of-contents">Table of contents</h1>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+</ul>
+<hr>
+<h1 id="introduction">Introduction</h1>
+<p>Hello and thanks for opening this cookbook! The goal of this book is to introduce you to Record &amp; Tuple, an experiemental feature of JavaScript.</p>
+<p>In this book, you&#39;ll find multiple examples of programs that can be written using this feature.</p>
+<h2 id="what-are-record--tuple-">What are Record &amp; Tuple ?</h2>
+<p>A record is analoguous to an Object in JavaScript with the exception that the Record is not an Object but a deeply immutable primitive value.
+Likewise, a Tuple is like an Array but is a deeply immutable primitive value.</p>
+<h3 id="immutability">Immutability</h3>
+<p>What do we want to say by deeply immutable primitive value?</p>
+<ul>
+<li>Primitive value: A string, a number or a symbol for instance are primitive values in JavaScript. Those values are in general represented as low-level values attached to the program stack.</li>
+<li>Deeply immutable: It is actually a repetition as primitive values are by nature impossible to change, they are immutable. Because of that, Records or Tuples can only contain other primitive values such as strings, numbers, symbols or Records and Tuples! Those structures can be defined recursively, explaining why this immutability is deep.</li>
+</ul>
+<p>One could say that Record and Tuple can be described as Compound Value Types.</p>
+<h4 id="examples">Examples</h4>
+<p>Let&#39;s start by representing a wallet in a Tuple composed of different cards represented by Records:</p>
+<pre><code class="language-js">const drivingLicence = #{
+    country: &quot;UK&quot;,
+    number: 123456789870,
+};
+const creditCard = #{
+    type: &quot;Amex&quot;,
+    number: 378282246310005,
+};
+const debitCard = #{
+    type: &quot;Visa&quot;,
+    number: 4242424242424242,
+};
+const wallet = #[
+    drivingLicence,
+    creditCard,
+    debitCard,
+];</code></pre>
+<p>In order to create a Record or a Tuple, just write an Object or an Array and prefix it with an hash <code>#</code> character.</p>
+<blockquote>
+<p>Note: You can&#39;t put objects in your wallet as your wallet is a Tuple!</p>
+<pre><code class="language-js">const milesCard = {
+    rank: &quot;gold&quot;,
+    numero: 123456,
+};
+const wallet = #[
+    milesCard, // TypeError
+];</code></pre>
+</blockquote>
+<h3 id="comparisons">Comparisons</h3>
+<p>The main advantage of this approach, excluding the immutability constraint, is to guarantee value equality instead of identity equality.</p>
+<p>This means that you don&#39;t need to worry about which Record is being manipulated, where has it been created, etc... If its values are identical, two Records are equal. You can therefore use the <code>===</code> comparison to know if both primitive values are equal.</p>
+<h4 id="example">Example</h4>
+<pre><code class="language-js">const drivingLicence = #{
+    country: &quot;UK&quot;,
+    number: 123456789870,
+};
+const milesCard = {
+    rank: &quot;gold&quot;,
+    numero: 123456,
+};
+
+console.log(drivingLicence === #{
+    country: &quot;UK&quot;,
+    number: 123456789870,
+}); // =&gt; true
+console.log(milesCard === {
+    rank: &quot;gold&quot;,
+    numero: 123456,
+}); // =&gt; false</code></pre>
+<p>As we can see, records get matched by value instead of by identity as seen with the <code>milesCard</code>.</p>
+
+
+<hr/>
+<nav>
+    <a href="#top">^ Back to top</a>
+</nav>
+<script type="module">
+    import { bootstrapCodeSnippets } from "./bootstrap-snippets.js";
+    bootstrapCodeSnippets(`Run in playground`);
+</script>
+</body>
+</html>
