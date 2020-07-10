@@ -1,5 +1,4 @@
-import { build } from "./build.mjs";
-import CONFIG from "../config.mjs";
+import { build, getConfigFor } from "./build-static-page.mjs";
 import * as fs from "fs";
 
 function watch(config) {
@@ -10,4 +9,8 @@ function watch(config) {
   );
 }
 
-watch(CONFIG);
+async function main() {
+  watch(await getConfigFor(process.argv[2]));
+}
+
+main();

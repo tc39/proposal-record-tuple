@@ -9,15 +9,15 @@ export default {
   watchDir: __dirname,
   template: join(__dirname, "..", "assets", "template.html"),
   copyToOutDir: join(__dirname, "..", "assets"),
-  outDir: join(__dirname, "..", "out", "cookbook"),
+  outDir: join(__dirname, "..", "out", "tutorial"),
   replacementsPerLanguage: {
     en: {
-      RT_COOKBOOK_TITLE: "Record & Tuple Cookbook",
+      RT_COOKBOOK_TITLE: "Record & Tuple Tutorial",
       RUN_IN_PLAYGROUND: "Run in playground",
       TOP_OF_PAGE: "^ Back to top",
     },
     fr: {
-      RT_COOKBOOK_TITLE: "Livre de recettes Record & Tuple",
+      RT_COOKBOOK_TITLE: "Tutoriel Record & Tuple",
       RUN_IN_PLAYGROUND: "Essayer dans le bac à sable",
       TOP_OF_PAGE: "^ Retour en haut de page",
     },
