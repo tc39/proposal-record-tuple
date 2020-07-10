@@ -23,21 +23,21 @@ This tutorial will guide you through the [Record & Tuple ECMAScript proposal][rt
 
 Hello and thanks for opening this tutorial! The goal of this page is to introduce you to Record & Tuple, an experiemental feature of JavaScript.
 
-In this book, you'll find multiple examples of programs that can be written using this feature.
+In this tutorial, you'll find multiple examples of programs that can be written using this feature.
 
-## What are Record & Tuple ?
+## What is `Record & Tuple`?
 
 A record is analoguous to an Object in JavaScript with the exception that the Record is not an Object but a deeply immutable primitive value.
 Likewise, a Tuple is like an Array but is a deeply immutable primitive value.
 
 ### Immutability
 
-What do we want to say by deeply immutable primitive value?
+What do we mean by `deeply immutable primitive value`?
 
-- Primitive value: A string, a number or a symbol for instance are primitive values in JavaScript. Those values are in general represented as low-level values attached to the program stack.
-- Deeply immutable: It is actually a repetition as primitive values are by nature impossible to change, they are immutable. Because of that, Records or Tuples can only contain other primitive values such as strings, numbers, symbols or Records and Tuples! Those structures can be defined recursively, explaining why this immutability is deep.
+- Primitive value: A string, a number or a symbol are primitive values in JavaScript. These values are *in general* represented as low-level values attached to the program stack.
+- Deeply immutable: For a value to be deeply immutable, it must be immutable and all of it's subelements must also be deeply immutable. All JavaScript primitive values, including `Record & Tuple`, are deeply immutable, but only records and tuples have "subelements". Records and tuples can only contain primitive values such as strings, numbers, symbols or records and tuples, which makes them deeply immutable by definition.
 
-One could say that Record and Tuple can be described as [compound primitive values][2ality].
+One could say that Record & Tuple can be described as [compound primitive values][2ality].
 
 [2ality]: https://2ality.com/2020/05/records-tuples-first-look.html
 
@@ -65,7 +65,7 @@ const wallet = #[
 ];
 ```
 
-In order to create a Record or a Tuple, just write an Object or an Array and prefix it with an hash `#` character.
+In order to create a Record or a Tuple, just use an Object or an Array literal and prefix it with an hash `#` character.
 
 > Note: You can't put objects in your wallet as your wallet is a Tuple!
 >
@@ -83,7 +83,7 @@ In order to create a Record or a Tuple, just write an Object or an Array and pre
 
 The main advantage of this approach, excluding the immutability constraint, is to guarantee value equality instead of identity equality.
 
-This means that you don't need to worry about which Record is being manipulated, where has it been created, etc... If its values are identical, two Records are equal. You can therefore use the `===` comparison to know if both primitive values are equal.
+This means that you don't need to worry about which Record is being manipulated, where has it been created, etc... If its values are identical, two Records are equal. You can therefore use the `===` comparison to know if both records are equal.
 
 #### Example
 
@@ -107,7 +107,7 @@ console.log(milesCard === {
 }); // => false
 ```
 
-As we can see, records get matched by value instead of by identity as seen with the `milesCard`.
+As we can see, records are compared by value instead of by identity as seen with the `milesCard`.
 
 ## Introduction, looking back!
 
@@ -117,11 +117,9 @@ We finally have a quick idea of what Record & Tuple are for but it might be a no
 
 # Compound values
 
-This part is there to introduce you to the posibility to build compound values easily and how to use them.
+## Using strings as compound values
 
-## Using strings to compound values
-
-What we're going to do here is already possible with strings. However the ergonomics are not great.
+What we're going to do here is already possible with strings. However, the ergonomics are not great.
 
 Let's say we want to index items in a sparse grid and be able to look them up fast. We're going to try to encode coordinates in strings:
 
@@ -183,7 +181,7 @@ console.log("at 0:0x0", grid[JSON.stringify({
 })]); // undefined
 ```
 
-We're getting a wrong lookup because the order matters in JSON serialization.
+We're not getting what we expect because the order of properties matters in JSON serialization.
 
 ## Coumpounding values into another value with tuples
 
@@ -201,7 +199,7 @@ console.log("at 0:0", grid.get(#[0, 0])); // player
 console.log("at 0:0", grid.get(#[0, 0x0])); // player
 ```
 
-Amazing! This works as expected! The difference between a tuple and a string is that a string will only keep the sequence of character information, so if one char changes, everything is off. However, the tuple will keep the actual sequence of typed values so if all the values of the tuple are identical, everything should work.
+Amazing! This works as expected! The difference between a tuple and a string is that a string will only keep the sequence of character information, so if one char changes, everything is off. However, the tuple will keep the actual sequence of primitive values so if all the values of the tuple are identical, everything will work as expected.
 
 Now what is interesting is that you can access the internals of the tuple in a way you couldn't before and use that for equality:
 
@@ -227,8 +225,7 @@ const tooCrazyTuple = #[{}]; // TypeError!
 
 ## Coumpounding values into another value with records
 
-Now let's take a quick look at records that are like tuples but keyed! Let's just name our axes from our previous example:
-
+Now let's take a quick look at records. Records are like tuples but have string-keys like objects, instead of an ordered sequence of elements like a tuple (or array). Let's name our axes from our previous example:
 
 
 ```js
@@ -244,7 +241,7 @@ console.log("at 0:0", grid.get(#{x:0, y:0x0})); // player
 console.log("at 0:0", grid.get(#{y:0x0, x:0})); // player
 ```
 
-Note that on the last `console.log`, the order did not matter in the equality, unlike what we've seen with converting objects to JSON.
+Note the last `console.log`; the order did not matter, unlike what we've seen when converting objects to JSON.
 
 The same operations from before are also possible:
 
@@ -260,7 +257,7 @@ console.log("c1 at origin?", isAtOrigin(c1)); // false
 console.log("c2 at origin?", isAtOrigin(c2)); // true
 ```
 
-And you can obviously store any other value in there:
+And you can store any other value in a record:
 
 
 ```js
@@ -284,7 +281,7 @@ By this point, you should get a pretty good idea of how Record and Tuple behave.
 
 # Managing State with Record & Tuple
 
-Record & Tuple are great for representing state (especially shared state). For instance you could use Record & Tuple to manage your [Redux] state as you would use [Immutable.js] for the same thing!
+Record & Tuple are great for representing state (especially shared state). For instance you could use Record & Tuple to manage your [Redux] state just like you would use [Immutable.js] or another immutable library.
 
 [Redux]: https://redux.js.org/
 [Immutable.js]: https://immutable-js.github.io/immutable-js/
@@ -322,7 +319,7 @@ console.log("nb visits", getNbVisits()); // 3
 console.log("nb visits by alice", getNbVisitByUser("alice")); // 2
 ```
 
-As we can see we have some denormalized state that is useful for the kind of lookups we want to do. Maintaining that state up to date can be hard if anyone can go and change it partially. This can happen in large codebases with mutable datastructures. Here, we can't change the datastructure so we have to mutate the state atomically, at once:
+As we can see we have some denormalized state that is useful for the kind of lookups we want to do. Maintaining that state can be hard if anything can mutate it. This can happen in large codebases with mutable data structures. Here, we can't change the data structure so we have to mutate the state atomically, t once:
 
 ```js
 let appState = #{
@@ -364,8 +361,8 @@ console.log("nb visits by alice", getNbVisitByUser("alice")); // 2
 ```
 
 
-> Note: We use an assignment to reassign the state: this is ok because the variable can have its value changed unlike the contents of the value it holds. You can try doing an assignment inside, it will fail:
-> 
+> Note: We use an assignment to reassign `appState`; this is fine because the variable can have its value changed unlike the contents of a record. You can try doing an assignment to a record's property, but it will fail:
+>
 > ```js
 > let appState = #{
 >     userByVisit: #[],
@@ -374,14 +371,13 @@ console.log("nb visits by alice", getNbVisitByUser("alice")); // 2
 > appState.userByVisit.push("jose"); // TypeError
 > appState.visitsByUser["jose"] = 1; // TypeError (if you remove the line before)
 > ```
-
 > Note: using spreads to do deep reassignments can be a cumbersome task. That is why, once [Deep Path Properties for Record] advances more stages, we'll be able to feature it in this tutorial!
 
 [Deep Path Properties for Record]: https://github.com/tc39/proposal-deep-path-properties-for-record/
 
 ## Keeping track of immutable state and comparing it
 
-Now that we have a good idea of how we want to maintain our state, we can immediately start using more of the immutability property: we can now keep around copies of our state to restore it back for later or debugging:
+Now that we have a good idea of how we want to maintain our state, we can immediately start using more of the immutability property: we can keep around copies of our state so that we can restore it or debug it later:
 
 ```js
 // We store our history of states in a normal array
@@ -429,7 +425,7 @@ console.log(
 ); // 1
 ```
 
-Now that we can keep track of the past, let's see how we can use it with the comparison to be more efficient. We change a bit the state here and just keep track of two different pieces of state in one central state, changing one part of the state should normally not affect the rest of our app:
+Now that we can keep track of the past, let's see how we can use it with comparison to be more efficient. We can compose two separate pieces of application state, and use the equality of records to check if we need to re-render the "application" components that depend on that substate.
 
 ```js
 const appStateHistory = [#{
@@ -501,19 +497,19 @@ updateFullName("Allie Ri");
 render(); // Will only show Profile string
 ```
 
-Now we can only do expensive operations (like updating our UI) when the piece of state we're looking at changed!
+Now we can choose to only perform expensive operations (like updating our UI) when the piece of state we're looking at changed!
 
 ## State management, looking back!
 
-We only scratched the surface of what is possible! As we've seen before you might want to use a state management solution like [Redux] to do this. However, [Redux] is not meant to give you comparison operations, you usually have to do it yourself and it is hard to get it right. With Record & Tuple, comparison is done by the JavaScript engine so you don't have to do it!
+We only scratched the surface of what is possible! As we've seen before you might want to use a state management solution like [Redux] to do this. However, [Redux] is not meant to give you comparison operations, you usually have to do it yourself and it is hard to get it right. With Record & Tuple, comparison is performed by the JavaScript engine so you don't have to do it!
 
 ---
 
 # Keeping track of objects in Record & Tuple
 
-As we've seen multiple times by now, Record and Tuple will give you the dreaded `TypeError` every time you need to store an object in them.
+As we've seen multiple times, Record and Tuple will give you the dreaded `TypeError` every time you need to store an object in them.
 
-THis doesn't mean you can't symbolically reference to objects in them, in this part we're going to see how!
+If you need to refer to objects anyway, you can indirectly reference them. In this part we're going to see how!
 
 ## Tracking objects through indices
 
@@ -527,7 +523,7 @@ let appState = #{
 };
 ```
 
-What we can do is create our state so it has a `fixed` Record and Tuple part and a `dynamic` part and reference from one ot the other:
+What we can do is modify our example so that it has a `fixed` Record and Tuple part and a `dynamic` part and reference one from the other.
 
 ```js
 const appState = {
@@ -559,20 +555,20 @@ document.querySelectorAll("*").forEach(n => addComicSansNode(n));
 makeItComic();
 ```
 
-Ok, as a fine observer you would tell us that this is just an array with extra steps. I'm not going to lie, it's pretty much the case!
+Ok, as an observer you would tell us that this is just an array with extra steps. I'm not going to lie, it's pretty much the case!
 
 The only added advantage is that indices can come from any part of the "fixed" structure, not only the `comicSansNodes` tuple. We have one unique lookup location for our state.
 
 ## Tracking objects more globally with a ref bookkeeping system
 
-We don't really want to have to track things around so we could create a global reference bookkeeping system:
+We don't really want to have to keep track of things so we could instead create a global reference bookkeeping system:
 
 ```js
 // A bookkeeper is a structure maintaining that references list for you
 // with easy to use methods
 class RefBookkeeper {
     constructor() { this._references = []; }
-    ref(obj) { 
+    ref(obj) {
         const idx = this._references.length;
         this._references[idx] = obj;
         return idx;
@@ -628,13 +624,13 @@ globalThis.refs = new RefBookkeeper();
 
 [Symbols as WeakMap Keys]: https://github.com/tc39/proposal-symbols-as-weakmap-keys
 
-In the meantime, you should probably associate bookkeepers alongside your structures that need object referencing instead of making them global:
+In the meantime, you should associate bookkeepers alongside your structures that need object referencing instead of making them global:
 
 
 ```js
 class RefBookkeeper {
     constructor() { this._references = []; }
-    ref(obj) { 
+    ref(obj) {
         const idx = this._references.length;
         this._references[idx] = obj;
         return idx;
@@ -668,7 +664,7 @@ makeItComic();
 
 ## Virtual DOM diffing with Record, Tuple and referencing
 
-This is now an extremely advanced usage that should be abstracted away by libraries. But if you are in that space, you can use both Record & Tuple and object references to compare virtual doms.
+This is advanced usage that should be abstracted away by libraries. But if you are interested in this space, you can use both Record & Tuple and object references to compare virtual doms.
 
 The main idea is to go back to the initial index tracking we've seen at the beginning of this chapter: we keep "fixed" and "dynamic" parts separate, the fixed part describes the template part with placeholders that matches indices in the dynamic part. All we need to do is compare fixed parts to know if the general structure changed and just iterate shallowly over the dynamic part to detect changes and use that to only update the parts/placeholders of the tree that changed:
 
@@ -731,18 +727,18 @@ console.log(getChanges(initialVdomTree, updatedVdomTree)); // only "Dynamic text
 
 Then it's up to our rendering library to keep track of which reference corresponds to which path in the dom, but given that info, we can figure out quite rapidly that the only thing that needs to get updated in the second `getChanges` is one piece of text!
 
-This is a concept that still requires some more research and is only shallowly covered in this tutorial to show some more possible advanced usages. Don't get too hung up on it if you don't understand it.
+This is a concept that still requires some more research and is only shallowly covered in this tutorial to show some more possible advanced usages.
 
 ## Keeping track of objects, looking back!
 
-This part introduces us to more advanced concepts that should be abstracted away most of the time. In general, if you can only use Record & Tuple alone, that's for the best because they will give you strong guarantees, that being said, sometimes you need an escape hatch: we chose to make that escape hatch explicit so you can always trust the integrity and equality of your Records and Tuples but the drawback is that you will need to put in more work to reference/dereference non-primitive values...
+This part introduced us to more advanced concepts that should be abstracted away most of the time. In general, Record & Tuple is best when used in a functional and immutable way. However, sometimes you need an escape hatch: we chose to make that escape hatch explicit so you can always trust the integrity and equality of your Records and Tuples but the drawback is that you will need to put in more work to reference/dereference non-primitive values.
 
 ---
 
 # Conclusion
 
-Hopefully this tutorial gave you a better idea of what is possible with Record & Tuple. Keep in mind this is just scratching the surface!
+Hopefully this tutorial gives you a better idea of what is possible with Record & Tuple. We are just scratching the surface!
 
-If you are still in need for more examples, we are compiling a [cookbook] with a few more tricks in it!
+If you are in need of more examples, we are compiling a [cookbook] with a few more tricks in it!
 
 [cookbook]: ../cookbook/index.html
