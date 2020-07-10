@@ -12,6 +12,7 @@ This small website will guide you through the [Record & Tuple ECMAScript proposa
 # Table of contents
 
 - [Introduction](#introduction)
+- [Compound values](#compound-values)
 - [Managing State with Record & Tuple](#managing-state-with-record--tuple)
 
 ---
@@ -34,7 +35,9 @@ What do we want to say by deeply immutable primitive value?
 - Primitive value: A string, a number or a symbol for instance are primitive values in JavaScript. Those values are in general represented as low-level values attached to the program stack.
 - Deeply immutable: It is actually a repetition as primitive values are by nature impossible to change, they are immutable. Because of that, Records or Tuples can only contain other primitive values such as strings, numbers, symbols or Records and Tuples! Those structures can be defined recursively, explaining why this immutability is deep.
 
-One could say that Record and Tuple can be described as Compound Value Types.
+One could say that Record and Tuple can be described as [compound primitive values][2ality].
+
+[2ality]: https://2ality.com/2020/05/records-tuples-first-look.html
 
 #### Examples
 
@@ -106,7 +109,174 @@ As we can see, records get matched by value instead of by identity as seen with 
 
 ## Introduction, looking back!
 
-We finally have a quick idea of what Record & Tuple are for but it might be a non-trivial to know what they would be used for... We are going to explore that very soon in the next part, starting with state management!
+We finally have a quick idea of what Record & Tuple are for but it might be a non-trivial to know what they would be used for... We are going to explore that very soon in the next part, starting with compound values!
+
+---
+
+# Compound values
+
+This part is there to introduce you to the posibility to build compound values easily and how to use them.
+
+## Using strings to compound values
+
+What we're going to do here is already possible with strings. However the ergonomics are not great.
+
+Let's say we want to index items in a sparse grid and be able to look them up fast. We're going to try to encode coordinates in strings:
+
+```js
+const grid = {
+    "0:0": "player",
+    "3:5": "enemy",
+    "0:1": "wall",
+};
+
+console.log("at 0:0", grid["0:0"]); // player
+```
+
+This seems to do what we want, however, it is really easy to make a mistake:
+
+```js
+const grid = {
+    "0:0": "player",
+    "3:5": "enemy",
+    "0:1": "wall",
+};
+
+console.log("at 0:0x0", grid["0:0x0"]); // undefined
+```
+
+Changing our number representation made it impossible for us to find the location, yet, we know that `0 === 0x0`.
+
+Strings let us compound values together but will leave us with their arbitrary constraints.
+
+Let's look at another way we could have done this:
+
+
+```js
+const grid = {
+    '{"x":0,"y":0}': "player",
+    '{"x":3,"y":5}': "enemy",
+    '{"x":0,"y":1}': "wall",
+};
+
+console.log("at 0:0x0", grid[JSON.stringify({
+    x: 0,
+    y: 0x0,
+})]); // player
+```
+
+Great! this works! All we have to do is stringifying values and now we can compare things as we want. There are a few caveats though...
+
+
+```js
+const grid = {
+    '{"x":0,"y":0}': "player",
+    '{"x":3,"y":5}': "enemy",
+    '{"x":0,"y":1}': "wall",
+};
+
+console.log("at 0:0x0", grid[JSON.stringify({
+    y: 0x0,
+    x: 0,
+})]); // undefined
+```
+
+We're getting a wrong lookup because the order matters in JSON serialization.
+
+## Coumpounding values into another value with tuples
+
+Fortunately we can solve those issues with Records and Tuples. Like strings, we can concatenate together some values and use them to do a bunch of things such as comparing their equality together but also using them to lookup keys. Back to our example but with tuples:
+
+```js
+// We use an ES Map as they can have tuples as key values
+const grid = new Map([
+    [#[0, 0], "player"],
+    [#[3, 5], "enemy"],
+    [#[0, 1], "wall"],
+]);
+
+console.log("at 0:0", grid.get(#[0, 0])); // player
+console.log("at 0:0", grid.get(#[0, 0x0])); // player
+```
+
+Amazing! This works as expected! The difference between a tuple and a string is that a string will only keep the sequence of character information, so if one char changes, everything is off. However, the tuple will keep the actual sequence of typed values so if all the values of the tuple are identical, everything should work.
+
+Now what is interesting is that you can access the internals of the tuple in a way you couldn't before and use that for equality:
+
+```js
+function isAtOrigin(coordinate) {
+    return coordinate === #[0, 0];
+}
+
+const c1 = #[1, 2];
+const c2 = #[c1[0] - 1, c1[1] * 2 - 4];
+console.log("c1 at origin?", isAtOrigin(c1)); // false
+console.log("c2 at origin?", isAtOrigin(c2)); // true
+```
+
+Finally, there is no need to compound values of the same type, tuples can also store a sequence of different types:
+
+```js
+// Store everything!
+const crazyTuple = #["hello", 123, Symbol(), #{}, #[]];
+// ... except objects
+const tooCrazyTuple = #[{}]; // TypeError!
+```
+
+## Coumpounding values into another value with records
+
+Now let's take a quick look at records that are like tuples but keyed! Let's just name our axes from our previous example:
+
+
+
+```js
+// We use an ES Map as they can have tuples as key values
+const grid = new Map([
+    [#{x:0, y:0}, "player"],
+    [#{x:3, y:5}, "enemy"],
+    [#{x:0, y:1}, "wall"],
+]);
+
+console.log("at 0:0", grid.get(#{x:0, y:0})); // player
+console.log("at 0:0", grid.get(#{x:0, y:0x0})); // player
+console.log("at 0:0", grid.get(#{y:0x0, x:0})); // player
+```
+
+Note that on the last `console.log`, the order did not matter in the equality, unlike what we've seen with converting objects to JSON.
+
+The same operations from before are also possible:
+
+
+```js
+function isAtOrigin(coordinate) {
+    return coordinate === #{x:0, y:0};
+}
+
+const c1 = #{x:1, y:2};
+const c2 = #{x: c1.x - 1, y: c1.y * 2 - 4 };
+console.log("c1 at origin?", isAtOrigin(c1)); // false
+console.log("c2 at origin?", isAtOrigin(c2)); // true
+```
+
+And you can obviously store any other value in there:
+
+
+```js
+// Store everything!
+const crazyRecord = #{
+    str: "hello",
+    nbr: 123,
+    sym: Symbol(),
+    rec: #{},
+    tup: #[],
+};
+// ... except objects
+const tooCrazyRecord = #{ obj: {} }; // TypeError!
+```
+
+## Coumpound values, looking back!
+
+By this point, you should get a pretty good idea of how Record and Tuple behave. They have some nice equality properties that let us replace strings in some places. That being said, this is only a small use case for them, next, we're going to look at how we can do some state management using Record & Tuple.
 
 ---
 
