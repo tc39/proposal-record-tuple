@@ -1,0 +1,104 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutoriel Record & Tuple</title>
+    <link rel="stylesheet" href="./watercss/light.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/themes/prism.min.css" rel="stylesheet" />
+    <style>
+        code, pre {
+            font-family:'Roboto Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+
+<h1 id="tutoriel-pour-record--tuple">Tutoriel pour Record &amp; Tuple</h1>
+<p>Ce petit site web est conçu pour vous introduire à <a href="https://github.com/tc39/proposal-record-tuple">la proposition de langage ECMAScript Record &amp; Tuple</a>.</p>
+<p>🌐 <a href="./index.html">en</a> | <strong>fr</strong></p>
+<hr>
+<h1 id="table-des-matières">Table des matières</h1>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+</ul>
+<hr>
+<h1 id="introduction">Introduction</h1>
+<p>Bonjour et bienvenue dans ce tutoriel! Il a pour but de vous introduire à une nouvelle fonctionnalité experimentale de JavaScript nommée Record &amp; Tuple.</p>
+<p>À travers ce tutoriel, nous allons voir plusieurs exemples de programmes courants pouvant être écrits avec Record &amp; Tuple.</p>
+<h2 id="que-sont-les-record--tuple">Que sont les Record &amp; Tuple?</h2>
+<p>Un Record est similaire à un Objet en JavaScript à l&#39;exception que le Record n&#39;est pas un Objet mais une valeur primitive profondément immutable.
+De la même façon, un Tuple est similaire à un Array (Tableau?) mais est une valeur primitive profondément immutable.</p>
+<h3 id="immutabilité">Immutabilité</h3>
+<p>Que voulons-nous dire par valeur primitive profondément immutable ?</p>
+<ul>
+<li>Valeur primitive: Une chaîne de caractères, un nombre ou un symbole par exemple est une valeur primitive en JavaScript. Ces valeurs sont généralement représentées comme des valeurs de bas-niveau qui sont attachées à la pile d&#39;éxecution du programme.</li>
+<li>Profondément immutable: C&#39;est en fait un pléonasme car une valeur primitive ne peut déjà pas être changée, elle est donc immutable. Dans cette situation, un Record ou un Tuple ne peut pas contenir autre chose qu&#39;une autre valeur immutable comme un nombre, une chaîne de caractère, un symbole ou un Record ou un Tuple! Ces structures peuvent donc être définies récursivement ce qui implique une profondeur dans cette immutabilité!</li>
+</ul>
+<p>En général Record &amp; Tuple peuvent étre décrits comme valeurs primitives composées.</p>
+<h4 id="exemple">Exemple</h4>
+<p>Commençons par représenter un portefeuille dans un Tuple, composé de différentes cartes représentées par des Records:</p>
+<pre><code class="language-js">const permisDeConduire = #{
+    pays: &quot;France&quot;,
+    numero: 123456789870,
+};
+const carteDeCredit = #{
+    type: &quot;Amex&quot;,
+    numero: 378282246310005,
+};
+const carteDeDebit = #{
+    type: &quot;Visa&quot;,
+    numero: 4242424242424242,
+};
+const portefeuille = #[
+    permisDeConduire,
+    carteDeCredit,
+    carteDeDebit,
+];</code></pre>
+<p>Pour créer un Record ou un Tuple, faites comme si vous créeriez un Objet ou un Array mais ajoutez dièze <code>#</code> devant!</p>
+<blockquote>
+<p>Note: Vous ne pouvez pas mettre d&#39;objets dans votre portefeuille car un Tuple n&#39;accepte pas d&#39;objets!</p>
+<pre><code class="language-js">const carteTrain = {
+    type: &quot;senior&quot;,
+    numero: 123456,
+};
+const portefeuille = #[
+    carteTrain, // Génère une erreur de type TypeError
+];</code></pre>
+</blockquote>
+<h3 id="comparaisons">Comparaisons</h3>
+<p>Le principal avantage de cette approche, outre de vous contraindre à ne pas changer le contenu de ces types, est de garantir une égalité par valeur à l&#39;opposé de par identité.</p>
+<p>Cela veut dire que vous n&#39;avez pas à vous soucier de quel Record vous manipulez, où a-t-il été crée, etc ... si ses valeurs sont identiques, deux Records sont égaux. Vous pouvez donc utiliser la comparaison <code>===</code> pour savoir si deux Records ou Tuples sont égaux.</p>
+<h4 id="exemple-1">Exemple</h4>
+<pre><code class="language-js">const permisDeConduire = #{
+    pays: &quot;France&quot;,
+    numero: 123456789870,
+};
+const carteTrain = {
+    type: &quot;senior&quot;,
+    numero: 123456,
+};
+
+console.log(permisDeConduire === #{
+    pays: &quot;France&quot;,
+    numero: 123456789870,
+}); // =&gt; true
+console.log(carteTrain === {
+    type: &quot;senior&quot;,
+    numero: 123456,
+}); // =&gt; false</code></pre>
+<p>Comme on le voit ici, le Record est comparé par son contenu. L&#39;objet est comparé par son identité.</p>
+
+
+<hr/>
+<nav>
+    <a href="#top">^ Retour en haut de page</a>
+</nav>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.20.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script type="module">
+    import { bootstrapCodeSnippets } from "./bootstrap-snippets.js";
+    bootstrapCodeSnippets(`Essayer dans le bac à sable`);
+</script>
+</body>
+</html>
