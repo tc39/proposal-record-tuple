@@ -23,6 +23,8 @@
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#compound-values">Compound values</a></li>
 <li><a href="#managing-state-with-record--tuple">Managing State with Record &amp; Tuple</a></li>
+<li><a href="#keeping-track-of-objects-in-record--tuple">Keeping track of objects in Record &amp; Tuple</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
 </ul>
 <hr>
 <h1 id="introduction">Introduction</h1>
@@ -395,6 +397,198 @@ render(); // Will only show Profile string</code></pre>
 <p>Now we can only do expensive operations (like updating our UI) when the piece of state we&#39;re looking at changed!</p>
 <h2 id="state-management-looking-back">State management, looking back!</h2>
 <p>We only scratched the surface of what is possible! As we&#39;ve seen before you might want to use a state management solution like <a href="https://redux.js.org/">Redux</a> to do this. However, <a href="https://redux.js.org/">Redux</a> is not meant to give you comparison operations, you usually have to do it yourself and it is hard to get it right. With Record &amp; Tuple, comparison is done by the JavaScript engine so you don&#39;t have to do it!</p>
+<hr>
+<h1 id="keeping-track-of-objects-in-record--tuple">Keeping track of objects in Record &amp; Tuple</h1>
+<p>As we&#39;ve seen multiple times by now, Record and Tuple will give you the dreaded <code>TypeError</code> every time you need to store an object in them.</p>
+<p>THis doesn&#39;t mean you can&#39;t symbolically reference to objects in them, in this part we&#39;re going to see how!</p>
+<h2 id="tracking-objects-through-indices">Tracking objects through indices</h2>
+<p>Let&#39;s now imagine we have an app state that requires us to keep track of a DOM node:</p>
+<pre><code class="language-js">let appState = #{
+    comicSansNodes: #[
+        document.body, // TypeError! DOM elements are objects
+    ],
+};</code></pre>
+<p>What we can do is create our state so it has a <code>fixed</code> Record and Tuple part and a <code>dynamic</code> part and reference from one ot the other:</p>
+<pre><code class="language-js">const appState = {
+    // Record and Tuple only here:
+    fixed: #{ comicSansNodes: #[] },
+    // But here, you can store whatever we need!
+    dynamic: [],
+};
+
+function addComicSansNode(domNode) {
+    // we need to create an index and add it in the dynamic and fixed part
+    const idx = appState.dynamic.length;
+    appState.dynamic.push(domNode);
+    appState.fixed = #{
+        comicSansNodes: appState.fixed.comicSansNodes.pushed(idx),
+    };
+}
+
+function makeItComic() {
+    for (const idx of appState.fixed.comicSansNodes) {
+        // we need to lookup our index
+        const domNode = appState.dynamic[idx];
+        domNode.style.fontFamily = &#39;&quot;Comic Sans MS&quot;&#39;;
+    }
+}
+
+document.querySelectorAll(&quot;*&quot;).forEach(n =&gt; addComicSansNode(n));
+// Finally!
+makeItComic();</code></pre>
+<p>Ok, as a fine observer you would tell us that this is just an array with extra steps. I&#39;m not going to lie, it&#39;s pretty much the case!</p>
+<p>The only added advantage is that indices can come from any part of the &quot;fixed&quot; structure, not only the <code>comicSansNodes</code> tuple. We have one unique lookup location for our state.</p>
+<h2 id="tracking-objects-more-globally-with-a-ref-bookkeeping-system">Tracking objects more globally with a ref bookkeeping system</h2>
+<p>We don&#39;t really want to have to track things around so we could create a global reference bookkeeping system:</p>
+<pre><code class="language-js">// A bookkeeper is a structure maintaining that references list for you
+// with easy to use methods
+class RefBookkeeper {
+    constructor() { this._references = []; }
+    ref(obj) { 
+        const idx = this._references.length;
+        this._references[idx] = obj;
+        return idx;
+    }
+    deref(sym) { return this._references[sym]; }
+}
+
+globalThis.refs = new RefBookkeeper();
+
+// Back to everything Record &amp; Tuple!
+let appState = #{ comicSansNodes: #[] };
+
+function addComicSansNode(domNode) {
+    // just one state swap to do!
+    appState = #{
+        comicSansNodes: appState.comicSansNodes.pushed(
+            // .ref() creates the index for us, we just have to store it
+            refs.ref(domNode)
+        ),
+    };
+}
+
+function makeItComic() {
+    for (const domNodeRef of appState.comicSansNodes) {
+        // we need to deref the node first
+        const domNode = refs.deref(domNodeRef);
+        domNode.style.fontFamily = &#39;&quot;Comic Sans MS&quot;&#39;;
+    }
+}
+
+document.querySelectorAll(&quot;*&quot;).forEach(n =&gt; addComicSansNode(n));
+makeItComic();</code></pre>
+<p>This is much more ergonomic, and again, we can start putting refs in other locations of the state, this would work.</p>
+<p>That being said there is a huge caveat here: each object we track in the global refs will leak memory. There is no way around it, however, we&#39;re working on <a href="https://github.com/tc39/proposal-symbols-as-weakmap-keys">Symbols as WeakMap Keys</a> that should let you create a global bookkeeper that doesn&#39;t leak!</p>
+<pre><code class="language-js">// This snippet will not execute correctly in the playground
+class RefBookkeeper {
+    constructor() { this._references = new WeakMap(); }
+    ref(obj) {
+        // (Simplified; we may want to return an existing symbol if it&#39;s already there)
+        const sym = Symbol();
+        this._references.set(sym, obj);
+        return sym;
+    }
+    deref(sym) { return this._references.get(sym); }
+}
+globalThis.refs = new RefBookkeeper();</code></pre>
+<p>In the meantime, you should probably associate bookkeepers alongside your structures that need object referencing instead of making them global:</p>
+<pre><code class="language-js">class RefBookkeeper {
+    constructor() { this._references = []; }
+    ref(obj) { 
+        const idx = this._references.length;
+        this._references[idx] = obj;
+        return idx;
+    }
+    deref(sym) { return this._references[sym]; }
+}
+
+// now appStateRefs is module-scoped, like appState
+const appStateRefs = new RefBookkeeper();
+
+let appState = #{ comicSansNodes: #[] };
+
+function addComicSansNode(domNode) {
+    appState = #{
+        comicSansNodes: appState.comicSansNodes.pushed(
+            appStateRefs.ref(domNode)
+        ),
+    };
+}
+
+function makeItComic() {
+    for (const domNodeRef of appState.comicSansNodes) {
+        const domNode = appStateRefs.deref(domNodeRef);
+        domNode.style.fontFamily = &#39;&quot;Comic Sans MS&quot;&#39;;
+    }
+}
+
+document.querySelectorAll(&quot;*&quot;).forEach(n =&gt; addComicSansNode(n));
+makeItComic();</code></pre>
+<h2 id="virtual-dom-diffing-with-record-tuple-and-referencing">Virtual DOM diffing with Record, Tuple and referencing</h2>
+<p>This is now an extremely advanced usage that should be abstracted away by libraries. But if you are in that space, you can use both Record &amp; Tuple and object references to compare virtual doms.</p>
+<p>The main idea is to go back to the initial index tracking we&#39;ve seen at the beginning of this chapter: we keep &quot;fixed&quot; and &quot;dynamic&quot; parts separate, the fixed part describes the template part with placeholders that matches indices in the dynamic part. All we need to do is compare fixed parts to know if the general structure changed and just iterate shallowly over the dynamic part to detect changes and use that to only update the parts/placeholders of the tree that changed:</p>
+<pre><code class="language-js">const emptyVdomTree = {
+    fixed: null,
+    dynamic: [],
+};
+
+const initialVdomTree = {
+    fixed: #{
+        type: &quot;ul&quot;,
+        children: #[
+            #{ type: &quot;li&quot;, text: &quot;Purely Static&quot; },
+            #{ type: &quot;li&quot;, text: 0 },
+            1,
+        ]
+    },
+    dynamic: [
+        &quot;Dynamic text&quot;,
+        #{ type: &quot;li&quot;, text: &quot;Dynamic li&quot; },
+    ]
+};
+
+const updatedVdomTree = {
+    fixed: #{
+        type: &quot;ul&quot;,
+        children: #[
+            #{ type: &quot;li&quot;, text: &quot;Purely Static&quot; },
+            #{ type: &quot;li&quot;, text: 0 },
+            1,
+        ]
+    },
+    dynamic: [
+        &quot;Dynamic text - updated!&quot;,
+        #{ type: &quot;li&quot;, text: &quot;Dynamic li&quot; },
+    ]
+};
+
+function getChanges(vdom1, vdom2) {
+    if (vdom1.fixed !== vdom2.fixed) {
+        // the whole structure changed,
+        // you should probably rerender everything...
+        return vdom2;
+    }
+    const dynamic = [];
+    for (let i = 0; i &lt; vdom1.dynamic.length; i += 1) {
+        if (vdom1.dynamic[i] !== vdom2.dynamic[i]) {
+            dynamic.push(vdom2.dynamic[i]);
+        } else {
+            dynamic.push(undefined);
+        }
+    }
+    return { dynamic };
+}
+
+console.log(getChanges(emptyVdomTree, initialVdomTree)); // full initial vdom tree
+console.log(getChanges(initialVdomTree, updatedVdomTree)); // only &quot;Dynamic text - updated!&quot;</code></pre>
+<p>Then it&#39;s up to our rendering library to keep track of which reference corresponds to which path in the dom, but given that info, we can figure out quite rapidly that the only thing that needs to get updated in the second <code>getChanges</code> is one piece of text!</p>
+<p>This is a concept that still requires some more research and is only shallowly covered in this tutorial to show some more possible advanced usages. Don&#39;t get too hung up on it if you don&#39;t understand it.</p>
+<h2 id="keeping-track-of-objects-looking-back">Keeping track of objects, looking back!</h2>
+<p>This part introduces us to more advanced concepts that should be abstracted away most of the time. In general, if you can only use Record &amp; Tuple alone, that&#39;s for the best because they will give you strong guarantees, that being said, sometimes you need an escape hatch: we chose to make that escape hatch explicit so you can always trust the integrity and equality of your Records and Tuples but the drawback is that you will need to put in more work to reference/dereference non-primitive values...</p>
+<hr>
+<h1 id="conclusion">Conclusion</h1>
+<p>Hopefully this tutorial gave you a better idea of what is possible with Record &amp; Tuple. Keep in mind this is just scratching the surface!</p>
+<p>If you are still in need for more examples, we are compiling a <a href="../cookbook/index.html">cookbook</a> with a few more tricks in it!</p>
 
 
 <hr/>
