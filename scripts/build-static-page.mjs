@@ -2,7 +2,6 @@
 import fse from "fs-extra";
 import marked from "marked";
 import { join } from "path";
-import CONFIG from "../config.mjs";
 
 async function buildLanguageFile(lang, config, isDefault = false) {
   const outFile = join(
@@ -32,9 +31,12 @@ async function buildLanguageFile(lang, config, isDefault = false) {
 }
 
 export async function build(config) {
-  await fse.remove(config.outDir);
   await fse.mkdirp(config.outDir);
-  await fse.copy(config.copyToOutDir, config.outDir);
+  await fse.copy(config.copyToOutDir, config.outDir, {
+    errorOnExist: false,
+    overwrite: true,
+    recursive: true,
+  });
   await Promise.all(
     config.languages.map((lang) =>
       buildLanguageFile(lang, config, lang === config.defaultLanguage)
@@ -42,7 +44,16 @@ export async function build(config) {
   );
 }
 
-build(CONFIG).catch(e => {
-  console.error(e.stack);
-  process.exit(1);
-});
+export async function getConfigFor(staticPageDir) {
+  const importPath = join("..", staticPageDir, "config.mjs").replace(/\\/g, "/");
+  return (await import(importPath)).default;
+}
+
+async function main() {
+  build(await getConfigFor(process.argv[2])).catch(e => {
+    console.error(e.stack);
+    process.exit(1);
+  });
+}
+
+main();
