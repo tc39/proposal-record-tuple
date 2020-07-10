@@ -14,7 +14,8 @@ This tutorial will guide you through the [Record & Tuple ECMAScript proposal][rt
 - [Introduction](#introduction)
 - [Compound values](#compound-values)
 - [Managing State with Record & Tuple](#managing-state-with-record--tuple)
-- [Keeping track of objects in Record & Tuple](#keeping-track-of-objects-in-Record--Tuple)
+- [Keeping track of objects in Record & Tuple](#keeping-track-of-objects-in-record--tuple)
+- [Conclusion](#conclusion)
 
 ---
 
@@ -667,4 +668,81 @@ makeItComic();
 
 ## Virtual DOM diffing with Record, Tuple and referencing
 
-TODO
+This is now an extremely advanced usage that should be abstracted away by libraries. But if you are in that space, you can use both Record & Tuple and object references to compare virtual doms.
+
+The main idea is to go back to the initial index tracking we've seen at the beginning of this chapter: we keep "fixed" and "dynamic" parts separate, the fixed part describes the template part with placeholders that matches indices in the dynamic part. All we need to do is compare fixed parts to know if the general structure changed and just iterate shallowly over the dynamic part to detect changes and use that to only update the parts/placeholders of the tree that changed:
+
+```js
+const emptyVdomTree = {
+    fixed: null,
+    dynamic: [],
+};
+
+const initialVdomTree = {
+    fixed: #{
+        type: "ul",
+        children: #[
+            #{ type: "li", text: "Purely Static" },
+            #{ type: "li", text: 0 },
+            1,
+        ]
+    },
+    dynamic: [
+        "Dynamic text",
+        #{ type: "li", text: "Dynamic li" },
+    ]
+};
+
+const updatedVdomTree = {
+    fixed: #{
+        type: "ul",
+        children: #[
+            #{ type: "li", text: "Purely Static" },
+            #{ type: "li", text: 0 },
+            1,
+        ]
+    },
+    dynamic: [
+        "Dynamic text - updated!",
+        #{ type: "li", text: "Dynamic li" },
+    ]
+};
+
+function getChanges(vdom1, vdom2) {
+    if (vdom1.fixed !== vdom2.fixed) {
+        // the whole structure changed,
+        // you should probably rerender everything...
+        return vdom2;
+    }
+    const dynamic = [];
+    for (let i = 0; i < vdom1.dynamic.length; i += 1) {
+        if (vdom1.dynamic[i] !== vdom2.dynamic[i]) {
+            dynamic.push(vdom2.dynamic[i]);
+        } else {
+            dynamic.push(undefined);
+        }
+    }
+    return { dynamic };
+}
+
+console.log(getChanges(emptyVdomTree, initialVdomTree)); // full initial vdom tree
+console.log(getChanges(initialVdomTree, updatedVdomTree)); // only "Dynamic text - updated!"
+```
+
+Then it's up to our rendering library to keep track of which reference corresponds to which path in the dom, but given that info, we can figure out quite rapidly that the only thing that needs to get updated in the second `getChanges` is one piece of text!
+
+This is a concept that still requires some more research and is only shallowly covered in this tutorial to show some more possible advanced usages. Don't get too hung up on it if you don't understand it.
+
+## Keeping track of objects, looking back!
+
+This part introduces us to more advanced concepts that should be abstracted away most of the time. In general, if you can only use Record & Tuple alone, that's for the best because they will give you strong guarantees, that being said, sometimes you need an escape hatch: we chose to make that escape hatch explicit so you can always trust the integrity and equality of your Records and Tuples but the drawback is that you will need to put in more work to reference/dereference non-primitive values...
+
+---
+
+# Conclusion
+
+Hopefully this tutorial gave you a better idea of what is possible with Record & Tuple. Keep in mind this is just scratching the surface!
+
+If you are still in need for more examples, we are compiling a [cookbook] with a few more tricks in it!
+
+[cookbook]: ../cookbook/index.html

@@ -12,6 +12,8 @@ Ce petit site web est conçu pour vous introduire à [la proposition de langage 
 # Table des matières
 
 - [Introduction](#introduction)
+- 🚧 En construction! 🚧 aidez-nous à traduire [en contribuant sur GitHub](https://github.com/tc39/proposal-record-tuple/blob/master/tutorial/fr.md).
+- [Conclusion](#conclusion)
 
 ---
 
@@ -102,3 +104,12 @@ console.log(carteTrain === {
 ```
 
 Comme on le voit ici, le Record est comparé par son contenu. L'objet est comparé par son identité.
+
+---
+
+# Conclusion
+
+Ce tutoriel n'est pas terminé. Vous pouvez toujours vous référer à la [version anglaise] ou regarder des exemples dans le [livre de recettes].
+
+[version anglaise]: ./index.html
+[livre de recettes]: ../cookbook/fr.html
