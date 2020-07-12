@@ -657,7 +657,7 @@ A new, deeply immutable, compound primitive type data structure, proposed in thi
 
 #### Tuple
 
-A new, deeply immutable, compound primitive type data structure, proposed in this document, that is analogous to Objects. `#[1, 2, 3, 4]`
+A new, deeply immutable, compound primitive type data structure, proposed in this document, that is analogous to Arrays. `#[1, 2, 3, 4]`
 
 #### Compound primitive types
 
