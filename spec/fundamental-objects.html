@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<meta charset="utf8" />
+<emu-clause id="sec-fundamental-objects">
+  <h1>Fundamental Objects</h1>
+  <emu-clause id="sec-object-objects">
+    <h1>Object Objects</h1>
+
+    <emu-clause id="sec-properties-of-the-object-prototype-object">
+      <h1>Properties of the Object Prototype Object</h1>
+      <emu-clause id="sec-object.prototype.tostring">
+        <h1>Object.prototype.toString ( )</h1>
+        <p>When the `toString` method is called, the following steps are taken:</p>
+        <emu-alg>
+          1. If the *this* value is *undefined*, return *"[object Undefined]"*.
+          1. If the *this* value is *null*, return *"[object Null]"*.
+          1. Let _O_ be ! ToObject(*this* value).
+          1. Let _isArray_ be ? IsArray(_O_).
+          1. If _isArray_ is *true*, let _builtinTag_ be *"Array"*.
+          1. Else if _O_ has a [[ParameterMap]] internal slot, let _builtinTag_ be *"Arguments"*.
+          1. Else if _O_ has a [[Call]] internal method, let _builtinTag_ be *"Function"*.
+          1. Else if _O_ has an [[ErrorData]] internal slot, let _builtinTag_ be *"Error"*.
+          1. Else if _O_ has a [[BooleanData]] internal slot, let _builtinTag_ be *"Boolean"*.
+          1. Else if _O_ has a [[NumberData]] internal slot, let _builtinTag_ be *"Number"*.
+          1. Else if _O_ has a [[StringData]] internal slot, let _builtinTag_ be *"String"*.
+          1. Else if _O_ has a [[DateValue]] internal slot, let _builtinTag_ be *"Date"*.
+          1. Else if _O_ has a [[RegExpMatcher]] internal slot, let _builtinTag_ be *"RegExp"*.
+          1. <ins>Else if _O_ has a [[RecordData]] internal slot, let _builtinTag_ be *"Record"*.</ins>
+          1. <ins>Else if _O_ has a [[TupleData]] internal slot, let _builtinTag_ be *"Tuple"*.</ins>
+          1. Else, let _builtinTag_ be *"Object"*.
+          1. Let _tag_ be ? Get(_O_, @@toStringTag).
+          1. If Type(_tag_) is not String, set _tag_ to _builtinTag_.
+          1. Return the string-concatenation of *"[object "*, _tag_, and *"]"*.
+        </emu-alg>
+        <p>This function is the <dfn>%ObjProto_toString%</dfn> intrinsic object.</p>
+        <emu-note>
+          <p>Historically, this function was occasionally used to access the String value of the [[Class]] internal slot that was used in previous editions of this specification as a nominal type tag for various built-in objects. The above definition of `toString` preserves compatibility for legacy code that uses `toString` as a test for those specific kinds of built-in objects. It does not provide a reliable type testing mechanism for other kinds of built-in or program defined objects. In addition, programs can use @@toStringTag in ways that will invalidate the reliability of such legacy type tests.</p>
+        </emu-note>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>
