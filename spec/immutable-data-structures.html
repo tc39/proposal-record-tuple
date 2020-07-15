@@ -318,59 +318,18 @@
           1. Return a new Tuple value whose [[Sequence]] is _newList_.
         </emu-alg>
       </emu-clause>
-      <emu-clause id="sec-array.prototype.sort">
+      <emu-clause id="sec-tuple.prototype.sorted">
         <h1>Tuple.prototype.sorted ( _comparefn_ )</h1>
-        <p>A new Tuple the elements from the original Tuple is returned, where the elements are sorted. The sort must be stable (that is, elements that compare equal must remain in their original order). If _comparefn_ is not *undefined*, it should be a function that accepts two arguments _x_ and _y_ and returns a negative value if _x_ &lt; _y_, zero if _x_ = _y_, or a positive value if _x_ &gt; _y_.</p>
-        <p>Upon entry, the following steps are performed to initialize evaluation of the `sorted` function:</p>
+
+        <p>`sorted` is a distinct function that, except as described below, implements the same requirements as those of `Array.prototype.sort` as defined in <emu-xref href="#sec-array.prototype.sort"></emu-xref>. The implementation may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse.</p>
+        <p>Upon entry, the following steps are performed to initialize evaluation of the `sorted` function. These steps are used instead of the entry steps in <emu-xref href="#sec-array.prototype.sort"></emu-xref>:</p>
         <emu-alg>
           1. If _comparefn_ is not *undefined* and IsCallable(_comparefn_) is *false*, throw a *TypeError* exception.
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be a new List containing the elements of _T_.[[Sequence]].
-          1. Let _len_ be the number of elements in _list_.
+          1. Let _len_ be the length of list _list_.
         </emu-alg>
-        <p>The <em>sort order</em> is the ordering, after completion of this function, of the elements of _list_. The result of the `sort` function is then determined as follows:</p>
-        <p>If _comparefn_ is not *undefined* and is not a consistent comparison function for the elements of this array (see below), the sort order is implementation-defined. The sort order is also implementation-defined if _comparefn_ is *undefined* and SortCompare does not act as a consistent comparison function.</p>
-        <p>The following steps are taken:</p>
-        <emu-alg>
-          1. Perform an implementation-dependent sequence of operations (such as retrieving the element at a specific index, or mutating the value at a specific index) on _list_, such that:
-            * The arguments for calls to SortCompare are values in the list _list_.
-            * If an abrupt completion is returned from any of these operations, it is immediately returned as the value of this function.
-          1. Return a new Tuple value whose [[Sequence]] is _list_.
-        </emu-alg>
-        <p>Unless the sort order is specified above to be implementation-defined, the returned Tuple must have the following characteristic:</p>
-        <ul>
-          <li>
-            For all nonnegative integers _j_ and _k_, each less than _len_, if <emu-eqn>SortCompare(old[_j_], old[_k_]) &lt; 0</emu-eqn>, then <emu-eqn>new[&pi;(_j_)] &lt; new[&pi;(_k_)]</emu-eqn>.
-          </li>
-        </ul>
-        <p>Here the notation <emu-eqn>old[_j_]</emu-eqn> is used to refer to the hypothetical result of retrieving the element _j_ from list _list_ before this function is executed, and the notation <emu-eqn>new[_j_]</emu-eqn> to refer to the hypothetical result of retrieving the element _j_ from list _list_ after this function has been executed.</p>
-        <p>A function _comparefn_ is a consistent comparison function for a set of values _S_ if all of the requirements below are met for all values _a_, _b_, and _c_ (possibly the same value) in the set _S_: The notation <emu-eqn>_a_ &lt;<sub>CF</sub> _b_</emu-eqn> means <emu-eqn>_comparefn_(_a_, _b_) &lt; 0</emu-eqn>; <emu-eqn>_a_ =<sub>CF</sub> _b_</emu-eqn> means <emu-eqn>_comparefn_(_a_, _b_) = 0</emu-eqn> (of either sign); and <emu-eqn>_a_ &gt;<sub>CF</sub> _b_</emu-eqn> means <emu-eqn>_comparefn_(_a_, _b_) &gt; 0</emu-eqn>.</p>
-        <ul>
-          <li>
-            Calling _comparefn_(_a_, _b_) always returns the same value _v_ when given a specific pair of values _a_ and _b_ as its two arguments. Furthermore, Type(_v_) is Number, and _v_ is not *NaN*. Note that this implies that exactly one of _a_ &lt;<sub>CF</sub> _b_, _a_ =<sub>CF</sub> _b_, and _a_ &gt;<sub>CF</sub> _b_ will be true for a given pair of _a_ and _b_.
-          </li>
-          <li>
-            Calling _comparefn_(_a_, _b_) does not modify _obj_ or any object on _obj_'s prototype chain.
-          </li>
-          <li>
-            _a_ =<sub>CF</sub> _a_ (reflexivity)
-          </li>
-          <li>
-            If _a_ =<sub>CF</sub> _b_, then _b_ =<sub>CF</sub> _a_ (symmetry)
-          </li>
-          <li>
-            If _a_ =<sub>CF</sub> _b_ and _b_ =<sub>CF</sub> _c_, then _a_ =<sub>CF</sub> _c_ (transitivity of =<sub>CF</sub>)
-          </li>
-          <li>
-            If _a_ &lt;<sub>CF</sub> _b_ and _b_ &lt;<sub>CF</sub> _c_, then _a_ &lt;<sub>CF</sub> _c_ (transitivity of &lt;<sub>CF</sub>)
-          </li>
-          <li>
-            If _a_ &gt;<sub>CF</sub> _b_ and _b_ &gt;<sub>CF</sub> _c_, then _a_ &gt;<sub>CF</sub> _c_ (transitivity of &gt;<sub>CF</sub>)
-          </li>
-        </ul>
-        <emu-note>
-          <p>The above conditions are necessary and sufficient to ensure that _comparefn_ divides the set _S_ into equivalence classes and that these equivalence classes are totally ordered.</p>
-        </emu-note>
+        <p>A new Tuple containing the elements from the original Tuple is returned, where the elements are sorted. The <em>sort order</em> is the ordering, after completion of this function, of the elements of _list_. The <em>sort order</em> of the result of *sorted* is the same order as if the elements of _list_ were sorted in an Array via %Array.prototype.sort% with _comparefn_ as the first argument.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.spliced">
         <h1>Tuple.prototype.spliced ( _start_, _deleteCount_, ..._items_ )</h1>
