@@ -360,10 +360,10 @@ For integrity, out-of-bounds numerical indexing on Tuples returns `undefined`, r
 
 # `Record` and `Tuple` standard library support
 
-The `Record` constructor has functionality broadly analogous to `Object`. Similarly, the `Tuple` constructor is analogous to `Array`.
+`Tuple` values have functionality broadly analogous to `Array`. Similarly, `Record` values are supported by different `Object` static methods.
 
 ```js
-assert(Record.keys(#{ a: 1, b: 2 }) === #["a", "b"]);
+assert(Object.keys(#{ a: 1, b: 2 }) === #["a", "b"]);
 assert(#[1, 2, 3].map(x => x * 2), #[2, 4, 6]);
 ```
 
