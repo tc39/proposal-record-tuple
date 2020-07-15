@@ -327,7 +327,7 @@
           1. If _comparefn_ is not *undefined* and IsCallable(_comparefn_) is *false*, throw a *TypeError* exception.
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be a new List containing the elements of _T_.[[Sequence]].
-          1. Let _len_ be the length of list _list_.
+          1. Let _len_ be the length of _list_.
         </emu-alg>
         <p>A new Tuple containing the elements from the original Tuple is returned, where the elements are sorted. The <em>sort order</em> is the ordering, after completion of this function, of the elements of _list_. The <em>sort order</em> of the result of *sorted* is the same order as if the elements of _list_ were sorted in an Array via %Array.prototype.sort% with _comparefn_ as the first argument.</p>
       </emu-clause>
