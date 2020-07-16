@@ -506,6 +506,53 @@
         <h1>Tuple.prototype.find</h1>
         <p>The initial value of *Tuple.prototype.find* is  %Array.prototype.find%.</p>
       </emu-clause>
+      <emu-clause id="sec-tuple.prototype.flat">
+        <h1>Tuple.prototype.flat ( [ _depth_ ] )</h1>
+        <p>When the `flat` method is called with zero or one arguments, the following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _list_ be _T_.[[Sequence]].
+          1. Let _depthNum_ be 1.
+          1. If _depth_ is not *undefined*, then
+            1. Set _depthNum_ to ? ToInteger(_depth_).
+          1. Let _flat_ be a new empty List.
+          1. Perform ? FlattenIntoList(_flat_, _list_, _depthNum_).
+          1. Return a new Tuple value whose [[Sequence]] is _flat_.
+        </emu-alg>
+
+        <emu-clause id="sec-flattenintolist" aoid="FlattenIntoList">
+          <h1>FlattenIntoList ( _target_, _source_, _depth_ [ , _mapperFunction_, _thisArg_ ] )</h1>
+          <p>The abstract operation FlattenIntoList takes arguments _target_, _source_, and _depth_ and optional arguments _mapperFunction_ and _thisArg_. It performs the following steps when called:</p>
+          <emu-alg>
+            1. Assert: _target_ is a List.
+            1. Assert: _source_ is a List.
+            1. Assert: ! IsInteger(_depth_) is *true*, or _depth_ is either *+&infin;* or *-&infin;*.
+            1. Assert: If _mapperFunction_ is present, then ! IsCallable(_mapperFunction_) is *true*, _thisArg_ is present, and _depth_ is *1*.
+            1. For each _element_ of _source_,
+              1. If _mapperFunction_ is present, then
+                1. Set _element_ to ? Call(_mapperFunction_, _thisArg_, &laquo; _element_, _sourceIndex_, _source_ &raquo;).
+                1. If Type(_element_) is Object, throw a *TypeError* exception.
+              1. If _depth_ &gt; 0 and Type(_element_) is Tuple, then
+                1. Perform ? FlattenIntoList(_target_, _element_, _depth_ - 1).
+              1. Else,
+                1. Let _len_ be the length of _target_.
+                1. If _len_ &ge; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+                1. Append _element_ to _target_.
+          </emu-alg>
+        </emu-clause>
+      </emu-clause>
+      <emu-clause id="sec-tuple.prototype.flatmap">
+        <h1>Tuple.prototype.flatMap ( _mapperFunction_ [ , _thisArg_ ] )</h1>
+        <p>When the `flatMap` method is called with one or two arguments, the following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _list_ be _T_.[[Sequence]].
+          1. If ! IsCallable(_mapperFunction_) is *false*, throw a *TypeError* exception.
+          1. Let _flat_ be a new empty List.
+          1. Perform ? FlattenIntoList(_flat_, _list_, 1, _mapperFunction_, _thisArg_).
+          1. Return a new Tuple value whose [[Sequence]] is _flat_.
+        </emu-alg>
+      </emu-clause>
       <emu-clause id="sec-tuple.prototype.findIndex">
         <h1>Tuple.prototype.findIndex</h1>
         <p>The initial value of *Tuple.prototype.findIndex* is  %Array.prototype.findIndex%.</p>
