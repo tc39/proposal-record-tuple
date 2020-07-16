@@ -388,7 +388,7 @@
               <ins>Record</ins>
             </td>
             <td>
-              <ins>Return ! Record::toString(_argument_).</ins>
+              <ins>Return ! RecordToString(_argument_).</ins>
             </td>
           </tr>
           <tr>
@@ -396,7 +396,7 @@
               <ins>Tuple</ins>
             </td>
             <td>
-              <ins>Return ! Tuple::toString(_argument_).</ins>
+              <ins>Return ! TupleToString(_argument_).</ins>
             </td>
           </tr>
           <tr>
@@ -623,8 +623,9 @@
       <p>The abstract operation SameValue takes arguments _x_ (an ECMAScript language value) and _y_ (an ECMAScript language value) and returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean. It performs the following steps when called:</p>
       <emu-alg>
         1. If Type(_x_) is different from Type(_y_), return *false*.
-        1. If Type(_x_) is <del>Number or BigInt</del><ins>Number, BigInt, Record, or Tuple</ins>, then
-          1. Return ! Type(_x_)::sameValue(_x_, _y_).
+        1. If Type(_x_) is Number or BigInt, then return ! Type(_x_)::sameValue(_x_, _y_).
+        1. <ins>If Type(_x_) is Record, then return ! RecordSameValue(_x_, _y_).</ins>
+        1. <ins>If Type(_x_) is Tuple, then return ! TupleSameValue(_x_, _y_).</ins>
         1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
         1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
@@ -638,13 +639,14 @@
       <p>The abstract operation SameValueZero takes arguments _x_ (an ECMAScript language value) and _y_ (an ECMAScript language value) and returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean. It performs the following steps when called:</p>
       <emu-alg>
         1. If Type(_x_) is different from Type(_y_), return *false*.
-        1. If Type(_x_) is <del>Number or BigInt</del><ins>Number, BigInt, Record, or Tuple</ins>, then
-          1. Return ! Type(_x_)::sameValueZero(_x_, _y_).
+        1. If Type(_x_) is Number or BigInt, then return ! Type(_x_)::sameValueZero(_x_, _y_).
+        1. <ins>If Type(_x_) is Record, then return ! RecordSameValueZero(_x_, _y_).</ins>
+        1. <ins>If Type(_x_) is Tuple, then return ! TupleSameValueZero(_x_, _y_).</ins>
         1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
         1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
       <emu-note>
-        <p>SameValueZero differs from SameValue only in its treatment of *+0* and *-0*.</p>
+        <p>SameValueZero differs from SameValue only in its treatment of *+0* and *-0*<ins>, and the treatment of those values inside a Record or Tuple</ins>.</p>
       </emu-note>
     </emu-clause>
 
@@ -709,7 +711,7 @@
       </emu-note>
     </emu-clause>
   </emu-clause>
-  
+
   <emu-clause id="sec-operations-on-records">
     <h1>Operations on Records</h1>
 
@@ -730,7 +732,7 @@
 
   <emu-clause id="sec-operations-on-tuples">
     <h1>Operations on Tuples</h1>
-    
+
     <emu-clause id="sec-addvaluetotuplesequencelist" aoid="AddValueToTupleSequenceList">
       <h1>AddValueToTupleSequenceList ( _sequence_, _value_ )</h1>
       <p>This abstract operation AddValueToTupleSequenceList takes _sequence_ and _value_ arguments. It is used during a single addition in a Tuple literal expression. It performs the following steps when called:</p>
