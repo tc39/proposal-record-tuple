@@ -236,12 +236,12 @@ Returns a `Tuple` with the same elements as the original `Tuple` except the elem
 - `Object.is()` - When comparing records and tuples it behaves exactly like `===`
 - `Object.entries()`, `Object.keys()`, `Object.values()` - The resulting arrays are sorted alphabetically by key
 - `Object.assign()` - Copy properties from a record or tuple to another object. **Caveat**: The first argument cannot be a record or a tuple, because they are immutable
-- `Object.isExtensible()`, `Object.isFrozen()`, `Object.isSealed()` - They always return `false` for records and tuples
+- `Object.isExtensible()`, `Object.isFrozen()`, `Object.isSealed()` - When called on records and tuples, they always return `false`, `true`, and `true` respectively
 - `Object.preventExtension()`, `Object.freeze()`, `Object.seal()` - Records and tuples are already immutable, so these methods will not throw but won't have any effect
 - `Object.getOwnPropertyDescriptor()`, `Object.getOwnPropertyDescriptors()` - The resulting descriptors all have `writable: false, enumerable: true, configurable: false`
 - `Object.getOwnPropertyNames()`, `Object.getOwnPropertySymbols()`, `Object.getPrototypeOf()` - Behave similarly to when called on objects
 
-- `Object.prototype.toString`, `Object.prototype.toLocaleString` - Return `[object Record]` and `[object Tuple]`
+- `Object.prototype.toString`, `Object.prototype.toLocaleString` - Return `[object Record]` and `[object Tuple]` when a Record or Tuple is the receiver
 - `Object.prototype.valueOf` - Boxes a primitive record or tuple into an object
 - `Object.prototype.propertyIsEnumerable` - Always returns `true` for existing properties
 - `Object.prototype.hasOwnProperty`
@@ -249,5 +249,5 @@ Returns a `Tuple` with the same elements as the original `Tuple` except the elem
 
 ## `Object` methods which don't work with `Record` and `Tuple`
 
-- `Object.create()` - Records and tuples cannot have a prototype
-- `Object.defineProperties()`, `Object.defineProperty()`, `Object.setPrototypeOf()` - Records and tuples are non-observable, not writable by nature
+- `Object.create()` - Records and tuples cannot be used as prototypes, unless you wrap them in objects (`Object(#{})`)
+- `Object.defineProperties()`, `Object.defineProperty()`, `Object.setPrototypeOf()` - Records and tuples are immutable by design.
