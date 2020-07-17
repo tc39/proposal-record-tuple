@@ -18,10 +18,10 @@ Similar to `Object.fromEntries`, but created a new `Record`.
 - `Object.entries()`
 - `Object.keys()`
 - `Object.values()`
+- `Object.assign()` - **Caveat**: The first argument cannot be a record or a tuple, because they are immutable
 
 ## `Object` namespace functions not working with `Record`
 
-- `Object.assign()` - You can't assign new properties to a record.
 - `Object.create()` - `Record` has no prototype so `Record.create()` would not have any meaning.
 - `Object.defineProperties()`, `Object.defineProperty()` - A `Record` is non-observable, not writable by nature
 - `Object.freeze()`, `Object.seal()` - `Record` is not mutable
