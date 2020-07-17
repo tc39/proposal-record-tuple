@@ -1,14 +1,13 @@
 # Record & Tuple Cookbook
 
+> **🚧 Work in progress 🚧**: this document is a work in progress. The format and writing-style of the document will change as well as the examples. Please do not take the examples as a sign of best practice.
+
 A series of bite-sized examples of things you can do with the [Record & Tuple ECMAScript proposal][rt].
 
 If you are unsure what this is all about, make sure you check out the [tutorial] first!
 
-🌐 **en** | [fr]
-
 [rt]: https://github.com/tc39/proposal-record-tuple
 [tutorial]: ../tutorial/index.html
-[fr]: ./fr.html
 
 ---
 

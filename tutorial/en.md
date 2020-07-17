@@ -1,11 +1,10 @@
 # Record & Tuple Tutorial
 
+> **🚧 Work in progress 🚧**: this document is a work in progress. The format and writing-style of the document will change as well as the examples. Please do not take the code snippets as a sign of best practice.
+
 This tutorial will guide you through the [Record & Tuple ECMAScript proposal][rt].
 
-🌐 **en** | [fr]
-
 [rt]: https://github.com/tc39/proposal-record-tuple
-[fr]: ./fr.html
 
 ---
 
