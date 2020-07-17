@@ -12,24 +12,6 @@ Checks whether the parameter is either a Record primitive or Record wrapper.
 
 Similar to `Object.fromEntries`, but created a new `Record`.
 
-## `Object` namespace functions working with `Record`
-
-- `Object.is()`
-- `Object.entries()`
-- `Object.keys()`
-- `Object.values()`
-- `Object.assign()` - **Caveat**: The first argument cannot be a record or a tuple, because they are immutable
-
-## `Object` namespace functions not working with `Record`
-
-- `Object.create()` - `Record` has no prototype so `Record.create()` would not have any meaning.
-- `Object.defineProperties()`, `Object.defineProperty()` - A `Record` is non-observable, not writable by nature
-- `Object.freeze()`, `Object.seal()` - `Record` is not mutable
-- `Object.getOwnPropertyDescriptor()`, `Object.getOwnPropertyDescriptors()` - Does not make sense as there is no `defineProperty`
-- `Object.getOwnPropertyNames()`, `Object.getOwnPropertySymbols()`, `Object.getPrototypeOf()`, `Object.setPrototypeOf()` - Does not make sense without a prototype
-- `Object.isExtensible()`, `Object.isFrozen()`, `Object.isSealed()` - `Record` is not mutable anyway
-- `Object.isPrototypeOf()`, `Object.isEnumerable()` - As we can't set those things up as seen previously, those are not available on `Record`
-
 # `Tuple` namespace
 
 ## `Tuple.from(arrayLike, mapFn, thisArg) => Tuple`
@@ -244,3 +226,28 @@ Returns a `Tuple Iterator` object that contains the values for each index in the
 ## `Tuple.prototype.with(index, value)`
 
 Returns a `Tuple` with the same elements as the original `Tuple` except the element at `index` is replaced with `value`.
+
+# Compatibility with the existing `Object` methods
+
+> NOTE: Since `Record` doesn't inherit from `Object`, you can't directly call the `Object.prototype.*` methods but you have to use `.call()`.
+
+## `Object` methods which work with `Record` and `Tuple`
+
+- `Object.is()` - When comparing records and tuples it behaves exactly like `===`
+- `Object.entries()`, `Object.keys()`, `Object.values()` - The resulting arrays are sorted alphabetically by key
+- `Object.assign()` - Copy properties from a record or tuple to another object. **Caveat**: The first argument cannot be a record or a tuple, because they are immutable
+- `Object.isExtensible()`, `Object.isFrozen()`, `Object.isSealed()` - They always return `false` for records and tuples
+- `Object.preventExtension()`, `Object.freeze()`, `Object.seal()` - Records and tuples are already immutable, so these methods will not throw but won't have any effect
+- `Object.getOwnPropertyDescriptor()`, `Object.getOwnPropertyDescriptors()` - The resulting descriptors all have `writable: false, enumerable: true, configurable: false`
+- `Object.getOwnPropertyNames()`, `Object.getOwnPropertySymbols()`, `Object.getPrototypeOf()` - Behave similarly to when called on objects
+
+- `Object.prototype.toString`, `Object.prototype.toLocaleString` - Return `[object Record]` and `[object Tuple]`
+- `Object.prototype.valueOf` - Boxes a primitive record or tuple into an object
+- `Object.prototype.propertyIsEnumerable` - Always returns `true` for existing properties
+- `Object.prototype.hasOwnProperty`
+- `Object.prototype.isPrototypeOf`
+
+## `Object` methods which don't work with `Record` and `Tuple`
+
+- `Object.create()` - Records and tuples cannot have a prototype
+- `Object.defineProperties()`, `Object.defineProperty()`, `Object.setPrototypeOf()` - Records and tuples are non-observable, not writable by nature
