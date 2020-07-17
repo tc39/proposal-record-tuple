@@ -22,6 +22,10 @@
 
 ### [Spec Text](https://tc39.es/proposal-record-tuple/)
 
+### [Tutorial](https://tc39.es/proposal-record-tuple/tutorial/)
+
+### [Cookbook](https://tc39.es/proposal-record-tuple/cookbook/)
+
 # Overview
 
 This proposal introduces two new deeply immutable data structures to JavaScript:
