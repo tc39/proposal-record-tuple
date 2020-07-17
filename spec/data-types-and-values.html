@@ -90,7 +90,20 @@
         <h1>TupleToString ( _argument_ )</h1>
         <p>The abstract operation TupleToString takes argument _argument_ (a Tuple). It performs the following steps when called:</p>
         <emu-alg>
-            1. Return ? Call(%Array.prototype.join%, _argument_, &laquo; &raquo;).
+            1. Assert: Type(_argument_) is Tuple.
+            1. Let _list_ be _argument_.[[Sequence]].
+            1. Let _length_ be the length of List _list_.
+            1. Let _ret_ be the value *"#["*.
+            1. Let _k_ be 0.
+            1. Repeat, while _k_ &lt; _len_,
+              1. Let _value_ be _list_[_k_].
+              1. If Type(_value_) is Symbol, Let _valueString_ be ! SymbolDescriptiveString(_value_).
+              1. Else, Let _valueString_ be ? ToString(_value_).
+              1. Set _ret_ to be the string-concatenation _ret_ and _valueString_.
+              1. If _k_ &lt; _len_, Set _ret_ to be the string-concatenation _ret_ and *", "*.
+              1. Set _k_ to _k_ + 1.
+            1. Set _ret_ to be the string-concatenation _ret_ and *"]"*.
+            1. Return _ret_.
         </emu-alg>
       </emu-clause>
 
