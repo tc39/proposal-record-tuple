@@ -570,9 +570,10 @@
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be a new List containing the elements of _T_.[[Sequence]].
           1. Let _length_ be the length of list _list_.
-          1. If _index_ &lt; 0 or _index_ >= _length_, throw a *RangeError* exception.
+          1. Let _I_ be ? ToIndex(_index_).
+          1. If _I_ &ge; _length_, throw a *RangeError* exception.
           1. If Type(_value_) is Object, throw a *TypeError* exception.
-          1. Set _list_[_index_] to _value_.
+          1. Set _list_[_I_] to _value_.
           1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
       </emu-clause>
