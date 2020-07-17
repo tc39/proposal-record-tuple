@@ -519,40 +519,6 @@ At a high level, the object/primitive distinction helps form a hard line between
 
 An alternative to implementing Record and Tuple as primitives would be to use [operator overloading](https://github.com/tc39/proposal-operator-overloading) to achieve a similar result, by implementing an overloaded abstract equality (`==`) operator that deeply compares objects. While this is possible, it doesn't satisfy the full use case, because operator overloading doesn't provide an override for the `===` operator. We want the strict equality (`===`) operator to be a reliable check of "identity" for objects and "observable value" (modulo -0/+0/NaN) for value types.
 
-## Why **specifically** the #{}/#[] syntax? What about an existing or new keyword?
-
-Using a keyword as a prefix to the standard object/array literal syntax presents issues around
-backwards compatibility. Additionally, re-using existing keywords can introduce ambiguity.
-
-ECMAScript defines a set of [_reserved keywords_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#Keywords) that can be used for future extensions to the language.
-Defining a new keyword that is not already reserved is theoretically possible, but requires significant effort to validate
-that the new keyword will not likely break backwards compatibility.
-
-Using a reserved keyword makes this process easier, but it is not a perfect solution because there are no reserved keywords
-that match the "intent" of the feature, other than `const`. The `const` keyword is also tricky, because it describes
-a similar concept (variable reference immutability) while this proposal intends to add new immutable data structures.
-While immutability is the common thread between these two features, there has been significant community feedback that
-indicates that using `const` in both contexts is undesirable.
-
-Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible alternatives. Currently, the champion group is leaning towards `#[]`/`#{}`, but discussion is ongoing in [#10](https://github.com/tc39/proposal-record-tuple/issues/10).
-
-# FAQ
-
-## What are the performance expectations of those Data Structures?
-
-This proposal in itself does not put any performance guarantees and does not require specific optimizations on the implementers. It is however built in a way that some performance optimizations can be done in most cases if implementers choose to do so.
-
-This proposal is designed to enable classical optimizations for purely functional data structures, including but not limited to:
-
-- Optimizations for making deep equality checks fast:
-  - For returning true quickly, intern ("hash-cons") some data structures
-  - For returning false quickly, maintain a hash up the tree of the contents of some structures
-- Optimizations for manipulating data structures
-  - In some cases, reuse existing data structures (e.g., when manipulated with object spread), similar to ropes or typical implementations of functional data structures
-  - In other cases, as determined by the engine, use a flat representation like existing JavaScript object implementations
-
-These optimizations are analogous to the way that modern JavaScript engines handle string concatenation, with various different internal types of strings. The validity of these optimizations rests on the unobservability of the identity of records and tuples. It's not expected that all engines will act identically with respect to these optimizations, but rather, they will each make decisions about particular heuristics to use. Before Stage 4 of this proposal, we plan to publish a guide for best practices for cross-engine optimizable use of Records and Tuples, based on the implementation experience that we will have at that point.
-
 ## Why introduce new syntax? Why not just introduce the Record and Tuple globals?
 
 The proposed syntax significantly improves the ergonomics of using `Record` and `Tuple` in code. For example:
@@ -598,6 +564,41 @@ const record = Record({
 ```
 
 The proposed syntax is intended to be simpler and easier to understand, because it is intentionally similar to syntax for object and array literals. This takes advantage of the user's existing familiarity with objects and arrays. Additionally, the second example introduces additional temporary object literals, which adds to complexity of the expression.
+
+
+## Why **specifically** the #{}/#[] syntax? What about an existing or new keyword?
+
+Using a keyword as a prefix to the standard object/array literal syntax presents issues around
+backwards compatibility. Additionally, re-using existing keywords can introduce ambiguity.
+
+ECMAScript defines a set of [_reserved keywords_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#Keywords) that can be used for future extensions to the language.
+Defining a new keyword that is not already reserved is theoretically possible, but requires significant effort to validate
+that the new keyword will not likely break backwards compatibility.
+
+Using a reserved keyword makes this process easier, but it is not a perfect solution because there are no reserved keywords
+that match the "intent" of the feature, other than `const`. The `const` keyword is also tricky, because it describes
+a similar concept (variable reference immutability) while this proposal intends to add new immutable data structures.
+While immutability is the common thread between these two features, there has been significant community feedback that
+indicates that using `const` in both contexts is undesirable.
+
+Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible alternatives. Currently, the champion group is leaning towards `#[]`/`#{}`, but discussion is ongoing in [#10](https://github.com/tc39/proposal-record-tuple/issues/10).
+
+# FAQ
+
+## What are the performance expectations of those Data Structures?
+
+This proposal in itself does not put any performance guarantees and does not require specific optimizations on the implementers. It is however built in a way that some performance optimizations can be done in most cases if implementers choose to do so.
+
+This proposal is designed to enable classical optimizations for purely functional data structures, including but not limited to:
+
+- Optimizations for making deep equality checks fast:
+  - For returning true quickly, intern ("hash-cons") some data structures
+  - For returning false quickly, maintain a hash up the tree of the contents of some structures
+- Optimizations for manipulating data structures
+  - In some cases, reuse existing data structures (e.g., when manipulated with object spread), similar to ropes or typical implementations of functional data structures
+  - In other cases, as determined by the engine, use a flat representation like existing JavaScript object implementations
+
+These optimizations are analogous to the way that modern JavaScript engines handle string concatenation, with various different internal types of strings. The validity of these optimizations rests on the unobservability of the identity of records and tuples. It's not expected that all engines will act identically with respect to these optimizations, but rather, they will each make decisions about particular heuristics to use. Before Stage 4 of this proposal, we plan to publish a guide for best practices for cross-engine optimizable use of Records and Tuples, based on the implementation experience that we will have at that point.
 
 ## How can I make a Record or Tuple which is based on an existing one, but with one part changed or added?
 
