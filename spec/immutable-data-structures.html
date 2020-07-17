@@ -516,13 +516,13 @@
           1. If _depth_ is not *undefined*, then
             1. Set _depthNum_ to ? ToInteger(_depth_).
           1. Let _flat_ be a new empty List.
-          1. Perform ? FlattenIntoList(_flat_, _list_, _depthNum_).
+          1. Perform ? FlattenIntoTuple(_flat_, _list_, _depthNum_).
           1. Return a new Tuple value whose [[Sequence]] is _flat_.
         </emu-alg>
 
-        <emu-clause id="sec-flattenintolist" aoid="FlattenIntoList">
-          <h1>FlattenIntoList ( _target_, _source_, _depth_ [ , _mapperFunction_, _thisArg_ ] )</h1>
-          <p>The abstract operation FlattenIntoList takes arguments _target_, _source_, and _depth_ and optional arguments _mapperFunction_ and _thisArg_. It performs the following steps when called:</p>
+        <emu-clause id="sec-flattenintotuple" aoid="FlattenIntoTuple">
+          <h1>FlattenIntoTuple ( _target_, _source_, _depth_ [ , _mapperFunction_, _thisArg_ ] )</h1>
+          <p>The abstract operation FlattenIntoTuple takes arguments _target_, _source_, and _depth_ and optional arguments _mapperFunction_ and _thisArg_. It performs the following steps when called:</p>
           <emu-alg>
             1. Assert: _target_ is a List.
             1. Assert: _source_ is a List.
@@ -533,7 +533,7 @@
                 1. Set _element_ to ? Call(_mapperFunction_, _thisArg_, &laquo; _element_, _sourceIndex_, _source_ &raquo;).
                 1. If Type(_element_) is Object, throw a *TypeError* exception.
               1. If _depth_ &gt; 0 and Type(_element_) is Tuple, then
-                1. Perform ? FlattenIntoList(_target_, _element_, _depth_ - 1).
+                1. Perform ? FlattenIntoTuple(_target_, _element_, _depth_ - 1).
               1. Else,
                 1. Let _len_ be the length of _target_.
                 1. If _len_ &ge; 2<sup>53</sup> - 1, throw a *TypeError* exception.
@@ -549,7 +549,7 @@
           1. Let _list_ be _T_.[[Sequence]].
           1. If ! IsCallable(_mapperFunction_) is *false*, throw a *TypeError* exception.
           1. Let _flat_ be a new empty List.
-          1. Perform ? FlattenIntoList(_flat_, _list_, 1, _mapperFunction_, _thisArg_).
+          1. Perform ? FlattenIntoTuple(_flat_, _list_, 1, _mapperFunction_, _thisArg_).
           1. Return a new Tuple value whose [[Sequence]] is _flat_.
         </emu-alg>
       </emu-clause>
