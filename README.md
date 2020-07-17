@@ -509,6 +509,33 @@ const weakSet = new WeakSet();
 weakSet.add(record);
 ```
 
+# Rationale
+
+## Why introduce new primitive types? Why not just use objects in an immutable data structure library?
+
+One core benefit of the Records and Tuples proposal is that they are compared by their contents, not their identity. At the same time, `===` in JavaScript on objects has very clear, consistent semantics: to compare the objects by identity. Making Records and Tuples primitives enables comparison based on their values.
+
+At a high level, the object/primitive distinction helps form a hard line between the deeply immutable, context-free, identity-free world and the world of mutable objects above it. This category split makes the design and mental model clearer.
+
+An alternative to implementing Record and Tuple as primitives would be to use [operator overloading](https://github.com/tc39/proposal-operator-overloading) to achieve a similar result, by implementing an overloaded abstract equality (`==`) operator that deeply compares objects. While this is possible, it doesn't satisfy the full use case, because operator overloading doesn't provide an override for the `===` operator. We want the strict equality (`===`) operator to be a reliable check of "identity" for objects and "observable value" (modulo -0/+0/NaN) for value types.
+
+## Why **specifically** the #{}/#[] syntax? What about an existing or new keyword?
+
+Using a keyword as a prefix to the standard object/array literal syntax presents issues around
+backwards compatibility. Additionally, re-using existing keywords can introduce ambiguity.
+
+ECMAScript defines a set of [_reserved keywords_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#Keywords) that can be used for future extensions to the language.
+Defining a new keyword that is not already reserved is theoretically possible, but requires significant effort to validate
+that the new keyword will not likely break backwards compatibility.
+
+Using a reserved keyword makes this process easier, but it is not a perfect solution because there are no reserved keywords
+that match the "intent" of the feature, other than `const`. The `const` keyword is also tricky, because it describes
+a similar concept (variable reference immutability) while this proposal intends to add new immutable data structures.
+While immutability is the common thread between these two features, there has been significant community feedback that
+indicates that using `const` in both contexts is undesirable.
+
+Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible alternatives. Currently, the champion group is leaning towards `#[]`/`#{}`, but discussion is ongoing in [#10](https://github.com/tc39/proposal-record-tuple/issues/10).
+
 # FAQ
 
 ## What are the performance expectations of those Data Structures?
@@ -572,29 +599,6 @@ const record = Record({
 
 The proposed syntax is intended to be simpler and easier to understand, because it is intentionally similar to syntax for object and array literals. This takes advantage of the user's existing familiarity with objects and arrays. Additionally, the second example introduces additional temporary object literals, which adds to complexity of the expression.
 
-## Why **specifically** the #{}/#[] syntax? What about an existing or new keyword?
-
-Using a keyword as a prefix to the standard object/array literal syntax presents issues around
-backwards compatibility. Additionally, re-using existing keywords can introduce ambiguity.
-
-ECMAScript defines a set of [_reserved keywords_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#Keywords) that can be used for future extensions to the language.
-Defining a new keyword that is not already reserved is theoretically possible, but requires significant effort to validate
-that the new keyword will not likely break backwards compatibility.
-
-Using a reserved keyword makes this process easier, but it is not a perfect solution because there are no reserved keywords
-that match the "intent" of the feature, other than `const`. The `const` keyword is also tricky, because it describes
-a similar concept (variable reference immutability) while this proposal intends to add new immutable data structures.
-While immutability is the common thread between these two features, there has been significant community feedback that
-indicates that using `const` in both contexts is undesirable.
-
-Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible alternatives. Currently, the champion group is leaning towards `#[]`/`#{}`, but discussion is ongoing in [#10](https://github.com/tc39/proposal-record-tuple/issues/10).
-
-## Why introduce new primitive types? Why not just use objects in an immutable data structure library?
-
-One core benefit of the Records and Tuples proposal is that they are compared by their contents, not their identity. At the same time, `===` in JavaScript on objects has very clear, consistent semantics: to compare the objects by identity. Making Records and Tuples primitives enables comparison based on their values. 
-
-At a high level, the object/primitive distinction helps form a hard line between the deeply immutable, context-free, identity-free world and the world of mutable objects above it. This category split makes the design and mental model clearer.
-
 ## How can I make a Record or Tuple which is based on an existing one, but with one part changed or added?
 
 In general, the spread operator works well for this:
@@ -629,9 +633,9 @@ We are developing the deep path properties proposal as a separate follow-on prop
 
 ## Could I "box" a pointer to an object, and put that in a Record or Tuple?
 
-Maybe! It's unclear exactly how such a box would work. We've been thinking about this in the [Boxing Objects](https://github.com/rricard/proposal-boxing-objects) proposal repo, but this is very early, and still undergoing change. One alternative is that we could permit JS developers to use Symbols as WeakMap keys, so that they could build their own way to use Symbols as such a box.
+Yes! Because you can store primitives in a Record or Tuple, you are free to use any primitive value as a "surrogate" for an object, and store said object in a side table. Integer surrogates are a common method of implementing this type of operation.
 
-Overall, we believe Records and Tuples are sufficiently useful on their own even without a built-in box mechanism. See the [Boxing Objects README](https://github.com/rricard/proposal-boxing-objects) for further explanation.
+Additionally, the [Symbols as WeakMap keys](https://github.com/rricard/proposal-symbols-as-weakmap-keys) proposal provides a way of accomplishing this via Symbols and WeakMaps.
 
 ## How does this relate to the [Readonly Collections](https://github.com/tc39/proposal-readonly-collections) proposal?
 
