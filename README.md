@@ -4,6 +4,7 @@
 
 - Robin Ricard (Bloomberg)
 - Rick Button (Bloomberg)
+- Nicolò Ribaudo (Babel)
 
 **Champions:**
 
