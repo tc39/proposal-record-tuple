@@ -61,13 +61,14 @@ Deep equality as defined in user libraries can vary significantly, in part due t
 
 #### `Record`
 
-Here is a record that can contain different things:
+Here is a record that can contain different values (of different types):
 
 ```js
 const document = #{
   id: 1234,
   title: "Record & Tuple proposal",
   contents: `...`,
+  // tuples are value types so you can put them in records:
   keywords: #["ecma", "tc39", "proposal", "record", "tuple"],
 };
 
@@ -118,86 +119,72 @@ See [more examples here](./details.md#more-exhaustive-record-manipulations).
 
 #### `Tuple`
 
+Here is a tuple that can contain different values (of different types):
+
+```js
+const document = [
+  "Record & Tuple ECMAScript proposal",
+  #{
+    id: 1234,
+    keywords: #["ecma", "tc39", "proposal", "record", "tuple"], 
+  },
+  `...`
+];
+
+// Accessing indices like you would with arrays!
+console.log(document[0]); // Record & Tuple proposal
+console.log(document[1].keywords[1]); // tc39
+
+// Slice and spread like arrays!
+const document2 = #[
+  "Record & Tuple ECMAScript proposal",
+  ...document.sliced(1),
+];
+console.log(document[0]); // Record & Tuple ECMAScript proposal
+console.log(document[1].keywords[1]); // tc39
+
+// or use the .with() shorthand for the same result:
+const document3 = document.with(0, "Record & Tuple ECMAScript proposal");
+console.log(document[0]); // Record & Tuple ECMAScript proposal
+console.log(document[1].keywords[1]); // tc39
+
+// Finally you can also use the funtions available on the Tuple prototype
+// that is similar to the Array prototype:
+console.log(#[1, 2, 3].map(x => x + 1)); // #[2, 3, 4]
+```
+
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBkb2N1bWVudCA9IFtcbiAgXCJSZWNvcmQgJiBUdXBsZSBFQ01BU2NyaXB0IHByb3Bvc2FsXCIsXG4gICN7XG4gICAgaWQ6IDEyMzQsXG4gICAga2V5d29yZHM6ICNbXCJlY21hXCIsIFwidGMzOVwiLCBcInByb3Bvc2FsXCIsIFwicmVjb3JkXCIsIFwidHVwbGVcIl0sIFxuICB9LFxuICBgLi4uYFxuXTtcblxuLy8gQWNjZXNzaW5nIGluZGljZXMgbGlrZSB5b3Ugd291bGQgd2l0aCBhcnJheXMhXG5jb25zb2xlLmxvZyhkb2N1bWVudFswXSk7IC8vIFJlY29yZCAmIFR1cGxlIHByb3Bvc2FsXG5jb25zb2xlLmxvZyhkb2N1bWVudFsxXS5rZXl3b3Jkc1sxXSk7IC8vIHRjMzlcblxuLy8gU2xpY2UgYW5kIHNwcmVhZCBsaWtlIGFycmF5cyFcbmNvbnN0IGRvY3VtZW50MiA9ICNbXG4gIFwiUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFwiLFxuICAuLi5kb2N1bWVudC5zbGljZSgxKSxcbl07XG5jb25zb2xlLmxvZyhkb2N1bWVudFswXSk7IC8vIFJlY29yZCAmIFR1cGxlIEVDTUFTY3JpcHQgcHJvcG9zYWxcbmNvbnNvbGUubG9nKGRvY3VtZW50WzFdLmtleXdvcmRzWzFdKTsgLy8gdGMzOVxuXG4vLyBvciB1c2UgdGhlIC53aXRoKCkgc2hvcnRoYW5kIGZvciB0aGUgc2FtZSByZXN1bHQ6XG5jb25zdCBkb2N1bWVudDMgPSBkb2N1bWVudC53aXRoKDAsIFwiUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFwiKTtcbmNvbnNvbGUubG9nKGRvY3VtZW50WzBdKTsgLy8gUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFxuY29uc29sZS5sb2coZG9jdW1lbnRbMV0ua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIEZpbmFsbHkgeW91IGNhbiBhbHNvIHVzZSB0aGUgZnVudGlvbnMgYXZhaWxhYmxlIG9uIHRoZSBUdXBsZSBwcm90b3R5cGVcbi8vIHRoYXQgaXMgc2ltaWxhciB0byB0aGUgQXJyYXkgcHJvdG90eXBlOlxuY29uc29sZS5sb2coI1sxLCAyLCAzXS5tYXAoeCA9PiB4ICsgMSkpOyAvLyAjWzIsIDMsIDRdXG4iLCJzeW50YXgiOiJoYXNoIn0=)
+
+Similarly than with records, we can treat tuples as array-like:
+
+```js
+const ship1 = #[1, 2];
+// ship2 is an array:
+const ship2 = [-1, 3];
+
+function move(start, deltaX, deltaY) {
+  // we always return a tuple after moving
+  return #[
+    start.x + deltaX,
+    start.y + deltaY,
+  ];
+}
+
+const ship1Moved = move(ship1, 1, 0);
+// passing an array to move() still works:
+const ship2Moved = move(ship2, 3, -1);
+
+console.log(ship1Moved === ship2Moved); // true
+// ship1 and ship2 have the same coordinates after moving
+```
+
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBzaGlwMSA9ICNbMSwgMl07XG4vLyBzaGlwMiBpcyBhbiBhcnJheTpcbmNvbnN0IHNoaXAyID0gWy0xLCAzXTtcblxuZnVuY3Rpb24gbW92ZShzdGFydCwgZGVsdGFYLCBkZWx0YVkpIHtcbiAgLy8gd2UgYWx3YXlzIHJldHVybiBhIHR1cGxlIGFmdGVyIG1vdmluZ1xuICByZXR1cm4gI1tcbiAgICBzdGFydC54ICsgZGVsdGFYLFxuICAgIHN0YXJ0LnkgKyBkZWx0YVksXG4gIF07XG59XG5cbmNvbnN0IHNoaXAxTW92ZWQgPSBtb3ZlKHNoaXAxLCAxLCAwKTtcbi8vIHBhc3NpbmcgYW4gb3JkaW5hcnkgb2JqZWN0IHRvIG1vdmUoKSBzdGlsbCB3b3JrczpcbmNvbnN0IHNoaXAyTW92ZWQgPSBtb3ZlKHNoaXAyLCAzLCAtMSk7XG5cbmNvbnNvbGUubG9nKHNoaXAxTW92ZWQgPT09IHNoaXAyTW92ZWQpOyAvLyB0cnVlXG4vLyBzaGlwMSBhbmQgc2hpcDIgaGF2ZSB0aGUgc2FtZSBjb29yZGluYXRlcyBhZnRlciBtb3ZpbmdcbiIsInN5bnRheCI6Imhhc2gifQ==)
+
 See [more examples here](./details.md#more-exhaustive-tuple-manipulations).
 
-#### Record initialization
-
-Computed keys are supported, similar to [computed property names](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names) in object literals.
-
-```js
-const key = "a";
-assert(#{ [key]: 1 } === #{ a: 1 })
-assert(#{ [key.toUpperCase()]: 1 } === #{ A: 1 })
-```
-
-Non-string keys are coerced to strings.
-
-```js
-assert(#{ [true]: 1 } === #{ true: 1 })
-assert(#{ [true]: 1 } === #{ ["true"]: 1 })
-
-assert(#{ [1 + 1]: "two" } === #{ 2: "two" })
-assert(#{ [9 + 1]: "ten" } === #{ ["10"]: "ten" })
-```
-
-[Shorthand notation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#New_notations_in_ECMAScript_2015) is supported.
-
-```js
-const url = "https://github.com/tc39/proposal-record-tuple";
-const record = #{ url }
-console.log(record.url) // https://github.com/tc39/proposal-record-tuple
-```
-
-The spread operator can be used to specify keys and their values.
-
-```js
-const formData = #{ title: "Implement all the things" }
-const taskNow = #{ id: 42, status: "WIP", ...formData }
-const taskLater = #{ ...taskNow, status: "DONE" }
-
-// A reminder: The ordering of keys in record literals does not affect equality (and is not retained)
-assert(taskLater === #{ status: "DONE", title: formData.title, id: 42 })
-```
-
-#### Destructuring
-
-```js
-const { a, b } = #{ a: 1, b: 2 };
-assert(a === 1);
-assert(b === 2);
-
-const [a, b] = #[1, 2];
-assert(a === 1);
-assert(b === 2);
-```
-
-A "spread" on the `lhs` will create an object or array, not a record or tuple. See issue [#77](https://github.com/tc39/proposal-record-tuple/issues/77) for more discussion.
-
-```js
-const { a, ...rest } = #{ a: 1, b: 2, c: 3 };
-assert(a === 1);
-assert(typeof rest === "object");
-assert(rest.b === 2);
-assert(rest.c === 3);
-
-const [a, ...rest] = #[1, 2, 3];
-assert(a === 1);
-assert(Array.isArray(rest));
-assert(rest[0] === 2);
-assert(rest[1] === 3);
-```
-
-Using a record or tuple literal on the `lhs` is a `SyntaxError`
-
-```js
-// SyntaxError
-const #{ a, b } = #{ a: 1, b: 2 };
-
-// SyntaxError
-const #[a, b] = #[1, 2];
-```
-
 #### Forbidden cases
+
+As stated beffore Record & Tuple ar edeeply immutable: attempting to insert an object in them will result in a TypeError:
 
 ```js
 const instance = new MyClass();
