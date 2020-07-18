@@ -665,6 +665,26 @@ This proposal is loosely related to a broader set of proposals, including [opera
 
 If we had user-defined value types, then it could make sense to use them in built-in features, such as [CSS Typed OM](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Typed_OM_API/Guide) or the [Temporal Proposal](https://github.com/tc39/proposal-temporal). However, this is far in the future, if it ever happens; for now, it works well to use objects for these sorts of features.
 
+## Are ECMAScript Record & Tuple the same as TypeScript's [Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkt) & [Tuple](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple)
+
+No they are completely different.
+
+Records in Typescript are a generic utility type to represent an object taking a key type matching with a value type. They still represents objects.
+
+Likewise Tuples in Typescript are a notation to express types in an array of a limited size (starting with TypeScript 4.0 they have a [variadic form](https://github.com/microsoft/TypeScript/pull/39094)).
+
+TS Records or Tuples could end up be usable on ECMAScript Records and Tuples as well, for instance:
+
+```ts
+// potential TS Record of an ECMAScript Record
+const record: RecordRecord<string, number> = #{
+  foo: 1,
+  bar: 2,
+};
+
+// potential TS Tuple of an ECMAScript Tuple
+const tuple: #[number, string] = #[1, "foo"];
+```
 
 # Glossary
 
