@@ -8,41 +8,9 @@ Converts shallowly an object to a record. If the object has a non-const value, a
 
 Checks whether the parameter is either a Record primitive or Record wrapper.
 
-## `Record.assign(...args: Record[]) -> Record`
-
-Merges all records passed as arguments into one **new** record returned by the function. The latest argument will override arguments before when merging.
-
-## `Record.entries(record: Record) -> Tuple`
-
-Returns all of the entries in a Record as a Tuple of 2-values Tuples (key, value) in the same order as `Record.keys()`.
-
 ## `Record.fromEntries(iterator: Iterator): Record`
 
-Takes an iterator of 2-element array-like values and creates a record out of it. If the iterator returns something other than an array-like tuple, a TypeError will be raised.
-
-## `Record.keys(record: Record) -> Tuple`
-
-Returns a Tuple containing the values serving as keys. Order will be the one defined in the main proposal document.
-
-## `Record.toString(record: Record) -> String`
-
-To be defined - it can actually show the full value.
-
-## `Record.values(record: Record) -> Tuple`
-
-Returns all of the values in a Record in the same order as the associated keys in `Record.keys()`.
-
-## `Object` namespace functions not available in `Record`
-
-- `Object.create()` - `Record` has no prototype so `Record.create()` would not have any meaning.
-- `Object.defineProperties()`, `Object.defineProperty()` - A `Record` is non-observable, not writable by nature
-- `Object.freeze()`, `Object.seal()` - `Record` is not mutable
-- `Object.getOwnPropertyDescriptor()`, `Object.getOwnPropertyDescriptors()` - Does not make sense as there is no `defineProperty`
-- `Object.getOwnPropertyNames()`, `Object.getOwnPropertySymbols()`, `Object.getPrototypeOf()`, `Object.setPrototypeOf()` - Does not make sense without a prototype
-- `Object.is()` - `Record.is()` would be exactly the same as `Object.is()`, we can eventually make it an alias
-- `Object.isExtensible()`, `Object.isFrozen()`, `Object.isSealed()` - `Record` is not mutable anyway
-- `Object.hasOwnProperty()`, `Object.isPrototypeOf()`, `Object.isEnumerable()` - As we can't set those things up as seen previously, those are not available on `Record`
-- `Object.toLocaleString()`, `Object.valueOf()` - Only used by objects overloading Object, we can't overload a Record
+Similar to `Object.fromEntries`, but created a new `Record`.
 
 # `Tuple` namespace
 
@@ -258,3 +226,28 @@ Returns a `Tuple Iterator` object that contains the values for each index in the
 ## `Tuple.prototype.with(index, value)`
 
 Returns a `Tuple` with the same elements as the original `Tuple` except the element at `index` is replaced with `value`.
+
+# Compatibility with the existing `Object` methods
+
+> NOTE: Since `Record` doesn't inherit from `Object`, you can't directly call the `Object.prototype.*` methods but you have to use `.call()`.
+
+## `Object` methods which work with `Record` and `Tuple`
+
+- `Object.is()` - When comparing records and tuples it behaves exactly like `===`
+- `Object.entries()`, `Object.keys()`, `Object.values()` - The resulting arrays are sorted alphabetically by key
+- `Object.assign()` - Copy properties from a record or tuple to another object. **Caveat**: The first argument cannot be a record or a tuple, because they are immutable
+- `Object.isExtensible()`, `Object.isFrozen()`, `Object.isSealed()` - When called on records and tuples, they always return `false`, `true`, and `true` respectively
+- `Object.preventExtension()`, `Object.freeze()`, `Object.seal()` - Records and tuples are already immutable, so these methods will not throw but won't have any effect
+- `Object.getOwnPropertyDescriptor()`, `Object.getOwnPropertyDescriptors()` - The resulting descriptors all have `writable: false, enumerable: true, configurable: false`
+- `Object.getOwnPropertyNames()`, `Object.getOwnPropertySymbols()`, `Object.getPrototypeOf()` - Behave similarly to when called on objects
+
+- `Object.prototype.toString`, `Object.prototype.toLocaleString` - Return `[object Record]` and `[object Tuple]` when a Record or Tuple is the receiver
+- `Object.prototype.valueOf` - Boxes a primitive record or tuple into an object
+- `Object.prototype.propertyIsEnumerable` - Always returns `true` for existing properties
+- `Object.prototype.hasOwnProperty`
+- `Object.prototype.isPrototypeOf`
+
+## `Object` methods which don't work with `Record` and `Tuple`
+
+- `Object.create()` - Records and tuples cannot be used as prototypes, unless you wrap them in objects (`Object(#{})`)
+- `Object.defineProperties()`, `Object.defineProperty()`, `Object.setPrototypeOf()` - Records and tuples are immutable by design.
