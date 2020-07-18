@@ -142,10 +142,10 @@
           1. If Type(_value_) is BigInt, throw a *TypeError* exception.
           1. If Type(_value_) is Object and IsCallable(_value_) is *false*, then
             1. <del>Let _isArray_ be ? IsArray(_value_).</del>
-            1. <ins>If _value_ has a [[TupleData]] internal slot, then
-              1. Let _isArrayLike_ be *true*.
-            1. Else,
-              1. Let _isArrayLike_ be ? IsArray(_value_),
+            1. <ins>If _value_ has a [[TupleData]] internal slot, then</ins>
+              1. <ins>Let _isArrayLike_ be *true*.</ins>
+            1. <ins>Else,</ins>
+              1. <ins>Let _isArrayLike_ be ? IsArray(_value_).</ins>
             1. If <del>_isArray_</del><ins>_isArrayLike_</ins> is *true*, return ? SerializeJSONArray(_state_, _value_).
             1. Return ? SerializeJSONObject(_state_, _value_).
           1. Return *undefined*.
