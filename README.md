@@ -526,6 +526,12 @@ An alternative to implementing Record and Tuple as primitives would be to use [o
 
 Another option is to perform what is called _interning_: we track globally Record or Tuple objects and if we attempt to create a new one that happens to be identical to an existing Record object, we now reference this existing Record instead of creating a new one. This is essentially what the [polyfill](https://github.com/bloomberg/record-tuple-polyfill) does. We're now equating value and identity. This approach creates problems once we extend that behavior across multiple JavaScript contexts and wouldn't give deep immutability by nature.
 
+## Will developers be familiar with this new concept?
+
+Record & Tuple is built to interoperate with objects and arrays well: you can read them exactly the same way as you would do with objects and arrays. The main change lies in the deep immutability and the comparison by value instead of identity.
+
+Developers used to manipulating objects in an immutable manner (such as transforming pieces of Redux state) will be able to continue to do the same manipulations they used to do on objects and arrays, this time, with more guarantees.
+
 ## Why introduce new syntax? Why not just introduce the Record and Tuple globals?
 
 The proposed syntax significantly improves the ergonomics of using `Record` and `Tuple` in code. For example:
