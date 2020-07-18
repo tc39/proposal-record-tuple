@@ -61,46 +61,64 @@ Deep equality as defined in user libraries can vary significantly, in part due t
 
 #### `Record`
 
+Here is a record that can contain different things:
+
 ```js
-const record1 = #{
-    a: 1,
-    b: 2,
-    c: 3,
+const document = #{
+  id: 1234,
+  title: "Record & Tuple proposal",
+  contents: `...`,
+  keywords: #["ecma", "tc39", "proposal", "record", "tuple"],
 };
 
-const record2 = #{...record1, b: 5};
+// Accessing keys like you would with objects!
+console.log(document.title); // Record & Tuple proposal
+console.log(document.keywords[1]); // tc39
 
-assert(record1.a === 1);
-assert(record1["a"] === 1);
-assert(record1 !== record2);
-assert(record2 === #{ a: 1, c: 3, b: 5 });
-assert(record1?.a === 1);
-assert(record1?.d === undefined);
-assert(record1?.d ?? 5 === 5);
-assert(record1.d?.a === undefined);
+// Spread like objects!
+const document2 = #{
+  ...document,
+  title: "Record & Tuple ECMAScript proposal",
+};
+console.log(document.title); // Record & Tuple ECMAScript proposal
+console.log(document.keywords[1]); // tc39
+
+// Finally you can also use Object functions on Records:
+console.log(Object.keys(document)); // ["contents", "id", "keywords", "title"]
 ```
+
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBkb2N1bWVudCA9ICN7XG4gIGlkOiAxMjM0LFxuICB0aXRsZTogXCJSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFwiLFxuICBjb250ZW50czogYC4uLmAsXG4gIGtleXdvcmRzOiAjW1wiZWNtYVwiLCBcInRjMzlcIiwgXCJwcm9wb3NhbFwiLCBcInJlY29yZFwiLCBcInR1cGxlXCJdLFxufTtcblxuLy8gQWNjZXNzaW5nIGtleXMgbGlrZSB5b3Ugd291bGQgd2l0aCBvYmplY3RzIVxuY29uc29sZS5sb2coZG9jdW1lbnQudGl0bGUpOyAvLyBSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFxuY29uc29sZS5sb2coZG9jdW1lbnQua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIFNwcmVhZCBsaWtlIG9iamVjdHMhXG5jb25zdCBkb2N1bWVudDIgPSAje1xuICAuLi5kb2N1bWVudCxcbiAgdGl0bGU6IFwiUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFwiLFxufTtcbmNvbnNvbGUubG9nKGRvY3VtZW50LnRpdGxlKTsgLy8gUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFxuY29uc29sZS5sb2coZG9jdW1lbnQua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIEZpbmFsbHkgeW91IGNhbiBhbHNvIHVzZSBPYmplY3QgZnVuY3Rpb25zIG9uIFJlY29yZHM6XG5jb25zb2xlLmxvZyhPYmplY3Qua2V5cyhkb2N1bWVudCkpOyAvLyBbXCJjb250ZW50c1wiLCBcImlkXCIsIFwia2V5d29yZHNcIiwgXCJ0aXRsZVwiXVxuIiwic3ludGF4IjoiaGFzaCJ9)
+
+In the following example, you'll see how Records and Objects can be treated by functions the same:
+
+```js
+const ship1 = #{ x: 1, y: 2 };
+// ship2 is an ordinary object:
+const ship2 = { x: -1, y: 3 };
+
+function move(start, deltaX, deltaY) {
+  // we always return a record after moving
+  return #{
+    x: start.x + deltaX,
+    y: start.y + deltaY,
+  };
+}
+
+const ship1Moved = move(ship1, 1, 0);
+// passing an ordinary object to move() still works:
+const ship2Moved = move(ship2, 3, -1);
+
+console.log(ship1Moved === ship2Moved); // true
+// ship1 and ship2 have the same coordinates after moving
+```
+
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBzaGlwMSA9ICN7IHg6IDEsIHk6IDIgfTtcbi8vIHNoaXAyIGlzIGFuIG9yZGluYXJ5IG9iamVjdDpcbmNvbnN0IHNoaXAyID0geyB4OiAtMSwgeTogMyB9O1xuXG5mdW5jdGlvbiBtb3ZlKHN0YXJ0LCBkZWx0YVgsIGRlbHRhWSkge1xuICAvLyB3ZSBhbHdheXMgcmV0dXJuIGEgcmVjb3JkIGFmdGVyIG1vdmluZ1xuICByZXR1cm4gI3tcbiAgICB4OiBzdGFydC54ICsgZGVsdGFYLFxuICAgIHk6IHN0YXJ0LnkgKyBkZWx0YVksXG4gIH07XG59XG5cbmNvbnN0IHNoaXAxTW92ZWQgPSBtb3ZlKHNoaXAxLCAxLCAwKTtcbi8vIHBhc3NpbmcgYW4gb3JkaW5hcnkgb2JqZWN0IHRvIG1vdmUoKSBzdGlsbCB3b3JrczpcbmNvbnN0IHNoaXAyTW92ZWQgPSBtb3ZlKHNoaXAyLCAzLCAtMSk7XG5cbmNvbnNvbGUubG9nKHNoaXAxTW92ZWQgPT09IHNoaXAyTW92ZWQpOyAvLyB0cnVlXG4vLyBzaGlwMSBhbmQgc2hpcDIgaGF2ZSB0aGUgc2FtZSBjb29yZGluYXRlcyBhZnRlciBtb3ZpbmdcbiIsInN5bnRheCI6Imhhc2gifQ==)
+
+See [more examples here](./details.md#more-exhaustive-record-manipulations).
 
 #### `Tuple`
 
-```js
-const tuple1 = #[1, 2, 3];
-
-assert(tuple1[0] === 1);
-
-const tuple2 = tuple1.with(0, 2);
-assert(tuple1 !== tuple2);
-assert(tuple2 === #[2, 2, 3]);
-
-const tuple3 = #[1, ...tuple2];
-assert(tuple3 === #[1, 2, 2, 3]);
-
-const tuple4 = tuple3.pushed(4);
-assert(tuple4 === #[1, 2, 2, 3, 4]);
-
-assert(tuple4.first() === 1);
-const tuple5 = tuple4.popped();
-assert(tuple5 === #[2, 2, 3, 4]);
-```
+See [more examples here](./details.md#more-exhaustive-tuple-manipulations).
 
 #### Record initialization
 
