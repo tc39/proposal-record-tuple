@@ -142,7 +142,7 @@
           1. If Type(_value_) is BigInt, throw a *TypeError* exception.
           1. If Type(_value_) is Object and IsCallable(_value_) is *false*, then
             1. <del>Let _isArray_ be ? IsArray(_value_).</del>
-            1. <ins>If _value_ has a [[TupleData]] internal slot, then</ins>
+            1. <ins>If ! IsTuple(_value_) is *true*, then</ins>
               1. <ins>Let _isArrayLike_ be *true*.</ins>
             1. <ins>Else,</ins>
               1. <ins>Let _isArrayLike_ be ? IsArray(_value_).</ins>
