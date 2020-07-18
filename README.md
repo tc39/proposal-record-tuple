@@ -184,7 +184,7 @@ See [more examples here](./details.md#more-exhaustive-tuple-manipulations).
 
 #### Forbidden cases
 
-As stated beffore Record & Tuple ar edeeply immutable: attempting to insert an object in them will result in a TypeError:
+As stated before Record & Tuple ar edeeply immutable: attempting to insert an object in them will result in a TypeError:
 
 ```js
 const instance = new MyClass();
