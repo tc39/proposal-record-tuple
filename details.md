@@ -1,8 +1,7 @@
-# Additional details to the main proposal document
 
 ## Examples
 
-### More exhaustive record manipulations
+### Records
 
 ```js
 const record1 = #{

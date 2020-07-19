@@ -82,13 +82,13 @@ const document2 = #{
 console.log(document.title); // Stage 1: Record & Tuple
 console.log(document.keywords[1]); // tc39
 
-// Finally you can also use Object functions on Records:
+// Object work functions on Records:
 console.log(Object.keys(document)); // ["contents", "id", "keywords", "title"]
 ```
 
 > [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBkb2N1bWVudCA9ICN7XG4gIGlkOiAxMjM0LFxuICB0aXRsZTogXCJSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFwiLFxuICBjb250ZW50czogYC4uLmAsXG4gIGtleXdvcmRzOiAjW1wiZWNtYVwiLCBcInRjMzlcIiwgXCJwcm9wb3NhbFwiLCBcInJlY29yZFwiLCBcInR1cGxlXCJdLFxufTtcblxuLy8gQWNjZXNzaW5nIGtleXMgbGlrZSB5b3Ugd291bGQgd2l0aCBvYmplY3RzIVxuY29uc29sZS5sb2coZG9jdW1lbnQudGl0bGUpOyAvLyBSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFxuY29uc29sZS5sb2coZG9jdW1lbnQua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIFNwcmVhZCBsaWtlIG9iamVjdHMhXG5jb25zdCBkb2N1bWVudDIgPSAje1xuICAuLi5kb2N1bWVudCxcbiAgdGl0bGU6IFwiUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFwiLFxufTtcbmNvbnNvbGUubG9nKGRvY3VtZW50LnRpdGxlKTsgLy8gUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFxuY29uc29sZS5sb2coZG9jdW1lbnQua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIEZpbmFsbHkgeW91IGNhbiBhbHNvIHVzZSBPYmplY3QgZnVuY3Rpb25zIG9uIFJlY29yZHM6XG5jb25zb2xlLmxvZyhPYmplY3Qua2V5cyhkb2N1bWVudCkpOyAvLyBbXCJjb250ZW50c1wiLCBcImlkXCIsIFwia2V5d29yZHNcIiwgXCJ0aXRsZVwiXVxuIiwic3ludGF4IjoiaGFzaCJ9)
 
-In the following example, you'll see how Records and Objects can be treated by functions the same:
+Functions can handle Records and Objects in generally the same way:
 
 ```js
 const ship1 = #{ x: 1, y: 2 };
@@ -117,7 +117,6 @@ See [more examples here](./details.md#records).
 
 #### `Tuple`
 
-Here is a tuple that can contain different values (of different types):
 
 ```js
 const document = #[
@@ -680,7 +679,7 @@ We are developing the deep path properties proposal as a separate follow-on prop
 
 ## Could I "box" a pointer to an object, and put that in a Record or Tuple?
 
-Yes! Because you can store primitives in a Record or Tuple, you are free to use any primitive value as a "surrogate" for an object, and store said object in a side table. Integer surrogates are a common method of implementing this type of operation.
+Yes! Because you can store primitives in a Record or Tuple, you are free to use any primitive value to represent a "reference" for an object, and store said object in a side table. For example, integers or Symbols could be used as these sorts of references.
 
 Additionally, the [Symbols as WeakMap keys](https://github.com/rricard/proposal-symbols-as-weakmap-keys) proposal provides a way of accomplishing this via Symbols and WeakMaps. Using Symbols as WeakMap keys, you will be able to reference objects in your code in the following way without leaking memory:
 
@@ -731,9 +730,9 @@ This proposal is loosely related to a broader set of proposals, including [opera
 
 If we had user-defined value types, then it could make sense to use them in built-in features, such as [CSS Typed OM](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Typed_OM_API/Guide) or the [Temporal Proposal](https://github.com/tc39/proposal-temporal). However, this is far in the future, if it ever happens; for now, it works well to use objects for these sorts of features.
 
-## Are ECMAScript Record & Tuple the same as TypeScript's [Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkt) & [Tuple](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple)
+## What's the relationship between this proposal's Record & Tuple and TypeScript's [Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkt) & [Tuple](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple)?
 
-No they are completely different.
+Although both kinds of Records relate to Objects, and both kinds of Tuples relate to Arrays, that's about where the similarity ends.
 
 Records in Typescript are a generic utility type to represent an object taking a key type matching with a value type. They still represent objects.
 
