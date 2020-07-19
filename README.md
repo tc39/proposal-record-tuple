@@ -525,38 +525,60 @@ We are going to do empirical research through interviews and surveys to figure o
 
 ## Why are Record & Tuple not based on `.get()`/`.set()` methods like [Immutable.js](https://immutable-js.github.io/immutable-js/)?
 
-If we want to keep access to Record & Tuple similar to Objects and Arrays as described in the previous section, we can't rely on methods to perform that access. Doing so would require us to branch code when trying to create a "generic" function able to take Objects/Arrays/Records/Tuples. We also want to avoid an ecoystem split where libraries choose which structures they want to operate on.
+If we want to keep access to Record & Tuple similar to Objects and Arrays as described in the previous section, we can't rely on methods to perform that access. Doing so would require us to branch code when trying to create a "generic" function able to take Objects/Arrays/Records/Tuples.
 
-Taking back the `move()` function from our previous [example](#examples):
-
-```js
-function move(start, deltaX, deltaY) {
-  // we always return a record after moving
-  return #{
-    x: start.x + deltaX,
-    y: start.y + deltaY,
-  };
-}
-```
-
-If we would need to use methods to access records we'd need to conditionally split the function:
+Here is an example function that has support for [Immutable.js](https://immutable-js.github.io/immutable-js/) Records and ordinary objects:
 
 ```js
-function move(start, deltaX, deltaY) {
-  if (Record.isRecord(start)) {
-    return Record({
-      x: start.get("x") + deltaX,
-      y: start.get("y") + deltaY,
-    });
-  }
-  return {
-    x: start.x + deltaX,
-    y: start.y + deltaY,
-  };
+const profileObject = {
+    name: "Rick Button",
+    githubHandle: "rickbutton,
+};
+const profileRecord = Immutable.Record({
+    name: "Robin Ricard",
+    githubHandle: "rricard,
+});
+
+function getGithubUrl(profile) {
+    if (Immutable.Record.isRecord(profile)) {
+        return `https://github.com/${
+            profile.get("githubHandle")
+        }`;
+    }
+    return `https://github.com/${
+        profile.githubHandle
+    }`;
 }
+
+console.log(getGithubUrl(profileObject)) // https://github.com/rickbutton
+console.log(getGithubUrl(profileRecord)) // https://github.com/rricard
 ```
 
-The latter is more error-prone than the former as both branches could easily get out of sync over time...
+This is error-prone as both branches could easily get out of sync over time... We also want to avoid an ecoystem split where libraries choose which structures they want to operate on.
+
+Here is how we would write that function taking Records from this proposal and ordinary objects:
+
+```js
+const profileObject = {
+  name: "Rick Button",
+  githubHandle: "rickbutton,
+};
+const profileRecord = #{
+  name: "Robin Ricard",
+  githubHandle: "rricard,
+};
+
+function getGithubUrl(profile) {
+  return `https://github.com/${
+    profile.githubHandle
+  }`;
+}
+
+console.log(getGithubUrl(profileObject)) // https://github.com/rickbutton
+console.log(getGithubUrl(profileRecord)) // https://github.com/rricard
+```
+
+This function support both Objects and Records in a single code-path as well as not forcing the consumer to choose which data structures to use.
 
 ## Why introduce new syntax? Why not just introduce the Record and Tuple globals?
 
