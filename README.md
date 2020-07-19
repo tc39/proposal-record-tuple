@@ -148,7 +148,7 @@ const document3 = document.with(0, "Record & Tuple ECMAScript proposal");
 console.log(document[0]); // Record & Tuple ECMAScript proposal
 console.log(document[1].keywords[1]); // tc39
 
-// Finally you can also use the funtions available on the Tuple prototype
+// Finally, you can also use the functions available on the Tuple prototype
 // that is similar to the Array prototype:
 console.log(#[1, 2, 3].map(x => x + 1)); // #[2, 3, 4]
 ```
@@ -184,7 +184,7 @@ See [more examples here](./details.md#more-exhaustive-tuple-manipulations).
 
 #### Forbidden cases
 
-As stated before Record & Tuple ar edeeply immutable: attempting to insert an object in them will result in a TypeError:
+As stated before Record & Tuple are deeply immutable: attempting to insert an object in them will result in a TypeError:
 
 ```js
 const instance = new MyClass();
@@ -702,7 +702,7 @@ If we had user-defined value types, then it could make sense to use them in buil
 
 No they are completely different.
 
-Records in Typescript are a generic utility type to represent an object taking a key type matching with a value type. They still represents objects.
+Records in Typescript are a generic utility type to represent an object taking a key type matching with a value type. They still represent objects.
 
 Likewise Tuples in Typescript are a notation to express types in an array of a limited size (starting with TypeScript 4.0 they have a [variadic form](https://github.com/microsoft/TypeScript/pull/39094)).
 
