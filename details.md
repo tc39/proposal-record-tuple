@@ -88,7 +88,7 @@ Using a record literal on the `lhs` is a `SyntaxError`
 const #{ a, b } = #{ a: 1, b: 2 };
 ```
 
-### More exhaustive tuple manipulations
+### Tuples
 
 ```js
 const tuple1 = #[1, 2, 3];
