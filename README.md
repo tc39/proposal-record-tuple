@@ -62,124 +62,118 @@ Deep equality as defined in user libraries can vary significantly, in part due t
 #### `Record`
 
 ```js
-const record1 = #{
-    a: 1,
-    b: 2,
-    c: 3,
+const document = #{
+  id: 1234,
+  title: "Record & Tuple proposal",
+  contents: `...`,
+  // tuples are value types so you can put them in records:
+  keywords: #["ecma", "tc39", "proposal", "record", "tuple"],
 };
 
-const record2 = #{...record1, b: 5};
+// Accessing keys like you would with objects!
+console.log(document.title); // Record & Tuple proposal
+console.log(document.keywords[1]); // tc39
 
-assert(record1.a === 1);
-assert(record1["a"] === 1);
-assert(record1 !== record2);
-assert(record2 === #{ a: 1, c: 3, b: 5 });
-assert(record1?.a === 1);
-assert(record1?.d === undefined);
-assert(record1?.d ?? 5 === 5);
-assert(record1.d?.a === undefined);
+// Spread like objects!
+const document2 = #{
+  ...document,
+  title: "Stage 1: Record & Tuple",
+};
+console.log(document.title); // Stage 1: Record & Tuple
+console.log(document.keywords[1]); // tc39
+
+// Object work functions on Records:
+console.log(Object.keys(document)); // ["contents", "id", "keywords", "title"]
 ```
+
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBkb2N1bWVudCA9ICN7XG4gIGlkOiAxMjM0LFxuICB0aXRsZTogXCJSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFwiLFxuICBjb250ZW50czogYC4uLmAsXG4gIGtleXdvcmRzOiAjW1wiZWNtYVwiLCBcInRjMzlcIiwgXCJwcm9wb3NhbFwiLCBcInJlY29yZFwiLCBcInR1cGxlXCJdLFxufTtcblxuLy8gQWNjZXNzaW5nIGtleXMgbGlrZSB5b3Ugd291bGQgd2l0aCBvYmplY3RzIVxuY29uc29sZS5sb2coZG9jdW1lbnQudGl0bGUpOyAvLyBSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFxuY29uc29sZS5sb2coZG9jdW1lbnQua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIFNwcmVhZCBsaWtlIG9iamVjdHMhXG5jb25zdCBkb2N1bWVudDIgPSAje1xuICAuLi5kb2N1bWVudCxcbiAgdGl0bGU6IFwiUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFwiLFxufTtcbmNvbnNvbGUubG9nKGRvY3VtZW50LnRpdGxlKTsgLy8gUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFxuY29uc29sZS5sb2coZG9jdW1lbnQua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIEZpbmFsbHkgeW91IGNhbiBhbHNvIHVzZSBPYmplY3QgZnVuY3Rpb25zIG9uIFJlY29yZHM6XG5jb25zb2xlLmxvZyhPYmplY3Qua2V5cyhkb2N1bWVudCkpOyAvLyBbXCJjb250ZW50c1wiLCBcImlkXCIsIFwia2V5d29yZHNcIiwgXCJ0aXRsZVwiXVxuIiwic3ludGF4IjoiaGFzaCJ9)
+
+Functions can handle Records and Objects in generally the same way:
+
+```js
+const ship1 = #{ x: 1, y: 2 };
+// ship2 is an ordinary object:
+const ship2 = { x: -1, y: 3 };
+
+function move(start, deltaX, deltaY) {
+  // we always return a record after moving
+  return #{
+    x: start.x + deltaX,
+    y: start.y + deltaY,
+  };
+}
+
+const ship1Moved = move(ship1, 1, 0);
+// passing an ordinary object to move() still works:
+const ship2Moved = move(ship2, 3, -1);
+
+console.log(ship1Moved === ship2Moved); // true
+// ship1 and ship2 have the same coordinates after moving
+```
+
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBzaGlwMSA9ICN7IHg6IDEsIHk6IDIgfTtcbi8vIHNoaXAyIGlzIGFuIG9yZGluYXJ5IG9iamVjdDpcbmNvbnN0IHNoaXAyID0geyB4OiAtMSwgeTogMyB9O1xuXG5mdW5jdGlvbiBtb3ZlKHN0YXJ0LCBkZWx0YVgsIGRlbHRhWSkge1xuICAvLyB3ZSBhbHdheXMgcmV0dXJuIGEgcmVjb3JkIGFmdGVyIG1vdmluZ1xuICByZXR1cm4gI3tcbiAgICB4OiBzdGFydC54ICsgZGVsdGFYLFxuICAgIHk6IHN0YXJ0LnkgKyBkZWx0YVksXG4gIH07XG59XG5cbmNvbnN0IHNoaXAxTW92ZWQgPSBtb3ZlKHNoaXAxLCAxLCAwKTtcbi8vIHBhc3NpbmcgYW4gb3JkaW5hcnkgb2JqZWN0IHRvIG1vdmUoKSBzdGlsbCB3b3JrczpcbmNvbnN0IHNoaXAyTW92ZWQgPSBtb3ZlKHNoaXAyLCAzLCAtMSk7XG5cbmNvbnNvbGUubG9nKHNoaXAxTW92ZWQgPT09IHNoaXAyTW92ZWQpOyAvLyB0cnVlXG4vLyBzaGlwMSBhbmQgc2hpcDIgaGF2ZSB0aGUgc2FtZSBjb29yZGluYXRlcyBhZnRlciBtb3ZpbmdcbiIsInN5bnRheCI6Imhhc2gifQ==)
+
+See [more examples here](./details.md#records).
 
 #### `Tuple`
 
-```js
-const tuple1 = #[1, 2, 3];
-
-assert(tuple1[0] === 1);
-
-const tuple2 = tuple1.with(0, 2);
-assert(tuple1 !== tuple2);
-assert(tuple2 === #[2, 2, 3]);
-
-const tuple3 = #[1, ...tuple2];
-assert(tuple3 === #[1, 2, 2, 3]);
-
-const tuple4 = tuple3.pushed(4);
-assert(tuple4 === #[1, 2, 2, 3, 4]);
-
-assert(tuple4.first() === 1);
-const tuple5 = tuple4.popped();
-assert(tuple5 === #[2, 2, 3, 4]);
-```
-
-#### Record initialization
-
-Computed keys are supported, similar to [computed property names](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names) in object literals.
 
 ```js
-const key = "a";
-assert(#{ [key]: 1 } === #{ a: 1 })
-assert(#{ [key.toUpperCase()]: 1 } === #{ A: 1 })
+const measures = #[42, 12, 67, "measure error: foo happened"];
+
+// Accessing indices like you would with arrays!
+console.log(document[0]); // 42
+console.log(document[3]); // measure error: foo happened
+
+// Slice and spread like arrays!
+const correctedMeasures = #[
+  ...measures.sliced(0, measures.length - 1),
+  -1
+];
+console.log(document[0]); // 42
+console.log(document[3]); // -1
+
+// or use the .with() shorthand for the same result:
+const correctedMeasures2 = document.with(3, -1);
+console.log(document[0]); // 42
+console.log(document[3]); // -1
+
+// Tuples support methods similar to Arrays
+console.log(correctedMeasures2.map(x => x + 1)); // #[43, 13, 68, 0]
 ```
 
-Non-string keys are coerced to strings.
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBtZWFzdXJlcyA9ICNbNDIsIDEyLCA2NywgXCJtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcIl07XG5cbi8vIEFjY2Vzc2luZyBpbmRpY2VzIGxpa2UgeW91IHdvdWxkIHdpdGggYXJyYXlzIVxuY29uc29sZS5sb2coZG9jdW1lbnRbMF0pOyAvLyA0MlxuY29uc29sZS5sb2coZG9jdW1lbnRbM10pOyAvLyBtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcblxuLy8gU2xpY2UgYW5kIHNwcmVhZCBsaWtlIGFycmF5cyFcbmNvbnN0IGNvcnJlY3RlZE1lYXN1cmVzID0gI1tcbiAgLi4ubWVhc3VyZXMuc2xpY2VkKDAsIG1lYXN1cmVzLmxlbmd0aCAtIDEpLFxuICAtMVxuXTtcbmNvbnNvbGUubG9nKGRvY3VtZW50WzBdKTsgLy8gNDJcbmNvbnNvbGUubG9nKGRvY3VtZW50WzNdKTsgLy8gLTFcblxuLy8gb3IgdXNlIHRoZSAud2l0aCgpIHNob3J0aGFuZCBmb3IgdGhlIHNhbWUgcmVzdWx0OlxuY29uc3QgY29ycmVjdGVkTWVhc3VyZXMyID0gZG9jdW1lbnQud2l0aCgzLCAtMSk7XG5jb25zb2xlLmxvZyhkb2N1bWVudFswXSk7IC8vIDQyXG5jb25zb2xlLmxvZyhkb2N1bWVudFszXSk7IC8vIC0xXG5cbi8vIEZpbmFsbHksIHlvdSBjYW4gYWxzbyB1c2UgdGhlIGZ1bmN0aW9ucyBhdmFpbGFibGUgb24gdGhlIFR1cGxlIHByb3RvdHlwZVxuLy8gdGhhdCBpcyBzaW1pbGFyIHRvIHRoZSBBcnJheSBwcm90b3R5cGU6XG5jb25zb2xlLmxvZyhjb3JyZWN0ZWRNZWFzdXJlczIubWFwKHggPT4geCArIDEpKTsgLy8gI1s0MywgMTMsIDY4LCAwXVxuIiwic3ludGF4IjoiaGFzaCJ9)
+
+Similarly than with records, we can treat tuples as array-like:
 
 ```js
-assert(#{ [true]: 1 } === #{ true: 1 })
-assert(#{ [true]: 1 } === #{ ["true"]: 1 })
+const ship1 = #[1, 2];
+// ship2 is an array:
+const ship2 = [-1, 3];
 
-assert(#{ [1 + 1]: "two" } === #{ 2: "two" })
-assert(#{ [9 + 1]: "ten" } === #{ ["10"]: "ten" })
+function move(start, deltaX, deltaY) {
+  // we always return a tuple after moving
+  return #[
+    start[0] + deltaX,
+    start[1] + deltaY,
+  ];
+}
+
+const ship1Moved = move(ship1, 1, 0);
+// passing an array to move() still works:
+const ship2Moved = move(ship2, 3, -1);
+
+console.log(ship1Moved === ship2Moved); // true
+// ship1 and ship2 have the same coordinates after moving
 ```
 
-[Shorthand notation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#New_notations_in_ECMAScript_2015) is supported.
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBzaGlwMSA9ICNbMSwgMl07XG4vLyBzaGlwMiBpcyBhbiBhcnJheTpcbmNvbnN0IHNoaXAyID0gWy0xLCAzXTtcblxuZnVuY3Rpb24gbW92ZShzdGFydCwgZGVsdGFYLCBkZWx0YVkpIHtcbiAgLy8gd2UgYWx3YXlzIHJldHVybiBhIHR1cGxlIGFmdGVyIG1vdmluZ1xuICByZXR1cm4gI1tcbiAgICBzdGFydC54ICsgZGVsdGFYLFxuICAgIHN0YXJ0LnkgKyBkZWx0YVksXG4gIF07XG59XG5cbmNvbnN0IHNoaXAxTW92ZWQgPSBtb3ZlKHNoaXAxLCAxLCAwKTtcbi8vIHBhc3NpbmcgYW4gb3JkaW5hcnkgb2JqZWN0IHRvIG1vdmUoKSBzdGlsbCB3b3JrczpcbmNvbnN0IHNoaXAyTW92ZWQgPSBtb3ZlKHNoaXAyLCAzLCAtMSk7XG5cbmNvbnNvbGUubG9nKHNoaXAxTW92ZWQgPT09IHNoaXAyTW92ZWQpOyAvLyB0cnVlXG4vLyBzaGlwMSBhbmQgc2hpcDIgaGF2ZSB0aGUgc2FtZSBjb29yZGluYXRlcyBhZnRlciBtb3ZpbmdcbiIsInN5bnRheCI6Imhhc2gifQ==)
 
-```js
-const url = "https://github.com/tc39/proposal-record-tuple";
-const record = #{ url }
-console.log(record.url) // https://github.com/tc39/proposal-record-tuple
-```
-
-The spread operator can be used to specify keys and their values.
-
-```js
-const formData = #{ title: "Implement all the things" }
-const taskNow = #{ id: 42, status: "WIP", ...formData }
-const taskLater = #{ ...taskNow, status: "DONE" }
-
-// A reminder: The ordering of keys in record literals does not affect equality (and is not retained)
-assert(taskLater === #{ status: "DONE", title: formData.title, id: 42 })
-```
-
-#### Destructuring
-
-```js
-const { a, b } = #{ a: 1, b: 2 };
-assert(a === 1);
-assert(b === 2);
-
-const [a, b] = #[1, 2];
-assert(a === 1);
-assert(b === 2);
-```
-
-A "spread" on the `lhs` will create an object or array, not a record or tuple. See issue [#77](https://github.com/tc39/proposal-record-tuple/issues/77) for more discussion.
-
-```js
-const { a, ...rest } = #{ a: 1, b: 2, c: 3 };
-assert(a === 1);
-assert(typeof rest === "object");
-assert(rest.b === 2);
-assert(rest.c === 3);
-
-const [a, ...rest] = #[1, 2, 3];
-assert(a === 1);
-assert(Array.isArray(rest));
-assert(rest[0] === 2);
-assert(rest[1] === 3);
-```
-
-Using a record or tuple literal on the `lhs` is a `SyntaxError`
-
-```js
-// SyntaxError
-const #{ a, b } = #{ a: 1, b: 2 };
-
-// SyntaxError
-const #[a, b] = #[1, 2];
-```
+See [more examples here](./details.md#tuples).
 
 #### Forbidden cases
+
+As stated before Record & Tuple are deeply immutable: attempting to insert an object in them will result in a TypeError:
 
 ```js
 const instance = new MyClass();
@@ -519,6 +513,73 @@ At a high level, the object/primitive distinction helps form a hard line between
 
 An alternative to implementing Record and Tuple as primitives would be to use [operator overloading](https://github.com/tc39/proposal-operator-overloading) to achieve a similar result, by implementing an overloaded abstract equality (`==`) operator that deeply compares objects. While this is possible, it doesn't satisfy the full use case, because operator overloading doesn't provide an override for the `===` operator. We want the strict equality (`===`) operator to be a reliable check of "identity" for objects and "observable value" (modulo -0/+0/NaN) for value types.
 
+Another option is to perform what is called _interning_: we track globally Record or Tuple objects and if we attempt to create a new one that happens to be identical to an existing Record object, we now reference this existing Record instead of creating a new one. This is essentially what the [polyfill](https://github.com/bloomberg/record-tuple-polyfill) does. We're now equating value and identity. This approach creates problems once we extend that behavior across multiple JavaScript contexts and wouldn't give deep immutability by nature and **it is particularly slow** which would make using Record & Tuple a performance-negative choice.
+
+## Will developers be familiar with this new concept?
+
+Record & Tuple is built to interoperate with objects and arrays well: you can read them exactly the same way as you would do with objects and arrays. The main change lies in the deep immutability and the comparison by value instead of identity.
+
+Developers used to manipulating objects in an immutable manner (such as transforming pieces of Redux state) will be able to continue to do the same manipulations they used to do on objects and arrays, this time, with more guarantees.
+
+We are going to do empirical research through interviews and surveys to figure out if this is working out as we think it does.
+
+## Why are Record & Tuple not based on `.get()`/`.set()` methods like [Immutable.js](https://immutable-js.github.io/immutable-js/)?
+
+If we want to keep access to Record & Tuple similar to Objects and Arrays as described in the previous section, we can't rely on methods to perform that access. Doing so would require us to branch code when trying to create a "generic" function able to take Objects/Arrays/Records/Tuples.
+
+Here is an example function that has support for [Immutable.js](https://immutable-js.github.io/immutable-js/) Records and ordinary objects:
+
+```js
+const profileObject = {
+    name: "Rick Button",
+    githubHandle: "rickbutton",
+};
+const profileRecord = Immutable.Record({
+    name: "Robin Ricard",
+    githubHandle: "rricard",
+});
+
+function getGithubUrl(profile) {
+    if (Immutable.Record.isRecord(profile)) {
+        return `https://github.com/${
+            profile.get("githubHandle")
+        }`;
+    }
+    return `https://github.com/${
+        profile.githubHandle
+    }`;
+}
+
+console.log(getGithubUrl(profileObject)) // https://github.com/rickbutton
+console.log(getGithubUrl(profileRecord)) // https://github.com/rricard
+```
+
+This is error-prone as both branches could easily get out of sync over time... We also want to avoid an ecoystem split where libraries choose which structures they want to operate on.
+
+Here is how we would write that function taking Records from this proposal and ordinary objects:
+
+```js
+const profileObject = {
+  name: "Rick Button",
+  githubHandle: "rickbutton",
+};
+const profileRecord = #{
+  name: "Robin Ricard",
+  githubHandle: "rricard",
+};
+
+function getGithubUrl(profile) {
+  return `https://github.com/${
+    profile.githubHandle
+  }`;
+}
+
+console.log(getGithubUrl(profileObject)) // https://github.com/rickbutton
+console.log(getGithubUrl(profileRecord)) // https://github.com/rricard
+```
+
+This function support both Objects and Records in a single code-path as well as not forcing the consumer to choose which data structures to use.
+
 ## Why introduce new syntax? Why not just introduce the Record and Tuple globals?
 
 The proposed syntax significantly improves the ergonomics of using `Record` and `Tuple` in code. For example:
@@ -634,9 +695,36 @@ We are developing the deep path properties proposal as a separate follow-on prop
 
 ## Could I "box" a pointer to an object, and put that in a Record or Tuple?
 
-Yes! Because you can store primitives in a Record or Tuple, you are free to use any primitive value as a "surrogate" for an object, and store said object in a side table. Integer surrogates are a common method of implementing this type of operation.
+Yes! Because you can store primitives in a Record or Tuple, you are free to use any primitive value to represent a "reference" for an object, and store said object in a side table. For example, integers or Symbols could be used as these sorts of references.
 
-Additionally, the [Symbols as WeakMap keys](https://github.com/rricard/proposal-symbols-as-weakmap-keys) proposal provides a way of accomplishing this via Symbols and WeakMaps.
+Additionally, the [Symbols as WeakMap keys](https://github.com/rricard/proposal-symbols-as-weakmap-keys) proposal provides a way of accomplishing this via Symbols and WeakMaps. Using Symbols as WeakMap keys, you will be able to reference objects in your code in the following way without leaking memory:
+
+```js
+import { ref, deref } from "ref-bookkeeper.js";
+
+const server = #{
+    port: 8080,
+    handler: ref(function handler(req) { /* ... */ }),
+};
+deref(server.handler)({ /* ... */ });
+```
+<details>
+<summary><code>ref-bookkeeper.js</code></summary>
+
+```js
+const references = new WeakMap();
+
+export function ref(obj) {
+  // (Simplified; we may want to return an existing symbol if it's already there)
+  const sym = Symbol();
+  references.set(sym, obj);
+  return sym;
+}
+
+export function deref(sym) { return references.get(sym); }
+```
+
+</details>
 
 ## How does this relate to the [Readonly Collections](https://github.com/tc39/proposal-readonly-collections) proposal?
 
@@ -658,6 +746,23 @@ This proposal is loosely related to a broader set of proposals, including [opera
 
 If we had user-defined value types, then it could make sense to use them in built-in features, such as [CSS Typed OM](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Typed_OM_API/Guide) or the [Temporal Proposal](https://github.com/tc39/proposal-temporal). However, this is far in the future, if it ever happens; for now, it works well to use objects for these sorts of features.
 
+## What's the relationship between this proposal's Record & Tuple and TypeScript's [Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkt) & [Tuple](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple)?
+
+Although both kinds of Records relate to Objects, and both kinds of Tuples relate to Arrays, that's about where the similarity ends.
+
+Records in Typescript are a generic utility type to represent an object taking a key type matching with a value type. They still represent objects.
+
+Likewise Tuples in Typescript are a notation to express types in an array of a limited size (starting with TypeScript 4.0 they have a [variadic form](https://github.com/microsoft/TypeScript/pull/39094)). Tuples in TypeScript are a way to express arrays with heterogeneous types. ECMAScript tuples can correspond to TS arrays or TS tuples easily as they can either contain an indefinite number of values of the same type or contain a limited number of values with different types.
+
+TS Records or Tuples are orthogonal features to ECMAScript Records and Tuples and both could be expressed at the same time:
+
+```ts
+const record: readonly Record<string, number> = #{
+  foo: 1,
+  bar: 2,
+};
+const tuple:  readonly [number, string] = #[1, "foo"];
+```
 
 # Glossary
 
