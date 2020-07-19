@@ -731,19 +731,16 @@ Although both kinds of Records relate to Objects, and both kinds of Tuples relat
 
 Records in Typescript are a generic utility type to represent an object taking a key type matching with a value type. They still represent objects.
 
-Likewise Tuples in Typescript are a notation to express types in an array of a limited size (starting with TypeScript 4.0 they have a [variadic form](https://github.com/microsoft/TypeScript/pull/39094)).
+Likewise Tuples in Typescript are a notation to express types in an array of a limited size (starting with TypeScript 4.0 they have a [variadic form](https://github.com/microsoft/TypeScript/pull/39094)). Tuples in TypeScript are a way to express arrays with heterogeneous types. ECMAScript tuples can correspond to TS arrays or TS tuples easily as they can either contain an indefinite number of values of the same type or contain a limited number of values with different types.
 
-TS Records or Tuples could end up be usable on ECMAScript Records and Tuples as well, for instance:
+TS Records or Tuples are orthogonal features to ECMAScript Records and Tuples and both could be expressed at the same time:
 
 ```ts
-// potential TS Record of an ECMAScript Record
-const record: RecordRecord<string, number> = #{
+const record: readonly Record<string, number> = #{
   foo: 1,
   bar: 2,
 };
-
-// potential TS Tuple of an ECMAScript Tuple
-const tuple: #[number, string] = #[1, "foo"];
+const tuple:  readonly [number, string] = #[1, "foo"];
 ```
 
 # Glossary
