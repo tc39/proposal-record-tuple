@@ -532,11 +532,11 @@ Here is an example function that has support for [Immutable.js](https://immutabl
 ```js
 const profileObject = {
     name: "Rick Button",
-    githubHandle: "rickbutton,
+    githubHandle: "rickbutton",
 };
 const profileRecord = Immutable.Record({
     name: "Robin Ricard",
-    githubHandle: "rricard,
+    githubHandle: "rricard",
 });
 
 function getGithubUrl(profile) {
@@ -561,11 +561,11 @@ Here is how we would write that function taking Records from this proposal and o
 ```js
 const profileObject = {
   name: "Rick Button",
-  githubHandle: "rickbutton,
+  githubHandle: "rickbutton",
 };
 const profileRecord = #{
   name: "Robin Ricard",
-  githubHandle: "rricard,
+  githubHandle: "rricard",
 };
 
 function getGithubUrl(profile) {
