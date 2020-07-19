@@ -61,8 +61,6 @@ Deep equality as defined in user libraries can vary significantly, in part due t
 
 #### `Record`
 
-Here is a record that can contain different values (of different types):
-
 ```js
 const document = #{
   id: 1234,
