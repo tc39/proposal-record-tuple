@@ -122,7 +122,7 @@ See [more examples here](./details.md#more-exhaustive-record-manipulations).
 Here is a tuple that can contain different values (of different types):
 
 ```js
-const document = [
+const document = #[
   "Record & Tuple ECMAScript proposal",
   #{
     id: 1234,
@@ -165,8 +165,8 @@ const ship2 = [-1, 3];
 function move(start, deltaX, deltaY) {
   // we always return a tuple after moving
   return #[
-    start.x + deltaX,
-    start.y + deltaY,
+    start[0] + deltaX,
+    start[1] + deltaY,
   ];
 }
 
