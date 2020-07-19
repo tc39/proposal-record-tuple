@@ -119,38 +119,31 @@ See [more examples here](./details.md#records).
 
 
 ```js
-const document = #[
-  "Stage 1: Record & Tuple",
-  #{
-    id: 1234,
-    keywords: #["ecma", "tc39", "proposal", "record", "tuple"], 
-  },
-  `...`
-];
+const measures = #[42, 12, 67, "measure error: foo happened"];
 
 // Accessing indices like you would with arrays!
-console.log(document[0]); // Record & Tuple proposal
-console.log(document[1].keywords[1]); // tc39
+console.log(document[0]); // 42
+console.log(document[3]); // measure error: foo happened
 
 // Slice and spread like arrays!
-const document2 = #[
-  "Stage 1: Record & Tuple",
-  ...document.sliced(1),
+const correctedMeasures = #[
+  ...measures.sliced(0, measures.length - 1),
+  -1
 ];
-console.log(document[0]); // Stage 1: Record & Tuple
-console.log(document[1].keywords[1]); // tc39
+console.log(document[0]); // 42
+console.log(document[3]); // -1
 
 // or use the .with() shorthand for the same result:
-const document3 = document.with(0, "Stage 1: Record & Tuple");
-console.log(document[0]); // Stage 1: Record & Tuple
-console.log(document[1].keywords[1]); // tc39
+const correctedMeasures2 = document.with(3, -1);
+console.log(document[0]); // 42
+console.log(document[3]); // -1
 
 // Finally, you can also use the functions available on the Tuple prototype
 // that is similar to the Array prototype:
-console.log(#[1, 2, 3].map(x => x + 1)); // #[2, 3, 4]
+console.log(correctedMeasures2.map(x => x + 1)); // #[43, 13, 68, 0]
 ```
 
-> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBkb2N1bWVudCA9IFtcbiAgXCJSZWNvcmQgJiBUdXBsZSBFQ01BU2NyaXB0IHByb3Bvc2FsXCIsXG4gICN7XG4gICAgaWQ6IDEyMzQsXG4gICAga2V5d29yZHM6ICNbXCJlY21hXCIsIFwidGMzOVwiLCBcInByb3Bvc2FsXCIsIFwicmVjb3JkXCIsIFwidHVwbGVcIl0sIFxuICB9LFxuICBgLi4uYFxuXTtcblxuLy8gQWNjZXNzaW5nIGluZGljZXMgbGlrZSB5b3Ugd291bGQgd2l0aCBhcnJheXMhXG5jb25zb2xlLmxvZyhkb2N1bWVudFswXSk7IC8vIFJlY29yZCAmIFR1cGxlIHByb3Bvc2FsXG5jb25zb2xlLmxvZyhkb2N1bWVudFsxXS5rZXl3b3Jkc1sxXSk7IC8vIHRjMzlcblxuLy8gU2xpY2UgYW5kIHNwcmVhZCBsaWtlIGFycmF5cyFcbmNvbnN0IGRvY3VtZW50MiA9ICNbXG4gIFwiUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFwiLFxuICAuLi5kb2N1bWVudC5zbGljZSgxKSxcbl07XG5jb25zb2xlLmxvZyhkb2N1bWVudFswXSk7IC8vIFJlY29yZCAmIFR1cGxlIEVDTUFTY3JpcHQgcHJvcG9zYWxcbmNvbnNvbGUubG9nKGRvY3VtZW50WzFdLmtleXdvcmRzWzFdKTsgLy8gdGMzOVxuXG4vLyBvciB1c2UgdGhlIC53aXRoKCkgc2hvcnRoYW5kIGZvciB0aGUgc2FtZSByZXN1bHQ6XG5jb25zdCBkb2N1bWVudDMgPSBkb2N1bWVudC53aXRoKDAsIFwiUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFwiKTtcbmNvbnNvbGUubG9nKGRvY3VtZW50WzBdKTsgLy8gUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFxuY29uc29sZS5sb2coZG9jdW1lbnRbMV0ua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIEZpbmFsbHkgeW91IGNhbiBhbHNvIHVzZSB0aGUgZnVudGlvbnMgYXZhaWxhYmxlIG9uIHRoZSBUdXBsZSBwcm90b3R5cGVcbi8vIHRoYXQgaXMgc2ltaWxhciB0byB0aGUgQXJyYXkgcHJvdG90eXBlOlxuY29uc29sZS5sb2coI1sxLCAyLCAzXS5tYXAoeCA9PiB4ICsgMSkpOyAvLyAjWzIsIDMsIDRdXG4iLCJzeW50YXgiOiJoYXNoIn0=)
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBtZWFzdXJlcyA9ICNbNDIsIDEyLCA2NywgXCJtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcIl07XG5cbi8vIEFjY2Vzc2luZyBpbmRpY2VzIGxpa2UgeW91IHdvdWxkIHdpdGggYXJyYXlzIVxuY29uc29sZS5sb2coZG9jdW1lbnRbMF0pOyAvLyA0MlxuY29uc29sZS5sb2coZG9jdW1lbnRbM10pOyAvLyBtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcblxuLy8gU2xpY2UgYW5kIHNwcmVhZCBsaWtlIGFycmF5cyFcbmNvbnN0IGNvcnJlY3RlZE1lYXN1cmVzID0gI1tcbiAgLi4ubWVhc3VyZXMuc2xpY2VkKDAsIG1lYXN1cmVzLmxlbmd0aCAtIDEpLFxuICAtMVxuXTtcbmNvbnNvbGUubG9nKGRvY3VtZW50WzBdKTsgLy8gNDJcbmNvbnNvbGUubG9nKGRvY3VtZW50WzNdKTsgLy8gLTFcblxuLy8gb3IgdXNlIHRoZSAud2l0aCgpIHNob3J0aGFuZCBmb3IgdGhlIHNhbWUgcmVzdWx0OlxuY29uc3QgY29ycmVjdGVkTWVhc3VyZXMyID0gZG9jdW1lbnQud2l0aCgzLCAtMSk7XG5jb25zb2xlLmxvZyhkb2N1bWVudFswXSk7IC8vIDQyXG5jb25zb2xlLmxvZyhkb2N1bWVudFszXSk7IC8vIC0xXG5cbi8vIEZpbmFsbHksIHlvdSBjYW4gYWxzbyB1c2UgdGhlIGZ1bmN0aW9ucyBhdmFpbGFibGUgb24gdGhlIFR1cGxlIHByb3RvdHlwZVxuLy8gdGhhdCBpcyBzaW1pbGFyIHRvIHRoZSBBcnJheSBwcm90b3R5cGU6XG5jb25zb2xlLmxvZyhjb3JyZWN0ZWRNZWFzdXJlczIubWFwKHggPT4geCArIDEpKTsgLy8gI1s0MywgMTMsIDY4LCAwXVxuIiwic3ludGF4IjoiaGFzaCJ9)
 
 Similarly than with records, we can treat tuples as array-like:
 
