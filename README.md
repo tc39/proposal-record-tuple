@@ -649,7 +649,34 @@ We are developing the deep path properties proposal as a separate follow-on prop
 
 Yes! Because you can store primitives in a Record or Tuple, you are free to use any primitive value as a "surrogate" for an object, and store said object in a side table. Integer surrogates are a common method of implementing this type of operation.
 
-Additionally, the [Symbols as WeakMap keys](https://github.com/rricard/proposal-symbols-as-weakmap-keys) proposal provides a way of accomplishing this via Symbols and WeakMaps.
+Additionally, the [Symbols as WeakMap keys](https://github.com/rricard/proposal-symbols-as-weakmap-keys) proposal provides a way of accomplishing this via Symbols and WeakMaps. Using Symbols as WeakMap keys, you will be able to reference objects in your code in the following way:
+
+```js
+import { ref, deref } from "ref-bookkeeper.js";
+
+const server = #{
+    port: 8080,
+    handler: ref(function handler(req) { /* ... */ }),
+};
+deref(server.handler)({ /* ... */ });
+```
+<details>
+<summary><code>ref-bookkeeper.js</code></summary>
+
+```js
+const references = new WeakMap();
+
+export function ref(obj) {
+  // (Simplified; we may want to return an existing symbol if it's already there)
+  const sym = Symbol();
+  references.set(sym, obj);
+  return sym;
+}
+
+export function deref(sym) { return references.get(sym); }
+```
+
+</details>
 
 ## How does this relate to the [Readonly Collections](https://github.com/tc39/proposal-readonly-collections) proposal?
 
