@@ -79,9 +79,9 @@ console.log(document.keywords[1]); // tc39
 // Spread like objects!
 const document2 = #{
   ...document,
-  title: "Record & Tuple ECMAScript proposal",
+  title: "Stage 1: Record & Tuple",
 };
-console.log(document.title); // Record & Tuple ECMAScript proposal
+console.log(document.title); // Stage 1: Record & Tuple
 console.log(document.keywords[1]); // tc39
 
 // Finally you can also use Object functions on Records:
@@ -123,7 +123,7 @@ Here is a tuple that can contain different values (of different types):
 
 ```js
 const document = #[
-  "Record & Tuple ECMAScript proposal",
+  "Stage 1: Record & Tuple",
   #{
     id: 1234,
     keywords: #["ecma", "tc39", "proposal", "record", "tuple"], 
@@ -137,15 +137,15 @@ console.log(document[1].keywords[1]); // tc39
 
 // Slice and spread like arrays!
 const document2 = #[
-  "Record & Tuple ECMAScript proposal",
+  "Stage 1: Record & Tuple",
   ...document.sliced(1),
 ];
-console.log(document[0]); // Record & Tuple ECMAScript proposal
+console.log(document[0]); // Stage 1: Record & Tuple
 console.log(document[1].keywords[1]); // tc39
 
 // or use the .with() shorthand for the same result:
-const document3 = document.with(0, "Record & Tuple ECMAScript proposal");
-console.log(document[0]); // Record & Tuple ECMAScript proposal
+const document3 = document.with(0, "Stage 1: Record & Tuple");
+console.log(document[0]); // Stage 1: Record & Tuple
 console.log(document[1].keywords[1]); // tc39
 
 // Finally, you can also use the functions available on the Tuple prototype
