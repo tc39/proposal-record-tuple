@@ -565,7 +565,7 @@ function move(start, deltaX, deltaY) {
 }
 ```
 
-
+The latter is more error-prone than the former as both branches could easily get out of sync over time...
 
 ## Why introduce new syntax? Why not just introduce the Record and Tuple globals?
 
