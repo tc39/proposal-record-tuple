@@ -532,6 +532,41 @@ Record & Tuple is built to interoperate with objects and arrays well: you can re
 
 Developers used to manipulating objects in an immutable manner (such as transforming pieces of Redux state) will be able to continue to do the same manipulations they used to do on objects and arrays, this time, with more guarantees.
 
+## Why are Record & Tuple not based on `.get()`/`.set()` methods like [Immutable.js](https://immutable-js.github.io/immutable-js/)?
+
+If we want to keep access to Record & Tuple similar to Objects and Arrays as described in the previous section, we can't rely on methods to perform that access. Doing so would require us to branch code when trying to create a "generic" function able to take Objects/Arrays/Records/Tuples. We also want to avoid an ecoystem split where libraries choose which structures they want to operate on.
+
+Taking back the `move()` function from our previous [example](#examples):
+
+```js
+function move(start, deltaX, deltaY) {
+  // we always return a record after moving
+  return #{
+    x: start.x + deltaX,
+    y: start.y + deltaY,
+  };
+}
+```
+
+If we would need to use methods to access records we'd need to conditionally split the function:
+
+```js
+function move(start, deltaX, deltaY) {
+  if (Record.isRecord(start)) {
+    return Record({
+      x: start.get("x") + deltaX,
+      y: start.get("y") + deltaY,
+    });
+  }
+  return {
+    x: start.x + deltaX,
+    y: start.y + deltaY,
+  };
+}
+```
+
+
+
 ## Why introduce new syntax? Why not just introduce the Record and Tuple globals?
 
 The proposed syntax significantly improves the ergonomics of using `Record` and `Tuple` in code. For example:
