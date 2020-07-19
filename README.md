@@ -138,8 +138,7 @@ const correctedMeasures2 = document.with(3, -1);
 console.log(document[0]); // 42
 console.log(document[3]); // -1
 
-// Finally, you can also use the functions available on the Tuple prototype
-// that is similar to the Array prototype:
+// Tuples support methods similar to Arrays
 console.log(correctedMeasures2.map(x => x + 1)); // #[43, 13, 68, 0]
 ```
 
