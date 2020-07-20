@@ -66,7 +66,7 @@ const document = #{
   id: 1234,
   title: "Record & Tuple proposal",
   contents: `...`,
-  // tuples are value types so you can put them in records:
+  // tuples are primitive types so you can put them in records:
   keywords: #["ecma", "tc39", "proposal", "record", "tuple"],
 };
 
@@ -511,7 +511,7 @@ One core benefit of the Records and Tuples proposal is that they are compared by
 
 At a high level, the object/primitive distinction helps form a hard line between the deeply immutable, context-free, identity-free world and the world of mutable objects above it. This category split makes the design and mental model clearer.
 
-An alternative to implementing Record and Tuple as primitives would be to use [operator overloading](https://github.com/tc39/proposal-operator-overloading) to achieve a similar result, by implementing an overloaded abstract equality (`==`) operator that deeply compares objects. While this is possible, it doesn't satisfy the full use case, because operator overloading doesn't provide an override for the `===` operator. We want the strict equality (`===`) operator to be a reliable check of "identity" for objects and "observable value" (modulo -0/+0/NaN) for value types.
+An alternative to implementing Record and Tuple as primitives would be to use [operator overloading](https://github.com/tc39/proposal-operator-overloading) to achieve a similar result, by implementing an overloaded abstract equality (`==`) operator that deeply compares objects. While this is possible, it doesn't satisfy the full use case, because operator overloading doesn't provide an override for the `===` operator. We want the strict equality (`===`) operator to be a reliable check of "identity" for objects and "observable value" (modulo -0/+0/NaN) for primitive types.
 
 Another option is to perform what is called _interning_: we track globally Record or Tuple objects and if we attempt to create a new one that happens to be identical to an existing Record object, we now reference this existing Record instead of creating a new one. This is essentially what the [polyfill](https://github.com/bloomberg/record-tuple-polyfill) does. We're now equating value and identity. This approach creates problems once we extend that behavior across multiple JavaScript contexts and wouldn't give deep immutability by nature and **it is particularly slow** which would make using Record & Tuple a performance-negative choice.
 
@@ -744,7 +744,7 @@ TC39 has been long discussing "value types", which would be some kind of class d
 
 This proposal is loosely related to a broader set of proposals, including [operator overloading](https://github.com/littledan/proposal-operator-overloading/) and [extended numeric literals](https://github.com/tc39/proposal-extended-numeric-literals): These all conspire to provide a way for user-defined types to do the same as [BigInt](https://github.com/tc39/proposal-bigint). However, the idea is to add these features if we determine they're independently motivated.
 
-If we had user-defined value types, then it could make sense to use them in built-in features, such as [CSS Typed OM](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Typed_OM_API/Guide) or the [Temporal Proposal](https://github.com/tc39/proposal-temporal). However, this is far in the future, if it ever happens; for now, it works well to use objects for these sorts of features.
+If we had user-defined primtiive/value types, then it could make sense to use them in built-in features, such as [CSS Typed OM](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Typed_OM_API/Guide) or the [Temporal Proposal](https://github.com/tc39/proposal-temporal). However, this is far in the future, if it ever happens; for now, it works well to use objects for these sorts of features.
 
 ## What's the relationship between this proposal's Record & Tuple and TypeScript's [Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkt) & [Tuple](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple)?
 
