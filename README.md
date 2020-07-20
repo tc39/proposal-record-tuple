@@ -530,11 +530,16 @@ If we want to keep access to Record & Tuple similar to Objects and Arrays as des
 Here is an example function that has support for [Immutable.js](https://immutable-js.github.io/immutable-js/) Records and ordinary objects:
 
 ```js
+const ProfileRecord = Immutable.Record({
+    name: "Anonymous",
+    githubHandle: null,
+});
+
 const profileObject = {
     name: "Rick Button",
     githubHandle: "rickbutton",
 };
-const profileRecord = Immutable.Record({
+const profileRecord = ProfileRecord({
     name: "Robin Ricard",
     githubHandle: "rricard",
 });
@@ -554,7 +559,7 @@ console.log(getGithubUrl(profileObject)) // https://github.com/rickbutton
 console.log(getGithubUrl(profileRecord)) // https://github.com/rricard
 ```
 
-This is error-prone as both branches could easily get out of sync over time... We also want to avoid an ecoystem split where libraries choose which structures they want to operate on.
+This is error-prone as both branches could easily get out of sync over time...
 
 Here is how we would write that function taking Records from this proposal and ordinary objects:
 
@@ -579,6 +584,18 @@ console.log(getGithubUrl(profileRecord)) // https://github.com/rricard
 ```
 
 This function support both Objects and Records in a single code-path as well as not forcing the consumer to choose which data structures to use.
+
+Why do we need to support both at the same time anyway? This is primarily to avoid an ecosystem split. Let's say we're using immutable to do our state management but we need to feed our state to a few external libraries that don't support it:
+
+```js
+state.jobResult = Immutable.fromJS(
+    ExternalLib.processJob(
+        state.jobDescription.toJS()
+    )
+);
+```
+
+Both `toJS()` and `fromJS()` can end up being very expensive operations depending on the size of the substructures. An ecosystem split means conversions that, in turn, means possible performance issues.
 
 ## Why introduce new syntax? Why not just introduce the Record and Tuple globals?
 
