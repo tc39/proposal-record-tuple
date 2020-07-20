@@ -744,7 +744,7 @@ TC39 has been long discussing "value types", which would be some kind of class d
 
 This proposal is loosely related to a broader set of proposals, including [operator overloading](https://github.com/littledan/proposal-operator-overloading/) and [extended numeric literals](https://github.com/tc39/proposal-extended-numeric-literals): These all conspire to provide a way for user-defined types to do the same as [BigInt](https://github.com/tc39/proposal-bigint). However, the idea is to add these features if we determine they're independently motivated.
 
-If we had user-defined primtiive/value types, then it could make sense to use them in built-in features, such as [CSS Typed OM](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Typed_OM_API/Guide) or the [Temporal Proposal](https://github.com/tc39/proposal-temporal). However, this is far in the future, if it ever happens; for now, it works well to use objects for these sorts of features.
+If we had user-defined primitive/value types, then it could make sense to use them in built-in features, such as [CSS Typed OM](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Typed_OM_API/Guide) or the [Temporal Proposal](https://github.com/tc39/proposal-temporal). However, this is far in the future, if it ever happens; for now, it works well to use objects for these sorts of features.
 
 ## What's the relationship between this proposal's Record & Tuple and TypeScript's [Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkt) & [Tuple](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple)?
 
