@@ -661,6 +661,45 @@ indicates that using `const` in both contexts is undesirable.
 
 Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible alternatives. Currently, the champion group is leaning towards `#[]`/`#{}`, but discussion is ongoing in [#10](https://github.com/tc39/proposal-record-tuple/issues/10).
 
+## Why deep immutability?
+
+The definition of Record & Tuple as compound primitives forces everything in Record & Tuple to not be objects. This comes with some drawbacks (referencing objects becomes harder but is still possible) but also more guarantees to avoid common programming mistakes.
+
+```js
+const object = {
+   a: {
+       foo: "bar",
+   },
+};
+Object.freeze(object);
+func(object);
+
+// func is able to mutate object’s keys even if object is frozen
+```
+
+In that example we try to have more guarantees with `Object.freeze`, unfortunately since we did not freeze it deeply, nothing tells us that `object.a` has been untouched. With Record & Tuple that constraint is by nature and there is no doubt ths structure is untouched:
+
+```js
+const record = #{
+   a: #{
+       foo: "bar",
+   },
+};
+func(record);
+// runtime guarantees that record is entirely unchanged
+assert(record.a.foo === "bar");
+```
+
+Finally, deep immutability suppresses the need for a common pattern which consists in deep-cloning objects to keep guarantees:
+
+```js
+const clonedObject = JSON.parse(JSON.stringify(object));
+func(clonedObject);
+// now func can have side effects on clonedObject, object is untouched
+// but at what cost?
+assert(object.a.foo === "bar");
+```
+
 # FAQ
 
 ## What are the performance expectations of those Data Structures?
