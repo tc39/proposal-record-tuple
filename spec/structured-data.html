@@ -107,5 +107,50 @@
         </ul>
       </emu-note>
     </emu-clause>
+
+    <emu-clause id="sec-json.stringify">
+      <h1>JSON.stringify ( _value_ [ , _replacer_ [ , _space_ ] ] )</h1>
+
+      <emu-clause id="sec-serializejsonproperty" aoid="SerializeJSONProperty">
+        <h1>Runtime Semantics: SerializeJSONProperty ( _state_, _key_, _holder_ )</h1>
+        <p>The abstract operation SerializeJSONProperty takes arguments _state_, _key_, and _holder_. It performs the following steps when called:</p>
+        <emu-alg>
+          1. Let _value_ be ? Get(_holder_, _key_).
+          1. If Type(_value_) is Object or BigInt, then
+            1. Let _toJSON_ be ? GetV(_value_, *"toJSON"*).
+            1. If IsCallable(_toJSON_) is *true*, then
+              1. Set _value_ to ? Call(_toJSON_, _value_, &laquo; _key_ &raquo;).
+          1. If _state_.[[ReplacerFunction]] is not *undefined*, then
+            1. Set _value_ to ? Call(_state_.[[ReplacerFunction]], _holder_, &laquo; _key_, _value_ &raquo;).
+          1. If Type(_value_) is Object, then
+            1. If _value_ has a [[NumberData]] internal slot, then
+              1. Set _value_ to ? ToNumber(_value_).
+            1. Else if _value_ has a [[StringData]] internal slot, then
+              1. Set _value_ to ? ToString(_value_).
+            1. Else if _value_ has a [[BooleanData]] internal slot, then
+              1. Set _value_ to _value_.[[BooleanData]].
+            1. Else if _value_ has a [[BigIntData]] internal slot, then
+              1. Set _value_ to _value_.[[BigIntData]].
+          1. <ins>If Type(_value_) is Record or Type(_value_) is Tuple, set _value_ to ! ToObject(_value_).</ins>
+          1. If _value_ is *null*, return *"null"*.
+          1. If _value_ is *true*, return *"true"*.
+          1. If _value_ is *false*, return *"false"*.
+          1. If Type(_value_) is String, return QuoteJSONString(_value_).
+          1. If Type(_value_) is Number, then
+            1. If _value_ is finite, return ! ToString(_value_).
+            1. Return *"null"*.
+          1. If Type(_value_) is BigInt, throw a *TypeError* exception.
+          1. If Type(_value_) is Object and IsCallable(_value_) is *false*, then
+            1. <del>Let _isArray_ be ? IsArray(_value_).</del>
+            1. <ins>If ! IsTuple(_value_) is *true*, then</ins>
+              1. <ins>Let _isArrayLike_ be *true*.</ins>
+            1. <ins>Else,</ins>
+              1. <ins>Let _isArrayLike_ be ? IsArray(_value_).</ins>
+            1. If <del>_isArray_</del><ins>_isArrayLike_</ins> is *true*, return ? SerializeJSONArray(_state_, _value_).
+            1. Return ? SerializeJSONObject(_state_, _value_).
+          1. Return *undefined*.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
   </emu-clause>
 </emu-clause>
