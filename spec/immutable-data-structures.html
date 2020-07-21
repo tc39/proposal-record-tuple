@@ -309,7 +309,7 @@
           1. Let _n_ be 0.
           1. Repeat, while _k_ &lt; _final_,
             1. Let _kValue_ be _list_[_k_].
-            1. If Type(_kValue_) is Object, throw a *TypeError* exception.
+            1. Assert: Type(_kValue_) is not Object.
             1. Append _kValue_ to the end of _newList_.
             1. Set _k_ to _k_ + 1.
             1. Set _n_ to _n_ + 1.
