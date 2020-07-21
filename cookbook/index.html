@@ -161,7 +161,7 @@ console.log(fixedUser === #{ name: &quot;danny&quot;, stats: #{
 <h2 id="array-like-manipulations-with-tuple-by-copy">Array-like manipulations with Tuple by copy</h2>
 <p>Use the past-tensed array methods for creating a new tuple that would be the result of that operation:</p>
 <pre><code class="language-js">console.log(#[1, 2].pushed(3) === #[1, 2, 3]);</code></pre>
-<pre><code class="language-js">console.log(#[1, 2, 3].sliced(1) === #[2, 3]);</code></pre>
+<pre><code class="language-js">console.log(#[1, 2, 3].spliced(0, 1, 4, 5) === #[4, 5, 2, 3]);</code></pre>
 <pre><code class="language-js">console.log(#[3, 2, 1].sorted() === #[1, 2, 3]);</code></pre>
 <blockquote>
 <p>Note: at the time of writing this, the playground does not support <code>Tuple.prototype.sorted</code>.</p>
