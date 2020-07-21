@@ -431,7 +431,8 @@
         <p>When the *entries* method is called, it returns an iterator over the entries of the Tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
-          1. Let _O_ be ? ToObject(*this* value).
+          1. Let _tuple_ be ? thisTupleValue(*this* value).
+          1. Let _O_ be ! ToObject(_tuple_).
           1. Return CreateArrayIterator(_O_, ~key+value~).
         </emu-alg>
       </emu-clause>
@@ -531,7 +532,8 @@
         <p>When the *keys* method is called, it returns an iterator over the keys of the Tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
-          1. Let _O_ be ? ToObject(*this* value).
+          1. Let _tuple_ be ? thisTupleValue(*this* value).
+          1. Let _O_ be ! ToObject(_tuple_).
           1. Return CreateArrayIterator(_O_, ~key~).
         </emu-alg>
       </emu-clause>
@@ -614,7 +616,8 @@
         <p>When the *values* method is called, it returns an iterator over the values of the Tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
-          1. Let _O_ be ? ToObject(*this* value).
+          1. Let _tuple_ be ? thisTupleValue(*this* value).
+          1. Let _O_ be ! ToObject(_tuple_).
           1. Return CreateArrayIterator(_O_, ~value~).
         </emu-alg>
       </emu-clause>
