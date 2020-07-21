@@ -407,33 +407,39 @@
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.includes">
-        <h1>Tuple.prototype.includes</h1>
-        <p>The initial value of *Tuple.prototype.includes* is %Array.prototype.includes%.</p>
+        <h1>Tuple.prototype.includes ( _searchElement_ [ , _fromIndex_ ] )</h1>
+        <p>`Tuple.prototype.includes` is a distinct function that implements the same algorithm as `Array.prototype.includes` as defined in <emu-xref href="#sec-array.prototype.includes"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.indexOf">
-        <h1>Tuple.prototype.indexOf</h1>
-        <p>The initial value of *Tuple.prototype.indexOf* is  %Array.prototype.indexOf%.</p>
+        <h1>Tuple.prototype.indexOf ( _searchElement_ [ , _fromIndex_ ] )</h1>
+        <p>`Tuple.prototype.indexOf` is a distinct function that implements the same algorithm as `Array.prototype.indexOf` as defined in <emu-xref href="#sec-array.prototype.indexOf"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.join">
-        <h1>Tuple.prototype.join</h1>
-        <p>The initial value of *Tuple.prototype.join* is  %Array.prototype.join%.</p>
+        <h1>Tuple.prototype.join ( _separator_ )</h1>
+        <p>`Tuple.prototype.join` is a distinct function that implements the same algorithm as `Array.prototype.join` as defined in <emu-xref href="#sec-array.prototype.join"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.lastIndexOf">
-        <h1>Tuple.prototype.lastIndexOf</h1>
-        <p>The initial value of *Tuple.prototype.lastIndexOf* is  %Array.prototype.lastIndexOf%.</p>
+        <h1>Tuple.prototype.lastIndexOf ( _searchElement_ [ , _fromIndex_ ] )</h1>
+        <p>`Tuple.prototype.lastIndexOf` is a distinct function that implements the same algorithm as `Array.prototype.lastIndexOf` as defined in <emu-xref href="#sec-array.prototype.lastIndexOf"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.entries">
         <h1>Tuple.prototype.entries ( )</h1>
         <p>When the *entries* method is called, it returns an iterator over the entries of the Tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
-          1. Let _O_ be ? ToObject(*this* value).
+          1. Let _tuple_ be ? thisTupleValue(*this* value).
+          1. Let _O_ be ! ToObject(_tuple_).
           1. Return CreateArrayIterator(_O_, ~key+value~).
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.every">
-        <h1>Tuple.prototype.every</h1>
-        <p>The initial value of *Tuple.prototype.every* is  %Array.prototype.every%.</p>
+        <h1>Tuple.prototype.every ( _callbackfn_ [ , _thisArg_ ] )</h1>
+        <p>`Tuple.prototype.every` is a distinct function that implements the same algorithm as `Array.prototype.every` as defined in <emu-xref href="#sec-array.prototype.every"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.filter">
         <h1>Tuple.prototype.filter ( _callbackfn_ [ , _thisArg_ ] )</h1>
@@ -460,8 +466,14 @@
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.find">
-        <h1>Tuple.prototype.find</h1>
-        <p>The initial value of *Tuple.prototype.find* is  %Array.prototype.find%.</p>
+        <h1>Tuple.prototype.find ( _predicate_ [ , _thisArg_ ] )</h1>
+        <p>`Tuple.prototype.find` is a distinct function that implements the same algorithm as `Array.prototype.find` as defined in <emu-xref href="#sec-array.prototype.find"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+      </emu-clause>
+      <emu-clause id="sec-tuple.prototype.findIndex">
+        <h1>Tuple.prototype.findIndex ( _predicate_ [ , _thisArg_ ] )</h1>
+        <p>`Tuple.prototype.findIndex` is a distinct function that implements the same algorithm as `Array.prototype.findIndex` as defined in <emu-xref href="#sec-array.prototype.findIndex"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.flat">
         <h1>Tuple.prototype.flat ( [ _depth_ ] )</h1>
@@ -510,20 +522,18 @@
           1. Return a new Tuple value whose [[Sequence]] is _flat_.
         </emu-alg>
       </emu-clause>
-      <emu-clause id="sec-tuple.prototype.findIndex">
-        <h1>Tuple.prototype.findIndex</h1>
-        <p>The initial value of *Tuple.prototype.findIndex* is  %Array.prototype.findIndex%.</p>
-      </emu-clause>
       <emu-clause id="sec-tuple.prototype.forEach">
-        <h1>Tuple.prototype.forEach</h1>
-        <p>The initial value of *Tuple.prototype.forEach* is  %Array.prototype.forEach%.</p>
+        <h1>Tuple.prototype.forEach ( _callbackfn_ [ , _thisArg_ ] )</h1>
+        <p>`Tuple.prototype.forEach` is a distinct function that implements the same algorithm as `Array.prototype.forEach` as defined in <emu-xref href="#sec-array.prototype.forEach"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.keys">
         <h1>Tuple.prototype.keys ( )</h1>
         <p>When the *keys* method is called, it returns an iterator over the keys of the Tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
-          1. Let _O_ be ? ToObject(*this* value).
+          1. Let _tuple_ be ? thisTupleValue(*this* value).
+          1. Let _O_ be ! ToObject(_tuple_).
           1. Return CreateArrayIterator(_O_, ~key~).
         </emu-alg>
       </emu-clause>
@@ -552,16 +562,20 @@
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.reduce">
-        <h1>Tuple.prototype.reduce</h1>
-        <p>The initial value of *Tuple.prototype.reduce* is  %Array.prototype.reduce%.</p>
+        <h1>Tuple.prototype.reduce ( _callbackfn_ [ , _thisArg_ ] )</h1>
+        <p>`Tuple.prototype.reduce` is a distinct function that implements the same algorithm as `Array.prototype.reduce` as defined in <emu-xref href="#sec-array.prototype.reduce"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+      </emu-clause>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.reduceRight">
-        <h1>Tuple.prototype.reduceRight</h1>
-        <p>The initial value of *Tuple.prototype.reduceRight* is  %Array.prototype.reduceRight%.</p>
+        <h1>Tuple.prototype.reduceRight ( _callbackfn_ [ , _thisArg_ ] )</h1>
+        <p>`Tuple.prototype.reduceRight` is a distinct function that implements the same algorithm as `Array.prototype.reduceRight` as defined in <emu-xref href="#sec-array.prototype.reduceRight"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.some">
-        <h1>Tuple.prototype.some</h1>
-        <p>The initial value of *Tuple.prototype.some* is  %Array.prototype.some%.</p>
+        <h1>Tuple.prototype.some ( _callbackfn_ [ , _thisArg_ ] )</h1>
+        <p>`Tuple.prototype.some` is a distinct function that implements the same algorithm as `Array.prototype.some` as defined in <emu-xref href="#sec-array.prototype.some"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.unshifted">
         <h1>Tuple.prototype.unshifted ( ..._args_ )</h1>
@@ -588,19 +602,22 @@
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-array.prototype.tolocalestring">
-        <h1>Tuple.prototype.toLocaleString</h1>
-        <p>The initial value of *Tuple.prototype.toLocaleString* is  %Array.prototype.toLocaleString%.</p>
+        <h1>Tuple.prototype.toLocaleString ( [ _reserved1_ [ , _reserved2_ ] ] )</h1>
+        <p>`Tuple.prototype.toLocaleString` is a distinct function that implements the same algorithm as `Array.prototype.toLocaleString` as defined in <emu-xref href="#sec-array.prototype.toLocaleString"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.tostring">
         <h1>Tuple.prototype.toString ()</h1>
-        <p>The initial value of *Tuple.prototype.toString* is  %Array.prototype.toString%.</p>
+        <p>`Tuple.prototype.toString` is a distinct function that implements the same algorithm as `Array.prototype.toString` as defined in <emu-xref href="#sec-array.prototype.toString"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
+        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.values">
         <h1>Tuple.prototype.values ()</h1>
         <p>When the *values* method is called, it returns an iterator over the values of the Tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
-          1. Let _O_ be ? ToObject(*this* value).
+          1. Let _tuple_ be ? thisTupleValue(*this* value).
+          1. Let _O_ be ! ToObject(_tuple_).
           1. Return CreateArrayIterator(_O_, ~value~).
         </emu-alg>
       </emu-clause>
