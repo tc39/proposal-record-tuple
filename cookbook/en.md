@@ -211,7 +211,7 @@ console.log(#[1, 2].pushed(3) === #[1, 2, 3]);
 ```
 
 ```js
-console.log(#[1, 2, 3].sliced(1) === #[2, 3]);
+console.log(#[1, 2, 3].spliced(0, 1, 4, 5) === #[4, 5, 2, 3]);
 ```
 
 ```js

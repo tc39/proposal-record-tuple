@@ -292,9 +292,9 @@
         </emu-alg>
 
       </emu-clause>
-      <emu-clause id="sec-tuple.prototype.sliced">
-        <h1>Tuple.prototype.sliced ( _start_, _end_ )</h1>
-        <p>When the `sliced` method is called with two arguments, _start_ and _end_, and returns a Tuple containing the elements of the Tuple from element _start_ up to, but not including, element _end_ (or through the end of the tuple if _end_ is *undefined*). If _start_ is negative, it is treated as <emu-eqn>_length_ + _start_</emu-eqn> where _length_ is the length of the tuple. If _end_ is negative, it is treated as <emu-eqn>_length_ + _end_</emu-eqn> where _length_ is the length of the tuple.</p>
+      <emu-clause id="sec-tuple.prototype.slice">
+        <h1>Tuple.prototype.slice ( _start_, _end_ )</h1>
+        <p>When the `slice` method is called with two arguments, _start_ and _end_, and returns a Tuple containing the elements of the Tuple from element _start_ up to, but not including, element _end_ (or through the end of the tuple if _end_ is *undefined*). If _start_ is negative, it is treated as <emu-eqn>_length_ + _start_</emu-eqn> where _length_ is the length of the tuple. If _end_ is negative, it is treated as <emu-eqn>_length_ + _end_</emu-eqn> where _length_ is the length of the tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).

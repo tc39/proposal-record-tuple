@@ -127,7 +127,7 @@ console.log(document[3]); // measure error: foo happened
 
 // Slice and spread like arrays!
 const correctedMeasures = #[
-  ...measures.sliced(0, measures.length - 1),
+  ...measures.slice(0, measures.length - 1),
   -1
 ];
 console.log(document[0]); // 42
