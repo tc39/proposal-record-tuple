@@ -17,7 +17,7 @@
 - Dan Ehrenberg (Igalia)
 - Maxwell Heiber (Bloomberg)
 
-**Stage:** 1
+**Stage:** 2
 
 ### [Try out Record and Tuple in the playground!](https://rickbutton.github.io/record-tuple-playground)
 
@@ -77,9 +77,9 @@ console.log(document.keywords[1]); // tc39
 // Spread like objects!
 const document2 = #{
   ...document,
-  title: "Stage 1: Record & Tuple",
+  title: "Stage 2: Record & Tuple",
 };
-console.log(document.title); // Stage 1: Record & Tuple
+console.log(document.title); // Stage 2: Record & Tuple
 console.log(document.keywords[1]); // tc39
 
 // Object work functions on Records:
