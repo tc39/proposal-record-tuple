@@ -36,21 +36,21 @@ This proposal introduces two new deeply immutable data structures to JavaScript:
 
 Records and Tuples can only contain primitives and other Records and Tuples. You could think of Records and Tuples as "compound primitives". By being thoroughly based on primitives, not objects, Records and Tuples are deeply immutable.
 
-Records and Tuples support comfortable idioms for construction, manipulation and use, similar working with objects and Arrays. They are compared deeply by their contents, rather than by their shallow identity.
+Records and Tuples support comfortable idioms for construction, manipulation and use, similar to working with objects and Arrays. They are compared deeply by their contents, rather than by their identity.
 
-JavaScript engines may perform certain optimizations on construction, manipulation and comparison of Records and Tuples, analogous to the way Strings are often implemented in JS engines. (It should be understood, these optimizations are not guaranteed.)
+JavaScript engines may perform certain optimizations on construction, manipulation and comparison of Records and Tuples, analogous to the way Strings are often implemented in JS engines. (It should be understood that these optimizations are not guaranteed.)
 
 Records and Tuples aim to be usable and understood with external typesystem supersets such as TypeScript or Flow.
 
 ## Prior work on immutable data structures in JavaScript
 
-Today, userland libraries implement similar concepts, such as [Immutable.js](https://immutable-js.github.io/immutable-js/). Also [a previous proposal attempt](https://github.com/sebmarkbage/ecmascript-immutable-data-structures) has been done previously but abandoned because of the complexity of the proposal and lack of sufficient use cases.
+Today, userland libraries implement similar concepts, such as [Immutable.js](https://immutable-js.github.io/immutable-js/). Also [a previous proposal](https://github.com/sebmarkbage/ecmascript-immutable-data-structures) has been attempted but abandoned because of the complexity of the proposal and lack of sufficient use cases.
 
 This new proposal is still inspired by this previous proposal but introduces some significant changes: Record and Tuples are now deeply immutable. This property is fundamentally based on the observation that, in large projects, the risk of mixing immutable and mutable data structures grows as the amount of data being stored and passed around grows as well so you'll be more likely handling large record & tuple structures. This can introduce hard-to-find bugs.
 
 As a built-in, deeply immutable data structure, this proposal also offers a few usability advantages compared to userland libraries:
 - Records and Tuples are easily introspectable in a debugger, while library provided immutable types are often hard to inspect as you have to inspect through data structure details.
-- Because they're accessed through typical object and Array idioms, no additional branching is needed in order to write a generic library that consumes both immutable and JS objects; with user libraries, method calls may be needed just in the immutable case.
+- Because they're accessed through typical object and array idioms, no additional branching is needed in order to write a generic library that consumes both immutable and JS objects; with user libraries, method calls may be needed just in the immutable case.
 - We avoid cases where developers may expensively convert between regular JS objects and immutable structures, by making it easier to just always use the immutable ones.
 
 [Immer](https://github.com/mweststrate/immer) is a notable approach to immutable data structures, and prescribes a pattern for manipulation through producers and reducers. It is not providing immutable data types however, as it generates frozen objects. This same pattern can be adapted to the structures defined in this proposal in addition to frozen objects.
@@ -690,7 +690,7 @@ func(record);
 assert(record.a.foo === "bar");
 ```
 
-Finally, deep immutability suppresses the need for a common pattern which consists in deep-cloning objects to keep guarantees:
+Finally, deep immutability suppresses the need for a common pattern which consists of deep-cloning objects to keep guarantees:
 
 ```js
 const clonedObject = JSON.parse(JSON.stringify(object));
@@ -702,9 +702,9 @@ assert(object.a.foo === "bar");
 
 # FAQ
 
-## What are the performance expectations of those Data Structures?
+## What are the performance expectations of these data structures?
 
-This proposal in itself does not put any performance guarantees and does not require specific optimizations on the implementers. It is however built in a way that some performance optimizations can be done in most cases if implementers choose to do so.
+This proposal in itself does not make any performance guarantees and does not require specific optimizations in implementations. It is, however, built in a way that some performance optimizations can be made in most cases, if implementers choose to do so.
 
 This proposal is designed to enable classical optimizations for purely functional data structures, including but not limited to:
 
@@ -715,7 +715,7 @@ This proposal is designed to enable classical optimizations for purely functiona
   - In some cases, reuse existing data structures (e.g., when manipulated with object spread), similar to ropes or typical implementations of functional data structures
   - In other cases, as determined by the engine, use a flat representation like existing JavaScript object implementations
 
-These optimizations are analogous to the way that modern JavaScript engines handle string concatenation, with various different internal types of strings. The validity of these optimizations rests on the unobservability of the identity of records and tuples. It's not expected that all engines will act identically with respect to these optimizations, but rather, they will each make decisions about particular heuristics to use. Before Stage 4 of this proposal, we plan to publish a guide for best practices for cross-engine optimizable use of Records and Tuples, based on the implementation experience that we will have at that point.
+These optimizations are analogous to the way that modern JavaScript engines handle string concatenation, with various different internal types of strings. The validity of these optimizations rests on the unobservability of the identity of records and tuples. It's not expected that all engines will act identically with respect to these optimizations, but rather, they will each make decisions about which particular heuristics to use. Before Stage 4 of this proposal, we plan to publish a guide for best practices for cross-engine optimizable use of Records and Tuples, based on the implementation experience that we will have at that point.
 
 ## How can I make a Record or Tuple which is based on an existing one, but with one part changed or added?
 
@@ -735,9 +735,12 @@ let tup = #[1, 2, 3];
 
 // Prepend to a Tuple
 #[0, ...tup]  // #[0, 1, 2, 3]
+
+// Prepend and append to a Tuple
+#[0, ...tup, 4]  // #[0, 1, 2, 3, 4]
 ```
 
-And if you're changing something in the middle of a Tuple, the `Tuple.prototype.with` method works:
+And if you're changing something in a Tuple, the `Tuple.prototype.with` method works:
 
 ```js
 // Change a Tuple index
@@ -786,7 +789,7 @@ export function deref(sym) { return references.get(sym); }
 
 We've talked with the Readonly Collections champions, and both groups agree that these are complements:
 - Readonly collections are shallowly immutable and may point to objects; they may be mutated during construction, and read-only views of mutating objects are supported.
-- Records and Tuples are deeply immutable and consist just of primitives.
+- Records and Tuples are deeply immutable and consist only of primitives.
 
 Neither one is a subset of the other in terms of functionality. At best, they are parallel, just like each proposal is parallel to other collection types in the language.
 
@@ -796,7 +799,7 @@ In the current proposal drafts, there aren't any overlapping types for the same 
 
 ## Could we have classes whose instances are Records?
 
-TC39 has been long discussing "value types", which would be some kind of class declaration for a primitive type, for several years on and off. An [earlier version of this proposal](./history/with-classes.md) even made an attempt. This proposal tries to start off simple and minimal, providing just the core structures. The hope is that it could provide the data model for a future proposal for classes.
+TC39 has been long discussing "value types", which would be some kind of class declaration for a primitive type, for several years, on and off. An [earlier version of this proposal](./history/with-classes.md) even made an attempt. This proposal tries to start off simple and minimal, providing just the core structures. The hope is that it could provide the data model for a future proposal for classes.
 
 This proposal is loosely related to a broader set of proposals, including [operator overloading](https://github.com/littledan/proposal-operator-overloading/) and [extended numeric literals](https://github.com/tc39/proposal-extended-numeric-literals): These all conspire to provide a way for user-defined types to do the same as [BigInt](https://github.com/tc39/proposal-bigint). However, the idea is to add these features if we determine they're independently motivated.
 
@@ -806,9 +809,9 @@ If we had user-defined primitive/value types, then it could make sense to use th
 
 Although both kinds of Records relate to Objects, and both kinds of Tuples relate to Arrays, that's about where the similarity ends.
 
-Records in Typescript are a generic utility type to represent an object taking a key type matching with a value type. They still represent objects.
+Records in TypeScript are a generic utility type to represent an object taking a key type matching with a value type. They still represent objects.
 
-Likewise Tuples in Typescript are a notation to express types in an array of a limited size (starting with TypeScript 4.0 they have a [variadic form](https://github.com/microsoft/TypeScript/pull/39094)). Tuples in TypeScript are a way to express arrays with heterogeneous types. ECMAScript tuples can correspond to TS arrays or TS tuples easily as they can either contain an indefinite number of values of the same type or contain a limited number of values with different types.
+Likewise, Tuples in TypeScript are a notation to express types in an array of a limited size (starting with TypeScript 4.0 they have a [variadic form](https://github.com/microsoft/TypeScript/pull/39094)). Tuples in TypeScript are a way to express arrays with heterogeneous types. ECMAScript tuples can correspond to TS arrays or TS tuples easily as they can either contain an indefinite number of values of the same type or contain a limited number of values with different types.
 
 TS Records or Tuples are orthogonal features to ECMAScript Records and Tuples and both could be expressed at the same time:
 
@@ -817,18 +820,18 @@ const record: readonly Record<string, number> = #{
   foo: 1,
   bar: 2,
 };
-const tuple:  readonly [number, string] = #[1, "foo"];
+const tuple: readonly [number, string] = #[1, "foo"];
 ```
 
 # Glossary
 
 #### Record
 
-A new, deeply immutable, compound primitive type data structure, proposed in this document, that is analogous to Objects. `#{ a: 1, b: 2 }`
+A new, deeply immutable, compound primitive type data structure, proposed in this document, that is analogous to Object. `#{ a: 1, b: 2 }`
 
 #### Tuple
 
-A new, deeply immutable, compound primitive type data structure, proposed in this document, that is analogous to Arrays. `#[1, 2, 3, 4]`
+A new, deeply immutable, compound primitive type data structure, proposed in this document, that is analogous to Array. `#[1, 2, 3, 4]`
 
 #### Compound primitive types
 
@@ -847,7 +850,7 @@ Things which are either compound or simple primitive types. All primitives in Ja
 
 #### Immutable Data Structure
 
-A Data Structure that doesn't accept operations that change it internally, it has operations that return a new value that is the result of applying that operation on it.
+A data structure that doesn't accept operations that change it internally, but instead has operations that return a new value that is the result of applying that operation to it.
 
 In this proposal `Record` and `Tuple` are deeply immutable data structures.
 
