@@ -122,27 +122,27 @@ See [more examples here](./details.md#records).
 const measures = #[42, 12, 67, "measure error: foo happened"];
 
 // Accessing indices like you would with arrays!
-console.log(document[0]); // 42
-console.log(document[3]); // measure error: foo happened
+console.log(measures[0]); // 42
+console.log(measures[3]); // measure error: foo happened
 
 // Slice and spread like arrays!
 const correctedMeasures = #[
   ...measures.slice(0, measures.length - 1),
   -1
 ];
-console.log(document[0]); // 42
-console.log(document[3]); // -1
+console.log(correctedMeasures[0]); // 42
+console.log(correctedMeasures[3]); // -1
 
 // or use the .with() shorthand for the same result:
 const correctedMeasures2 = document.with(3, -1);
-console.log(document[0]); // 42
-console.log(document[3]); // -1
+console.log(correctedMeasures2[0]); // 42
+console.log(correctedMeasures2[3]); // -1
 
 // Tuples support methods similar to Arrays
 console.log(correctedMeasures2.map(x => x + 1)); // #[43, 13, 68, 0]
 ```
 
-> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBtZWFzdXJlcyA9ICNbNDIsIDEyLCA2NywgXCJtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcIl07XG5cbi8vIEFjY2Vzc2luZyBpbmRpY2VzIGxpa2UgeW91IHdvdWxkIHdpdGggYXJyYXlzIVxuY29uc29sZS5sb2coZG9jdW1lbnRbMF0pOyAvLyA0MlxuY29uc29sZS5sb2coZG9jdW1lbnRbM10pOyAvLyBtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcblxuLy8gU2xpY2UgYW5kIHNwcmVhZCBsaWtlIGFycmF5cyFcbmNvbnN0IGNvcnJlY3RlZE1lYXN1cmVzID0gI1tcbiAgLi4ubWVhc3VyZXMuc2xpY2VkKDAsIG1lYXN1cmVzLmxlbmd0aCAtIDEpLFxuICAtMVxuXTtcbmNvbnNvbGUubG9nKGRvY3VtZW50WzBdKTsgLy8gNDJcbmNvbnNvbGUubG9nKGRvY3VtZW50WzNdKTsgLy8gLTFcblxuLy8gb3IgdXNlIHRoZSAud2l0aCgpIHNob3J0aGFuZCBmb3IgdGhlIHNhbWUgcmVzdWx0OlxuY29uc3QgY29ycmVjdGVkTWVhc3VyZXMyID0gZG9jdW1lbnQud2l0aCgzLCAtMSk7XG5jb25zb2xlLmxvZyhkb2N1bWVudFswXSk7IC8vIDQyXG5jb25zb2xlLmxvZyhkb2N1bWVudFszXSk7IC8vIC0xXG5cbi8vIEZpbmFsbHksIHlvdSBjYW4gYWxzbyB1c2UgdGhlIGZ1bmN0aW9ucyBhdmFpbGFibGUgb24gdGhlIFR1cGxlIHByb3RvdHlwZVxuLy8gdGhhdCBpcyBzaW1pbGFyIHRvIHRoZSBBcnJheSBwcm90b3R5cGU6XG5jb25zb2xlLmxvZyhjb3JyZWN0ZWRNZWFzdXJlczIubWFwKHggPT4geCArIDEpKTsgLy8gI1s0MywgMTMsIDY4LCAwXVxuIiwic3ludGF4IjoiaGFzaCJ9)
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBtZWFzdXJlcyA9ICNbNDIsIDEyLCA2NywgXCJtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcIl07XG5cbi8vIEFjY2Vzc2luZyBpbmRpY2VzIGxpa2UgeW91IHdvdWxkIHdpdGggYXJyYXlzIVxuY29uc29sZS5sb2cobWVhc3VyZXNbMF0pOyAvLyA0MlxuY29uc29sZS5sb2cobWVhc3VyZXNbM10pOyAvLyBtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcblxuLy8gU2xpY2UgYW5kIHNwcmVhZCBsaWtlIGFycmF5cyFcbmNvbnN0IGNvcnJlY3RlZE1lYXN1cmVzID0gI1tcbiAgLi4ubWVhc3VyZXMuc2xpY2VkKDAsIG1lYXN1cmVzLmxlbmd0aCAtIDEpLFxuICAtMVxuXTtcbmNvbnNvbGUubG9nKGNvcnJlY3RlZE1lYXN1cmVzWzBdKTsgLy8gNDJcbmNvbnNvbGUubG9nKGNvcnJlY3RlZE1lYXN1cmVzWzNdKTsgLy8gLTFcblxuLy8gb3IgdXNlIHRoZSAud2l0aCgpIHNob3J0aGFuZCBmb3IgdGhlIHNhbWUgcmVzdWx0OlxuY29uc3QgY29ycmVjdGVkTWVhc3VyZXMyID0gZG9jdW1lbnQud2l0aCgzLCAtMSk7XG5jb25zb2xlLmxvZyhjb3JyZWN0ZWRNZWFzdXJlczJbMF0pOyAvLyA0MlxuY29uc29sZS5sb2coY29ycmVjdGVkTWVhc3VyZXMyWzNdKTsgLy8gLTFcblxuLy8gRmluYWxseSwgeW91IGNhbiBhbHNvIHVzZSB0aGUgZnVuY3Rpb25zIGF2YWlsYWJsZSBvbiB0aGUgVHVwbGUgcHJvdG90eXBlXG4vLyB0aGF0IGlzIHNpbWlsYXIgdG8gdGhlIEFycmF5IHByb3RvdHlwZTpcbmNvbnNvbGUubG9nKGNvcnJlY3RlZE1lYXN1cmVzMi5tYXAoeCA9PiB4ICsgMSkpOyAvLyAjWzQzLCAxMywgNjgsIDBdXG4iLCJzeW50YXgiOiJoYXNoIn0=)
 
 Similarly than with records, we can treat tuples as array-like:
 
