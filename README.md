@@ -119,24 +119,24 @@ See [more examples here](./details.md#records).
 
 
 ```js
-const document = #[42, 12, 67, "measure error: foo happened"];
+const measures = #[42, 12, 67, "measure error: foo happened"];
 
 // Accessing indices like you would with arrays!
-console.log(document[0]); // 42
-console.log(document[3]); // measure error: foo happened
+console.log(measures[0]); // 42
+console.log(measures[3]); // measure error: foo happened
 
 // Slice and spread like arrays!
 const correctedMeasures = #[
   ...measures.slice(0, measures.length - 1),
   -1
 ];
-console.log(document[0]); // 42
-console.log(document[3]); // -1
+console.log(measures[0]); // 42
+console.log(measures[3]); // -1
 
 // or use the .with() shorthand for the same result:
-const correctedMeasures2 = document.with(3, -1);
-console.log(document[0]); // 42
-console.log(document[3]); // -1
+const correctedMeasures2 = measures.with(3, -1);
+console.log(measures[0]); // 42
+console.log(measures[3]); // -1
 
 // Tuples support methods similar to Arrays
 console.log(correctedMeasures2.map(x => x + 1)); // #[43, 13, 68, 0]
