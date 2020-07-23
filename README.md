@@ -119,7 +119,7 @@ See [more examples here](./details.md#records).
 
 
 ```js
-const measures = #[42, 12, 67, "measure error: foo happened"];
+const document = #[42, 12, 67, "measure error: foo happened"];
 
 // Accessing indices like you would with arrays!
 console.log(document[0]); // 42
