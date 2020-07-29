@@ -62,7 +62,7 @@ Deep equality as defined in user libraries can vary significantly, in part due t
 #### `Record`
 
 ```js
-const record = #{
+const proposal = #{
   id: 1234,
   title: "Record & Tuple proposal",
   contents: `...`,
@@ -71,22 +71,22 @@ const record = #{
 };
 
 // Accessing keys like you would with objects!
-console.log(record.title); // Record & Tuple proposal
-console.log(record.keywords[1]); // tc39
+console.log(proposal.title); // Record & Tuple proposal
+console.log(proposal.keywords[1]); // tc39
 
 // Spread like objects!
-const record2 = #{
-  ...record,
+const proposal2 = #{
+  ...proposal,
   title: "Stage 2: Record & Tuple",
 };
-console.log(record2.title); // Stage 2: Record & Tuple
-console.log(record2.keywords[1]); // tc39
+console.log(proposal2.title); // Stage 2: Record & Tuple
+console.log(proposal2.keywords[1]); // tc39
 
 // Object work functions on Records:
-console.log(Object.keys(record)); // ["contents", "id", "keywords", "title"]
+console.log(Object.keys(proposal)); // ["contents", "id", "keywords", "title"]
 ```
 
-> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCByZWNvcmQgPSAje1xuICBpZDogMTIzNCxcbiAgdGl0bGU6IFwiUmVjb3JkICYgVHVwbGUgcHJvcG9zYWxcIixcbiAgY29udGVudHM6IGAuLi5gLFxuICBrZXl3b3JkczogI1tcImVjbWFcIiwgXCJ0YzM5XCIsIFwicHJvcG9zYWxcIiwgXCJyZWNvcmRcIiwgXCJ0dXBsZVwiXSxcbn07XG5cbi8vIEFjY2Vzc2luZyBrZXlzIGxpa2UgeW91IHdvdWxkIHdpdGggb2JqZWN0cyFcbmNvbnNvbGUubG9nKHJlY29yZC50aXRsZSk7IC8vIFJlY29yZCAmIFR1cGxlIHByb3Bvc2FsXG5jb25zb2xlLmxvZyhyZWNvcmQua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIFNwcmVhZCBsaWtlIG9iamVjdHMhXG5jb25zdCByZWNvcmQyID0gI3tcbiAgLi4ucmVjb3JkLFxuICB0aXRsZTogXCJSZWNvcmQgJiBUdXBsZSBFQ01BU2NyaXB0IHByb3Bvc2FsXCIsXG59O1xuY29uc29sZS5sb2cocmVjb3JkMi50aXRsZSk7IC8vIFJlY29yZCAmIFR1cGxlIEVDTUFTY3JpcHQgcHJvcG9zYWxcbmNvbnNvbGUubG9nKHJlY29yZDIua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIEZpbmFsbHkgeW91IGNhbiBhbHNvIHVzZSBPYmplY3QgZnVuY3Rpb25zIG9uIFJlY29yZHM6XG5jb25zb2xlLmxvZyhPYmplY3Qua2V5cyhyZWNvcmQpKTsgLy8gW1wiY29udGVudHNcIiwgXCJpZFwiLCBcImtleXdvcmRzXCIsIFwidGl0bGVcIl1cbiIsInN5bnRheCI6Imhhc2giLCJkb21Nb2RlIjpmYWxzZX0=)
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBwcm9wb3NhbCA9ICN7XG4gIGlkOiAxMjM0LFxuICB0aXRsZTogXCJSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFwiLFxuICBjb250ZW50czogYC4uLmAsXG4gIGtleXdvcmRzOiAjW1wiZWNtYVwiLCBcInRjMzlcIiwgXCJwcm9wb3NhbFwiLCBcInJlY29yZFwiLCBcInR1cGxlXCJdLFxufTtcblxuLy8gQWNjZXNzaW5nIGtleXMgbGlrZSB5b3Ugd291bGQgd2l0aCBvYmplY3RzIVxuY29uc29sZS5sb2cocHJvcG9zYWwudGl0bGUpOyAvLyBSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFxuY29uc29sZS5sb2cocHJvcG9zYWwua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIFNwcmVhZCBsaWtlIG9iamVjdHMhXG5jb25zdCBwcm9wb3NhbDIgPSAje1xuICAuLi5wcm9wb3NhbCxcbiAgdGl0bGU6IFwiUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFwiLFxufTtcbmNvbnNvbGUubG9nKHByb3Bvc2FsMi50aXRsZSk7IC8vIFJlY29yZCAmIFR1cGxlIEVDTUFTY3JpcHQgcHJvcG9zYWxcbmNvbnNvbGUubG9nKHByb3Bvc2FsMi5rZXl3b3Jkc1sxXSk7IC8vIHRjMzlcblxuLy8gRmluYWxseSB5b3UgY2FuIGFsc28gdXNlIE9iamVjdCBmdW5jdGlvbnMgb24gUmVjb3JkczpcbmNvbnNvbGUubG9nKE9iamVjdC5rZXlzKHByb3Bvc2FsKSk7IC8vIFtcImNvbnRlbnRzXCIsIFwiaWRcIiwgXCJrZXl3b3Jkc1wiLCBcInRpdGxlXCJdXG4iLCJzeW50YXgiOiJoYXNoIiwiZG9tTW9kZSI6ZmFsc2V9)
 
 Functions can handle Records and Objects in generally the same way:
 
