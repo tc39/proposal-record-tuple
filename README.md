@@ -62,7 +62,7 @@ Deep equality as defined in user libraries can vary significantly, in part due t
 #### `Record`
 
 ```js
-const document = #{
+const proposal = #{
   id: 1234,
   title: "Record & Tuple proposal",
   contents: `...`,
@@ -71,22 +71,22 @@ const document = #{
 };
 
 // Accessing keys like you would with objects!
-console.log(document.title); // Record & Tuple proposal
-console.log(document.keywords[1]); // tc39
+console.log(proposal.title); // Record & Tuple proposal
+console.log(proposal.keywords[1]); // tc39
 
 // Spread like objects!
-const document2 = #{
-  ...document,
+const proposal2 = #{
+  ...proposal,
   title: "Stage 2: Record & Tuple",
 };
-console.log(document.title); // Stage 2: Record & Tuple
-console.log(document.keywords[1]); // tc39
+console.log(proposal2.title); // Stage 2: Record & Tuple
+console.log(proposal2.keywords[1]); // tc39
 
 // Object work functions on Records:
-console.log(Object.keys(document)); // ["contents", "id", "keywords", "title"]
+console.log(Object.keys(proposal)); // ["contents", "id", "keywords", "title"]
 ```
 
-> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBkb2N1bWVudCA9ICN7XG4gIGlkOiAxMjM0LFxuICB0aXRsZTogXCJSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFwiLFxuICBjb250ZW50czogYC4uLmAsXG4gIGtleXdvcmRzOiAjW1wiZWNtYVwiLCBcInRjMzlcIiwgXCJwcm9wb3NhbFwiLCBcInJlY29yZFwiLCBcInR1cGxlXCJdLFxufTtcblxuLy8gQWNjZXNzaW5nIGtleXMgbGlrZSB5b3Ugd291bGQgd2l0aCBvYmplY3RzIVxuY29uc29sZS5sb2coZG9jdW1lbnQudGl0bGUpOyAvLyBSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFxuY29uc29sZS5sb2coZG9jdW1lbnQua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIFNwcmVhZCBsaWtlIG9iamVjdHMhXG5jb25zdCBkb2N1bWVudDIgPSAje1xuICAuLi5kb2N1bWVudCxcbiAgdGl0bGU6IFwiUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFwiLFxufTtcbmNvbnNvbGUubG9nKGRvY3VtZW50LnRpdGxlKTsgLy8gUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFxuY29uc29sZS5sb2coZG9jdW1lbnQua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIEZpbmFsbHkgeW91IGNhbiBhbHNvIHVzZSBPYmplY3QgZnVuY3Rpb25zIG9uIFJlY29yZHM6XG5jb25zb2xlLmxvZyhPYmplY3Qua2V5cyhkb2N1bWVudCkpOyAvLyBbXCJjb250ZW50c1wiLCBcImlkXCIsIFwia2V5d29yZHNcIiwgXCJ0aXRsZVwiXVxuIiwic3ludGF4IjoiaGFzaCJ9)
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBwcm9wb3NhbCA9ICN7XG4gIGlkOiAxMjM0LFxuICB0aXRsZTogXCJSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFwiLFxuICBjb250ZW50czogYC4uLmAsXG4gIGtleXdvcmRzOiAjW1wiZWNtYVwiLCBcInRjMzlcIiwgXCJwcm9wb3NhbFwiLCBcInJlY29yZFwiLCBcInR1cGxlXCJdLFxufTtcblxuLy8gQWNjZXNzaW5nIGtleXMgbGlrZSB5b3Ugd291bGQgd2l0aCBvYmplY3RzIVxuY29uc29sZS5sb2cocHJvcG9zYWwudGl0bGUpOyAvLyBSZWNvcmQgJiBUdXBsZSBwcm9wb3NhbFxuY29uc29sZS5sb2cocHJvcG9zYWwua2V5d29yZHNbMV0pOyAvLyB0YzM5XG5cbi8vIFNwcmVhZCBsaWtlIG9iamVjdHMhXG5jb25zdCBwcm9wb3NhbDIgPSAje1xuICAuLi5wcm9wb3NhbCxcbiAgdGl0bGU6IFwiUmVjb3JkICYgVHVwbGUgRUNNQVNjcmlwdCBwcm9wb3NhbFwiLFxufTtcbmNvbnNvbGUubG9nKHByb3Bvc2FsMi50aXRsZSk7IC8vIFJlY29yZCAmIFR1cGxlIEVDTUFTY3JpcHQgcHJvcG9zYWxcbmNvbnNvbGUubG9nKHByb3Bvc2FsMi5rZXl3b3Jkc1sxXSk7IC8vIHRjMzlcblxuLy8gRmluYWxseSB5b3UgY2FuIGFsc28gdXNlIE9iamVjdCBmdW5jdGlvbnMgb24gUmVjb3JkczpcbmNvbnNvbGUubG9nKE9iamVjdC5rZXlzKHByb3Bvc2FsKSk7IC8vIFtcImNvbnRlbnRzXCIsIFwiaWRcIiwgXCJrZXl3b3Jkc1wiLCBcInRpdGxlXCJdXG4iLCJzeW50YXgiOiJoYXNoIiwiZG9tTW9kZSI6ZmFsc2V9)
 
 Functions can handle Records and Objects in generally the same way:
 
@@ -134,7 +134,7 @@ console.log(correctedMeasures[0]); // 42
 console.log(correctedMeasures[3]); // -1
 
 // or use the .with() shorthand for the same result:
-const correctedMeasures2 = document.with(3, -1);
+const correctedMeasures2 = measures.with(3, -1);
 console.log(correctedMeasures2[0]); // 42
 console.log(correctedMeasures2[3]); // -1
 
@@ -142,7 +142,7 @@ console.log(correctedMeasures2[3]); // -1
 console.log(correctedMeasures2.map(x => x + 1)); // #[43, 13, 68, 0]
 ```
 
-> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBtZWFzdXJlcyA9ICNbNDIsIDEyLCA2NywgXCJtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcIl07XG5cbi8vIEFjY2Vzc2luZyBpbmRpY2VzIGxpa2UgeW91IHdvdWxkIHdpdGggYXJyYXlzIVxuY29uc29sZS5sb2cobWVhc3VyZXNbMF0pOyAvLyA0MlxuY29uc29sZS5sb2cobWVhc3VyZXNbM10pOyAvLyBtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcblxuLy8gU2xpY2UgYW5kIHNwcmVhZCBsaWtlIGFycmF5cyFcbmNvbnN0IGNvcnJlY3RlZE1lYXN1cmVzID0gI1tcbiAgLi4ubWVhc3VyZXMuc2xpY2VkKDAsIG1lYXN1cmVzLmxlbmd0aCAtIDEpLFxuICAtMVxuXTtcbmNvbnNvbGUubG9nKGNvcnJlY3RlZE1lYXN1cmVzWzBdKTsgLy8gNDJcbmNvbnNvbGUubG9nKGNvcnJlY3RlZE1lYXN1cmVzWzNdKTsgLy8gLTFcblxuLy8gb3IgdXNlIHRoZSAud2l0aCgpIHNob3J0aGFuZCBmb3IgdGhlIHNhbWUgcmVzdWx0OlxuY29uc3QgY29ycmVjdGVkTWVhc3VyZXMyID0gZG9jdW1lbnQud2l0aCgzLCAtMSk7XG5jb25zb2xlLmxvZyhjb3JyZWN0ZWRNZWFzdXJlczJbMF0pOyAvLyA0MlxuY29uc29sZS5sb2coY29ycmVjdGVkTWVhc3VyZXMyWzNdKTsgLy8gLTFcblxuLy8gRmluYWxseSwgeW91IGNhbiBhbHNvIHVzZSB0aGUgZnVuY3Rpb25zIGF2YWlsYWJsZSBvbiB0aGUgVHVwbGUgcHJvdG90eXBlXG4vLyB0aGF0IGlzIHNpbWlsYXIgdG8gdGhlIEFycmF5IHByb3RvdHlwZTpcbmNvbnNvbGUubG9nKGNvcnJlY3RlZE1lYXN1cmVzMi5tYXAoeCA9PiB4ICsgMSkpOyAvLyAjWzQzLCAxMywgNjgsIDBdXG4iLCJzeW50YXgiOiJoYXNoIn0=)
+> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiXG5jb25zdCBtZWFzdXJlcyA9ICNbNDIsIDEyLCA2NywgXCJtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcIl07XG5cbi8vIEFjY2Vzc2luZyBpbmRpY2VzIGxpa2UgeW91IHdvdWxkIHdpdGggYXJyYXlzIVxuY29uc29sZS5sb2cobWVhc3VyZXNbMF0pOyAvLyA0MlxuY29uc29sZS5sb2cobWVhc3VyZXNbM10pOyAvLyBtZWFzdXJlIGVycm9yOiBmb28gaGFwcGVuZWRcblxuLy8gU2xpY2UgYW5kIHNwcmVhZCBsaWtlIGFycmF5cyFcbmNvbnN0IGNvcnJlY3RlZE1lYXN1cmVzID0gI1tcbiAgLi4ubWVhc3VyZXMuc2xpY2VkKDAsIG1lYXN1cmVzLmxlbmd0aCAtIDEpLFxuICAtMVxuXTtcbmNvbnNvbGUubG9nKGNvcnJlY3RlZE1lYXN1cmVzWzBdKTsgLy8gNDJcbmNvbnNvbGUubG9nKGNvcnJlY3RlZE1lYXN1cmVzWzNdKTsgLy8gLTFcblxuLy8gb3IgdXNlIHRoZSAud2l0aCgpIHNob3J0aGFuZCBmb3IgdGhlIHNhbWUgcmVzdWx0OlxuY29uc3QgY29ycmVjdGVkTWVhc3VyZXMyID0gbWVhc3VyZXMud2l0aCgzLCAtMSk7XG5jb25zb2xlLmxvZyhjb3JyZWN0ZWRNZWFzdXJlczJbMF0pOyAvLyA0MlxuY29uc29sZS5sb2coY29ycmVjdGVkTWVhc3VyZXMyWzNdKTsgLy8gLTFcblxuLy8gRmluYWxseSwgeW91IGNhbiBhbHNvIHVzZSB0aGUgZnVuY3Rpb25zIGF2YWlsYWJsZSBvbiB0aGUgVHVwbGUgcHJvdG90eXBlXG4vLyB0aGF0IGlzIHNpbWlsYXIgdG8gdGhlIEFycmF5IHByb3RvdHlwZTpcbmNvbnNvbGUubG9nKGNvcnJlY3RlZE1lYXN1cmVzMi5tYXAoeCA9PiB4ICsgMSkpOyAvLyAjWzQzLCAxMywgNjgsIDBdXG4iLCJzeW50YXgiOiJoYXNoIiwiZG9tTW9kZSI6ZmFsc2V9)
 
 Similarly than with records, we can treat tuples as array-like:
 
