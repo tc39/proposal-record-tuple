@@ -363,7 +363,7 @@ For integrity, out-of-bounds numerical indexing on Tuples returns `undefined`, r
 
 ```js
 assert(Object.keys(#{ a: 1, b: 2 }) === #["a", "b"]);
-assert(#[1, 2, 3].map(x => x * 2), #[2, 4, 6]);
+assert(#[1, 2, 3].map(x => x * 2) === #[2, 4, 6]);
 ```
 
 See the [appendix](./NS-Proto-Appendix.md) to learn more about the `Record` & `Tuple` namespaces.
