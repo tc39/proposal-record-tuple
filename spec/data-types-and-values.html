@@ -63,7 +63,6 @@
       </emu-clause>
     </emu-clause>
 
-
     <emu-clause id="sec-ecmascript-language-types-tuple-type">
       <h1>The Tuple Type</h1>
       <p>The Tuple type is the set of all finite and ordered sequences of ECMAScript primitive values including Record and Tuple. Each tuple value holds an associated [[Sequence]] List which is a list of primitive values. The [[Sequence]] List is integer-indexed. The [[Sequence]] List and its values are never modified.</p>
@@ -112,6 +111,40 @@
           1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
             1. Return ! SameValueZero(_elementX_, _elementY_).
           1. Return ! TupleEqual(_x_, _y_, _elementEqual_).
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+
+    <emu-clause id="sec-ecmascript-language-types-box-type">
+      <h1>The Box Type</h1>
+      <p>The Box type is the set of all the possible singleton primitive wrappers around any ECMAScript value. Each box vale holds an associated [[Value]] containing an ECMAScript value. The [[Value]] internal slot is never modified.</p>
+
+      <emu-clause id="sec-ecmascript-language-types-box-tostring">
+        <h1>BoxToString ( _argument_ )</h1>
+        <p>The abstract operation BoxToString takes the argument _argument_ (a Box). It performs the following steps when called:</p>
+        <emu-alg>
+          1. Let _valueString_ be ? ToString(_argument_.[[Value]]).
+          1. Return the string-concatenation of *"Box("*, _valueString_, and *")"*.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-ecmascript-language-types-box-samevalue">
+        <h1>BoxSameValue ( _x_, _y_ )</h1>
+        <p>The abstract operation BoxSameValue takes arguments _x_ (a Box) and _y_ (a Box). It performs the following steps when called:</p>
+        <emu-alg>
+          1. Let _xValue_ be _x_.[[Value]].
+          1. Let _yValue_ be _y_.[[Value]].
+          1. Return ! SameValue(_xValue_, _yValue_.)
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-ecmascript-language-types-box-samevaluezero">
+        <h1>BoxSameValueZero ( _x_, _y_ )</h1>
+        <p>The abstract operation BoxSameValueZero takes arguments _x_ (a Box) and _y_ (a Box). It performs the following steps when called:</p>
+        <emu-alg>
+          1. Let _xValue_ be _x_.[[Value]].
+          1. Let _yValue_ be _y_.[[Value]].
+          1. Return ! SameValueZero(_xValue_, _yValue_.)
         </emu-alg>
       </emu-clause>
     </emu-clause>
