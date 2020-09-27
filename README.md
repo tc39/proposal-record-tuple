@@ -816,7 +816,7 @@ Likewise, Tuples in TypeScript are a notation to express types in an array of a 
 TS Records or Tuples are orthogonal features to ECMAScript Records and Tuples and both could be expressed at the same time:
 
 ```ts
-const record: readonly Record<string, number> = #{
+const record: Readonly<Record<string, number>> = #{
   foo: 1,
   bar: 2,
 };
