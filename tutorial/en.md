@@ -182,7 +182,7 @@ console.log("at 0:0x0", grid[JSON.stringify({
 
 We're not getting what we expect because the order of properties matters in JSON serialization.
 
-## Coumpounding values into another value with tuples
+## Compounding values into another value with tuples
 
 Fortunately we can solve those issues with Records and Tuples. Like strings, we can concatenate together some values and use them to do a bunch of things such as comparing their equality together but also using them to lookup keys. Back to our example but with tuples:
 
@@ -222,7 +222,7 @@ const crazyTuple = #["hello", 123, Symbol(), #{}, #[]];
 const tooCrazyTuple = #[{}]; // TypeError!
 ```
 
-## Coumpounding values into another value with records
+## Compounding values into another value with records
 
 Now let's take a quick look at records. Records are like tuples but have string-keys like objects, instead of an ordered sequence of elements like a tuple (or array). Let's name our axes from our previous example:
 
@@ -272,7 +272,7 @@ const crazyRecord = #{
 const tooCrazyRecord = #{ obj: {} }; // TypeError!
 ```
 
-## Coumpound values, looking back!
+## Compound values, looking back!
 
 By this point, you should get a pretty good idea of how Record and Tuple behave. They have some nice equality properties that let us replace strings in some places. That being said, this is only a small use case for them, next, we're going to look at how we can do some state management using Record & Tuple.
 
