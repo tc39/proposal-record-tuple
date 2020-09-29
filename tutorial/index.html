@@ -141,7 +141,7 @@ console.log(&quot;at 0:0x0&quot;, grid[JSON.stringify({
     x: 0,
 })]); // undefined</code></pre>
 <p>We&#39;re not getting what we expect because the order of properties matters in JSON serialization.</p>
-<h2 id="coumpounding-values-into-another-value-with-tuples">Coumpounding values into another value with tuples</h2>
+<h2 id="compounding-values-into-another-value-with-tuples">Compounding values into another value with tuples</h2>
 <p>Fortunately we can solve those issues with Records and Tuples. Like strings, we can concatenate together some values and use them to do a bunch of things such as comparing their equality together but also using them to lookup keys. Back to our example but with tuples:</p>
 <pre><code class="language-js">// We use an ES Map as they can have tuples as key values
 const grid = new Map([
@@ -167,7 +167,7 @@ console.log(&quot;c2 at origin?&quot;, isAtOrigin(c2)); // true</code></pre>
 const crazyTuple = #[&quot;hello&quot;, 123, Symbol(), #{}, #[]];
 // ... except objects
 const tooCrazyTuple = #[{}]; // TypeError!</code></pre>
-<h2 id="coumpounding-values-into-another-value-with-records">Coumpounding values into another value with records</h2>
+<h2 id="compounding-values-into-another-value-with-records">Compounding values into another value with records</h2>
 <p>Now let&#39;s take a quick look at records. Records are like tuples but have string-keys like objects, instead of an ordered sequence of elements like a tuple (or array). Let&#39;s name our axes from our previous example:</p>
 <pre><code class="language-js">// We use an ES Map as they can have tuples as key values
 const grid = new Map([
@@ -200,7 +200,7 @@ const crazyRecord = #{
 };
 // ... except objects
 const tooCrazyRecord = #{ obj: {} }; // TypeError!</code></pre>
-<h2 id="coumpound-values-looking-back">Coumpound values, looking back!</h2>
+<h2 id="compound-values-looking-back">Compound values, looking back!</h2>
 <p>By this point, you should get a pretty good idea of how Record and Tuple behave. They have some nice equality properties that let us replace strings in some places. That being said, this is only a small use case for them, next, we&#39;re going to look at how we can do some state management using Record &amp; Tuple.</p>
 <hr>
 <h1 id="managing-state-with-record--tuple">Managing State with Record &amp; Tuple</h1>
