@@ -221,7 +221,7 @@ Using the `__proto__` identifier as a property is prevented in syntax. See [issu
 ```js
 const x = #{ __proto__: foo }; // SyntaxError, __proto__ identifier prevented by syntax
 
-const y = #{ "__proto__": foo }; // valid, creates a record with a "__proto__" property.
+const y = #{ ["__proto__"]: foo }; // valid, creates a record with a "__proto__" property.
 ```
 
 Concise methods are disallowed in Record syntax.
