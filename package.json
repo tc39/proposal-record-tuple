@@ -29,8 +29,8 @@
     "browser-sync": "^2.26.7",
     "concurrently": "^5.2.0",
     "ecmarkup": "^3.23.0",
-    "mkdirp": "^0.5.1",
     "fs-extra": "^9.0.1",
-    "marked": "^1.1.0"
+    "marked": "^1.1.0",
+    "mkdirp": "^0.5.1"
   }
 }
