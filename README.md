@@ -714,6 +714,9 @@ This proposal is designed to enable classical optimizations for purely functiona
 - Optimizations for manipulating data structures
   - In some cases, reuse existing data structures (e.g., when manipulated with object spread), similar to ropes or typical implementations of functional data structures
   - In other cases, as determined by the engine, use a flat representation like existing JavaScript object implementations
+- Optimizations for memory
+  - Because records and tuples do not have seperate identities, JavaScript engines can delete data immediately to avoid GC garbage, especially for private data members
+  - It may be possible to flattening the record and tuple data directly into the object it's stored in, eliminating the need to dereference a pointer to retrieve data inside
 
 These optimizations are analogous to the way that modern JavaScript engines handle string concatenation, with various different internal types of strings. The validity of these optimizations rests on the unobservability of the identity of records and tuples. It's not expected that all engines will act identically with respect to these optimizations, but rather, they will each make decisions about which particular heuristics to use. Before Stage 4 of this proposal, we plan to publish a guide for best practices for cross-engine optimizable use of Records and Tuples, based on the implementation experience that we will have at that point.
 
