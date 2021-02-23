@@ -82,7 +82,7 @@ const proposal2 = #{
 console.log(proposal2.title); // Stage 2: Record & Tuple
 console.log(proposal2.keywords[1]); // tc39
 
-// Object work functions on Records:
+// Object functions work on Records:
 console.log(Object.keys(proposal)); // ["contents", "id", "keywords", "title"]
 ```
 
@@ -315,7 +315,7 @@ assert("a" in #{ a: 1, b: 2 });
 
 ## Advanced internal details: `Record` and `Tuple` wrapper objects
 
-JS developers will typically not have to think about `Record` and `Tuple` wrapper objects, but they're a key part to how Records and Tuples work "under the hood" in the JavaScript specification.
+JS developers will typically not have to think about `Record` and `Tuple` wrapper objects, but they're a key part of how Records and Tuples work "under the hood" in the JavaScript specification.
 
 Accessing of a Record or Tuple via `.` or `[]` follows the typical [`GetValue`](https://tc39.es/ecma262/#sec-getvalue) semantics, which implicitly converts to an instance of the corresponding wrapper type. You can also do the conversion explicitly through `Object()`:
 
@@ -420,7 +420,7 @@ for (const [key, value] of Object.entries(record)) { console.log(key) }
 ## JSON.stringify
 
 - The behavior of `JSON.stringify(record)` is equivalent to calling `JSON.stringify` on the object resulting from recursively converting the record to an object that contains no records or tuples.
-- The behavior of `JSON.stringify(tuple)` is equivalent to calling `JSON.stringify` on the array resulting from recursively converting the record to an object that contains no records or tuples.
+- The behavior of `JSON.stringify(tuple)` is equivalent to calling `JSON.stringify` on the array resulting from recursively converting the tuple to an array that contains no records or tuples.
 
 ```js
 JSON.stringify(#{ a: #[1, 2, 3] }); // '{"a":[1,2,3]}'
@@ -585,7 +585,7 @@ console.log(getGithubUrl(profileRecord)) // https://github.com/rricard
 
 This function support both Objects and Records in a single code-path as well as not forcing the consumer to choose which data structures to use.
 
-Why do we need to support both at the same time anyway? This is primarily to avoid an ecosystem split. Let's say we're using immutable to do our state management but we need to feed our state to a few external libraries that don't support it:
+Why do we need to support both at the same time anyway? This is primarily to avoid an ecosystem split. Let's say we're using Immutable.js to do our state management but we need to feed our state to a few external libraries that don't support it:
 
 ```js
 state.jobResult = Immutable.fromJS(
@@ -677,7 +677,7 @@ func(object);
 // func is able to mutate object’s keys even if object is frozen
 ```
 
-In that example we try to have more guarantees with `Object.freeze`, unfortunately since we did not freeze it deeply, nothing tells us that `object.a` has been untouched. With Record & Tuple that constraint is by nature and there is no doubt ths structure is untouched:
+In the above example, we try to create a guarantee of immutability with `Object.freeze`. Unfortunately, since we did not freeze the object deeply, nothing tells us that `object.a` has been untouched. With Record & Tuple that constraint is by nature and there is no doubt that the structure is untouched:
 
 ```js
 const record = #{
