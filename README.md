@@ -15,7 +15,7 @@
 
 - Philipp Dunkel (Bloomberg)
 - Dan Ehrenberg (Igalia)
-- Maxwell Heiber (Bloomberg)
+- Maxwell Heiber
 
 **Stage:** 2
 
