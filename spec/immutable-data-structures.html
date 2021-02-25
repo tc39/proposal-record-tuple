@@ -84,35 +84,12 @@
         <li>is the intrinsic object <dfn>%Tuple%</dfn>.</li>
         <li>is the initial value of the *"Tuple"* property of the global object.</li>
         <li>creates and initializes a new Tuple object when called as a function.</li>
-        <li>is a single function whose behavior is overloaded based on the number and types of its arguments</li>
         <li>is not intended to be used with the `new` operator or to be subclassed. It may be used as the value of an *extends* clause of a class definition but a *super* call to the Tuple constructor will cause an exception.</li>
       </ul>
-      <emu-clause id="sec-tuple-len">
-        <h1>Tuple ( _len_ )</h1>
-        <p>When the `Tuple` function is called with exactly one argument, the following steps are taken:</p>
-        <emu-alg>
-          1. Let _numberOfArgs_ be the number of arguments passed to this function call.
-          1. Assert: _numberOfArgs_ = 0 or _numberOfArgs_ = 1.
-          1. If _numberOfArgs_ is 0, return a new Tuple whose [[Sequence]] is an empty List.
-          1. Let _list_ be a new empty List.
-          1. If Type(_len_) is not Number, then
-            1. Append _len_ to the end of List _list_.
-          1. Else,
-            1. Let _intLen_ be ToUint32(_len_).
-            1. If _intLen_ &ne; _len_, throw a *RangeError* exception.
-            1. Let _k_ be 0.
-            1. Repeat, while _k_ &lt; _intLen_,
-              1. Append *undefined* to the end of List _list_.
-              1. Set _k_ to _k_ + 1.
-          1. Return a new Tuple value whose [[Sequence]] is _list_.
-        </emu-alg>
-      </emu-clause>
       <emu-clause id="sec-tuple-items">
         <h1>Tuple ( ..._items_ )</h1>
-        <p>When the `Tuple` function is called with at least two arguments, the following steps are taken:</p>
+        <p>When the `Tuple` function is called with zero or more arguments, the following steps are taken:</p>
         <emu-alg>
-          1. Let _numberOfArgs_ be the number of arguments passed to this function call.
-          1. Assert: _numberOfArgs_ &ge; 2.
           1. If NewTarget is not *undefined*, throw a *TypeError* exception.
           1. Let _items_ be the List of arguments passed to this function.
           1. For each element _e_ of _items_,
