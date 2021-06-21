@@ -7,7 +7,7 @@
   <emu-clause id="sec-type-conversion">
     <h1>Type Conversion</h1>
     <p>The ECMAScript language implicitly performs automatic type conversion as needed. To clarify the semantics of certain constructs it is useful to define a set of conversion abstract operations. The conversion abstract operations are polymorphic; they can accept a value of any ECMAScript language type. But no other specification types are used with these operations.</p>
-    <p>The BigInt <ins>, Record, and Tuple</ins> type<ins>s</ins> <del>has</del><ins>have</ins> no implicit conversions in the ECMAScript language; programmers must call BigInt <ins>, Record, or Tuple</ins> explicitly to convert values from other types.</p>
+    <p>The BigInt <ins>, Record, Tuple, and Box</ins> type<ins>s</ins> <del>has</del><ins>have</ins> no implicit conversions in the ECMAScript language; programmers must call BigInt <ins>, Record, Tuple, or Box</ins> explicitly to convert values from other types.</p>
 
     <emu-clause id="sec-toboolean" aoid="ToBoolean">
       <h1>ToBoolean ( _argument_ )</h1>
@@ -90,6 +90,14 @@
           <tr>
             <td>
               <ins>Tuple</ins>
+            </td>
+            <td>
+              <ins>Return *true*.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Box</ins>
             </td>
             <td>
               <ins>Return *true*.</ins>
@@ -190,6 +198,14 @@
           <tr>
             <td>
               <ins>Tuple</ins>
+            </td>
+            <td>
+              <ins>Throw a *TypeError* exception.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Box</ins>
             </td>
             <td>
               <ins>Throw a *TypeError* exception.</ins>
@@ -307,6 +323,14 @@
                 <ins>Throw a *TypeError* exception.</ins>
               </td>
             </tr>
+            <tr>
+              <td>
+                <ins>Box</ins>
+              </td>
+              <td>
+                <ins>Throw a *TypeError* exception.</ins>
+              </td>
+            </tr>
           </tbody>
         </table>
       </emu-table>
@@ -397,6 +421,14 @@
             </td>
             <td>
               <ins>Return ! TupleToString(_argument_).</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Box</ins>
+            </td>
+            <td>
+              <ins>Return ? BoxToString(_argument_).</ins>
             </td>
           </tr>
           <tr>
@@ -504,6 +536,14 @@
           </tr>
           <tr>
             <td>
+              <ins>Box</ins>
+            </td>
+            <td>
+              <ins>Return a new Box object whose [[BoxData]] internal slot is set to _argument_. See <emu-xref href="#sec-box-objects"></emu-xref> for a description of Box objects.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
               Object
             </td>
             <td>
@@ -607,6 +647,14 @@
           </tr>
           <tr>
             <td>
+              <ins>Box</ins>
+            </td>
+            <td>
+              <ins>Return _argument_.</ins>
+            </td>
+          </tr>
+          <tr>
+            <td>
               Object
             </td>
             <td>
@@ -626,6 +674,7 @@
         1. If Type(_x_) is Number or BigInt, then return ! Type(_x_)::sameValue(_x_, _y_).
         1. <ins>If Type(_x_) is Record, then return ! RecordSameValue(_x_, _y_).</ins>
         1. <ins>If Type(_x_) is Tuple, then return ! TupleSameValue(_x_, _y_).</ins>
+        1. <ins>If Type(_x_) is Box, then return ! BoxSameValue(_x_, _y_).</ins>
         1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
         1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
@@ -642,6 +691,7 @@
         1. If Type(_x_) is Number or BigInt, then return ! Type(_x_)::sameValueZero(_x_, _y_).
         1. <ins>If Type(_x_) is Record, then return ! RecordSameValueZero(_x_, _y_).</ins>
         1. <ins>If Type(_x_) is Tuple, then return ! TupleSameValueZero(_x_, _y_).</ins>
+        1. <ins>If Type(_x_) is Box, then return ! BoxSameValueZero(_x_, _y_).</ins>
         1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
         1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
@@ -685,8 +735,8 @@
         1. If Type(_x_) is String and Type(_y_) is BigInt, return the result of the comparison _y_ == _x_.
         1. If Type(_x_) is Boolean, return the result of the comparison ! ToNumber(_x_) == _y_.
         1. If Type(_y_) is Boolean, return the result of the comparison _x_ == ! ToNumber(_y_).
-        1. If Type(_x_) is either String, Number, BigInt<ins>, Record, Tuple</ins>, or Symbol and Type(_y_) is Object, return the result of the comparison _x_ == ? ToPrimitive(_y_).
-        1. If Type(_x_) is Object and Type(_y_) is either String, Number, BigInt<ins>, Record, Tuple</ins>, or Symbol, return the result of the comparison ? ToPrimitive(_x_) == _y_.
+        1. If Type(_x_) is either String, Number, BigInt<ins>, Record, Tuple, Box</ins>, or Symbol and Type(_y_) is Object, return the result of the comparison _x_ == ? ToPrimitive(_y_).
+        1. If Type(_x_) is Object and Type(_y_) is either String, Number, BigInt<ins>, Record, Tuple, Box</ins>, or Symbol, return the result of the comparison ? ToPrimitive(_x_) == _y_.
         1. If Type(_x_) is BigInt and Type(_y_) is Number, or if Type(_x_) is Number and Type(_y_) is BigInt, then
           1. If _x_ or _y_ are any of *NaN*, *+&infin;*, or *-&infin;*, return *false*.
           1. If the mathematical value of _x_ is equal to the mathematical value of _y_, return *true*; otherwise return *false*.
@@ -701,7 +751,7 @@
         1. If Type(_x_) is different from Type(_y_), return *false*.
         1. If Type(_x_) is Number or BigInt, then
           1. Return ! Type(_x_)::equal(_x_, _y_).
-        1. <ins>If Type(_x_) is Record or Tuple, then</ins>
+        1. <ins>If Type(_x_) is Record, Tuple or Box, then</ins>
           1. <ins>Return ! Type(_x_)::sameValueZero(_x_, _y_).</ins>
         1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
         1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>

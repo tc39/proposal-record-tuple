@@ -619,4 +619,109 @@
       </emu-clause>
     </emu-clause>
   </emu-clause>
+
+  <emu-clause id="sec-box-objects">
+    <h1>Box Objects</h1>
+    <emu-clause id="sec-box-constructor">
+      <h1>The Box Constructor</h1>
+      <p>The Box constructor:</p>
+      <ul>
+        <li>is the intrinsic object <dfn>%Box%</dfn>.</li>
+        <li>is the initial value of the *"Box"* property of the global object.</li>
+        <li>creates and initializes a new Box value when called as a function.</li>
+        <li>is not intended to be used with the `new` operator or to be subclassed. It may be used as the value of an *extends* clause of a class definition but a *super* call to the Box constructor will cause an exception.</li>
+      </ul>
+      <emu-clause id="sec-box-constructor-box-value">
+        <h1>Box ( _arg_ )</h1>
+        <p>When the `Box` function is called, the following steps are taken:</p>
+        <emu-alg>
+          1. If NewTarget is not *undefined*, throw a *TypeError* exception.
+          1. Return a new Box value whose [[Value]] is _arg_.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+
+    <emu-clause id="sec-properties-of-the-box-constructor">
+      <h1>Properties of the Box Constructor</h1>
+      <p>The Box constructor:</p>
+      <ul>
+        <li>has a [[Prototype]] internal slot whose value is %Function.prototype%.</li>
+        <li>has the following properties:</li>
+      </ul>
+
+      <emu-clause id="sec-box.containsboxes">
+        <h1>Box.containsBoxes ( _arg_ )</h1>
+        <p>The *containsBoxes* function takes one argument _arg_, and performs the following steps:</p>
+        <emu-alg>
+          1. If Type(_arg_) is not Record, Tuple or Box, throw a *TypeError* exception.
+          1. Return ! RecursiveContainsBoxes(_arg_).
+        </emu-alg>
+
+        <emu-clause id="sec-recursivecontainsboxes" aoid="RecursiveContainsBoxes">
+          <h1>RecursiveContainsBoxes ( _value_ )</h1>
+          <p>The abstract operation RecursiveContainsBoxes takes the argument _value_. It performs the following steps when called:</p>
+          <emu-alg>
+            1. Assert: Type(_value_) is not Object.
+            1. If Type(_value_) is Box, return *true*.
+            1. If Type(_value_) is Record, then
+              1. For each _field_ of _value_.[[Fields]], do
+                1. If ! RecursiveContainsBoxes(_field_.[[Value]]) is *true*, return *true*.
+            1. If Type(_value_) is Tuple,
+              1. For each _item_ of _value_.[[Sequence]], do
+                1. If ! RecursiveContainsBoxes(_item_) is *true*, return *true*.
+            1. Return *false*.
+          </emu-alg>
+        </emu-clause>
+      </emu-clause>
+
+      <emu-clause id="sec-box.prototype">
+        <h1>Box.prototype</h1>
+        <p>The initial value of *Box.prototype* is %Box.prototype%</p>
+        <p>This property has the attributes { [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false }.</p>
+      </emu-clause>
+    </emu-clause>
+
+    <emu-clause id="sec-properties-of-the-box-prototype-object">
+      <h1>Properties of the Box Prototype Object</h1>
+      <p>The Box prototype object:</p>
+      <ul>
+        <li>is an ordinary object.</li>
+        <li>is not a Box object; it does not have a [[BoxData]] internal slot.</li>
+        <li>has a [[Prototype]] internal slot whose value is *null*.</li>
+      </ul>
+      <p>The abstract operation <dfn id="sec-thisboxvalue" aoid="thisBoxValue">thisBoxValue</dfn> takes argument _value_. It performs the following steps when called:</p>
+      <emu-alg>
+        1. If Type(_value_) is Box, return _value_.
+        1. If Type(_value_) is Object and _value_ has a [[BoxData]] internal slot, then
+          1. Let _box_ be _value_.[[BoxValue]].
+          1. Assert: Type(_box_) is Box.
+          1. Return _box_.
+        1. Throw a *TypeError* exception.
+      </emu-alg>
+      <emu-clause id="sec-box.prototype.constructor">
+        <h1>Box.prototype.constructor</h1>
+        <p>The initial value of *Box.prototype.constructor* is the intrinsic object %Box%</p>
+      </emu-clause>
+      <emu-clause id="sec-box.prototype.valueof">
+        <h1>Box.prototype.valueOf ( )</h1>
+        <p>When the `valueOf` function is called, the following steps are taken:</p>
+        <emu-alg>
+          1. Return ? thisBoxValue(*this* value).
+        </emu-alg>
+      </emu-clause>
+      <emu-clause id="sec-box.prototype-@@toStringTag">
+        <h1>Box.prototype [ @@toStringTag ]</h1>
+        <p>The initial value of *Box.prototype[@@toStringTag]* is the String value *"Box"*.</p>
+        <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
+      </emu-clause>
+      <emu-clause id="sec-box.prototype.unbox">
+        <h1>Box.prototype.unbox ( )</h1>
+        <p>When the `unbox` function is called, the following steps are taken:</p>
+        <emu-alg>
+          1. Let _box_ be ? thisBoxValue(*this* value).
+          1. Return _box_.[[Value]]
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
 </emu-clause>

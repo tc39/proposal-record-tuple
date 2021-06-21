@@ -138,7 +138,7 @@
           1. Return *false*.
         </emu-alg>
       </emu-clause>
-      
+
       <emu-clause id="sec-recordget-r-p" aoid="RecordGet">
         <h1>RecordGet ( _R_, _P_ )</h1>
         <p>This abstract operation RecordGet takes arguments _R_ and _P_. It performs the following steps when called:</p>
@@ -311,6 +311,83 @@
           1. If ! IsValidTupleIndex(_numericIndex_) is *false*, return ~empty~.
           1. Let _value_ be the element with index _numericIndex_ in _tup_.[[Sequence]].
           1. Return _value_.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+
+    <emu-clause id="sec-box-exitic-objects">
+      <h1>Box Exotic Objects</h1>
+      <p>A Box object is an exotic object that encapsuates a Box value and exposes virtual integer-indexed data properties corresponding to the individual entries set on the underlying Box value. All keys properties are non-writable and non-configurable.</p>
+
+      <p>An object is a <dfn id="box-exotic-object">Box exotic object</dfn> (or simply, a Box object) if its following internal methods use the following implementations and it is an <emu-xref href="#sec-immutable-prototype-exotic-objects">Immutable Prototype Exotic Object</emu-xref>.</p>
+
+      <p>Box exotic objects have the same internal slots as ordinary objects. They also have a [[BoxData]] internal slot.</p>
+
+      <emu-clause id="sec-box-exotic-objects-isextensible">
+        <h1>[[IsExtensible]] ()</h1>
+        <p>When the [[IsExtensible]] internal method of a Box exotic object _T_ is called, the following steps are taken:</p>
+        <emu-alg>
+          1. Return *false*.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-box-exotic-objects-getownproperty-p">
+        <h1>[[GetOwnProperty]] ( _P_ )</h1>
+        <p>When the [[GetOwnProperty]] internal method of a Box exotic object _T_ is called with property key _P_, the following steps are taken:</p>
+        <emu-alg>
+          1. Return *false*.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-box-exotic-objects-defineownproperty-p-desc">
+        <h1>[[DefineOwnProperty]] ( _P_, _Desc_ )</h1>
+        <p>When the [[DefineOwnProperty]] internal method of a Box exotic object _T_ is called with property key _P_, and Property Descriptor _Desc_ the following steps are taken:</p>
+        <emu-alg>
+          1. Return *false*.
+        </emu-alg>
+      </emu-clause>
+      
+      <emu-clause id="sec-box-exotic-objects-hasproperty-p">
+        <h1>[[HasProperty]] ( _P_ )</h1>
+        <p>When the [[HasProperty]] internal method of a Box exotic object _T_ is called with property key _P_, the following steps are taken:</p>
+        <emu-alg>
+          1. Assert: IsPropertyKey(_P_) is *true*.
+          1. Let _parent_ be %Box.prototype%.
+          1. Return ? _parent_.[[HasProperty]](_P_).
+        </emu-alg>
+      </emu-clause>
+            
+      <emu-clause id="sec-box-exotic-objects-get-p-receiver">
+        <h1>[[Get]] ( _P_, _Receiver_ )</h1>
+        <p>When the [[Get]] internal method of a Box exotic object _T_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
+        <emu-alg>
+          1. Assert: IsPropertyKey(_P_) is *true*.
+          1. Let _parent_ be ? %Box.prototype%.
+          1. Return ? _parent_.[[Get]](_P_, _Receiver_).
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-box-exotic-objects-set-p-receiver">
+        <h1>[[Set]] ( _P_, _Receiver_ )</h1>
+        <p>When the [[Set]] internal method of a Box exotic object _T_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
+        <emu-alg>
+          1. Return *false*.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-box-exotic-objects-delete-p">
+        <h1>[[Delete]] ( _P_ )</h1>
+        <p>When the [[Delete]] internal method of a Box exotic object _T_ is called with property key _P_, the following steps are taken:</p>
+        <emu-alg>
+          1. Return *true*.
+        </emu-alg>
+      </emu-clause>
+      
+      <emu-clause id="sec-box-exotic-objects-ownpropertykeys">
+        <h1>[[OwnPropertyKeys]] ( )</h1>
+        <p>When the [[OwnPropertyKeys]] internal method of a Record exotic object _T_ is called, the following steps are taken:</p>
+        <emu-alg>
+          1. Return a new empty List.
         </emu-alg>
       </emu-clause>
     </emu-clause>
