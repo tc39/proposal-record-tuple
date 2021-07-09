@@ -29,7 +29,7 @@
             1. If Type(_value_) is Object, throw a *TypeError* exception.
             1. Let _field_ be the Record { [[Key]]: _name_, [[Value]]: _value_ }.
             1. Append _field_ to the end of list _fields_.
-          1. Return a new Record value whose [[Fields]] is _fields_.
+          1. Return ! CreateRecord(_fields_).
         </emu-alg>
       </emu-clause>
     </emu-clause>
@@ -51,7 +51,7 @@
             1. Let _field_ be { [[Key]]: _key_, [[Value]]: _value_ }.
             1. Append _field_ to the end of list _fields_.
           1. Perform ! AddEntriesFromIterable(*undefined*, _iterable_, _adder_).
-          1. Return a new Record value whose [[Fields]] is _fields_.
+          1. Return ! CreateRecord(_fields_).
         </emu-alg>
         <emu-note>
           <p>The parameter _iterable_ is expected to be an object that implements an @@iterator method that returns an iterator object that produces a two element array-like object whose first element is a value that will be used as a Map key and whose second element is the value to associate with that key.</p>

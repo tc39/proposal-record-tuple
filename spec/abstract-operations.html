@@ -765,6 +765,15 @@
   <emu-clause id="sec-operations-on-records">
     <h1>Operations on Records</h1>
 
+    <emu-clause id="sec-createrecord" aoid="CreateRecord">
+      <h1>CreateRecord ( _entries_ )</h1>
+      <p>This abstract operation CreateRecord takes a _entries_ argument. It is used to create a Record value ensuring that its fields are sorted. It performs the following steps when called:</p>
+      <emu-alg>
+        1. Let _sortedEntries_ be a new List containing the values of _entries_ sorted such that, for any entry two entries _a_ and _b_, _a_ will be placed before _b_ if the result of performing Abstract Relational Comparison _a_.[[Key]] < _b_.[[Key]] is *true*.
+        1. Return a new Record value whose [[Fields]] is _sortedEntries_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-addpropertyintorecordentrieslist" aoid="AddPropertyIntoRecordEntriesList">
       <h1>AddPropertyIntoRecordEntriesList ( _entries_, _propName_, _value_ )</h1>
       <p>This abstract operation AddPropertyIntoRecordEntriesList takes _entries_, _propName_ and _value_ arguments. It is used during a single assignment into a Record literal expression. It performs the following steps when called:</p>
