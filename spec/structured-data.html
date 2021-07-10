@@ -85,7 +85,7 @@
                 1. If _newElement_ is not *undefined*, then:
                   1. Let _field_ be the Record { [[Key]]: _childName_, [[Value]]: _newElement_ }.
                   1. Append _field_ to _fields_.
-              1. Let _immutable_ be a new Record value whose [[Fields]] is _fields_.
+              1. Let _immutable_ be ! CreateRecord(_fields_).
           1. Else,
             1. Let _immutable_ be _value_.
           1. If IsCallable(_reviver_) is *true*, then
