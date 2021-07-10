@@ -80,12 +80,12 @@
 
       <emu-clause id="sec-record-initializer-runtime-semantics-evaluation">
         <h1>Runtime Semantics: Evaluation</h1>
-        <emu-grammar>ObjectLiteral : `{` `}`</emu-grammar>
+        <emu-grammar>RecordLiteral : `#{` `}`</emu-grammar>
         <emu-alg>
-          1. Return OrdinaryObjectCreate(%Object.prototype%).
+          1. Return a new Record value whose [[Fields]] value is an empty List.
         </emu-alg>
         <emu-grammar>
-          ObjectLiteral :
+          RecordLiteral :
             `#{` RecordPropertyDefinitionList `}`
             `#{` RecordPropertyDefinitionList `,` `}`
         </emu-grammar>
