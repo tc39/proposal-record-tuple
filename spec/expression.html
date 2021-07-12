@@ -119,8 +119,10 @@
           1. Let _from_ be ! ToObject(_source_).
           1. Let _keys_ be ? _from_.[[OwnPropertyKeys]]().
           1. For each element _nextKey_ of _keys_ in List order, do
-            1. Let _value_ be _from_.[[Get]](_nextKey_).
-            1. Perform ? AddPropertyIntoRecordEntriesList(_entries_, _nextKey_, _value_).
+            1. Let _desc_ be ? _from_.[[GetOwnProperty]](_nextKey_).
+            1. If _desc_ is not *undefined* and _desc_.[[Enumerable]] is *true*, then
+              1. Let _value_ be ? Get(_from_, _nextKey_).
+              1. Perform ? AddPropertyIntoRecordEntriesList(_entries_, _nextKey_, _value_).
           1. Return _entries_.
         </emu-alg>
         <emu-grammar>RecordPropertyDefinition : IdentifierReference</emu-grammar>
