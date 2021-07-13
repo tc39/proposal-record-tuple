@@ -8,20 +8,14 @@
     <emu-grammar type="definition">
       Punctuator ::
         OptionalChainingPunctuator
-        <ins>NumberSignPunctuator</ins>
         OtherPunctuator
 
       OptionalChainingPunctuator ::
         `?.` [lookahead &lt;! DecimalDigit]
 
-      <ins>
-      NumberSignPunctuator ::
-        `#{`
-        `#[`
-      </ins>
-
       OtherPunctuator :: one of
         `{` `(` `)` `[` `]`
+        <ins>`#{` `#[`</ins>
         `.` `...` `;` `,`
         `&lt;` `&gt;` `&lt;=` `&gt;=`
         `==` `!=` `===` `!==`
