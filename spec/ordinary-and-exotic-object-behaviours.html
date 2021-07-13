@@ -43,9 +43,9 @@
           1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
           1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
+          1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
           1. Let _current_ be ! RecordGet(_R_, _P_).
           1. If _current_ is ~empty~ return *false*.
-          1. Assert: IsDataDescriptor(_Desc_) is *true*.
           1. If _Desc_.[[Value]] is present, return ! SameValue(_Desc_.[[Value]], _current_).
           1. Return *false*.
         </emu-alg>
@@ -56,7 +56,6 @@
         <p>When the [[HasProperty]] internal method of a Record exotic object _R_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return *false*.
           1. Return ! RecordHasProperty(_R_, _P_).
         </emu-alg>
       </emu-clause>
@@ -77,8 +76,6 @@
         <h1>[[Set]] ( _P_, _Receiver_ )</h1>
         <p>When the [[Set]] internal method of a Record exotic object _R_ is called with Property Key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
         <emu-alg>
-          1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return *false*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -88,9 +85,8 @@
         <p>When the [[Delete]] internal method of a Record exotic object _R_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return *true*.
           1. Let _hasProperty_ ? RecordHasProperty( _R_, _P_ ).
-          1. Return *true* if _hasProperty_ is *false*.
+          1. If _hasProperty_ is *false*, return *true*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -154,16 +150,16 @@
             1. Assert: Type(_key_) is String.
             1. Assert: Type(_val_) is not Object.
             1. If _key_ is _P_, return _val_.
-          1.Return ~empty~.
+          1. Return ~empty~.
         </emu-alg>
       </emu-clause>
     </emu-clause>
 
     <emu-clause id="sec-tuple-exotic-objects">
       <h1>Tuple Exotic Objects</h1>
-      <p>A Tuple object is an exotic object that encapsuates a Tuple value and exposes virtual integer-indexed data properties corresponding to the individual entries set on the underlying Tuple value. All keys properties are non-writable and non-configurable.</p>
+      <p>A Tuple object is an exotic object that encapsulates a Tuple value and exposes virtual integer-indexed data properties corresponding to the individual entries set on the underlying Tuple value. All keys properties are non-writable and non-configurable.</p>
 
-      <p>An object is a <dfn id="tuple-exotic-object">Tuple exotic object</dfn> (or simply, a Tuple object) if its following internal methods use the following implementations and is an <emu-xref href="#sec-immutable-prototype-exotic-objects">Immutable Prototype Exotic Object</emu-xref>..</p>
+      <p>An object is a <dfn id="tuple-exotic-object">Tuple exotic object</dfn> (or simply, a Tuple object) if its following internal methods use the following implementations and is an <emu-xref href="#sec-immutable-prototype-exotic-objects">Immutable Prototype Exotic Object</emu-xref>.</p>
 
       <p>Tuple exotic objects have the same internal slots as ordinary objects. They also have a [[TupleData]] internal slot.</p>
 
@@ -217,7 +213,7 @@
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, return ? IsValidTupleIndex(_T_, _numericIndex_)
           1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
-          1. Return ? _parent_.[[HasProperty]](_P_, _Receiver_).
+          1. Return ? _parent_.[[HasProperty]](_P_).
         </emu-alg>
       </emu-clause>
             
@@ -252,7 +248,9 @@
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *true*.
-          1. Let _isValidIndex_ ? IsValidTupleIndex( _T_, _P_ ).
+          1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
+          1. If _numericIndex_ is *undefined*, return *true*.
+          1. Let _isValidIndex_ ? IsValidTupleIndex( _T_, _numericIndex_ ).
           1. If _isValidIndex_ is *false*, return *true*.
           1. Return *false*.
         </emu-alg>
