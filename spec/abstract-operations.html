@@ -779,7 +779,7 @@
       <p>This abstract operation AddPropertyIntoRecordEntriesList takes _entries_, _propName_ and _value_ arguments. It is used during a single assignment into a Record literal expression. It performs the following steps when called:</p>
       <emu-alg>
           1. Assert: Type(_entries_) is List.
-          1. Assert: IsProperyKey(_propName_) is *true*.
+          1. Assert: IsPropertyKey(_propName_) is *true*.
           1. If Type(_propName_) is Symbol, throw a *TypeError* exception.
           1. If Type(_value_) is Object, throw a *TypeError* exception.
           1. Add { [[Key]]: _propType_, [[Value]]: _value_ } to _entries_.
