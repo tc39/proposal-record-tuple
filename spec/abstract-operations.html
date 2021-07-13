@@ -811,19 +811,5 @@
         1. If Type(_O_) is Tuple or Type(_O_) is Object and _O_ has a [[TupleData]] internal slot, return *true*.
         2. Return *false*.
       </emu-alg>
-    </emu-clause>
-  </emu-clause>
-
-  <emu-clause id="sec-isconcatspreadable" aoid="IsConcatSpreadable">
-      <h1>Runtime Semantics: IsConcatSpreadable ( _O_ )</h1>
-      <p>The abstract operation IsConcatSpreadable takes argument _O_. It performs the following steps when called:</p>
-      <emu-alg>
-        1. If Type(_O_) is not Object or Tuple, return *false*
-        1. Let _spreadable_ be ? Get<ins>V</ins>(_O_, @@isConcatSpreadable).
-        1. If _spreadable_ is not *undefined*, return ! ToBoolean(_spreadable_).
-        1. <ins>If ! IsTuple(_O_), return *true*</ins>
-        1. If ? IsArray(_O_).
-      </emu-alg>
-    </emu-clause>
   </emu-clause>
 </emu-clause>

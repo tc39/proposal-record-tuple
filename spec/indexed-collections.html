@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<meta charset="utf8" />
+
+<emu-clause id="sec-indexed-collections">
+  <h1>Indexed Collections</h1>
+
+  <emu-clause id="sec-array-objects">
+    <h1>Array Objects</h1>
+
+  <emu-clause id="sec-properties-of-the-array-prototype-object">
+    <h1>Properties of the Array Prototype Object</h1>
+
+    <emu-clause id="sec-array.prototype.concat">
+      <h1>Array.prototype.concat ( ..._items_ )</h1>
+      <p>Returns an array containing the array elements of the object followed by the array elements of each argument.</p>
+      <p>When the `concat` method is called, the following steps are taken:</p>
+      <emu-alg>
+        1. Let _O_ be ? ToObject(*this* value).
+        1. Let _A_ be ? ArraySpeciesCreate(_O_, 0).
+        1. Let _n_ be 0.
+        1. Prepend _O_ to _items_.
+        1. For each element _E_ of _items_, do
+          1. <del>Let _spreadable_ be ? IsConcatSpreadable(_E_).</del>
+          1. <ins>If Type(_E_) is Tuple, then</ins>
+            1. <ins>Let _len_ be the length of _E_.[[Sequence]].</ins>
+            1. <ins>If _n_ + _len_ &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.</ins>
+            1. <ins>For each element _subElement_ of _E_.[[Sequence]] in List order, do</ins>
+              1. <ins>Perform ? CreateDataPropertyOrThrow(_A_, ! ToString(𝔽(_n_)), _subElement_).</ins>
+              1. <ins>Set _n_ to _n_ + 1.</ins>
+          1. Else, if <del>_spreadable_</del><ins>? IsConcatSpreadable(_E_)</ins> is *true*, then
+            1. Let _k_ be 0.
+            1. Let _len_ be ? LengthOfArrayLike(_E_).
+            1. If _n_ + _len_ &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+            1. Repeat, while _k_ &lt; _len_,
+              1. Let _P_ be ! ToString(𝔽(_k_)).
+              1. Let _exists_ be ? HasProperty(_E_, _P_).
+              1. If _exists_ is *true*, then
+                1. Let _subElement_ be ? Get(_E_, _P_).
+                1. Perform ? CreateDataPropertyOrThrow(_A_, ! ToString(𝔽(_n_)), _subElement_).
+              1. Set _n_ to _n_ + 1.
+              1. Set _k_ to _k_ + 1.
+          1. Else,
+            1. NOTE: _E_ is added as a single item rather than spread.
+            1. If _n_ &ge; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+            1. Perform ? CreateDataPropertyOrThrow(_A_, ! ToString(𝔽(_n_)), _E_).
+            1. Set _n_ to _n_ + 1.
+        1. Perform ? Set(_A_, *"length"*, 𝔽(_n_), *true*).
+        1. Return _A_.
+      </emu-alg>
+  </emu-clause>
+</emu-clause>
