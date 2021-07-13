@@ -45,39 +45,6 @@
           `...` AssignmentExpression[+In, ?Yield, ?Await]
       </emu-grammar>
 
-      <emu-clause id="sec-record-initializer-static-semantics-propname">
-        <h1>Static Semantics: PropName</h1>
-        <emu-see-also-para op="PropName"></emu-see-also-para>
-        <emu-grammar>RecordPropertyDefinition : IdentifierReference</emu-grammar>
-        <emu-alg>
-          1. Return StringValue of |IdentifierReference|.
-        </emu-alg>
-        <emu-grammar>RecordPropertyDefinition : `...` AssignmentExpression</emu-grammar>
-        <emu-alg>
-          1. Return ~empty~.
-        </emu-alg>
-        <emu-grammar>RecordPropertyDefinition : PropertyName `:` AssignmentExpression</emu-grammar>
-        <emu-alg>
-          1. Return PropName of |PropertyName|.
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-record-semantics-propertynamelist">
-        <h1>Static Semantics: PropertyNameList</h1>
-        <emu-grammar>RecordPropertyDefinitionList : RecordPropertyDefinition</emu-grammar>
-        <emu-alg>
-          1. If PropName of |RecordPropertyDefinition| is ~empty~, return a new empty List.
-          1. Return a new List containing PropName of |RecordPropertyDefinition|.
-        </emu-alg>
-        <emu-grammar>RecordPropertyDefinitionList : RecordPropertyDefinitionList `,` RecordPropertyDefinition</emu-grammar>
-        <emu-alg>
-          1. Let _list_ be PropertyNameList of |RecordPropertyDefinitionList|.
-          1. If PropName of |RecordPropertyDefinition| is ~empty~, return _list_.
-          1. Append PropName of |RecordPropertyDefinition| to the end of _list_.
-          1. Return _list_.
-        </emu-alg>
-      </emu-clause>
-
       <emu-clause id="sec-record-initializer-runtime-semantics-evaluation">
         <h1>Runtime Semantics: Evaluation</h1>
         <emu-grammar>RecordLiteral : `#{` `}`</emu-grammar>
