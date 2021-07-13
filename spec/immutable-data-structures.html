@@ -649,31 +649,6 @@
         <li>has the following properties:</li>
       </ul>
 
-      <emu-clause id="sec-box.containsboxes">
-        <h1>Box.containsBoxes ( _arg_ )</h1>
-        <p>The *containsBoxes* function takes one argument _arg_, and performs the following steps:</p>
-        <emu-alg>
-          1. If Type(_arg_) is not Record, Tuple or Box, throw a *TypeError* exception.
-          1. Return ! RecursiveContainsBoxes(_arg_).
-        </emu-alg>
-
-        <emu-clause id="sec-recursivecontainsboxes" aoid="RecursiveContainsBoxes">
-          <h1>RecursiveContainsBoxes ( _value_ )</h1>
-          <p>The abstract operation RecursiveContainsBoxes takes the argument _value_. It performs the following steps when called:</p>
-          <emu-alg>
-            1. Assert: Type(_value_) is not Object.
-            1. If Type(_value_) is Box, return *true*.
-            1. If Type(_value_) is Record, then
-              1. For each _field_ of _value_.[[Fields]], do
-                1. If ! RecursiveContainsBoxes(_field_.[[Value]]) is *true*, return *true*.
-            1. If Type(_value_) is Tuple,
-              1. For each _item_ of _value_.[[Sequence]], do
-                1. If ! RecursiveContainsBoxes(_item_) is *true*, return *true*.
-            1. Return *false*.
-          </emu-alg>
-        </emu-clause>
-      </emu-clause>
-
       <emu-clause id="sec-box.prototype">
         <h1>Box.prototype</h1>
         <p>The initial value of *Box.prototype* is %Box.prototype%</p>

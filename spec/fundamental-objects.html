@@ -5,6 +5,34 @@
   <emu-clause id="sec-object-objects">
     <h1>Object Objects</h1>
 
+    <emu-clause id="sec-properties-of-the-object-constructor">
+      <h1>Properties of the Object Constructor</h1>
+
+      <emu-clause id="sec-object.containsobject">
+        <h1><ins>Object.containsObject ( _arg_ )</ins></h1>
+        <p>The *containsObject* function takes one argument _arg_, and performs the following steps:</p>
+        <emu-alg>
+          1. Return ! RecursiveContainsObjects(_arg_).
+        </emu-alg>
+
+        <emu-clause id="sec-recursivecontainsobject" aoid="RecursiveContainsObject">
+          <h1><ins>RecursiveContainsObject ( _value_ )</ins></h1>
+          <p>The abstract operation RecursiveContainsObject takes the argument _value_. It performs the following steps when called:</p>
+          <emu-alg>
+            1. If Type(_value_) is Object, return *true*.
+            1. If Type(_value_) is Box, return ! RecursiveContainsObject(_value_.[[Value]]).
+            1. If Type(_value_) is Record, then
+              1. For each _field_ of _value_.[[Fields]], do
+                1. If ! RecursiveContainsObject(_field_.[[Value]]) is *true*, return *true*.
+            1. If Type(_value_) is Tuple,
+              1. For each _item_ of _value_.[[Sequence]], do
+                1. If ! RecursiveContainsObject(_item_) is *true*, return *true*.
+            1. Return *false*.
+          </emu-alg>
+        </emu-clause>
+      </emu-clause>
+    </emu-clause>
+
     <emu-clause id="sec-properties-of-the-object-prototype-object">
       <h1>Properties of the Object Prototype Object</h1>
       <emu-clause id="sec-object.prototype.tostring">
