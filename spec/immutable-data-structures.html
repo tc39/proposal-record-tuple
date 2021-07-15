@@ -359,9 +359,8 @@
           1. Let _items_ be a List whose first element is _T_ and whose subsequent element are, in left to right order, the arguments that were passed to this function invocation.
           1. Repeat, while _items_ is not empty,
             1. Remove the first element from _items_ and let _E_ be the value of the element.
-            1. If Type(_E_) is Tuple, then
-              1. For each element _element_ of _E_.[[Sequence]] in List order, append _element_ to _list_.
-            1. Else, if ? IsConcatSpreadable(_E_) is *true*, then
+            1. Let _spreadable_ be ? IsConcatSpreadable(_E_).
+            1. If _spreadable_ is *true*, then
               1. Let _k_ be 0.
               1. Let _len_ be ? LengthOfArrayLike(_E_).
               1. If _n_ + _len_ &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.
