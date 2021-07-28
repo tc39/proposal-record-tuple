@@ -101,15 +101,15 @@ console.log(user["score"]); // 42
 ## Record & Tuple as Set values
 
 ```js
-const map = new Set([
+const set = new Set([
     #{ x: 0, y: 0 },
     #[1, 1],
 ]);
 
-console.log(map.has(#{ x: 0, y: 0 })); // true
-console.log(map.has(#{ x: 1, y: 1 })); // false
-console.log(map.has(#[0, 0])); // false
-console.log(map.has(#[1, 1])); // true
+console.log(set.has(#{ x: 0, y: 0 })); // true
+console.log(set.has(#{ x: 1, y: 1 })); // false
+console.log(set.has(#[0, 0])); // false
+console.log(set.has(#[1, 1])); // true
 ```
 
 ## Record & Tuple as Map keys
