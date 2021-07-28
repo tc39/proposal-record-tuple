@@ -78,15 +78,15 @@ console.log(admin === #{ name: &quot;danny&quot;, admin: true, score: 42 });</co
 console.log(user.name); // danny
 console.log(user[&quot;score&quot;]); // 42</code></pre>
 <h2 id="record--tuple-as-set-values">Record &amp; Tuple as Set values</h2>
-<pre><code class="language-js">const map = new Set([
+<pre><code class="language-js">const set = new Set([
     #{ x: 0, y: 0 },
     #[1, 1],
 ]);
 
-console.log(map.has(#{ x: 0, y: 0 })); // true
-console.log(map.has(#{ x: 1, y: 1 })); // false
-console.log(map.has(#[0, 0])); // false
-console.log(map.has(#[1, 1])); // true</code></pre>
+console.log(set.has(#{ x: 0, y: 0 })); // true
+console.log(set.has(#{ x: 1, y: 1 })); // false
+console.log(set.has(#[0, 0])); // false
+console.log(set.has(#[1, 1])); // true</code></pre>
 <h2 id="record--tuple-as-map-keys">Record &amp; Tuple as Map keys</h2>
 <pre><code class="language-js">const map = new Map([
     [#{ x: 0, y: 0 }, &quot;origin&quot;],
