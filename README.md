@@ -702,21 +702,6 @@ assert(object.a.foo === "bar");
 
 # FAQ
 
-## What are the performance expectations of these data structures?
-
-This proposal in itself does not make any performance guarantees and does not require specific optimizations in implementations. It is, however, built in a way that some performance optimizations can be made in most cases, if implementers choose to do so.
-
-This proposal is designed to enable classical optimizations for purely functional data structures, including but not limited to:
-
-- Optimizations for making deep equality checks fast:
-  - For returning true quickly, intern ("hash-cons") some data structures
-  - For returning false quickly, maintain a hash up the tree of the contents of some structures
-- Optimizations for manipulating data structures
-  - In some cases, reuse existing data structures (e.g., when manipulated with object spread), similar to ropes or typical implementations of functional data structures
-  - In other cases, as determined by the engine, use a flat representation like existing JavaScript object implementations
-
-These optimizations are analogous to the way that modern JavaScript engines handle string concatenation, with various different internal types of strings. The validity of these optimizations rests on the unobservability of the identity of records and tuples. It's not expected that all engines will act identically with respect to these optimizations, but rather, they will each make decisions about which particular heuristics to use. Before Stage 4 of this proposal, we plan to publish a guide for best practices for cross-engine optimizable use of Records and Tuples, based on the implementation experience that we will have at that point.
-
 ## How can I make a Record or Tuple which is based on an existing one, but with one part changed or added?
 
 In general, the spread operator works well for this:
@@ -822,6 +807,19 @@ const record: readonly Record<string, number> = #{
 };
 const tuple: readonly [number, string] = #[1, "foo"];
 ```
+
+## What are the performance expectations of these data structures?
+
+This proposal does not make any performance guarantees and does not require specific optimizations in implementations. __Based on feedback from implementers, it is expected that they will implement common operations via "linear time" algorithms.__ However, this proposal does not prevent some classical optimizations for purely functional data structures, including but not limited to:
+
+- Optimizations for making deep equality checks fast:
+  - For returning true quickly, intern ("hash-cons") some data structures
+  - For returning false quickly, maintain a hash of the tree of the contents of some structures
+- Optimizations for manipulating data structures
+  - In some cases, reuse existing data structures (e.g., when manipulated with object spread), similar to ropes or typical implementations of functional data structures
+  - In other cases, as determined by the engine, use a flat representation like existing JavaScript object implementations
+
+These optimizations are analogous to the way that modern JavaScript engines handle string concatenation, with various different internal types of strings. The validity of these optimizations rests on the unobservability of the identity of records and tuples. It's not expected that all engines will act identically with respect to these optimizations, but rather, they will each make decisions about which particular heuristics to use. Before Stage 4 of this proposal, we plan to publish a guide for best practices for cross-engine optimizable use of Records and Tuples, based on the implementation experience that we will have at that point.
 
 # Glossary
 
