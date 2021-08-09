@@ -21,14 +21,16 @@
         <emu-alg>
           1. If NewTarget is not *undefined*, throw a *TypeError* exception.
           1. Let _obj_ be ? ToObject(_arg_).
-          1. Let _props_ be ? EnumerableOwnPropertyNames(_obj_, ~key+value~).
+          1. Let _keys_ be ? _obj_.[[OwnPropertyKeys]]().
           1. Let _fields_ be a new empty List.
-          1. For each element _prop_ of _props_,
-            1. Let _name_ be ! GetV(_prop_, `"0"`).
-            1. Let _value_ be ! GetV(_prop_, `"1"`).
-            1. If Type(_value_) is Object, throw a *TypeError* exception.
-            1. Let _field_ be the Record { [[Key]]: _name_, [[Value]]: _value_ }.
-            1. Append _field_ to the end of list _fields_.
+          1. For each element _key_ of _keys_,
+            1. Let _desc_ be ? _obj_.[[GetOwnProperty]](_key_).
+            1. If _desc_ is not *undefined* and _desc_.[[Enumerable]] is *true*, then
+              1. If Type(_key_) is Symbol, throw a *TypeError* exception.
+              1. Let _value_ be ? Get(_obj_, _key_).
+              1. If Type(_value_) is Object, throw a *TypeError* exception.
+              1. Let _field_ be the Record { [[Key]]: _name_, [[Value]]: _value_ }.
+              1. Append _field_ to the end of list _fields_.
           1. Return ! CreateRecord(_fields_).
         </emu-alg>
       </emu-clause>
