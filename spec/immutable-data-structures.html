@@ -281,7 +281,6 @@
           1. If _relativeStart_ &lt; 0, let _k_ be max((_len_ + _relativeStart_), 0); else let _k_ be min(_relativeStart_, _len_).
           1. If _end_ is *undefined*, let _relativeEnd_ be _len_; else let _relativeEnd_ be ? ToInteger(_end_).
           1. If _relativeEnd_ &lt; 0, let _final_ be max((_len_ + _relativeEnd_), 0); else let _final_ be min(_relativeEnd_, _len_).
-          1. Let _count_ be max(_final_ - _k_, 0).
           1. Let _newList_ be a new empty List.
           1. Let _n_ be 0.
           1. Repeat, while _k_ &lt; _final_,

@@ -420,7 +420,7 @@
               <ins>Tuple</ins>
             </td>
             <td>
-              <ins>Return ! TupleToString(_argument_).</ins>
+              <ins>Return ? TupleToString(_argument_).</ins>
             </td>
           </tr>
           <tr>
@@ -484,6 +484,14 @@
             </td>
             <td>
               Return a new Boolean object whose [[BooleanData]] internal slot is set to _argument_. See <emu-xref href="#sec-boolean-objects"></emu-xref> for a description of Boolean objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ins>Box</ins>
+            </td>
+            <td>
+              <ins>Return a new Box object whose [[BoxData]] internal slot is set to _argument_. See <emu-xref href="#sec-box-objects"></emu-xref> for a description of Box objects.</ins>
             </td>
           </tr>
           <tr>
@@ -779,7 +787,7 @@
       <p>This abstract operation AddPropertyIntoRecordEntriesList takes _entries_, _propName_ and _value_ arguments. It is used during a single assignment into a Record literal expression. It performs the following steps when called:</p>
       <emu-alg>
           1. Assert: Type(_entries_) is List.
-          1. Assert: IsProperyKey(_propName_) is *true*.
+          1. Assert: IsPropertyKey(_propName_) is *true*.
           1. If Type(_propName_) is Symbol, throw a *TypeError* exception.
           1. If Type(_value_) is Object, throw a *TypeError* exception.
           1. Add { [[Key]]: _propType_, [[Value]]: _value_ } to _entries_.
