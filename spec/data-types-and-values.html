@@ -9,18 +9,30 @@
       <h1>The Record Type</h1>
       <p>The Record type is the set of all finite mappings from Strings to ECMAScript primitive values including Record and Tuple. Each record value holds an associated [[Fields]] List value which is a list of pairs of the form { [[Key]], [[Value]] } where the [[Key]] is a String and [[Value]] is any primitive value. Entries of [[Fields]] are sorted by [[Key]] in code unit order. The [[Fields]] List and its entries are never modified.</p>
 
-      <emu-clause id="sec-immutable-types-record-tostring">
-        <h1>RecordToString ( _argument_ )</h1>
-        <p>The abstract operation RecordToString takes argument _argument_ (a Record) and convertes _argument_ to a String. It performs the following steps when called:</p>
+      <emu-clause id="sec-immutable-types-record-tostring" type="abstract operation">
+        <h1>
+          RecordToString (
+            _argument_: a Record,
+          )
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It convertes _argument_ to a String.</dd>
+        </dl>
         <emu-alg>
-            1. Assert: Type(_argument_) is Record.
             1. Return *"[object Record]"*.
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-immutable-types-record-equal">
-        <h1>RecordEqual ( _x_, _y_, _elementEqual_ )</h1>
-        <p>The abstract operation RecordEqual takes arguments _x_ (a Record), _y_ (a Record), and _elementEqual_ (an Abstract Closure). It performs the following steps when called:</p>
+      <emu-clause id="sec-immutable-types-record-equal" type="abstract operation">
+        <h1>
+          RecordEqual (
+            _x_: a Record,
+            _y_: a Record,
+            _elementEqual_: an Abstract Closure,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. Let _xList_ be _x_.[[Fields]].
           1. Let _yList_ be _y_.[[Fields]].
@@ -42,9 +54,14 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-immutable-types-record-sameValue">
-        <h1>RecordSameValue ( _x_, _y_ )</h1>
-        <p>The abstract operation RecordSameValue takes arguments _x_ (a Record) and _y_ (a Record). It performs the following steps when called:</p>
+      <emu-clause id="sec-immutable-types-record-sameValue" type="abstract operation">
+        <h1>
+          RecordSameValue (
+            _x_: a Record,
+            _y_: a Record,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
             1. Return ! SameValue(_elementX_, _elementY_).
@@ -52,9 +69,14 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-immutable-types-record-sameValueZero">
-        <h1>RecordSameValueZero ( _x_, _y_ )</h1>
-        <p>The abstract operation RecordSameValueZero takes arguments _x_ (a Record) and _y_ (a Record). It performs the following steps when called:</p>
+      <emu-clause id="sec-immutable-types-record-sameValueZero" type="abstract operation">
+        <h1>
+          RecordSameValueZero (
+            _x_: a Record,
+            _y_: a Record,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
             1. Return ! SameValueZero(_elementX_, _elementY_).
@@ -67,17 +89,27 @@
       <h1>The Tuple Type</h1>
       <p>The Tuple type is the set of all finite and ordered sequences of ECMAScript primitive values including Record and Tuple. Each tuple value holds an associated [[Sequence]] List which is a list of primitive values. The [[Sequence]] List is integer-indexed. The [[Sequence]] List and its values are never modified.</p>
 
-      <emu-clause id="sec-immutable-types-tuple-tostring">
-        <h1>TupleToString ( _argument_ )</h1>
-        <p>The abstract operation TupleToString takes argument _argument_ (a Tuple). It performs the following steps when called:</p>
+      <emu-clause id="sec-immutable-types-tuple-tostring" type="abstract operation">
+        <h1>
+          TupleToString (
+            _argument_: a Tuple,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
             1. Return ? Call(%Array.prototype.join%, _argument_, &laquo; &raquo;).
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-immutable-types-tuple-equal">
-        <h1>TupleEqual ( _x_, _y_, _elementEqual_ )</h1>
-        <p>The abstract operation TupleEqual takes arguments _x_ (a Tuple), _y_ (a Tuple), and _elementEqual_ (an Abstract Closure). It performs the following steps when called:</p>
+      <emu-clause id="sec-immutable-types-tuple-equal" type="abstract operation">
+        <h1>
+          TupleEqual (
+            _x_: a Tuple,
+            _y_: a Tuple,
+            _elementEqual_: an Abstract Closure,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. Let _xList_ be _x_.[[Sequence]].
           1. Let _yList_ be _y_.[[Sequence]].
@@ -94,9 +126,14 @@
         </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-immutable-types-tuple-sameValue">
-        <h1>TupleSameValue ( _x_, _y_ )</h1>
-        <p>The abstract operation TupleSameValue takes arguments _x_ (a Tuple) and _y_ (a Tuple). It performs the following steps when called:</p>
+    <emu-clause id="sec-immutable-types-tuple-sameValue" type="abstract operation">
+        <h1>
+          TupleSameValue (
+            _x_: a Tuple,
+            _y_: a Tuple,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
             1. Return ! SameValue(_elementX_, _elementY_).
@@ -104,9 +141,14 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-immutable-types-tuple-sameValueZero">
-        <h1>TupleSameValueZero ( _x_, _y_ )</h1>
-        <p>The abstract operation TupleSameValueZero takes arguments _x_ (a Tuple) and _y_ (a Tuple). It performs the following steps when called:</p>
+      <emu-clause id="sec-immutable-types-tuple-sameValueZero" type="abstract operation">
+        <h1>
+          TupleSameValueZero (
+            _x_: a Tuple,
+            _y_: a Tuple,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
             1. Return ! SameValueZero(_elementX_, _elementY_).
@@ -120,18 +162,27 @@
       <p>The Box type is the set of all the possible singleton primitive wrappers around any ECMAScript value. Each box value holds an associated [[Value]] containing an ECMAScript value. The [[Value]] internal slot is never modified.</p>
 
 
-      <emu-clause id="sec-ecmascript-language-types-box-tostring">
-        <h1>BoxToString ( _argument_ )</h1>
-        <p>The abstract operation BoxToString takes the argument _argument_ (a Box). It performs the following steps when called:</p>
+      <emu-clause id="sec-ecmascript-language-types-box-tostring" type="abstract operation">
+        <h1>
+          BoxToString (
+            _argument_: a Box,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. Let _valueString_ be ? ToString(_argument_.[[Value]]).
           1. Return the string-concatenation of *"Box("*, _valueString_, and *")"*.
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-ecmascript-language-types-box-samevalue">
-        <h1>BoxSameValue ( _x_, _y_ )</h1>
-        <p>The abstract operation BoxSameValue takes arguments _x_ (a Box) and _y_ (a Box). It performs the following steps when called:</p>
+      <emu-clause id="sec-ecmascript-language-types-box-samevalue" type="abstract operation">
+        <h1>
+          BoxSameValue (
+            _x_: a Box,
+            _y_: a Box,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. Let _xValue_ be _x_.[[Value]].
           1. Let _yValue_ be _y_.[[Value]].
@@ -139,9 +190,14 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-ecmascript-language-types-box-samevaluezero">
-        <h1>BoxSameValueZero ( _x_, _y_ )</h1>
-        <p>The abstract operation BoxSameValueZero takes arguments _x_ (a Box) and _y_ (a Box). It performs the following steps when called:</p>
+      <emu-clause id="sec-ecmascript-language-types-box-samevaluezero" type="abstract operation">
+        <h1>
+          BoxSameValueZero (
+            _x_: a Box,
+            _y_: a Box,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. Let _xValue_ be _x_.[[Value]].
           1. Let _yValue_ be _y_.[[Value]].

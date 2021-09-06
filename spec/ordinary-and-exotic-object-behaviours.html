@@ -14,17 +14,23 @@
 
       <p>Record exotic objects have the same internal slots as ordinary objects. They also have a [[RecordData]] internal slot.</p>
       
-      <emu-clause id="sec-record-exotic-objects-isextensible">
+      <emu-clause id="sec-record-exotic-objects-isextensible" type="internal method">
         <h1>[[IsExtensible]] ()</h1>
-        <p>When the [[IsExtensible]] internal method of a Record exotic object _R_ is called, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Record exotic object</dd>
+        </dl>
         <emu-alg>
           1. Return *false*.
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-record-exotic-objects-getownproperty-p">
+      <emu-clause id="sec-record-exotic-objects-getownproperty-p" type="internal method">
         <h1>[[GetOwnProperty]] ( _P_ )</h1>
-        <p>When the [[GetOwnProperty]] internal method of a Record exotic object _R_ is called with property key _P_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Record exotic object</dd>
+        </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *undefined*.
@@ -34,9 +40,12 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-record-exotic-objects-defineownproperty-p-desc">
+      <emu-clause id="sec-record-exotic-objects-defineownproperty-p-desc" type="internal method">
         <h1>[[DefineOwnProperty]] ( _P_, _Desc_ )</h1>
-        <p>When the [[DefineOwnProperty]] internal method of a Record exotic object _R_ is called with property key _P_, and Property Descriptor _Desc_ the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Record exotic object</dd>
+        </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *false*.
@@ -51,18 +60,20 @@
         </emu-alg>
       </emu-clause>
       
-      <emu-clause id="sec-record-exotic-objects-hasproperty-p">
+      <emu-clause id="sec-record-exotic-objects-hasproperty-p" type="internal method">
         <h1>[[HasProperty]] ( _P_ )</h1>
-        <p>When the [[HasProperty]] internal method of a Record exotic object _R_ is called with property key _P_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Record exotic object</dd>
+        </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. Return ! RecordHasProperty(_R_, _P_).
         </emu-alg>
       </emu-clause>
             
-      <emu-clause id="sec-record-exotic-objects-get-p-receiver">
+      <emu-clause id="sec-record-exotic-objects-get-p-receiver" type="internal method">
         <h1>[[Get]] ( _P_, _Receiver_ )</h1>
-        <p>When the [[Get]] internal method of a Record exotic object _R_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *undefined*.
@@ -72,17 +83,23 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-record-exotic-objects-set-p-receiver">
+      <emu-clause id="sec-record-exotic-objects-set-p-receiver" type="internal method">
         <h1>[[Set]] ( _P_, _Receiver_ )</h1>
-        <p>When the [[Set]] internal method of a Record exotic object _R_ is called with Property Key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Record exotic object</dd>
+        </dl>
         <emu-alg>
           1. Return *false*.
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-record-exotic-objects-delete-p">
+      <emu-clause id="sec-record-exotic-objects-delete-p" type="internal method">
         <h1>[[Delete]] ( _P_ )</h1>
-        <p>When the [[Delete]] internal method of a Record exotic object _R_ is called with property key _P_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Record exotic object</dd>
+        </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. Let _hasProperty_ ? RecordHasProperty( _R_, _P_ ).
@@ -91,9 +108,12 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-record-exotic-objects-ownpropertykeys">
+      <emu-clause id="sec-record-exotic-objects-ownpropertykeys" type="internal method">
         <h1>[[OwnPropertyKeys]] ( )</h1>
-        <p>When the [[OwnPropertyKeys]] internal method of a Record exotic object _R_ is called, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Record exotic object</dd>
+        </dl>
         <emu-alg>
           1. Let _keys_ be a new empty List.
           1. Let _rec_ be _R_.[[RecordData]].
@@ -106,12 +126,17 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-recordcreate" aoid="RecordCreate">
-        <h1>RecordCreate ( _value_ )</h1>
-        <p>This abstract operation RecordCreate takes a _value_ argument. It is used to specify the creation of new Record exotic objects. It performs the following steps when called:</p>
+      <emu-clause id="sec-recordcreate" type="abstract operation">
+        <h1>
+          RecordCreate (
+            _value_: a Record,
+          )
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It is used to specify the creation of new Record exotic objects.</dd>
+        </dl>
         <emu-alg>
-            1. Assert: Type(_value_) is a Record.
-            1. Assert: Type(_value_.[[Fields]]) is a List.
             1. Let _R_ be ! MakeBasicObject(&laquo; [[RecordData]], [[Prototype]] &raquo;).
             1. Set _R_'s essential internal methods to the definitions specified in <emu-xref href="#sec-record-exotic-objects"></emu-xref>.
             1. Set _R_.[[Prototype]] to *null*.
@@ -120,11 +145,15 @@
         </emu-alg>
       </emu-clause>
       
-      <emu-clause id="sec-recordhasproperty-r-p" aoid="RecordHasProperty">
-        <h1>RecordHasProperty ( _R_, _P_ )</h1>
-        <p>This abstract operation RecordHasProperty takes arguments _R_ and _P_. It performs the following steps when called:</p>
+      <emu-clause id="sec-recordhasproperty-r-p" type="abstract operation">
+        <h1>
+          RecordHasProperty (
+            _R_: a Record,
+            _P_: a PropertyKey
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
-          1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *false*.
           1. Let _rec_ be _R_.[[RecordData]].
           1. Assert Type(_rec_) is a Record.
@@ -135,9 +164,14 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-recordget-r-p" aoid="RecordGet">
-        <h1>RecordGet ( _R_, _P_ )</h1>
-        <p>This abstract operation RecordGet takes arguments _R_ and _P_. It performs the following steps when called:</p>
+      <emu-clause id="sec-recordget-r-p" type="abstract operation">
+        <h1>
+          RecordGet (
+            _R_: a Record,
+            _P_: a PropertyKey,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. Assert: _R_ is an Object that has [[RecordData]] internal slot.
           1. Assert: Type(_P_) is String.
@@ -171,7 +205,7 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-tuple-exotic-objects-getownproperty-p">
+      <emu-clause id="sec-tuple-exotic-objects-getownproperty-p" type="internal method">
         <h1>[[GetOwnProperty]] ( _P_ )</h1>
         <p>When the [[GetOwnProperty]] internal method of a Tuple exotic object _T_ is called with property key _P_, the following steps are taken:</p>
         <emu-alg>
@@ -185,9 +219,12 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-tuple-exotic-objects-defineownproperty-p-desc">
+      <emu-clause id="sec-tuple-exotic-objects-defineownproperty-p-desc" type="internal method">
         <h1>[[DefineOwnProperty]] ( _P_, _Desc_ )</h1>
-        <p>When the [[DefineOwnProperty]] internal method of a Tuple exotic object _T_ is called with property key _P_, and Property Descriptor _Desc_ the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Tuple exotic object</dd>
+        </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *false*.
@@ -204,9 +241,12 @@
         </emu-alg>
       </emu-clause>
       
-      <emu-clause id="sec-tuple-exotic-objects-hasproperty-p">
+      <emu-clause id="sec-tuple-exotic-objects-hasproperty-p" type="internal method">
         <h1>[[HasProperty]] ( _P_ )</h1>
-        <p>When the [[HasProperty]] internal method of a Tuple exotic object _T_ is called with property key _P_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Tuple exotic object</dd>
+        </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is not Symbol, then
@@ -217,9 +257,12 @@
         </emu-alg>
       </emu-clause>
             
-      <emu-clause id="sec-tuple-exotic-objects-get-p-receiver">
+      <emu-clause id="sec-tuple-exotic-objects-get-p-receiver" type="internal method">
         <h1>[[Get]] ( _P_, _Receiver_ )</h1>
-        <p>When the [[Get]] internal method of a Tuple exotic object _T_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Tuple exotic object</dd>
+        </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is not Symbol, then
@@ -233,18 +276,24 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-tuple-exotic-objects-set-p-receiver">
+      <emu-clause id="sec-tuple-exotic-objects-set-p-receiver" type="internal method">
         <h1>[[Set]] ( _P_, _Receiver_ )</h1>
-        <p>When the [[Set]] internal method of a Tuple exotic object _T_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Tuple exotic object</dd>
+        </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-tuple-exotic-objects-delete-p">
+      <emu-clause id="sec-tuple-exotic-objects-delete-p" type="internal method">
         <h1>[[Delete]] ( _P_ )</h1>
-        <p>When the [[Delete]] internal method of a Tuple exotic object _T_ is called with property key _P_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Tuple exotic object</dd>
+        </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *true*.
@@ -256,9 +305,12 @@
         </emu-alg>
       </emu-clause>
       
-      <emu-clause id="sec-tuple-exotic-objects-ownpropertykeys">
+      <emu-clause id="sec-tuple-exotic-objects-ownpropertykeys" type="internal method">
         <h1>[[OwnPropertyKeys]] ( )</h1>
-        <p>When the [[OwnPropertyKeys]] internal method of a Record exotic object _T_ is called, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Tuple exotic object</dd>
+        </dl>
         <emu-alg>
           1. Let _keys_ be a new empty List.
           1. Let _tup_ be _T_.[[TupleData]].
@@ -273,38 +325,49 @@
       </emu-clause>
 
       
-      <emu-clause id="sec-tuplecreate" aoid="TupleCreate">
-        <h1>TupleCreate ( _value_ )</h1>
-        <p>This abstract operation TupleCreate takes a _value_ argument. It is used to specify the creation of new Tuple exotic objects. It performs the following steps when called:</p>
+      <emu-clause id="sec-tuplecreate" type="abstract operation">
+        <h1>
+          TupleCreate (
+            _value_: a Tuple,
+          )
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It is used to specify the creation of new Tuple exotic objects.</dd>
+        </dl>
         <emu-alg>
-            1. Assert: Type(_value_) is Tuple.
-            1. Assert: Type(_value_.[[Sequence]]) is List.
-            1. Let _T_ be ! MakeBasicObject(&laquo; [[TupleData]], [[Prototype]] &raquo;).
-            1. Set _T_'s essential internal methods to the definitions specified in <emu-xref href="#sec-tuple-exotic-objects"></emu-xref>.
-            1. Set _T_.[[Prototype]] to %Tuple.prototype%.
-            1. Set _T_.[[TupleData]] to _value_.
-            1. Return _T_.
+          1. Let _T_ be ! MakeBasicObject(&laquo; [[TupleData]], [[Prototype]] &raquo;).
+          1. Set _T_'s essential internal methods to the definitions specified in <emu-xref href="#sec-tuple-exotic-objects"></emu-xref>.
+          1. Set _T_.[[Prototype]] to %Tuple.prototype%.
+          1. Set _T_.[[TupleData]] to _value_.
+          1. Return _T_.
         </emu-alg>
       </emu-clause>
       
-      <emu-clause id="sec-isvalidtupleindex-r-p" aoid="IsValidTupleIndex">
-        <h1>IsValidTupleIndex ( _T_, _numericIndex_ )</h1>
-        <p>This abstract operation IsValidTupleIndex takes arguments _T_ and _numericIndex_. It performs the following steps when called:</p>
+      <emu-clause id="sec-isvalidtupleindex-r-p" type="abstract operation">
+        <h1>
+          IsValidTupleIndex (
+            _T_: a Tuple object,
+            _numericIndex_: an integer,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
-          1. Assert: _T_ is an Object that has [[TupleData]] internal slot.
-          1. Assert: ! IsInteger(_numericIndex_) is *true*.
           1. If _numericIndex_ is *-0*, return *false*.
           1. If _numericIndex_ &lt; 0 or _numericIndex_ &ge; the length of _T_.[[TupleData]].[[Sequence]], return *false*.
           1. Return *true*.
         </emu-alg>
       </emu-clause>
       
-      <emu-clause id="sec-tupleget-r-p" aoid="TupleGet">
-        <h1>TupleGet ( _T_, _numericIndex_ )</h1>
-        <p>This abstract operation TupleGet takes arguments _T_ and _numericIndex_. It performs the following steps when called:</p>
+      <emu-clause id="sec-tupleget-r-p" type="abstract operation">
+        <h1>
+          TupleGet (
+            _T_: a Tuple object,
+            _numericIndex_: an integer,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
-          1. Assert: _T_ is an Object that has [[TupleData]] internal slot.
-          1. Assert: Type(_numericIndex_) is an integer.
           1. Let _tup_ be _T_.[[TupleData]].
           1. If ! IsValidTupleIndex(_numericIndex_) is *false*, return ~empty~.
           1. Let _value_ be the element with index _numericIndex_ in _tup_.[[Sequence]].
@@ -321,33 +384,45 @@
 
       <p>Box exotic objects have the same internal slots as ordinary objects. They also have a [[BoxData]] internal slot.</p>
 
-      <emu-clause id="sec-box-exotic-objects-isextensible">
+      <emu-clause id="sec-box-exotic-objects-isextensible" type="internal method">
         <h1>[[IsExtensible]] ()</h1>
-        <p>When the [[IsExtensible]] internal method of a Box exotic object _T_ is called, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Box exotic object</dd>
+        </dl>
         <emu-alg>
           1. Return *false*.
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-box-exotic-objects-getownproperty-p">
+      <emu-clause id="sec-box-exotic-objects-getownproperty-p" type="internal method">
         <h1>[[GetOwnProperty]] ( _P_ )</h1>
-        <p>When the [[GetOwnProperty]] internal method of a Box exotic object _T_ is called with property key _P_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Box exotic object</dd>
+        </dl>
         <emu-alg>
           1. Return *false*.
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-box-exotic-objects-defineownproperty-p-desc">
+      <emu-clause id="sec-box-exotic-objects-defineownproperty-p-desc" type="internal method">
         <h1>[[DefineOwnProperty]] ( _P_, _Desc_ )</h1>
-        <p>When the [[DefineOwnProperty]] internal method of a Box exotic object _T_ is called with property key _P_, and Property Descriptor _Desc_ the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Box exotic object</dd>
+        </dl>
         <emu-alg>
           1. Return *false*.
         </emu-alg>
       </emu-clause>
       
-      <emu-clause id="sec-box-exotic-objects-hasproperty-p">
+      <emu-clause id="sec-box-exotic-objects-hasproperty-p" type="internal method">
         <h1>[[HasProperty]] ( _P_ )</h1>
-        <p>When the [[HasProperty]] internal method of a Box exotic object _T_ is called with property key _P_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Box exotic object</dd>
+        </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. Let _parent_ be %Box.prototype%.
@@ -355,9 +430,12 @@
         </emu-alg>
       </emu-clause>
             
-      <emu-clause id="sec-box-exotic-objects-get-p-receiver">
+      <emu-clause id="sec-box-exotic-objects-get-p-receiver" type="internal method">
         <h1>[[Get]] ( _P_, _Receiver_ )</h1>
-        <p>When the [[Get]] internal method of a Box exotic object _T_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Box exotic object</dd>
+        </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. Let _parent_ be ? %Box.prototype%.
@@ -365,25 +443,34 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-box-exotic-objects-set-p-receiver">
+      <emu-clause id="sec-box-exotic-objects-set-p-receiver" type="internal method">
         <h1>[[Set]] ( _P_, _Receiver_ )</h1>
-        <p>When the [[Set]] internal method of a Box exotic object _T_ is called with property key _P_ and ECMAScript language value _Receiver_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Box exotic object</dd>
+        </dl>
         <emu-alg>
           1. Return *false*.
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-box-exotic-objects-delete-p">
+      <emu-clause id="sec-box-exotic-objects-delete-p" type="internal method">
         <h1>[[Delete]] ( _P_ )</h1>
-        <p>When the [[Delete]] internal method of a Box exotic object _T_ is called with property key _P_, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Box exotic object</dd>
+        </dl>
         <emu-alg>
           1. Return *true*.
         </emu-alg>
       </emu-clause>
       
-      <emu-clause id="sec-box-exotic-objects-ownpropertykeys">
+      <emu-clause id="sec-box-exotic-objects-ownpropertykeys" type="internal method">
         <h1>[[OwnPropertyKeys]] ( )</h1>
-        <p>When the [[OwnPropertyKeys]] internal method of a Record exotic object _T_ is called, the following steps are taken:</p>
+        <dl class="header">
+          <dt>for</dt>
+          <dd>a Box exotic object</dd>
+        </dl>
         <emu-alg>
           1. Return a new empty List.
         </emu-alg>
