@@ -9,10 +9,17 @@
     <p>The ECMAScript language implicitly performs automatic type conversion as needed. To clarify the semantics of certain constructs it is useful to define a set of conversion abstract operations. The conversion abstract operations are polymorphic; they can accept a value of any ECMAScript language type. But no other specification types are used with these operations.</p>
     <p>The BigInt <ins>, Record, Tuple, and Box</ins> type<ins>s</ins> <del>has</del><ins>have</ins> no implicit conversions in the ECMAScript language; programmers must call BigInt <ins>, Record, Tuple, or Box</ins> explicitly to convert values from other types.</p>
 
-    <emu-clause id="sec-toboolean" aoid="ToBoolean">
-      <h1>ToBoolean ( _argument_ )</h1>
-      <p>The abstract operation ToBoolean takes argument _argument_. It converts _argument_ to a value of type Boolean according to <emu-xref href="#table-10"></emu-xref>:</p>
-      <emu-table id="table-10" caption="ToBoolean Conversions">
+    <emu-clause id="sec-toboolean" type="abstract operation">
+      <h1>
+        ToBoolean (
+          _argument_: unknown,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It converts _argument_ to a value of type Boolean according to <emu-xref href="#table-toboolean-conversions"></emu-xref>:</dd>
+      </dl>
+      <emu-table id="table-toboolean-conversions" caption="ToBoolean Conversions">
         <table>
           <tbody>
           <tr>
@@ -117,10 +124,17 @@
     </emu-clause>
 
 
-    <emu-clause id="sec-tonumber" aoid="ToNumber">
-      <h1>ToNumber ( _argument_ )</h1>
-      <p>The abstract operation ToNumber takes argument _argument_. It converts _argument_ to a value of type Number according to <emu-xref href="#table-11"></emu-xref>:</p>
-      <emu-table id="table-11" caption="ToNumber Conversions">
+    <emu-clause id="sec-tonumber" type="abstract operation">
+      <h1>
+        ToNumber (
+          _argument_: unknown,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It converts _argument_ to a value of type Number according to <emu-xref href="#table-tonumber-conversions"></emu-xref>:</dd>
+      </dl>
+      <emu-table id="table-tonumber-conversions" caption="ToNumber Conversions">
         <table>
           <tbody>
           <tr>
@@ -229,9 +243,16 @@
     </emu-clause>
 
 
-    <emu-clause id="sec-tobigint" aoid="ToBigInt">
-      <h1>ToBigInt ( _argument_ )</h1>
-      <p>The abstract operation ToBigInt takes argument _argument_. It converts _argument_ to a BigInt value, or throws if an implicit conversion from Number would be required. It performs the following steps when called:</p>
+    <emu-clause id="sec-tobigint" type="abstract operation">
+      <h1>
+        ToBigInt (
+          _argument_: unknown,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It converts _argument_ to a BigInt value, or throws if an implicit conversion from Number would be required.</dd>
+      </dl>
       <emu-alg>
         1. Let _prim_ be ? ToPrimitive(_argument_, hint Number).
         1. Return the value that _prim_ corresponds to in <emu-xref href="#table-tobigint"></emu-xref>.
@@ -336,10 +357,17 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-tostring" aoid="ToString">
-      <h1>ToString ( _argument_ )</h1>
-      <p>The abstract operation ToString takes argument _argument_. It converts _argument_ to a value of type String according to <emu-xref href="#table-12"></emu-xref>:</p>
-      <emu-table id="table-12" caption="ToString Conversions">
+    <emu-clause id="sec-tostring" type="abstract operation">
+      <h1>
+        ToString (
+          _argument_: unknown,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It converts _argument_ to a value of type String according to <emu-xref href="#table-tostring-conversions"></emu-xref>:</dd>
+      </dl>
+      <emu-table id="table-tostring-conversions" caption="ToString Conversions">
         <table>
           <tbody>
           <tr>
@@ -448,10 +476,17 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-toobject" aoid="ToObject">
-      <h1>ToObject ( _argument_ )</h1>
-      <p>The abstract operation ToObject takes argument _argument_. It converts _argument_ to a value of type Object according to <emu-xref href="#table-13"></emu-xref>:</p>
-      <emu-table id="table-13" caption="ToObject Conversions">
+    <emu-clause id="sec-toobject" type="abstract operation">
+      <h1>
+        ToObject (
+          _argument_: unknown,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It converts _argument_ to a value of type Object according to <emu-xref href="#table-toobject-conversions"></emu-xref>:</dd>
+      </dl>
+      <emu-table id="table-toobject-conversions" caption="ToObject Conversions">
         <table>
           <tbody>
           <tr>
@@ -567,10 +602,17 @@
   <emu-clause id="sec-testing-and-comparison-operations">
     <h1>Testing and Comparison Operations</h1>
 
-    <emu-clause id="sec-requireobjectcoercible" aoid="RequireObjectCoercible">
-      <h1>RequireObjectCoercible ( _argument_ )</h1>
-      <p>The abstract operation RequireObjectCoercible takes argument _argument_. It throws an error if _argument_ is a value that cannot be converted to an Object using ToObject. It is defined by <emu-xref href="#table-14"></emu-xref>:</p>
-      <emu-table id="table-14" caption="RequireObjectCoercible Results">
+    <emu-clause id="sec-requireobjectcoercible" type="abstract operation">
+      <h1>
+        RequireObjectCoercible (
+          _argument_: unknown,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It throws an error if _argument_ is a value that cannot be converted to an Object using ToObject. It is defined by <emu-xref href="#table-requireobjectcoercible-results"></emu-xref>:</dd>
+      </dl>
+      <emu-table id="table-requireobjectcoercible-results" caption="RequireObjectCoercible Results">
         <table>
           <tbody>
           <tr>
@@ -674,9 +716,17 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-samevalue" aoid="SameValue">
-      <h1>SameValue ( _x_, _y_ )</h1>
-      <p>The abstract operation SameValue takes arguments _x_ (an ECMAScript language value) and _y_ (an ECMAScript language value) and returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean. It performs the following steps when called:</p>
+    <emu-clause id="sec-samevalue" type="abstract operation">
+      <h1>
+        SameValue (
+          _x_: an ECMAScript language value,
+          _y_: an ECMAScript language value,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean.</dd>
+      </dl>
       <emu-alg>
         1. If Type(_x_) is different from Type(_y_), return *false*.
         1. If Type(_x_) is Number or BigInt, then return ! Type(_x_)::sameValue(_x_, _y_).
@@ -691,9 +741,17 @@
       </emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-samevaluezero" aoid="SameValueZero">
-      <h1>SameValueZero ( _x_, _y_ )</h1>
-      <p>The abstract operation SameValueZero takes arguments _x_ (an ECMAScript language value) and _y_ (an ECMAScript language value) and returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean. It performs the following steps when called:</p>
+    <emu-clause id="sec-samevaluezero" type="abstract operation">
+      <h1>
+        SameValueZero (
+          _x_: an ECMAScript language value,
+          _y_: an ECMAScript language value,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean.</dd>
+      </dl>
       <emu-alg>
         1. If Type(_x_) is different from Type(_y_), return *false*.
         1. If Type(_x_) is Number or BigInt, then return ! Type(_x_)::sameValueZero(_x_, _y_).
@@ -708,9 +766,17 @@
       </emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-samevaluenongeneric" aoid="SameValueNonGeneric" oldids="sec-samevaluenongeneric">
-      <h1><del>SameValueNonNumeric</del><ins>SameValueNonGeneric</ins> ( _x_, _y_ )</h1>
-      <p>The abstract operation <del>SameValueNonNumeric</del><ins>SameValueNonGeneric</ins> takes arguments _x_ (an ECMAScript language value) and _y_ (an ECMAScript language value) and returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean. It performs the following steps when called:</p>
+    <emu-clause id="sec-samevaluenongeneric" type="abstract operation" oldids="sec-samevaluenonnumeric sec-samevaluenonnumber">
+      <h1>
+        <del>SameValueNonNumeric</del><ins>SameValueNonGeneric</ins> (
+          _x_: an ECMAScript language value, but not a Number or a BigInt,
+          _y_: an ECMAScript language value, but not a Number or a BigInt,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean.</dd>
+      </dl>
       <emu-alg>
         1. Assert: Type(_x_) is not Number or BigInt.
         1. Assert: Type(_x_) is the same as Type(_y_).
@@ -726,35 +792,52 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-abstract-equality-comparison" aoid="Abstract Equality Comparison">
-      <h1>Abstract Equality Comparison</h1>
-      <p>The comparison _x_ == _y_, where _x_ and _y_ are values, produces *true* or *false*. Such a comparison is performed as follows:</p>
+    <emu-clause id="sec-islooselyequal" type="abstract operation" oldids="sec-abstract-equality-comparison">
+      <h1>
+        IsLooselyEqual (
+          _x_: an ECMAScript language value,
+          _y_: an ECMAScript language value,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It provides the semantics for the comparison _x_ == _y_, returning *true* or *false*.</dd>
+      </dl>
       <emu-alg>
         1. If Type(_x_) is the same as Type(_y_), then
-          1. Return the result of performing Strict Equality Comparison _x_ === _y_.
+          1. Return IsStrictlyEqual(_x_, _y_).
         1. If _x_ is *null* and _y_ is *undefined*, return *true*.
         1. If _x_ is *undefined* and _y_ is *null*, return *true*.
-        1. If Type(_x_) is Number and Type(_y_) is String, return the result of the comparison _x_ == ! ToNumber(_y_).
-        1. If Type(_x_) is String and Type(_y_) is Number, return the result of the comparison ! ToNumber(_x_) == _y_.
+        1. [id="step-abstract-equality-comparison-web-compat-insertion-point"] NOTE: This step is replaced in section <emu-xref href="#sec-IsHTMLDDA-internal-slot-aec"></emu-xref>.
+        1. If Type(_x_) is Number and Type(_y_) is String, return IsLooselyEqual(_x_, ! ToNumber(_y_)).
+        1. If Type(_x_) is String and Type(_y_) is Number, return IsLooselyEqual(! ToNumber(_x_), _y_).
         1. If Type(_x_) is BigInt and Type(_y_) is String, then
           1. Let _n_ be ! StringToBigInt(_y_).
           1. If _n_ is *NaN*, return *false*.
-          1. Return the result of the comparison _x_ == _n_.
-        1. If Type(_x_) is String and Type(_y_) is BigInt, return the result of the comparison _y_ == _x_.
-        1. If Type(_x_) is Boolean, return the result of the comparison ! ToNumber(_x_) == _y_.
-        1. If Type(_y_) is Boolean, return the result of the comparison _x_ == ! ToNumber(_y_).
-        1. If Type(_x_) is either String, Number, BigInt<ins>, Record, Tuple, Box</ins>, or Symbol and Type(_y_) is Object, return the result of the comparison _x_ == ? ToPrimitive(_y_).
-        1. If Type(_x_) is Object and Type(_y_) is either String, Number, BigInt<ins>, Record, Tuple, Box</ins>, or Symbol, return the result of the comparison ? ToPrimitive(_x_) == _y_.
+          1. Return IsLooselyEqual(_x_, _n_).
+        1. If Type(_x_) is String and Type(_y_) is BigInt, return IsLooselyEqual(_y_, _x_).
+        1. If Type(_x_) is Boolean, return IsLooselyEqual(! ToNumber(_x_), _y_).
+        1. If Type(_y_) is Boolean, return IsLooselyEqual(_x_, ! ToNumber(_y_)).
+        1. If Type(_x_) is either String, Number, BigInt<ins>, Record, Tuple, Box</ins>, or Symbol and Type(_y_) is Object, return IsLooselyEqual(_x_, ? ToPrimitive(_y_)).
+        1. If Type(_x_) is Object and Type(_y_) is either String, Number, BigInt<ins>, Record, Tuple, Box</ins>, or Symbol, return IsLooselyEqual(? ToPrimitive(_x_), _y_).
         1. If Type(_x_) is BigInt and Type(_y_) is Number, or if Type(_x_) is Number and Type(_y_) is BigInt, then
-          1. If _x_ or _y_ are any of *NaN*, *+&infin;*, or *-&infin;*, return *false*.
-          1. If the mathematical value of _x_ is equal to the mathematical value of _y_, return *true*; otherwise return *false*.
+          1. If _x_ or _y_ are any of *NaN*, *+&infin;*<sub>𝔽</sub>, or *-&infin;*<sub>𝔽</sub>, return *false*.
+          1. If ℝ(_x_) = ℝ(_y_), return *true*; otherwise return *false*.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-strict-equality-comparison" aoid="Strict Equality Comparison">
-      <h1>Strict Equality Comparison</h1>
-      <p>The comparison _x_ === _y_, where _x_ and _y_ are values, produces *true* or *false*. Such a comparison is performed as follows:</p>
+    <emu-clause id="sec-isstrictlyequal" type="abstract operation" oldids="sec-strict-equality-comparison">
+      <h1>
+        IsStrictlyEqual (
+          _x_: an ECMAScript language value,
+          _y_: an ECMAScript language value,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It provides the semantics for the comparison _x_ === _y_, returning *true* or *false*.</dd>
+      </dl>
       <emu-alg>
         1. If Type(_x_) is different from Type(_y_), return *false*.
         1. If Type(_x_) is Number or BigInt, then
@@ -773,21 +856,35 @@
   <emu-clause id="sec-operations-on-records">
     <h1>Operations on Records</h1>
 
-    <emu-clause id="sec-createrecord" aoid="CreateRecord">
-      <h1>CreateRecord ( _entries_ )</h1>
-      <p>This abstract operation CreateRecord takes a _entries_ argument. It is used to create a Record value ensuring that its fields are sorted. It performs the following steps when called:</p>
+    <emu-clause id="sec-createrecord" type="abstract operation">
+      <h1>
+        CreateRecord (
+          _entries_: a List of { [[Key]], [[Value]] } records,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It is used to create a Record value ensuring that its fields are sorted.</dd>
+      </dl>
       <emu-alg>
         1. Let _sortedEntries_ be a new List containing the values of _entries_ sorted such that, for any entry two entries _a_ and _b_, _a_ will be placed before _b_ if the result of performing Abstract Relational Comparison _a_.[[Key]] < _b_.[[Key]] is *true*.
         1. Return a new Record value whose [[Fields]] is _sortedEntries_.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-addpropertyintorecordentrieslist" aoid="AddPropertyIntoRecordEntriesList">
-      <h1>AddPropertyIntoRecordEntriesList ( _entries_, _propName_, _value_ )</h1>
-      <p>This abstract operation AddPropertyIntoRecordEntriesList takes _entries_, _propName_ and _value_ arguments. It is used during a single assignment into a Record literal expression. It performs the following steps when called:</p>
+    <emu-clause id="sec-addpropertyintorecordentrieslist" type="abstract operation">
+      <h1>
+        AddPropertyIntoRecordEntriesList (
+          _entries_: a List of { [[Key]], [[Value]] } records,
+          _propName_: a property key,
+          _value_: an ECMAScript language value
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It is used during a single assignment into a Record literal expression.</dd>
+      </dl>
       <emu-alg>
-          1. Assert: Type(_entries_) is List.
-          1. Assert: IsPropertyKey(_propName_) is *true*.
           1. If Type(_propName_) is Symbol, throw a *TypeError* exception.
           1. If Type(_value_) is Object, throw a *TypeError* exception.
           1. Add { [[Key]]: _propType_, [[Value]]: _value_ } to _entries_.
@@ -800,11 +897,18 @@
   <emu-clause id="sec-operations-on-tuples">
     <h1>Operations on Tuples</h1>
 
-    <emu-clause id="sec-addvaluetotuplesequencelist" aoid="AddValueToTupleSequenceList">
-      <h1>AddValueToTupleSequenceList ( _sequence_, _value_ )</h1>
-      <p>This abstract operation AddValueToTupleSequenceList takes _sequence_ and _value_ arguments. It is used during a single addition in a Tuple literal expression. It performs the following steps when called:</p>
+    <emu-clause id="sec-addvaluetotuplesequencelist" type="abstract operation">
+      <h1>
+        AddValueToTupleSequenceList (
+          _sequence_: a List of ECMAScript language values,
+          _value_: an ECMAScript language value,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It is used during a single addition in a Tuple literal expression.</dd>
+      </dl>
       <emu-alg>
-          1. Assert: Type(_sequence_) is List.
           1. If Type(_value_) is Object, throw a *TypeError* exception.
           1. Add _value_ to _sequence_.
           1. Return _sequence_.
@@ -812,19 +916,28 @@
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id="sec-istuple" aoid="IsTuple">
-      <h1>Runtime Semantics: IsTuple ( _O_ )</h1>
-      <p>The abstract operation IsTuple takes argument _O_. It performs the following steps when called:</p>
+  <emu-clause id="sec-istuple" type="abstract operation">
+      <h1>
+        IsTuple (
+          _O_: an ECMAScript language value,
+        )
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
         1. If Type(_O_) is Tuple or Type(_O_) is Object and _O_ has a [[TupleData]] internal slot, return *true*.
         2. Return *false*.
       </emu-alg>
     </emu-clause>
-  </emu-clause>
 
-  <emu-clause id="sec-isconcatspreadable" aoid="IsConcatSpreadable">
-      <h1>Runtime Semantics: IsConcatSpreadable ( _O_ )</h1>
-      <p>The abstract operation IsConcatSpreadable takes argument _O_. It performs the following steps when called:</p>
+    <emu-clause id="sec-isconcatspreadable" type="abstract operation">
+      <h1>
+        IsConcatSpreadable (
+          _O_: unknown,
+        )
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
         1. If Type(_O_) is not Object or Tuple, return *false*
         1. Let _spreadable_ be ? Get<ins>V</ins>(_O_, @@isConcatSpreadable).

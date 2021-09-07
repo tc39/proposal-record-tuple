@@ -30,9 +30,16 @@
       <p>This function is the <dfn>%JSONParse%</dfn> intrinsic object.</p>
       <p>The *"length"* property of the `parse` function is 2.</p>
   
-      <emu-clause id="sec-parsejsontext" aoid="ParseJSONText">
-        <h1><ins>Runtime Semantics: ParseJSONText ( _text_ )</ins></h1>
-        <p>The abstract operation ParseJSONText parses a JSON text (a JSON-formatted String) and produces an ECMAScript value.</p>
+      <emu-clause id="sec-parsejsontext" type="abstract operation">
+        <h1>
+          <ins>ParseJSONText</ins> (
+            _text_: an ECMAScript language value
+          )
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It parses a JSON text (a JSON-formatted String) and produces an ECMAScript value.</dd>
+        </dl>
         <emu-alg>
           1. Let _jsonString_ be ? ToString(_text_).
           1. Parse ! UTF16DecodeString(_jsonString_) as a JSON text as specified in ECMA-404. Throw a *SyntaxError* exception if it is not a valid JSON text as defined in that specification.
@@ -56,9 +63,15 @@
       <p>This function is the <dfn>%JSONParseImmutable%</dfn> intrinsic object.</p>
       <p>The *"length"* property of the `parseImmutable` function is 2.</p>
   
-      <emu-clause id="sec-buildimmutableproperty" aoid="BuildImmutableProperty">
-        <h1><ins>Runtime Semantics: BuildImmutableProperty ( _value_, _name_, _reviver_ )</ins></h1>
-        <p>The abstract operation BuildImmutableProperty takes arguments _value_ (a String, Number, Boolean, Null, or an Object), _name_ (a String), and _reviver_ (an optional function object). It performs the following steps when called:</p>
+      <emu-clause id="sec-buildimmutableproperty" type="abstract operation">
+        <h1>
+          <ins>BuildImmutableProperty</ins> (
+            _value_: an ECMAScript language value,
+            _name_: a String,
+            _reviver_: a function object or Undefined,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. If Type(_value_) is Object, then
             1. Let _isArray_ be ? IsArray(_val_).
@@ -111,9 +124,15 @@
     <emu-clause id="sec-json.stringify">
       <h1>JSON.stringify ( _value_ [ , _replacer_ [ , _space_ ] ] )</h1>
 
-      <emu-clause id="sec-serializejsonproperty" aoid="SerializeJSONProperty">
-        <h1>Runtime Semantics: SerializeJSONProperty ( _state_, _key_, _holder_ )</h1>
-        <p>The abstract operation SerializeJSONProperty takes arguments _state_, _key_, and _holder_. It performs the following steps when called:</p>
+      <emu-clause id="sec-serializejsonproperty" type="abstract operation">
+        <h1>
+          SerializeJSONProperty (
+            _state_: unknown,
+            _key_: unknown,
+            _holder_: unknown,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. Let _value_ be ? Get(_holder_, _key_).
           1. <ins>Let _toJSONCalled_ be *false*.</ins>
@@ -163,9 +182,13 @@
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-maybeunwrapbox" aoid="MaybeUnwrapBox">
-        <h1><ins>Runtime Semantics: MaybeUnwrapBox ( _value_ )</ins></h1>
-        <p>The abstract operation MaybeUnwrapBox takes a single argument, _value_. It performs the following steps when called:</p>
+      <emu-clause id="sec-maybeunwrapbox" type="abstract operation">
+        <h1>
+          <ins>MaybeUnwrapBox</ins> (
+            _value_: an ECMAScript language value,
+          )
+        </h1>
+        <dl class="header"></dl>
         <emu-alg>
           1. If Type(_value_) is Object and _value_ has a [[BoxData]] internal slot,
             1. Set _value_ to _value_.[[BoxData]].
