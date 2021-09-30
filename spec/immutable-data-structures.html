@@ -637,7 +637,8 @@
         <p>When the `Box` function is called, the following steps are taken:</p>
         <emu-alg>
           1. If NewTarget is not *undefined*, throw a *TypeError* exception.
-          1. Return a new Box value whose [[Value]] is _arg_.
+          1. Let _realm_ be the current Realm Record.
+          1. Return a new Box value whose [[Value]] is _arg_ and whose [[Realm]] is _realm_.
         </emu-alg>
       </emu-clause>
     </emu-clause>
@@ -680,7 +681,7 @@
         <p>When the `unbox` function is called, the following steps are taken:</p>
         <emu-alg>
           1. Let _box_ be ? thisBoxValue(_value_).
-          1. Return _box_.[[Value]].
+          1. Return ? Unbox(_box_).
         </emu-alg>
       </emu-clause>
 

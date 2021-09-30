@@ -769,8 +769,8 @@
     <emu-clause id="sec-samevaluenongeneric" type="abstract operation" oldids="sec-samevaluenonnumeric sec-samevaluenonnumber">
       <h1>
         <del>SameValueNonNumeric</del><ins>SameValueNonGeneric</ins> (
-          _x_: an ECMAScript language value, but not a Number or a BigInt,
-          _y_: an ECMAScript language value, but not a Number or a BigInt,
+          _x_: an ECMAScript language value, but not a Number, a BigInt, a Record, a Tuple, or a Box,
+          _y_: an ECMAScript language value, but not a Number, a BigInt, a Record, a Tuple, or a Box,
         )
       </h1>
       <dl class="header">
@@ -778,7 +778,6 @@
         <dd>It returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean.</dd>
       </dl>
       <emu-alg>
-        1. Assert: Type(_x_) is not Number or BigInt.
         1. Assert: Type(_x_) is the same as Type(_y_).
         1. If Type(_x_) is Undefined, return *true*.
         1. If Type(_x_) is Null, return *true*.

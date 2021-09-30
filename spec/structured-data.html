@@ -143,15 +143,15 @@
               1. <ins>Set _toJSONCalled_ to *true*.</ins>
           1. If _state_.[[ReplacerFunction]] is not *undefined*, then
             1. Set _value_ to ? Call(_state_.[[ReplacerFunction]], _holder_, &laquo; _key_, _value_ &raquo;).
-            1. <ins>Set _value_ to ! MaybeUnwrapBox(_value_).</ins>
+            1. <ins>Set _value_ to ? MaybeUnwrapBox(_value_).</ins>
           1. <ins>Else,</ins>
-            1. <ins>Set _value_ to ! MaybeUnwrapBox(_value_).</ins>
+            1. <ins>Set _value_ to ? MaybeUnwrapBox(_value_).</ins>
             1. <ins>If _toJSONCalled_ is *false*, then</ins>
               1. <ins>If Type(_value_) is Object or BigInt, then</ins>
               1. <ins>Let _toJSON_ be ? GetV(_value_, *"toJSON"*).</ins>
               1. <ins>If IsCallable(_toJSON_) is *true*, then</ins>
                 1. <ins>Set _value_ to ? Call(_toJSON_, _value_, &laquo; _key_ &raquo;).</ins>
-                1. <ins>Set _value_ to ! MaybeUnwrapBox(_value_).</ins>
+                1. <ins>Set _value_ to ? MaybeUnwrapBox(_value_).</ins>
           1. If Type(_value_) is Object, then
             1. If _value_ has a [[NumberData]] internal slot, then
               1. Set _value_ to ? ToNumber(_value_).
@@ -192,7 +192,7 @@
         <emu-alg>
           1. If Type(_value_) is Object and _value_ has a [[BoxData]] internal slot,
             1. Set _value_ to _value_.[[BoxData]].
-          1. If Type(_value_) is Box, return ! MaybeUnwrapBox(_value_.[[Value]]).
+          1. If Type(_value_) is Box, return ? Unbox(_value_).
           1. Return _value_.
         </emu-alg>
       </emu-clause>
