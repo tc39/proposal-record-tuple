@@ -675,6 +675,15 @@
         </emu-clause>
       </emu-clause>
 
+      <emu-clause id="sec-box.unbox">
+        <h1>Box.unbox ( _value_ )</h1>
+        <p>When the `unbox` function is called, the following steps are taken:</p>
+        <emu-alg>
+          1. Let _box_ be ? thisBoxValue(_value_).
+          1. Return _box_.[[Value]].
+        </emu-alg>
+      </emu-clause>
+
       <emu-clause id="sec-box.prototype">
         <h1>Box.prototype</h1>
         <p>The initial value of *Box.prototype* is %Box.prototype%</p>
@@ -714,14 +723,6 @@
         <h1>Box.prototype [ @@toStringTag ]</h1>
         <p>The initial value of *Box.prototype[@@toStringTag]* is the String value *"Box"*.</p>
         <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
-      </emu-clause>
-      <emu-clause id="sec-box.prototype.unbox">
-        <h1>Box.prototype.unbox ( )</h1>
-        <p>When the `unbox` function is called, the following steps are taken:</p>
-        <emu-alg>
-          1. Let _box_ be ? thisBoxValue(*this* value).
-          1. Return _box_.[[Value]]
-        </emu-alg>
       </emu-clause>
     </emu-clause>
   </emu-clause>
