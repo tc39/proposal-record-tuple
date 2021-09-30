@@ -36,7 +36,7 @@ This proposal introduces two new deeply immutable data structures to JavaScript:
 
 Records and Tuples can only contain primitives and other Records and Tuples. You could think of Records and Tuples as "compound primitives". By being thoroughly based on primitives, not objects, Records and Tuples are deeply immutable.
 
-Additionaly, this proposal introduces a third new primitive type (`Box`) to ergonomically store object references inside Records and Tuples: `#{ prop: Box(object) }`.
+Additionally, this proposal introduces a third new primitive type (`Box`) to ergonomically store object references inside Records and Tuples: `#{ prop: Box(object) }`.
 
 Records and Tuples support comfortable idioms for construction, manipulation and use, similar to working with objects and Arrays. They are compared deeply by their contents, rather than by their identity.
 
