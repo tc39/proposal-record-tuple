@@ -480,7 +480,7 @@
     </emu-clause>
 
     <emu-clause id="sec-array.prototype.withSorted">
-        <h1>Array.prototype.withSorted ( _compareFn_ )</h1>
+        <h1>Tuple.prototype.withSorted ( _compareFn_ )</h1>
 
         <p>Except as described below, implements the same requirements as those of `Array.prototype.sort` as defined in <emu-xref href="#sec-array.prototype.sort"></emu-xref>. The implementation may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse.</p>
         <p>Upon entry, the following steps are performed to initialize evaluation of the `sorted` function. These steps are used instead of the entry steps in <emu-xref href="#sec-array.prototype.sort"></emu-xref>:</p>
@@ -495,7 +495,7 @@
     </emu-clause>
 
     <emu-clause id="sec-array.prototype.withSpliced">
-        <h1>Array.prototype.withSpliced ( _start_, _deleteCount_, ..._items_ )</h1>
+        <h1>Tuple.prototype.withSpliced ( _start_, _deleteCount_, ..._items_ )</h1>
 
         <p>When the `withSpliced` method is called with two or more arguments _start_, _deleteCount_ and zero or more _items_, a new Tuple is returned where the _deleteCount_ elements of the Tuple starting at integer index _start_ are replaced by the arguments _items_.</p>
         <p>The following steps are taken:</p>
