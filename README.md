@@ -503,7 +503,7 @@ The signature of `JSON.parseImmutable` is identical to `JSON.parse` with the onl
 
 - The mechanics of Tuple and Array methods are a bit different; Array methods generally depend on being able to incrementally modify the Array, and are built for subclassing, neither of which would apply for Tuples.
 - Operations which mutate the Array are not supported. For example, there is no `Tuple.prototype.push` method.
-- Tuples include the methods introduces by the [Change Array by copy](https://github.com/tc39/proposal-change-array-by-copy/) proposal, such as `Tuple.prototype.withAt`.
+- Tuples include the methods introduced by the [Change Array by copy](https://github.com/tc39/proposal-change-array-by-copy/) proposal, such as `Tuple.prototype.withAt`.
 
 The [appendix](./NS-Proto-Appendix.md#tuple-prototype) contains a full description of `Tuple`'s prototype.
 
