@@ -678,10 +678,12 @@
 
       <emu-clause id="sec-box.unbox">
         <h1>Box.unbox ( _value_ )</h1>
-        <p>When the `unbox` function is called, the following steps are taken:</p>
+        <p>The `unbox` function extracts the wrapped ECMAScript language value from _box_, throwing if it has been wrapped by a different Realm's Box constructor. When called, the following steps are taken:</p>
         <emu-alg>
           1. Let _box_ be ? thisBoxValue(_value_).
-          1. Return ? Unbox(_box_).
+          1. Let _realm_ be the current Realm Record.
+          1. If _box_.[[Realm]] is not _realm_, throw a TypeError exception.
+          1. Return _box_.[[Value]].
         </emu-alg>
       </emu-clause>
 

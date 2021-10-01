@@ -161,23 +161,6 @@
       <h1>The Box Type</h1>
       <p>The Box type is the set of all the possible singleton primitive wrappers around any ECMAScript value. Each box value holds an associated [[Value]] containing an ECMAScript value and a [[Realm]] containing the Realm of the Box function which created the Box value. The [[Value]] and [[Realm]] internal slots are never modified.</p>
 
-      <emu-clause id="sec-ecmascript-language-types-box-unbox" type="abstract operation">
-        <h1>
-          Unbox (
-            _box_: a Box,
-          )
-        </h1>
-        <dl class="header">
-          <dt>description</dt>
-          <dd>It extracts the boxed Object from _box_, throwing if it has been boxed by a different Realm's Box constructor.</dd>
-        </dl>
-        <emu-alg>
-          1. Let _realm_ be the current Realm Record.
-          1. If _box_.[[Realm]] is not _realm_, throw a TypeError exception.
-          1. Return _box_.[[Value]].
-        </emu-alg>
-      </emu-clause>
-
       <emu-clause id="sec-ecmascript-language-types-box-tostring" type="abstract operation">
         <h1>
           BoxToString (
@@ -186,9 +169,7 @@
         </h1>
         <dl class="header"></dl>
         <emu-alg>
-          1. Let _value_ be ? Unbox(_argument_).
-          1. Let _valueString_ be ? ToString(_value_).
-          1. Return the string-concatenation of *"Box("*, _valueString_, and *")"*.
+          1. Return *"[object Box]"*.
         </emu-alg>
       </emu-clause>
 
