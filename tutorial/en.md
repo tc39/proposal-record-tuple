@@ -20,13 +20,13 @@ This tutorial will guide you through the [Record & Tuple ECMAScript proposal][rt
 
 # Introduction
 
-Hello and thanks for opening this tutorial! The goal of this page is to introduce you to Record & Tuple, an experiemental feature of JavaScript.
+Hello and thanks for opening this tutorial! The goal of this page is to introduce you to Record & Tuple, an experimental feature of JavaScript.
 
 In this tutorial, you'll find multiple examples of programs that can be written using this feature.
 
 ## What is `Record & Tuple`?
 
-A record is analoguous to an Object in JavaScript with the exception that the Record is not an Object but a deeply immutable primitive value.
+A record is analogous to an Object in JavaScript with the exception that the Record is not an Object but a deeply immutable primitive value.
 Likewise, a Tuple is like an Array but is a deeply immutable primitive value.
 
 ### Immutability
@@ -504,13 +504,13 @@ We only scratched the surface of what is possible! As we've seen before you migh
 
 ---
 
-# Keeping track of objects in Record & Tuple
+# Storing objects in Record & Tuple
 
 As we've seen multiple times, Record and Tuple will give you the dreaded `TypeError` every time you need to store an object in them.
 
-If you need to refer to objects anyway, you can indirectly reference them. In this part we're going to see how!
+However, it's often useful to associate mutable objects to an otherwise immutable data structure: this proposal provides an ergonomic way of doing so. In this part we're going to see how!
 
-## Tracking objects through indices
+## The `Box` primitive type
 
 Let's now imagine we have an app state that requires us to keep track of a DOM node:
 
@@ -522,29 +522,33 @@ let appState = #{
 };
 ```
 
-What we can do is modify our example so that it has a `fixed` Record and Tuple part and a `dynamic` part and reference one from the other.
+What we can do is modify our example so that the mutable parts are wrapped in boxes:
 
 ```js
-const appState = {
-    // Record and Tuple only here:
-    fixed: #{ comicSansNodes: #[] },
-    // But here, you can store whatever we need!
-    dynamic: [],
+let appState = #{
+    comicSansNodes: #[
+        Box(document.body),
+    ],
 };
+```
+
+The `Box` constructor returns an opaque reference to replace the `document.body` object, so that `appState` doesn't _really_ contain an object. When we need to get the object corresponding to a box, we can use the `Box.unbox` function:
+
+```js
+let appState = #{ comicSansNodes: #[] };
 
 function addComicSansNode(domNode) {
     // we need to create an index and add it in the dynamic and fixed part
-    const idx = appState.dynamic.length;
-    appState.dynamic.push(domNode);
-    appState.fixed = #{
-        comicSansNodes: appState.fixed.comicSansNodes.pushed(idx),
+    const box = Box(domNode);
+    appState = #{
+        comicSansNodes: appState.fixed.comicSansNodes.pushed(box),
     };
 }
 
 function makeItComic() {
-    for (const idx of appState.fixed.comicSansNodes) {
-        // we need to lookup our index
-        const domNode = appState.dynamic[idx];
+    for (const box of appState.comicSansNodes) {
+        // we need to lookup the object corresponding to our box
+        const domNode = Box.unbox(box);
         domNode.style.fontFamily = '"Comic Sans MS"';
     }
 }
@@ -554,118 +558,13 @@ document.querySelectorAll("*").forEach(n => addComicSansNode(n));
 makeItComic();
 ```
 
-Ok, as an observer you would tell us that this is just an array with extra steps. I'm not going to lie, it's pretty much the case!
-
-The only added advantage is that indices can come from any part of the "fixed" structure, not only the `comicSansNodes` tuple. We have one unique lookup location for our state.
-
-## Tracking objects more globally with a ref bookkeeping system
-
-We don't really want to have to keep track of things so we could instead create a global reference bookkeeping system:
-
-```js
-// A bookkeeper is a structure maintaining that references list for you
-// with easy to use methods
-class RefBookkeeper {
-    constructor() { this._references = []; }
-    ref(obj) {
-        const idx = this._references.length;
-        this._references[idx] = obj;
-        return idx;
-    }
-    deref(sym) { return this._references[sym]; }
-}
-
-globalThis.refs = new RefBookkeeper();
-
-// Back to everything Record & Tuple!
-let appState = #{ comicSansNodes: #[] };
-
-function addComicSansNode(domNode) {
-    // just one state swap to do!
-    appState = #{
-        comicSansNodes: appState.comicSansNodes.pushed(
-            // .ref() creates the index for us, we just have to store it
-            refs.ref(domNode)
-        ),
-    };
-}
-
-function makeItComic() {
-    for (const domNodeRef of appState.comicSansNodes) {
-        // we need to deref the node first
-        const domNode = refs.deref(domNodeRef);
-        domNode.style.fontFamily = '"Comic Sans MS"';
-    }
-}
-
-document.querySelectorAll("*").forEach(n => addComicSansNode(n));
-makeItComic();
-```
-
-This is much more ergonomic, and again, we can start putting refs in other locations of the state, this would work.
-
-That being said there is a huge caveat here: each object we track in the global refs will leak memory. There is no way around it, however, we're working on [Symbols as WeakMap Keys] that should let you create a global bookkeeper that doesn't leak!
-
-```js
-// This snippet will not execute correctly in the playground
-class RefBookkeeper {
-    constructor() { this._references = new WeakMap(); }
-    ref(obj) {
-        // (Simplified; we may want to return an existing symbol if it's already there)
-        const sym = Symbol();
-        this._references.set(sym, obj);
-        return sym;
-    }
-    deref(sym) { return this._references.get(sym); }
-}
-globalThis.refs = new RefBookkeeper();
-```
-
-[Symbols as WeakMap Keys]: https://github.com/tc39/proposal-symbols-as-weakmap-keys
-
-In the meantime, you should associate bookkeepers alongside your structures that need object referencing instead of making them global:
-
-
-```js
-class RefBookkeeper {
-    constructor() { this._references = []; }
-    ref(obj) {
-        const idx = this._references.length;
-        this._references[idx] = obj;
-        return idx;
-    }
-    deref(sym) { return this._references[sym]; }
-}
-
-// now appStateRefs is module-scoped, like appState
-const appStateRefs = new RefBookkeeper();
-
-let appState = #{ comicSansNodes: #[] };
-
-function addComicSansNode(domNode) {
-    appState = #{
-        comicSansNodes: appState.comicSansNodes.pushed(
-            appStateRefs.ref(domNode)
-        ),
-    };
-}
-
-function makeItComic() {
-    for (const domNodeRef of appState.comicSansNodes) {
-        const domNode = appStateRefs.deref(domNodeRef);
-        domNode.style.fontFamily = '"Comic Sans MS"';
-    }
-}
-
-document.querySelectorAll("*").forEach(n => addComicSansNode(n));
-makeItComic();
-```
+Boxes opt-out from the deep equality used when comparing Records and Tuples: two objects are equal if they contain the same value. This means that you can still compare `appState.comicSansNodes === #[Box(document.all)]`, but `Box({ x: 1 }) === Box({ x: 1 })` will be `false` because they contain two different objects.
 
 ## Virtual DOM diffing with Record, Tuple and referencing
 
 This is advanced usage that should be abstracted away by libraries. But if you are interested in this space, you can use both Record & Tuple and object references to compare virtual doms.
 
-The main idea is to go back to the initial index tracking we've seen at the beginning of this chapter: we keep "fixed" and "dynamic" parts separate, the fixed part describes the template part with placeholders that matches indices in the dynamic part. All we need to do is compare fixed parts to know if the general structure changed and just iterate shallowly over the dynamic part to detect changes and use that to only update the parts/placeholders of the tree that changed:
+Since boxes containing different objects are considered different, the whole structure will be considered as new when a box's contents are updated. To work around this behavior, we can use externally-tracked indexes to associate data to our data structure: we keep "fixed" and "dynamic" parts separate, the fixed part describes the template part with placeholders that matches indices in the dynamic part. All we need to do is compare fixed parts to know if the general structure changed and just iterate shallowly over the dynamic part to detect changes and use that to only update the parts/placeholders of the tree that changed:
 
 ```js
 const emptyVdomTree = {
