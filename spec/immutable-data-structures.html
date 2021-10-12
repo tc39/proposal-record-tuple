@@ -223,13 +223,11 @@
           1. If _end_ is *undefined*, let _relativeEnd_ be _len_; else let _relativeEnd_ be ? ToInteger(_end_).
           1. If _relativeEnd_ &lt; 0, let _final_ be max((_len_ + _relativeEnd_), 0); else let _final_ be min(_relativeEnd_, _len_).
           1. Let _newList_ be a new empty List.
-          1. Let _n_ be 0.
           1. Repeat, while _k_ &lt; _final_,
             1. Let _kValue_ be _list_[_k_].
             1. Assert: Type(_kValue_) is not Object.
             1. Append _kValue_ to the end of _newList_.
             1. Set _k_ to _k_ + 1.
-            1. Set _n_ to _n_ + 1.
           1. Return a new Tuple value whose [[Sequence]] is _newList_.
         </emu-alg>
       </emu-clause>
