@@ -53,8 +53,7 @@
         1. If Type(_O_) is not Object <ins>or Tuple</ins>, return *false*.
         1. Let _spreadable_ be ? Get<ins>V</ins>(_O_, @@isConcatSpreadable).
         1. If _spreadable_ is not *undefined*, return ToBoolean(_spreadable_).
-        1. <ins>If ! IsTuple(_O_), return *true*.</ins>
-        1. If ? IsArray(_O_).
+        1. If ? <del>IsArray</del><ins>IsArrayOrTuple</ins>(_O_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -89,8 +88,7 @@
               1. Set _element_ to ? Call(_mapperFunction_, _thisArg_, &laquo; _element_, _sourceIndex_, _source_ &raquo;).
             1. Let _shouldFlatten_ be *false*.
             1. If _depth_ &gt; 0, then
-              1. <ins>If ! IsTuple(_element_) is *true*, set _shouldFlatten_ to *true*.</ins>
-              1. <ins>Else,</ins> set _shouldFlatten_ to ? IsArray(_element_).
+              1. Set _shouldFlatten_ to ? <del>IsArray</del><ins>IsArrayOrTuple</ins>(_element_).
             1. If _shouldFlatten_ is *true*, then
               1. If _depth_ is +&infin;, let _newDepth_ be +&infin;.
               1. Else, let _newDepth_ be _depth_ - 1.
