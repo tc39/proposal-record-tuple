@@ -34,6 +34,39 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-add-entries-from-iterable" type="abstract operation">
+    <h1>
+      AddEntriesFromIterable (
+        _target_: unknown,
+        _iterable_: an ECMAScript language value, but not *undefined* or *null*,
+        _adder_: a function object,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>_adder_ will be invoked, with _target_ as the receiver.</dd>
+    </dl>
+    <emu-alg>
+      1. If IsCallable(_adder_) is *false*, throw a *TypeError* exception.
+      1. Let _iteratorRecord_ be ? GetIterator(_iterable_).
+      1. Repeat,
+        1. Let _next_ be ? IteratorStep(_iteratorRecord_).
+        1. If _next_ is *false*, return _target_.
+        1. Let _nextItem_ be ? IteratorValue(_next_).
+        1. <ins>If Type(_nextItem_) is Tuple, then</ins>
+          1. <ins>Set _nextItem_ to ! ToObject(_nextItem_).</ins>
+        1. <ins>Else</ins> if Type(_nextItem_) is not Object, then
+          1. Let _error_ be ThrowCompletion(a newly created *TypeError* object).
+          1. Return ? IteratorClose(_iteratorRecord_, _error_).
+        1. Let _k_ be Get(_nextItem_, *"0"*).
+        1. IfAbruptCloseIterator(_k_, _iteratorRecord_).
+        1. Let _v_ be Get(_nextItem_, *"1"*).
+        1. IfAbruptCloseIterator(_v_, _iteratorRecord_).
+        1. Let _status_ be Call(_adder_, _target_, &laquo; _k_, _v_ &raquo;).
+        1. IfAbruptCloseIterator(_status_, _iteratorRecord_).
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-array.prototype.concat">
     <h1>Array.prototype.concat ( ..._items_ )</h1>
     <p>Returns an array containing the array elements of the object followed by the array elements of each argument.</p>
