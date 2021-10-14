@@ -7,6 +7,50 @@
 
   <p>This section contains minor spec updates to different algorithms that are not directly related to Records and Tuples, but they make it easier to interact with them by allowing Records and Tuples to be passed in places of Objects and Arrays.</p>
 
+  <emu-clause id="sec-topropertydescriptor" type="abstract operation">
+    <h1>
+      ToPropertyDescriptor (
+        _Obj_: unknown,
+      )
+    </h1>
+    <dl class="header">
+    </dl>
+    <emu-alg>
+      1. <ins>If Type(_Obj_) is Record, set _Obj_ to ! ToObject(_Obj_).</ins>
+      1. <ins>Else</ins> if Type(_Obj_) is not Object, throw a *TypeError* exception.
+      1. Let _desc_ be a new Property Descriptor that initially has no fields.
+      1. Let _hasEnumerable_ be ? HasProperty(_Obj_, *"enumerable"*).
+      1. If _hasEnumerable_ is *true*, then
+        1. Let _enumerable_ be ! ToBoolean(? Get(_Obj_, *"enumerable"*)).
+        1. Set _desc_.[[Enumerable]] to _enumerable_.
+      1. Let _hasConfigurable_ be ? HasProperty(_Obj_, *"configurable"*).
+      1. If _hasConfigurable_ is *true*, then
+        1. Let _configurable_ be ! ToBoolean(? Get(_Obj_, *"configurable"*)).
+        1. Set _desc_.[[Configurable]] to _configurable_.
+      1. Let _hasValue_ be ? HasProperty(_Obj_, *"value"*).
+      1. If _hasValue_ is *true*, then
+        1. Let _value_ be ? Get(_Obj_, *"value"*).
+        1. Set _desc_.[[Value]] to _value_.
+      1. Let _hasWritable_ be ? HasProperty(_Obj_, *"writable"*).
+      1. If _hasWritable_ is *true*, then
+        1. Let _writable_ be ! ToBoolean(? Get(_Obj_, *"writable"*)).
+        1. Set _desc_.[[Writable]] to _writable_.
+      1. Let _hasGet_ be ? HasProperty(_Obj_, *"get"*).
+      1. If _hasGet_ is *true*, then
+        1. Let _getter_ be ? Get(_Obj_, *"get"*).
+        1. If IsCallable(_getter_) is *false* and _getter_ is not *undefined*, throw a *TypeError* exception.
+        1. Set _desc_.[[Get]] to _getter_.
+      1. Let _hasSet_ be ? HasProperty(_Obj_, *"set"*).
+      1. If _hasSet_ is *true*, then
+        1. Let _setter_ be ? Get(_Obj_, *"set"*).
+        1. If IsCallable(_setter_) is *false* and _setter_ is not *undefined*, throw a *TypeError* exception.
+        1. Set _desc_.[[Set]] to _setter_.
+      1. If _desc_.[[Get]] is present or _desc_.[[Set]] is present, then
+        1. If _desc_.[[Value]] is present or _desc_.[[Writable]] is present, throw a *TypeError* exception.
+      1. Return _desc_.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-createlistfromarraylike" type="abstract operation">
     <h1>
       CreateListFromArrayLike (
