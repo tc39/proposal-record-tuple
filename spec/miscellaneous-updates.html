@@ -7,6 +7,32 @@
 
   <p>This section contains minor spec updates to different algorithms that are not directly related to Records and Tuples, but they make it easier to interact with them by allowing Records and Tuples to be passed in places of Objects and Arrays.</p>
 
+  <emu-clause id="sec-createlistfromarraylike" type="abstract operation">
+    <h1>
+      CreateListFromArrayLike (
+        _obj_: unknown,
+        optional _elementTypes_: a List of names of ECMAScript Language Types,
+      )
+    </h1>
+    <emu-note type="editor">
+      These changes allow using a Tuple for the arguments list passed to `Function.prototype.apply`, `Reflect.apply` and `Reflect.construct`.
+    </emu-note>
+    <emu-alg>
+      1. If _elementTypes_ is not present, set _elementTypes_ to &laquo; Undefined, Null, Boolean, String, Symbol, Number, BigInt, <ins>Record, Tuple, Box</ins> Object &raquo;.
+      1. <ins>If Type(_obj_) is Tuple, set _obj_ to ! ToObject(_obj_).</ins>
+      1. <ins>Else</ins> if Type(_obj_) is not Object, throw a *TypeError* exception.
+      1. Let _len_ be ? LengthOfArrayLike(_obj_).
+      1. Let _list_ be a new empty List.
+      1. Let _index_ be 0.
+      1. Repeat, while _index_ &lt; _len_,
+        1. Let _indexName_ be ! ToString(𝔽(_index_)).
+        1. Let _next_ be ? Get(_obj_, _indexName_).
+        1. If Type(_next_) is not an element of _elementTypes_, throw a *TypeError* exception.
+        1. Append _next_ as the last element of _list_.
+        1. Set _index_ to _index_ + 1.
+      1. Return _list_.
+    </emu-alg>
+  </emu-clause>
 
   <emu-clause id="sec-array.prototype.concat">
     <h1>Array.prototype.concat ( ..._items_ )</h1>
