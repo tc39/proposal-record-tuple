@@ -269,6 +269,7 @@
             1. Remove the first element from _items_ and let _E_ be the value of the element.
             1. Let _spreadable_ be ? IsConcatSpreadable(_E_).
             1. If _spreadable_ is *true*, then
+              1. Set _E_ to ! ToObject(_E_).
               1. Let _k_ be 0.
               1. Let _len_ be ? LengthOfArrayLike(_E_).
               1. If _n_ + _len_ &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.

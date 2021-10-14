@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<meta charset="utf8" />
+
+
+<emu-clause id="sec-miscellaneous-updates">
+  <h1>Miscellaneous Updates</h1>
+
+  <p>This section contains minor spec updates to different algorithms that are not directly related to Records and Tuples, but they make it easier to interact with them by allowing Records and Tuples to be passed in places of Objects and Arrays.</p>
+
+
+  <emu-clause id="sec-array.prototype.concat">
+    <h1>Array.prototype.concat ( ..._items_ )</h1>
+    <p>Returns an array containing the array elements of the object followed by the array elements of each argument.</p>
+    <p>When the `concat` method is called, the following steps are taken:</p>
+    <emu-alg>
+      1. Let _O_ be ? ToObject(*this* value).
+      1. Let _A_ be ? ArraySpeciesCreate(_O_, 0).
+      1. Let _n_ be 0.
+      1. Prepend _O_ to _items_.
+      1. For each element _E_ of _items_, do
+        1. Let _spreadable_ be ? IsConcatSpreadable(_E_).
+        1. If _spreadable_ is *true*, then
+          1. <ins>Set _E_ to ! ToObject(_E_).</ins>
+          1. Let _k_ be 0.
+          1. Let _len_ be ? LengthOfArrayLike(_E_).
+          1. If _n_ + _len_ &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _P_ be ! ToString(𝔽(_k_)).
+            1. Let _exists_ be ? HasProperty(_E_, _P_).
+            1. If _exists_ is *true*, then
+              1. Let _subElement_ be ? Get(_E_, _P_).
+              1. Perform ? CreateDataPropertyOrThrow(_A_, ! ToString(𝔽(_n_)), _subElement_).
+            1. Set _n_ to _n_ + 1.
+            1. Set _k_ to _k_ + 1.
+        1. Else,
+          1. NOTE: _E_ is added as a single item rather than spread.
+          1. If _n_ &ge; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+          1. Perform ? CreateDataPropertyOrThrow(_A_, ! ToString(𝔽(_n_)), _E_).
+          1. Set _n_ to _n_ + 1.
+      1. [id="step-array-proto-concat-set-length"] Perform ? Set(_A_, *"length"*, 𝔽(_n_), *true*).
+      1. Return _A_.
+    </emu-alg>
+
+    <emu-clause id="sec-isconcatspreadable" type="abstract operation">
+      <h1>
+        IsConcatSpreadable (
+          _O_: unknown,
+        )
+      </h1>
+      <dl class="header">
+      </dl>
+      <emu-alg>
+        1. If Type(_O_) is not Object <ins>or Tuple</ins>, return *false*.
+        1. Let _spreadable_ be ? Get<ins>V</ins>(_O_, @@isConcatSpreadable).
+        1. If _spreadable_ is not *undefined*, return ToBoolean(_spreadable_).
+        1. <ins>If ! IsTuple(_O_), return *true*.</ins>
+        1. If ? IsArray(_O_).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-array.prototype.flat">
+    <h1>Array.prototype.flat ( [ _depth_ ] )</h1>
+
+    <emu-clause id="sec-flattenintoarray" type="abstract operation">
+      <h1>
+        FlattenIntoArray (
+          _target_: an Object,
+          _source_: an Object <ins>or a Tuple</ins>,
+          _sourceLen_: a non-negative integer,
+          _start_: a non-negative integer,
+          _depth_: a non-negative integer or +&infin;,
+          optional _mapperFunction_: unknown,
+          optional _thisArg_: unknown,
+        )
+      </h1>
+      <dl class="header">
+      </dl>
+      <emu-alg>
+        1. Assert: If _mapperFunction_ is present, then ! IsCallable(_mapperFunction_) is *true*, _thisArg_ is present, and _depth_ is 1.
+        1. Let _targetIndex_ be _start_.
+        1. Let _sourceIndex_ be *+0*<sub>𝔽</sub>.
+        1. Repeat, while ℝ(_sourceIndex_) &lt; _sourceLen_,
+          1. Let _P_ be ! ToString(_sourceIndex_).
+          1. Let _exists_ be ? HasProperty(<del>_source_</del><ins>! ToObject(_source_)</ins>, _P_).
+          1. If _exists_ is *true*, then
+            1. Let _element_ be ? Get<ins>V</ins>(_source_, _P_).
+            1. If _mapperFunction_ is present, then
+              1. Set _element_ to ? Call(_mapperFunction_, _thisArg_, &laquo; _element_, _sourceIndex_, _source_ &raquo;).
+            1. Let _shouldFlatten_ be *false*.
+            1. If _depth_ &gt; 0, then
+              1. <ins>If ! IsTuple(_element_) is *true*, set _shouldFlatten_ to *true*.</ins>
+              1. <ins>Else,</ins> set _shouldFlatten_ to ? IsArray(_element_).
+            1. If _shouldFlatten_ is *true*, then
+              1. If _depth_ is +&infin;, let _newDepth_ be +&infin;.
+              1. Else, let _newDepth_ be _depth_ - 1.
+              1. Let _elementLen_ be ? LengthOfArrayLike(<del>_element_</del><ins>ToObject(_element_)</ins>).
+              1. Set _targetIndex_ to ? FlattenIntoArray(_target_, _element_, _elementLen_, _targetIndex_, _newDepth_).
+            1. Else,
+              1. If _targetIndex_ &ge; 2<sup>53</sup> - 1, throw a *TypeError* exception.
+              1. Perform ? CreateDataPropertyOrThrow(_target_, ! ToString(𝔽(_targetIndex_)), _element_).
+              1. Set _targetIndex_ to _targetIndex_ + 1.
+          1. Set _sourceIndex_ to _sourceIndex_ + *1*<sub>𝔽</sub>.
+        1. Return _targetIndex_.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+</emu-clause>
