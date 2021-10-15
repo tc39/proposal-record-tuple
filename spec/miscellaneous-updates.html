@@ -97,7 +97,7 @@
         1. Let _next_ be ? IteratorStep(_iteratorRecord_).
         1. If _next_ is *false*, return _target_.
         1. Let _nextItem_ be ? IteratorValue(_next_).
-        1. <ins>If Type(_nextItem_) is Tuple, then</ins>
+        1. <ins>If Type(_nextItem_) is Tuple or Record, then</ins>
           1. <ins>Set _nextItem_ to ! ToObject(_nextItem_).</ins>
         1. <ins>Else</ins> if Type(_nextItem_) is not Object, then
           1. Let _error_ be ThrowCompletion(a newly created *TypeError* object).
