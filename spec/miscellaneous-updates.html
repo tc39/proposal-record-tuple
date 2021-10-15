@@ -59,10 +59,10 @@
       )
     </h1>
     <emu-note type="editor">
-      These changes allow using a Tuple for the arguments list passed to `Function.prototype.apply`, `Reflect.apply` and `Reflect.construct`.
+      These changes allow using a Tuple for the arguments list passed to `Function.prototype.apply`, `Reflect.apply`, and `Reflect.construct`.
     </emu-note>
     <emu-alg>
-      1. If _elementTypes_ is not present, set _elementTypes_ to &laquo; Undefined, Null, Boolean, String, Symbol, Number, BigInt, <ins>Record, Tuple, Box</ins> Object &raquo;.
+      1. If _elementTypes_ is not present, set _elementTypes_ to &laquo; Undefined, Null, Boolean, String, Symbol, Number, BigInt, <ins>Record, Tuple, Box,</ins> Object &raquo;.
       1. <ins>If Type(_obj_) is Tuple, set _obj_ to ! ToObject(_obj_).</ins>
       1. <ins>Else</ins> if Type(_obj_) is not Object, throw a *TypeError* exception.
       1. Let _len_ be ? LengthOfArrayLike(_obj_).
