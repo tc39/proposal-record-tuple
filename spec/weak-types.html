@@ -1,0 +1,334 @@
+<emu-clause id="sec-executable-code-and-execution-contexts">
+  <h1>Executable Code and Execution Contexts</h1>
+  <emu-clause id="sec-weakref-processing-model">
+    <h1>Processing Model of WeakRef and FinalizationRegistry Objects</h1>
+    <emu-clause id="sec-weakref-invariants">
+      <h1>Objectives</h1>
+
+      <p>This specification does not make any guarantees that any <del>object</del><ins>value</ins> will be garbage collected. <del>Objects</del><ins>Values</ins> which are not live may be released after long periods of time, or never at all. For this reason, this specification uses the term "may" when describing behaviour triggered by garbage collection.</p>
+
+      <p>The semantics of WeakRefs and FinalizationRegistrys is based on two operations which happen at particular points in time:</p>
+
+      <ul>
+        <li>
+          When `WeakRef.prototype.deref` is called, the referent (if *undefined* is not returned) is kept alive so that subsequent, synchronous accesses also return the <del>object</del><ins>value</ins>. This list is reset when synchronous work is done using the ClearKeptObjects abstract operation.
+        </li>
+
+        <li>
+          When <del>an object</del><ins>a value</ins> which is registered with a FinalizationRegistry becomes unreachable, a call of the FinalizationRegistry's cleanup callback may eventually be made, after synchronous ECMAScript execution completes. The FinalizationRegistry cleanup is performed with the CleanupFinalizationRegistry abstract operation.
+        </li>
+      </ul>
+
+      <p>Neither of these actions (ClearKeptObjects or CleanupFinalizationRegistry) may interrupt synchronous ECMAScript execution. Because hosts may assemble longer, synchronous ECMAScript execution runs, this specification defers the scheduling of ClearKeptObjects and CleanupFinalizationRegistry to the host environment.</p>
+
+      <p>Some ECMAScript implementations include garbage collector implementations which run in the background, including when ECMAScript is idle. Letting the host environment schedule CleanupFinalizationRegistry allows it to resume ECMAScript execution in order to run finalizer work, which may free up held values, reducing overall memory usage.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-unforgeable-values">
+      <h1><ins>Unforgeable values</ins></h1>
+
+      <p>
+        <ins>A value _V_ is <dfn>unforgeable</dfn> if either one of the following conditions is true:</ins>
+        <ul>
+          <li><ins>it is an Object;</ins></li>
+          <li><ins>it is a Box whose [[Value]] internal slot is an unforgeable value;</ins></li>
+          <li><ins>it is a Tuple whose [[Sequence]] internal slot contains at least one unforgeable value;</ins></li>
+          <li><ins>it is a Record whose [[Fields]] internal slot contains at least one { [[Key]], [[Value]] } pair such that [[Value]] is an unforgeable value.</ins></li>
+        </ul>
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-liveness">
+      <h1>Liveness</h1>
+
+      <p>For some set of <del>objects</del><ins>unforgeable values</ins> _S_, a <dfn>hypothetical WeakRef-oblivious</dfn> execution with respect to _S_ is an execution whereby the abstract operation WeakRefDeref of a WeakRef whose referent is an element of _S_ always returns *undefined*.</p>
+
+      <emu-note>
+        WeakRef-obliviousness, together with liveness, capture two notions. One, that a WeakRef itself does not keep an <del>object</del><ins>unforgeable value</ins> alive. Two, that cycles in liveness does not imply that an object is live. To be concrete, if determining _obj_'s liveness depends on determining the liveness of another WeakRef referent, _obj2_, _obj2_'s liveness cannot assume _obj_'s liveness, which would be circular reasoning.
+      </emu-note>
+      <emu-note>
+        WeakRef-obliviousness is defined on sets of <del>objects</del><ins>unforgeable values</ins> instead of individual <del>objects</del><ins>unforgeable values</ins> to account for cycles. If it were defined on individual <del>objects</del><ins>unforgeable values</ins>, then an <del>object</del><ins>unforgeable value</ins> in a cycle will be considered live even though its <del>Object</del> value is only observed via WeakRefs of other <del>objects</del><ins>unforgeable values</ins> in the cycle.
+      </emu-note>
+      <emu-note>
+        Colloquially, we say that an individual <del>object</del><ins>unforgeable value</ins> is live if every set of <del>objects</del><ins>unforgeable values</ins> containing it is live.
+      </emu-note>
+
+      <p>At any point during evaluation, a set of <del>objects</del><ins>unforgeable values</ins> _S_ is considered <dfn>live</dfn> if either of the following conditions is met:</p>
+
+      <ul>
+        <li>
+          Any element in _S_ is included in any agent's [[KeptAlive]] List.
+        </li>
+        <li>
+          There exists a valid future hypothetical WeakRef-oblivious execution with respect to _S_ that observes the <del>Object value</del><ins>identity</ins> of any <del>object</del><ins>unforgeable value</ins> in _S_.
+        </li>
+      </ul>
+      <emu-note>
+        The second condition above intends to capture the intuition that an <del>object</del><ins>unforgeable value</ins> is live if its identity is observable via non-WeakRef means. An <del>object</del><ins>unforgeable value</ins>'s identity may be observed by observing a strict equality comparison between <del>objects</del><ins>unforgeable values</ins> or observing the <del>object</del><ins>unforgeable value</ins> being used as key in a Map.</del>
+      </emu-note>
+      <emu-note>
+        <p>Presence of an <del>object</del><ins>unforgeable value</ins> in a field, an internal slot, or a property does not imply that the <del>object</del><ins>unforgeable value</ins> is live. For example if the <del>object</del><ins>unforgeable value</ins> in question is <ins>an object that is</ins> never passed back to the program, then it cannot be observed.</p>
+
+        <p>This is the case for keys in a WeakMap, members of a WeakSet, as well as the [[WeakRefTarget]] and [[UnregisterToken]] fields of a FinalizationRegistry Cell record.</p>
+
+        <p>The above definition implies that, if a key in a WeakMap is not live, then its corresponding value is not necessarily live either.</p>
+      </emu-note>
+      <emu-note>
+        Liveness is the lower bound for guaranteeing which WeakRefs engines must not empty. Liveness as defined here is undecidable. In practice, engines use conservative approximations such as reachability. There is expected to be significant implementation leeway.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-weakref-execution">
+      <h1>Execution</h1>
+
+      <p>At any time, if a set of <del>objects</del><ins>unforgeable values</ins> _S_ is not live, an ECMAScript implementation may perform the following steps atomically:</p>
+
+      <emu-alg>
+        1. For each element <del>_obj_</del><ins>_val_</ins> of _S_, do
+          1. For each WeakRef _ref_ such that _ref_.[[WeakRefTarget]] is <del>_obj_</del><ins>_val_</ins>, do
+            1. Set _ref_.[[WeakRefTarget]] to ~empty~.
+          1. For each FinalizationRegistry _fg_ such that _fg_.[[Cells]] contains a Record _cell_ such that _cell_.[[WeakRefTarget]] is <del>_obj_</del><ins>_val_</ins>, do
+            1. Set _cell_.[[WeakRefTarget]] to ~empty~.
+            1. Optionally, perform ! HostEnqueueFinalizationRegistryCleanupJob(_fg_).
+          1. For each WeakMap _map_ such that _map_.[[WeakMapData]] contains a Record _r_ such that _r_.[[Key]] is <del>_obj_</del><ins>_val_</ins>, do
+            1. Set _r_.[[Key]] to ~empty~.
+            1. Set _r_.[[Value]] to ~empty~.
+          1. For each WeakSet _set_ such that _set_.[[WeakSetData]] contains <del>_obj_</del><ins>_val_</ins>, do
+            1. Replace the element of _set_.[[WeakSetData]] whose value is <del>_obj_</del><ins>_val_</ins> with an element whose value is ~empty~.
+      </emu-alg>
+
+      <emu-note>
+        <p>Together with the definition of liveness, this clause prescribes legal optimizations that an implementation may apply regarding WeakRefs.</p>
+
+        <p>It is possible to access an object without observing its identity. Optimizations such as dead variable elimination and scalar replacement on properties of non-escaping objects whose identity is not observed are allowed. These optimizations are thus allowed to observably empty WeakRefs that point to such objects.</p>
+
+        <p>On the other hand, if an object's identity is observable, and that object is in the [[WeakRefTarget]] internal slot of a WeakRef, optimizations such as rematerialization that observably empty the WeakRef are prohibited.</p>
+
+        <p>Because calling HostEnqueueFinalizationRegistryCleanupJob is optional, registered objects in a FinalizationRegistry do not necessarily hold that FinalizationRegistry live. Implementations may omit FinalizationRegistry callbacks for any reason, e.g., if the FinalizationRegistry itself becomes dead, or if the application is shutting down.</p>
+      </emu-note>
+      <emu-note>
+        <p>Implementations are not obligated to empty WeakRefs for maximal sets of non-live objects.</p>
+        <p>If an implementation chooses a non-live set _S_ in which to empty WeakRefs, it must empty WeakRefs for all objects in _S_ simultaneously. In other words, an implementation must not empty a WeakRef pointing to an object _obj_ without emptying out other WeakRefs that, if not emptied, could result in an execution that observes the Object value of _obj_.</p>
+      </emu-note>
+    </emu-clause>
+</emu-clause>
+
+<emu-clause id="sec-managing-memory">
+  <h1>Managing Memory</h1>
+
+  <emu-clause id="sec-weak-ref-objects">
+    <h1>WeakRef Objects</h1>
+    <p>A WeakRef is an object that is used to refer to a target <del>object</del><ins>unforgeable value</ins> without preserving it from garbage collection. WeakRefs can be dereferenced to allow access to the target <del>object</del><ins>unforgeable value</ins>, if the target <del>object</del><ins>unforgeable value</ins> hasn't been reclaimed by garbage collection.</p>
+
+    <emu-clause id="sec-weak-ref-constructor">
+      <h1>The WeakRef Constructor</h1>
+
+      <emu-clause id="sec-weak-ref-target">
+        <h1>WeakRef ( _target_ )</h1>
+        <p>When the `WeakRef` function is called with argument _target_, the following steps are taken:</p>
+        <emu-alg>
+          1. If NewTarget is *undefined*, throw a *TypeError* exception.
+          1. If <del>Type(_target_) is not Object</del><ins>_target_ is not an unforgeable value</ins>, throw a *TypeError* exception.
+          1. Let _weakRef_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%WeakRef.prototype%"*, &laquo; [[WeakRefTarget]] &raquo;).
+          1. Perform ! AddToKeptObjects(_target_).
+          1. Set _weakRef_.[[WeakRefTarget]] to _target_.
+          1. Return _weakRef_.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-finalization-registry-objects">
+    <h1>FinalizationRegistry Objects</h1>
+    <p>A FinalizationRegistry is an object that manages registration and unregistration of cleanup operations that are performed when target <del>objects</del><ins>unforgeable values</ins> are garbage collected.</p>
+
+    <emu-clause id="sec-properties-of-the-finalization-registry-prototype-object">
+      <h1>Properties of the FinalizationRegistry Prototype Object</h1>
+
+      <emu-clause id="sec-finalization-registry.prototype.register">
+        <h1>FinalizationRegistry.prototype.register ( _target_, _heldValue_ [ , _unregisterToken_ ] )</h1>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _finalizationRegistry_ be the *this* value.
+          1. Perform ? RequireInternalSlot(_finalizationRegistry_, [[Cells]]).
+          1. If <del>Type(_target_) is not Object</del><ins>_target_ is not an unforgeable value</ins>, throw a *TypeError* exception.
+          1. If SameValue(_target_, _heldValue_) is *true*, throw a *TypeError* exception.
+          1. If <del>Type(_unregisterToken_) is not Object</del><ins>_unregisterToken_ is not an unforgeable value</ins>, then
+            1. If _unregisterToken_ is not *undefined*, throw a *TypeError* exception.
+            1. Set _unregisterToken_ to ~empty~.
+          1. Let _cell_ be the Record { [[WeakRefTarget]]: _target_, [[HeldValue]]: _heldValue_, [[UnregisterToken]]: _unregisterToken_ }.
+          1. Append _cell_ to _finalizationRegistry_.[[Cells]].
+          1. Return *undefined*.
+        </emu-alg>
+
+        <emu-note>
+          <p>Based on the algorithms and definitions in this specification, _cell_.[[HeldValue]] is live when _cell_ is in _finalizationRegistry_.[[Cells]]; however, this does not necessarily mean that _cell_.[[UnregisterToken]] or _cell_.[[Target]] are live. For example, registering an <del>object</del><ins>unforgeable value</ins> with itself as its unregister token would not keep the object alive forever.</p>
+        </emu-note>
+      </emu-clause>
+
+      <emu-clause id="sec-finalization-registry.prototype.unregister">
+        <h1>FinalizationRegistry.prototype.unregister ( _unregisterToken_ )</h1>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _finalizationRegistry_ be the *this* value.
+          1. Perform ? RequireInternalSlot(_finalizationRegistry_, [[Cells]]).
+          1. If <del>Type(_unregisterToken_) is not Object</del><ins>_unregisterToken_ is not an unforgeable value</ins>, throw a *TypeError* exception.
+          1. Let _removed_ be *false*.
+          1. For each Record { [[WeakRefTarget]], [[HeldValue]], [[UnregisterToken]] } _cell_ of _finalizationRegistry_.[[Cells]], do
+            1. If _cell_.[[UnregisterToken]] is not ~empty~ and SameValue(_cell_.[[UnregisterToken]], _unregisterToken_) is *true*, then
+              1. Remove _cell_ from _finalizationRegistry_.[[Cells]].
+              1. Set _removed_ to *true*.
+          1. Return _removed_.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="sec-keyed-collections" oldids="sec-keyed-collection">
+  <h1>Keyed Collections</h1>
+
+  <emu-clause id="sec-weakmap-objects">
+    <h1>WeakMap Objects</h1>
+    <p>WeakMaps are collections of key/value pairs where the keys are <del>objects</del><ins>unforgeable values</ins> and values may be arbitrary ECMAScript language values. A WeakMap may be queried to see if it contains a key/value pair with a specific key, but no mechanism is provided for enumerating the <del>objects</del><ins>unforgeable values</ins> it holds as keys. In certain conditions, <del>objects</del><ins>unforgeable values</ins> which are not live are removed as WeakMap keys, as described in <emu-xref href="#sec-weakref-execution"></emu-xref>.</p>
+    <p>An implementation may impose an arbitrarily determined latency between the time a key/value pair of a WeakMap becomes inaccessible and the time when the key/value pair is removed from the WeakMap. If this latency was observable to ECMAScript program, it would be a source of indeterminacy that could impact program execution. For that reason, an ECMAScript implementation must not provide any means to observe a key of a WeakMap that does not require the observer to present the observed key.</p>
+    <p>WeakMaps must be implemented using either hash tables or other mechanisms that, on average, provide access times that are sublinear on the number of key/value pairs in the collection. The data structure used in this specification is only intended to describe the required observable semantics of WeakMaps. It is not intended to be a viable implementation model.</p>
+    <emu-note>
+      <p>WeakMap and WeakSets are intended to provide mechanisms for dynamically associating state with an <del>object</del><ins>unforgeable value</ins> in a manner that does not &ldquo;leak&rdquo; memory resources if, in the absence of the WeakMap or WeakSet, the <del>object</del><ins>unforgeable value</ins> otherwise became inaccessible and subject to resource reclamation by the implementation's garbage collection mechanisms. This characteristic can be achieved by using an inverted per-object mapping of weak map instances to keys. Alternatively each weak map may internally store its key to value mappings but this approach requires coordination between the WeakMap or WeakSet implementation and the garbage collector. The following references describe mechanism that may be useful to implementations of WeakMap and WeakSets:</p>
+      <p>Barry Hayes. 1997. Ephemerons: a new finalization mechanism. In <i>Proceedings of the 12th ACM SIGPLAN conference on Object-oriented programming, systems, languages, and applications (OOPSLA '97)</i>, A. Michael Berman (Ed.). ACM, New York, NY, USA, 176-183, <a href="http://doi.acm.org/10.1145/263698.263733">http://doi.acm.org/10.1145/263698.263733</a>.</p>
+      <p>Alexandra Barros, Roberto Ierusalimschy, Eliminating Cycles in Weak Tables. Journal of Universal Computer Science - J.UCS, vol. 14, no. 21, pp. 3481-3497, 2008, <a href="http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak">http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak</a></p>
+    </emu-note>
+
+    <emu-clause id="sec-properties-of-the-weakmap-prototype-object">
+      <h1>Properties of the WeakMap Prototype Object</h1>
+
+      <emu-clause id="sec-weakmap.prototype.delete">
+        <h1>WeakMap.prototype.delete ( _key_ )</h1>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _M_ be the *this* value.
+          1. Perform ? RequireInternalSlot(_M_, [[WeakMapData]]).
+          1. Let _entries_ be the List that is _M_.[[WeakMapData]].
+          1. If <del>Type(_key_) is not Object</del><ins>_key_ is not an unforgeable value</ins>, return *false*.
+          1. For each Record { [[Key]], [[Value]] } _p_ of _entries_, do
+            1. If _p_.[[Key]] is not ~empty~ and SameValue(_p_.[[Key]], _key_) is *true*, then
+              1. Set _p_.[[Key]] to ~empty~.
+              1. Set _p_.[[Value]] to ~empty~.
+              1. Return *true*.
+          1. Return *false*.
+        </emu-alg>
+        <emu-note>
+          <p>The value ~empty~ is used as a specification device to indicate that an entry has been deleted. Actual implementations may take other actions such as physically removing the entry from internal data structures.</p>
+        </emu-note>
+      </emu-clause>
+
+      <emu-clause id="sec-weakmap.prototype.get">
+        <h1>WeakMap.prototype.get ( _key_ )</h1>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _M_ be the *this* value.
+          1. Perform ? RequireInternalSlot(_M_, [[WeakMapData]]).
+          1. Let _entries_ be the List that is _M_.[[WeakMapData]].
+          1. If <del>Type(_key_) is not Object</del><ins>_key_ is not an unforgeable value</ins>, return *undefined*.
+          1. For each Record { [[Key]], [[Value]] } _p_ of _entries_, do
+            1. If _p_.[[Key]] is not ~empty~ and SameValue(_p_.[[Key]], _key_) is *true*, return _p_.[[Value]].
+          1. Return *undefined*.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-weakmap.prototype.has">
+        <h1>WeakMap.prototype.has ( _key_ )</h1>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _M_ be the *this* value.
+          1. Perform ? RequireInternalSlot(_M_, [[WeakMapData]]).
+          1. Let _entries_ be the List that is _M_.[[WeakMapData]].
+          1. If <del>Type(_key_) is not Object</del><ins>_key_ is not an unforgeable value</ins>, return *false*.
+          1. For each Record { [[Key]], [[Value]] } _p_ of _entries_, do
+            1. If _p_.[[Key]] is not ~empty~ and SameValue(_p_.[[Key]], _key_) is *true*, return *true*.
+          1. Return *false*.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-weakmap.prototype.set">
+        <h1>WeakMap.prototype.set ( _key_, _value_ )</h1>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _M_ be the *this* value.
+          1. Perform ? RequireInternalSlot(_M_, [[WeakMapData]]).
+          1. Let _entries_ be the List that is _M_.[[WeakMapData]].
+          1. If <del>Type(_key_) is not Object</del><ins>_key_ is not an unforgeable value</ins>, throw a *TypeError* exception.
+          1. For each Record { [[Key]], [[Value]] } _p_ of _entries_, do
+            1. If _p_.[[Key]] is not ~empty~ and SameValue(_p_.[[Key]], _key_) is *true*, then
+              1. Set _p_.[[Value]] to _value_.
+              1. Return _M_.
+          1. Let _p_ be the Record { [[Key]]: _key_, [[Value]]: _value_ }.
+          1. Append _p_ as the last element of _entries_.
+          1. Return _M_.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-weakset-objects">
+    <h1>WeakSet Objects</h1>
+    <p>WeakSets are collections of <del>objects</del><ins>unforgeable values</ins>. A distinct <del>object</del><ins>unforgeable value</ins> may only occur once as an element of a WeakSet's collection. A WeakSet may be queried to see if it contains a specific <del>object</del><ins>unforgeable value</ins>, but no mechanism is provided for enumerating the <del>objects</del><ins>unforgeable values</ins> it holds. In certain conditions, <del>objects</del><ins>unforgeable values</ins> which are not live are removed as WeakSet elements, as described in <emu-xref href="#sec-weakref-execution"></emu-xref>.</p>
+    <p>An implementation may impose an arbitrarily determined latency between the time an <del>object</del><ins>unforgeable value</ins> contained in a WeakSet becomes inaccessible and the time when the <del>object</del><ins>unforgeable value</ins> is removed from the WeakSet. If this latency was observable to ECMAScript program, it would be a source of indeterminacy that could impact program execution. For that reason, an ECMAScript implementation must not provide any means to determine if a WeakSet contains a particular <del>object</del><ins>unforgeable value</ins> that does not require the observer to present the observed <del>object</del><ins>unforgeable value</ins>.</p>
+    <p>WeakSets must be implemented using either hash tables or other mechanisms that, on average, provide access times that are sublinear on the number of elements in the collection. The data structure used in this specification is only intended to describe the required observable semantics of WeakSets. It is not intended to be a viable implementation model.</p>
+
+    <emu-clause id="sec-properties-of-the-weakset-prototype-object">
+      <h1>Properties of the WeakSet Prototype Object</h1>
+      <p>The <dfn>WeakSet prototype object</dfn>:</p>
+
+      <emu-clause id="sec-weakset.prototype.add">
+        <h1>WeakSet.prototype.add ( _value_ )</h1>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _S_ be the *this* value.
+          1. Perform ? RequireInternalSlot(_S_, [[WeakSetData]]).
+          1. If <del>Type(_value_) is not Object</del><ins>_value_ is not an unforgeable value</ins>, throw a *TypeError* exception.
+          1. Let _entries_ be the List that is _S_.[[WeakSetData]].
+          1. For each element _e_ of _entries_, do
+            1. If _e_ is not ~empty~ and SameValue(_e_, _value_) is *true*, then
+              1. Return _S_.
+          1. Append _value_ as the last element of _entries_.
+          1. Return _S_.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-weakset.prototype.delete">
+        <h1>WeakSet.prototype.delete ( _value_ )</h1>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _S_ be the *this* value.
+          1. Perform ? RequireInternalSlot(_S_, [[WeakSetData]]).
+          1. If <del>Type(_value_) is not Object</del><ins>_value_ is not an unforgeable value</ins>, return *false*.
+          1. Let _entries_ be the List that is _S_.[[WeakSetData]].
+          1. For each element _e_ of _entries_, do
+            1. If _e_ is not ~empty~ and SameValue(_e_, _value_) is *true*, then
+              1. Replace the element of _entries_ whose value is _e_ with an element whose value is ~empty~.
+              1. Return *true*.
+          1. Return *false*.
+        </emu-alg>
+        <emu-note>
+          <p>The value ~empty~ is used as a specification device to indicate that an entry has been deleted. Actual implementations may take other actions such as physically removing the entry from internal data structures.</p>
+        </emu-note>
+      </emu-clause>
+
+      <emu-clause id="sec-weakset.prototype.has">
+        <h1>WeakSet.prototype.has ( _value_ )</h1>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _S_ be the *this* value.
+          1. Perform ? RequireInternalSlot(_S_, [[WeakSetData]]).
+          1. Let _entries_ be the List that is _S_.[[WeakSetData]].
+          1. If <del>Type(_value_) is not Object</del><ins>_value_ is not an unforgeable value</ins>, return *false*.
+          1. For each element _e_ of _entries_, do
+            1. If _e_ is not ~empty~ and SameValue(_e_, _value_) is *true*, return *true*.
+          1. Return *false*.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>
