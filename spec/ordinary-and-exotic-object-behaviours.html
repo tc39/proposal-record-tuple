@@ -348,29 +348,29 @@
         <h1>
           IsValidTupleIndex (
             _T_: a Tuple object,
-            _numericIndex_: an integer,
+            _numericIndex_: an integral Number,
           )
         </h1>
         <dl class="header"></dl>
         <emu-alg>
           1. If _numericIndex_ is *-0*, return *false*.
-          1. If _numericIndex_ &lt; 0 or _numericIndex_ &ge; the length of _T_.[[TupleData]].[[Sequence]], return *false*.
+          1. If ℝ(_numericIndex_) &lt; 0 or ℝ(_numericIndex_) &ge; the length of _T_.[[TupleData]].[[Sequence]], return *false*.
           1. Return *true*.
         </emu-alg>
       </emu-clause>
-      
+
       <emu-clause id="sec-tupleget-r-p" type="abstract operation">
         <h1>
           TupleGet (
             _T_: a Tuple object,
-            _numericIndex_: an integer,
+            _numericIndex_: an integral Number,
           )
         </h1>
         <dl class="header"></dl>
         <emu-alg>
           1. Let _tup_ be _T_.[[TupleData]].
           1. If ! IsValidTupleIndex(_numericIndex_) is *false*, return ~empty~.
-          1. Let _value_ be the element with index _numericIndex_ in _tup_.[[Sequence]].
+          1. Let _value_ be the element with index ℝ(_numericIndex_) in _tup_.[[Sequence]].
           1. Return _value_.
         </emu-alg>
       </emu-clause>
