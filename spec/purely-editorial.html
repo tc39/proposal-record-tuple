@@ -1,0 +1,91 @@
+<emu-clause id="sec-purely-editorial">
+	<h1>Purely editorial changes</h1>
+  <p>These changes to unrelated parts of the ecma262 specification are editorial and don't affect the behavior of the modified algorithms. They are refactorings used to share existing algorithm steps with the new algorithms introduced by this proposal.</p>
+
+  <emu-clause id="sec-set-objects">
+    <h1>Set Objects</h1>
+
+    <emu-clause id="sec-set-constructor">
+      <h1>The Set Constructor</h1>
+
+      <emu-clause id="sec-set-iterable">
+        <h1>Set ( [ _iterable_ ] )</h1>
+        <p>When the `Set` function is called with optional argument _iterable_, the following steps are taken:</p>
+        <emu-alg>
+          1. If NewTarget is *undefined*, throw a *TypeError* exception.
+          1. Let _set_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%Set.prototype%"*, &laquo; [[SetData]] &raquo;).
+          1. Set _set_.[[SetData]] to a new empty List.
+          1. If _iterable_ is either *undefined* or *null*, return _set_.
+          1. Let _adder_ be ? Get(_set_, *"add"*).
+          1. <del>If IsCallable(_adder_) is *false*, throw a *TypeError* exception.</del>
+          1. <del>Let _iteratorRecord_ be ? GetIterator(_iterable_).</del>
+          1. <del>Repeat,</del>
+            1. <del>Let _next_ be ? IteratorStep(_iteratorRecord_).</del>
+            1. <del>If _next_ is *false*, return _set_.</del>
+            1. <del>Let _nextValue_ be ? IteratorValue(_next_).</del>
+            1. <del>Let _status_ be Call(_adder_, _set_, &laquo; _nextValue_ &raquo;).</del>
+            1. <del>IfAbruptCloseIterator(_status_, _iteratorRecord_).</del>
+          1. <ins>Return ? AddValuesFromIterable(_set_, _iterable_, _adder_).</ins>
+        </emu-alg>
+
+        <emu-clause id="sec-add-values-from-iterable" type="abstract operation">
+          <h1>
+            <ins>AddValuesFromIterable</ins> (
+              _target_: unknown,
+              _iterable_: an ECMAScript language value, but not *undefined* or *null*,
+              _adder_: a function object,
+              optional _iteratorMethod_: an ECMAScript language value
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>_adder_ will be invoked, with _target_ as the receiver.</dd>
+          </dl>
+          <emu-alg>
+            1. If IsCallable(_adder_) is *false*, throw a *TypeError* exception.
+            1. If _iteratorMethod_ is present, let _iteratorRecord_ be ? GetIterator(_iterable_, ~sync~, _iteratorMethod_).
+            1. Else, let _iteratorRecord_ be ? GetIterator(_iterable_).
+            1. Repeat,
+              1. Let _next_ be ? IteratorStep(_iteratorRecord_).
+              1. If _next_ is *false*, return _target_.
+              1. Let _nextValue_ be ? IteratorValue(_next_).
+              1. Let _status_ be Call(_adder_, _target_, &laquo; _nextValue_ &raquo;).
+              1. IfAbruptCloseIterator(_status_, _iteratorRecord_).
+          </emu-alg>
+          <emu-note>
+            <p>The parameter _iterable_ is expected to be an object that implements an @@iterator method that returns an iterator object. If _iteratorMethod_ is defined, it should have been obtained by getting the @@iterator method of _iterable_.</p>
+          </emu-note>
+        </emu-clause>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-weakset-objects">
+    <h1>WeakSet Objects</h1>
+
+    <emu-clause id="sec-weakset-constructor">
+      <h1>The WeakSet Constructor</h1>
+
+      <emu-clause id="sec-weakset-iterable">
+        <h1>WeakSet ( [ _iterable_ ] )</h1>
+        <p>When the `WeakSet` function is called with optional argument _iterable_, the following steps are taken:</p>
+        <emu-alg>
+          1. If NewTarget is *undefined*, throw a *TypeError* exception.
+          1. Let _set_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%WeakSet.prototype%"*, &laquo; [[WeakSetData]] &raquo;).
+          1. Set _set_.[[WeakSetData]] to a new empty List.
+          1. If _iterable_ is either *undefined* or *null*, return _set_.
+          1. Let _adder_ be ? Get(_set_, *"add"*).
+          1. <del>If IsCallable(_adder_) is *false*, throw a *TypeError* exception.</del>
+          1. <del>Let _iteratorRecord_ be ? GetIterator(_iterable_).</del>
+          1. <del>Repeat,</del>
+            1. <del>Let _next_ be ? IteratorStep(_iteratorRecord_).</del>
+            1. <del>If _next_ is *false*, return _set_.</del>
+            1. <del>Let _nextValue_ be ? IteratorValue(_next_).</del>
+            1. <del>Let _status_ be Call(_adder_, _set_, &laquo; _nextValue_ &raquo;).</del>
+            1. <del>IfAbruptCloseIterator(_status_, _iteratorRecord_).</del>
+          1. <ins>Return ? AddValuesFromIterable(_set_, _iterable_, _adder_).</ins>
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>
