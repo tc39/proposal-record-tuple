@@ -5,7 +5,7 @@
     <emu-clause id="sec-weakref-invariants">
       <h1>Objectives</h1>
 
-      <p>This specification does not make any guarantees that any <del>object</del><ins>value</ins> will be garbage collected. <del>Objects</del><ins>Values</ins> which are not live may be released after long periods of time, or never at all. For this reason, this specification uses the term "may" when describing behaviour triggered by garbage collection.</p>
+      <p>This specification does not make any guarantees that any object will be garbage collected. Objects which are not live may be released after long periods of time, or never at all. For this reason, this specification uses the term "may" when describing behaviour triggered by garbage collection.</p>
 
       <p>The semantics of WeakRefs and FinalizationRegistrys is based on two operations which happen at particular points in time:</p>
 
@@ -15,7 +15,7 @@
         </li>
 
         <li>
-          When <del>an object</del><ins>a value</ins> which is registered with a FinalizationRegistry becomes unreachable, a call of the FinalizationRegistry's cleanup callback may eventually be made, after synchronous ECMAScript execution completes. The FinalizationRegistry cleanup is performed with the CleanupFinalizationRegistry abstract operation.
+          When <del>an object</del><ins>an unforgeable value</ins> which is registered with a FinalizationRegistry becomes unreachable, a call of the FinalizationRegistry's cleanup callback may eventually be made, after synchronous ECMAScript execution completes. The FinalizationRegistry cleanup is performed with the CleanupFinalizationRegistry abstract operation.
         </li>
       </ul>
 
@@ -36,35 +36,49 @@
           <li><ins>it is a Record whose [[Fields]] internal slot contains at least one { [[Key]], [[Value]] } pair such that [[Value]] is an unforgeable value.</ins></li>
         </ul>
       </p>
+
+      <emu-note>
+        <p><ins>Symbols created by the `Symbol()` constructor are technically unforgeable: you cannot recreate one with the same identity. However, they are not covered by this definition and they are not allowed as `WeakMap` keys, `WeakSet` values, or as `WeakRef` and `FinalizationRegistry` targets.</ins></p>
+      </emu-note>
+
+      <p>
+        <ins>An unforgeable value _V_ contains an object _o_ if either one of the following conditions is true:</ins>
+        <ul>
+          <li><ins>_V_ is _o_;</ins></li>
+          <li><ins>_V_ is a Box whose [[Value]] internal slot contains _o_;</ins></li>
+          <li><ins>_V_ is a Tuple whose [[Sequence]] internal slot contains at least one unforgeable value that contains _o_;</ins></li>
+          <li><ins>_V_ is a Record whose [[Fields]] internal slot contains at least one { [[Key]], [[Value]] } pair such that [[Value]] is an unforgeable value that contains _o_.</ins></li>
+        </ul>
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-liveness">
       <h1>Liveness</h1>
 
-      <p>For some set of <del>objects</del><ins>unforgeable values</ins> _S_, a <dfn>hypothetical WeakRef-oblivious</dfn> execution with respect to _S_ is an execution whereby the abstract operation WeakRefDeref of a WeakRef whose referent is an element of _S_ always returns *undefined*.</p>
+      <p>For some set of objects _S_, a <dfn>hypothetical WeakRef-oblivious</dfn> execution with respect to _S_ is an execution whereby the abstract operation WeakRefDeref of a WeakRef whose referent is <ins>an unforgeable value that <emu-xref href="#sec-unforgeable-values">contains</emu-xref></ins> an element of _S_ always returns *undefined*.</p>
 
       <emu-note>
-        WeakRef-obliviousness, together with liveness, capture two notions. One, that a WeakRef itself does not keep an <del>object</del><ins>unforgeable value</ins> alive. Two, that cycles in liveness does not imply that an object is live. To be concrete, if determining _obj_'s liveness depends on determining the liveness of another WeakRef referent, _obj2_, _obj2_'s liveness cannot assume _obj_'s liveness, which would be circular reasoning.
+        WeakRef-obliviousness, together with liveness, capture two notions. One, that a WeakRef itself does not keep an <del>object</del><ins>unforgeable value</ins> alive. Two, that cycles in liveness does not imply that an <del>object</del><ins>unforgeable value</ins> is live. To be concrete, if determining _obj_'s liveness depends on determining the liveness of another WeakRef referent, <del>_obj2_</del><ins>_val2_</ins>, <del>_obj2's liveness</del><ins>the liveness of the objects _obj2_ such that _val2_ <emu-xref href="#sec-unforgeable-values">contains</emu-xref> _obj2_</ins> cannot assume _obj_'s liveness, which would be circular reasoning.
       </emu-note>
       <emu-note>
-        WeakRef-obliviousness is defined on sets of <del>objects</del><ins>unforgeable values</ins> instead of individual <del>objects</del><ins>unforgeable values</ins> to account for cycles. If it were defined on individual <del>objects</del><ins>unforgeable values</ins>, then an <del>object</del><ins>unforgeable value</ins> in a cycle will be considered live even though its <del>Object</del> value is only observed via WeakRefs of other <del>objects</del><ins>unforgeable values</ins> in the cycle.
+        WeakRef-obliviousness is defined on sets of objects instead of individual objects to account for cycles. If it were defined on individual objects, then an object in a cycle will be considered live even though its Object value is only observed via WeakRefs of other <del>objects</del><ins>unforgeable values</ins> in the cycle.
       </emu-note>
       <emu-note>
-        Colloquially, we say that an individual <del>object</del><ins>unforgeable value</ins> is live if every set of <del>objects</del><ins>unforgeable values</ins> containing it is live.
+        Colloquially, we say that an individual object is live if every set of objects containing it is live.
       </emu-note>
 
-      <p>At any point during evaluation, a set of <del>objects</del><ins>unforgeable values</ins> _S_ is considered <dfn>live</dfn> if either of the following conditions is met:</p>
+      <p>At any point during evaluation, a set of objects _S_ is considered <dfn>live</dfn> if either of the following conditions is met:</p>
 
       <ul>
         <li>
           Any element in _S_ is included in any agent's [[KeptAlive]] List.
         </li>
         <li>
-          There exists a valid future hypothetical WeakRef-oblivious execution with respect to _S_ that observes the <del>Object value</del><ins>identity</ins> of any <del>object</del><ins>unforgeable value</ins> in _S_.
+          There exists a valid future hypothetical WeakRef-oblivious execution with respect to _S_ that observes the Object value of any object in _S_.
         </li>
       </ul>
       <emu-note>
-        The second condition above intends to capture the intuition that an <del>object</del><ins>unforgeable value</ins> is live if its identity is observable via non-WeakRef means. An <del>object</del><ins>unforgeable value</ins>'s identity may be observed by observing a strict equality comparison between <del>objects</del><ins>unforgeable values</ins> or observing the <del>object</del><ins>unforgeable value</ins> being used as key in a Map.</del>
+        The second condition above intends to capture the intuition that an object is live if its identity is observable via non-WeakRef means. An object's identity may be observed by observing a strict equality comparison between <del>objects</del><ins>unforgeable values</ins> or observing <del>the object</del><ins>an unforgeable value that <emu-xref href="#sec-unforgeable-values">contains</emu-xref> the object</ins> being used as key in a Map.</del>
       </emu-note>
       <emu-note>
         <p>Presence of an <del>object</del><ins>unforgeable value</ins> in a field, an internal slot, or a property does not imply that the <del>object</del><ins>unforgeable value</ins> is live. For example if the <del>object</del><ins>unforgeable value</ins> in question is <ins>an object that is</ins> never passed back to the program, then it cannot be observed.</p>
@@ -81,20 +95,20 @@
     <emu-clause id="sec-weakref-execution">
       <h1>Execution</h1>
 
-      <p>At any time, if a set of <del>objects</del><ins>unforgeable values</ins> _S_ is not live, an ECMAScript implementation may perform the following steps atomically:</p>
+      <p>At any time, if a set of objects _S_ is not live, an ECMAScript implementation may perform the following steps atomically:</p>
 
       <emu-alg>
-        1. For each element <del>_obj_</del><ins>_val_</ins> of _S_, do
-          1. For each WeakRef _ref_ such that _ref_.[[WeakRefTarget]] is <del>_obj_</del><ins>_val_</ins>, do
+        1. For each element _obj_ of _S_, do
+          1. For each WeakRef _ref_ such that _ref_.[[WeakRefTarget]] <del>is</del><ins><emu-xref href="#sec-unforgeable-values">contains</emu-xref></ins> _obj_, do
             1. Set _ref_.[[WeakRefTarget]] to ~empty~.
-          1. For each FinalizationRegistry _fg_ such that _fg_.[[Cells]] contains a Record _cell_ such that _cell_.[[WeakRefTarget]] is <del>_obj_</del><ins>_val_</ins>, do
+          1. For each FinalizationRegistry _fg_ such that _fg_.[[Cells]] contains a Record _cell_ such that _cell_.[[WeakRefTarget]] <del>is</del><ins><emu-xref href="#sec-unforgeable-values">contains</emu-xref></ins> _obj_, do
             1. Set _cell_.[[WeakRefTarget]] to ~empty~.
             1. Optionally, perform ! HostEnqueueFinalizationRegistryCleanupJob(_fg_).
-          1. For each WeakMap _map_ such that _map_.[[WeakMapData]] contains a Record _r_ such that _r_.[[Key]] is <del>_obj_</del><ins>_val_</ins>, do
+          1. For each WeakMap _map_ such that _map_.[[WeakMapData]] contains a Record _r_ such that _r_.[[Key]] <del>is</del><ins><emu-xref href="#sec-unforgeable-values">contains</emu-xref></ins> _obj_, do
             1. Set _r_.[[Key]] to ~empty~.
             1. Set _r_.[[Value]] to ~empty~.
-          1. For each WeakSet _set_ such that _set_.[[WeakSetData]] contains <del>_obj_</del><ins>_val_</ins>, do
-            1. Replace the element of _set_.[[WeakSetData]] whose value is <del>_obj_</del><ins>_val_</ins> with an element whose value is ~empty~.
+          1. For each WeakSet _set_ such that _set_.[[WeakSetData]] contains <ins>a value _v_ such that _v_ <emu-xref href="#sec-unforgeable-values">contains</emu-xref></ins> _obj_, do
+            1. Replace the element of _set_.[[WeakSetData]] whose value is <del>_obj_</del><ins>_v_</ins> with an element whose value is ~empty~.
       </emu-alg>
 
       <emu-note>
