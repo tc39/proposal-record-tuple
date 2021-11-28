@@ -551,6 +551,12 @@
           1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
       </emu-clause>
+
+      <emu-clause id="sec-reflect-@@tostringtag">
+        <h1>Tuple.prototype [ @@toStringTag ]</h1>
+        <p>The initial value of the @@toStringTag property is the String value *"Tuple"*.</p>
+        <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
+      </emu-clause>
     </emu-clause>
   </emu-clause>
 
@@ -655,6 +661,12 @@
           1. Let _box_ be ? thisBoxValue(*this* value).
           1. Return _box_.[[Value]]
         </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-reflect-@@tostringtag">
+        <h1>Box.prototype [ @@toStringTag ]</h1>
+        <p>The initial value of the @@toStringTag property is the String value *"Box"*.</p>
+        <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
       </emu-clause>
     </emu-clause>
   </emu-clause>
