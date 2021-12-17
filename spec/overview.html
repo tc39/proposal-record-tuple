@@ -17,8 +17,8 @@
       <em>primitive values</em>, or <em>functions</em>. A primitive value is a
       member of one of the following built-in types: <b>Undefined</b>,
       <b>Null</b>, <b>Boolean</b>, <b>Number</b>, <b>BigInt</b>, <b>String</b>,
-      <del>and</del> <b>Symbol<del>;</del></b
-      ><ins>, <b>Record</b>, <b>Tuple</b> and <b>Box</b>;</ins> an object is a member of the
+      <del>and</del> <b>Symbol</b><ins>, <b>Record</b>, and <b>Tuple</b></ins>;
+      an object is a member of the
       built-in type <b>Object</b>; and a function is a callable object. A
       function that is associated with an object via a property is called a
       <em>method</em>.
@@ -28,7 +28,7 @@
       out the definition of ECMAScript entities. These built-in objects include
       the global object; objects that are fundamental to the runtime semantics
       of the language including `Object`, `Function`, `Boolean`, `Symbol`,
-      <ins>`Record`, `Tuple`, `Box`</ins> and various `Error` objects; objects that
+      <ins>`Record`, `Tuple`,</ins> and various `Error` objects; objects that
       represent and manipulate numeric values including `Math`, `Number`, and
       `Date`; the text processing objects `String` and `RegExp`; objects that
       are indexed collections of values including `Array` and nine different
@@ -108,37 +108,6 @@
           A Tuple object is created by using the `Object` function in a call
           expression, supplying an Tuple value as an argument. The resulting
           object has an internal slot whose value is the Tuple value.
-        </p>
-      </emu-note>
-    </emu-clause>
-
-    <emu-clause id="sec-box-value">
-      <h1>Box value</h1>
-      <p>
-        primitive value which contains an ECMAScript value
-      </p>
-      <emu-note>
-        <p>
-          A box is immutable and it will always contain the same reference over time. However, it does not guarantee that mutable referenced values will not be mutated.
-        </p>
-    </emu-clause>
-    <emu-clause id="sec-box-type">
-      <h1>Box type</h1>
-      <p>
-        set of all Box values
-      </p>
-    </emu-clause>
-    <emu-clause id="sec-box-object">
-      <h1>Box object</h1>
-      <p>
-        member of the Object type that is an instance of the standard built-in
-        `Box` constructor
-      </p>
-      <emu-note>
-        <p>
-          A Box object is created by using the `Object` function in a call
-          expression, supplying an Box value as an argument. The resulting
-          object has an internal slot whose value is the Box value.
         </p>
       </emu-note>
     </emu-clause>

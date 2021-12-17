@@ -26,7 +26,6 @@
           1. Else if _O_ has a [[RegExpMatcher]] internal slot, let _builtinTag_ be *"RegExp"*.
           1. <ins>Else if _O_ has a [[RecordData]] internal slot, let _builtinTag_ be *"Record"*.</ins>
           1. <ins>Else if _O_ has a [[TupleData]] internal slot, let _builtinTag_ be *"Tuple"*.</ins>
-          1. <ins>Else if _O_ has a [[BoxData]] internal slot, let _builtinTag_ be *"Box"*.</ins>
           1. Else, let _builtinTag_ be *"Object"*.
           1. Let _tag_ be ? Get(_O_, @@toStringTag).
           1. If Type(_tag_) is not String, set _tag_ to _builtinTag_.
