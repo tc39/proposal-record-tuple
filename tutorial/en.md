@@ -318,7 +318,7 @@ console.log("nb visits", getNbVisits()); // 3
 console.log("nb visits by alice", getNbVisitByUser("alice")); // 2
 ```
 
-As we can see we have some denormalized state that is useful for the kind of lookups we want to do. Maintaining that state can be hard if anything can mutate it. This can happen in large codebases with mutable data structures. Here, we can't change the data structure so we have to mutate the state atomically, t once:
+As we can see we have some denormalized state that is useful for the kind of lookups we want to do. Maintaining that state can be hard if anything can mutate it. This can happen in large codebases with mutable data structures. Here, we can't change the data structure so we have to mutate the state atomically:
 
 ```js
 let appState = #{
@@ -337,7 +337,7 @@ function getNbVisitByUser(username) {
 function visit(username) {
     // we swap our state with the new one
     appState = #{
-        // We use pushed() to return the new appState.userByVisit record
+        // We spread-append to return the new appState.userByVisit record
         // after pushing a new element to it
         userByVisit: appState.userByVisit.pushed(username),
         visitsByUser: #{
@@ -402,7 +402,7 @@ function visit(username) {
     const last = getLastState();
     // we push to the array now
     appStateHistory.push(#{
-        userByVisit: last.userByVisit.pushed(username),
+        userByVisit: #[...last.userByVisit, username],
         visitsByUser: #{
             ...last.visitsByUser,
             [username]: (last.visitsByUser[username] || 0) + 1,
@@ -504,13 +504,11 @@ We only scratched the surface of what is possible! As we've seen before you migh
 
 ---
 
-# Storing objects in Record & Tuple
+# Keeping track of objects in Record & Tuple
 
 As we've seen multiple times, Record and Tuple will give you the dreaded `TypeError` every time you need to store an object in them.
 
-However, it's often useful to associate mutable objects to an otherwise immutable data structure: this proposal provides an ergonomic way of doing so. In this part we're going to see how!
-
-## The `Box` primitive type
+However, it's often useful to associate mutable objects to an otherwise immutable data structure: with the changes planned to be introduced in [Symbols as WeakMap keys](https://github.com/tc39/proposal-symbols-as-weakmap-keys), you can associate symbols that you can put in the Record & Tuple structure while being able to dereference them back from a WeakMap.
 
 Let's now imagine we have an app state that requires us to keep track of a DOM node:
 
@@ -522,114 +520,56 @@ let appState = #{
 };
 ```
 
-What we can do is modify our example so that the mutable parts are wrapped in boxes:
+What we can do is modify our example so that the mutable parts are referenced with a WeakMap:
 
 ```js
+// temporary: until WeakMaps can contain symbols as keys, we need to swap them for Maps
+globalThis.WeakMap = globalThis.Map;
+
+const bodyRef = Symbol("document.body");
+const RefsRegistry = new WeakMap([[bodyRef, document.body]]);
+
 let appState = #{
     comicSansNodes: #[
-        Box(document.body),
+        bodyRef,
     ],
 };
 ```
 
-The `Box` constructor returns an opaque reference to replace the `document.body` object, so that `appState` doesn't _really_ contain an object. When we need to get the object corresponding to a box, we can use the `Box.unbox` function:
+The Symbol constructor acts as an opaque reference to replace the `document.body` object, so that `appState` doesn't _really_ contain an object. When we need to get the object corresponding to a symbol, we can get it in the WeakMap:
 
 ```js
+// temporary: until WeakMaps can contain symbols as keys, we need to swap them for Maps
+globalThis.WeakMap = globalThis.Map;
+
+const RefsRegistry = new WeakMap();
+
 let appState = #{ comicSansNodes: #[] };
 
 function addComicSansNode(domNode) {
-    // we need to create an index and add it in the dynamic and fixed part
-    const box = Box(domNode);
+    const domNodeRef = Symbol("domNode");
+    RefsRegistry.set(domNodeRef, domNode);
     appState = #{
-        comicSansNodes: appState.fixed.comicSansNodes.pushed(box),
+        comicSansNodes: #[...appState.comicSansNodes, domNodeRef],
     };
 }
 
 function makeItComic() {
-    for (const box of appState.comicSansNodes) {
-        // we need to lookup the object corresponding to our box
-        const domNode = Box.unbox(box);
+    for (const domNodeRef of appState.comicSansNodes) {
+        // we need to lookup the object corresponding to our symbol
+        const domNode = RefsRegistry.get(domNodeRef);
         domNode.style.fontFamily = '"Comic Sans MS"';
     }
 }
-
+document.write("<p>Hello <strong>R&T</strong></p>");
 document.querySelectorAll("*").forEach(n => addComicSansNode(n));
 // Finally!
 makeItComic();
 ```
 
-Boxes opt-out from the deep equality used when comparing Records and Tuples: two objects are equal if they contain the same value. This means that you can still compare `appState.comicSansNodes === #[Box(document.all)]`, but `Box({ x: 1 }) === Box({ x: 1 })` will be `false` because they contain two different objects.
-
-## Virtual DOM diffing with Record, Tuple and referencing
-
-This is advanced usage that should be abstracted away by libraries. But if you are interested in this space, you can use both Record & Tuple and object references to compare virtual doms.
-
-Since boxes containing different objects are considered different, the whole structure will be considered as new when a box's contents are updated. To work around this behavior, we can use externally-tracked indexes to associate data to our data structure: we keep "fixed" and "dynamic" parts separate, the fixed part describes the template part with placeholders that matches indices in the dynamic part. All we need to do is compare fixed parts to know if the general structure changed and just iterate shallowly over the dynamic part to detect changes and use that to only update the parts/placeholders of the tree that changed:
-
-```js
-const emptyVdomTree = {
-    fixed: null,
-    dynamic: [],
-};
-
-const initialVdomTree = {
-    fixed: #{
-        type: "ul",
-        children: #[
-            #{ type: "li", text: "Purely Static" },
-            #{ type: "li", text: 0 },
-            1,
-        ]
-    },
-    dynamic: [
-        "Dynamic text",
-        #{ type: "li", text: "Dynamic li" },
-    ]
-};
-
-const updatedVdomTree = {
-    fixed: #{
-        type: "ul",
-        children: #[
-            #{ type: "li", text: "Purely Static" },
-            #{ type: "li", text: 0 },
-            1,
-        ]
-    },
-    dynamic: [
-        "Dynamic text - updated!",
-        #{ type: "li", text: "Dynamic li" },
-    ]
-};
-
-function getChanges(vdom1, vdom2) {
-    if (vdom1.fixed !== vdom2.fixed) {
-        // the whole structure changed,
-        // you should probably rerender everything...
-        return vdom2;
-    }
-    const dynamic = [];
-    for (let i = 0; i < vdom1.dynamic.length; i += 1) {
-        if (vdom1.dynamic[i] !== vdom2.dynamic[i]) {
-            dynamic.push(vdom2.dynamic[i]);
-        } else {
-            dynamic.push(undefined);
-        }
-    }
-    return { dynamic };
-}
-
-console.log(getChanges(emptyVdomTree, initialVdomTree)); // full initial vdom tree
-console.log(getChanges(initialVdomTree, updatedVdomTree)); // only "Dynamic text - updated!"
-```
-
-Then it's up to our rendering library to keep track of which reference corresponds to which path in the dom, but given that info, we can figure out quite rapidly that the only thing that needs to get updated in the second `getChanges` is one piece of text!
-
-This is a concept that still requires some more research and is only shallowly covered in this tutorial to show some more possible advanced usages.
-
 ## Keeping track of objects, looking back!
 
-This part introduced us to more advanced concepts that should be abstracted away most of the time. In general, Record & Tuple is best when used in a functional and immutable way. However, sometimes you need an escape hatch: we chose to make that escape hatch explicit so you can always trust the integrity and equality of your Records and Tuples but the drawback is that you will need to put in more work to reference/dereference non-primitive values.
+This part introduced us to more advanced concepts that will be abstracted away most of the time through upcoming userland libraries. In general, Record & Tuple is best when used in a functional and immutable way. However, sometimes you need an escape hatch: we chose to make that escape hatch explicit so you can always trust the integrity and equality of your Records and Tuples but the drawback is that you will need to put in more work to reference/dereference non-primitive values.
 
 ---
 
