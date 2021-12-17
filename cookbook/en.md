@@ -204,21 +204,32 @@ console.log(fixedUser === #{ name: "danny", stats: #{
 
 ## Array-like manipulations with Tuple by copy
 
-Use the past-tensed array methods for creating a new tuple that would be the result of that operation:
+Using spread operations, `toReversed()`, `toSorted()`, `toSpliced()` or `with()` methods you can mutate tuples by copy:
 
 ```js
-console.log(#[1, 2].pushed(3) === #[1, 2, 3]);
+const base = #[1, 2];
+console.log(#[...base, 3] === #[1, 2, 3]);
 ```
 
 ```js
-console.log(#[1, 2, 3].spliced(0, 1, 4, 5) === #[4, 5, 2, 3]);
+console.log(#[3, 2, 1].toReversed() === #[3, 2, 1]);
 ```
 
 ```js
-console.log(#[3, 2, 1].sorted() === #[1, 2, 3]);
+console.log(#[3, 2, 1].toSorted() === #[1, 2, 3]);
 ```
 
-> Note: at the time of writing this, the playground does not support `Tuple.prototype.sorted`.
+```js
+console.log(#[1, 2, 3].toSpliced(0, 1, 4, 5) === #[4, 5, 2, 3]);
+```
+
+```js
+console.log(#[1, 2, 3].with(1, 5) === #[1, 5, 3]);
+```
+
+> **Note:** at the time of writing this, the playground is not updated to support this `.toX` terminology, please use `.x` instead, for instance: `toSorted` is just `sorted`.
+
+`toReversed()`, `toSorted()`, `toSpliced()` and `with()` will be available on Arrays too with the [Change Array by Copy](https://github.com/tc39/proposal-change-array-by-copy) proposal.
 
 ## Use Object methods on Records
 
