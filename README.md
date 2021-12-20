@@ -36,8 +36,6 @@ This proposal introduces two new deeply immutable data structures to JavaScript:
 
 Records and Tuples can only contain primitives and other Records and Tuples. You could think of Records and Tuples as "compound primitives". By being thoroughly based on primitives, not objects, Records and Tuples are deeply immutable.
 
-Additionally, this proposal introduces a third new primitive type (`Box`) to ergonomically store object references inside Records and Tuples: `#{ prop: Box(object) }`.
-
 Records and Tuples support comfortable idioms for construction, manipulation and use, similar to working with objects and Arrays. They are compared deeply by their contents, rather than by their identity.
 
 JavaScript engines may perform certain optimizations on construction, manipulation and comparison of Records and Tuples, analogous to the way Strings are often implemented in JS engines. (It should be understood that these optimizations are not guaranteed.)
@@ -173,30 +171,9 @@ console.log(ship1Moved === ship2Moved); // true
 
 See [more examples here](./details.md#tuples).
 
-#### `Box`
-
-```js
-const myObject = { x: 2 };
-
-const record = #{
-  name: "rec",
-  data: Box(myObject)
-};
-
-console.log(record.data.unbox().x); // 2
-
-// The box contents are classic mutable objects:
-record.data.unbox().x = 3;
-console.log(myObject.x); // 3
-
-console.log(record === #{ name: "rec", data: Box(myObject) }); // true
-```
-
-> [Open in playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiY29uc3QgbXlPYmplY3QgPSB7IHg6IDIgfTtcblxuY29uc3QgcmVjb3JkID0gI3tcbiAgbmFtZTogXCJyZWNcIixcbiAgZGF0YTogQm94KG15T2JqZWN0KVxufTtcblxuY29uc29sZS5sb2cocmVjb3JkLmRhdGEudW5ib3goKS54KTsgLy8gMlxuXG4vLyBUaGUgYm94IGNvbnRlbnRzIGFyZSBjbGFzc2ljIG11dGFibGUgb2JqZWN0czpcbnJlY29yZC5kYXRhLnVuYm94KCkueCA9IDM7XG5jb25zb2xlLmxvZyhteU9iamVjdC54KTsgLy8gM1xuXG5jb25zb2xlLmxvZyhyZWNvcmQgPT09ICN7IG5hbWU6IFwicmVjXCIsIGRhdGE6IEJveChteU9iamVjdCkgfSk7IC8vIHRydWUiLCJzeW50YXgiOiJoYXNoIiwiZG9tTW9kZSI6ZmFsc2V9)
-
 #### Forbidden cases
 
-As stated before Record & Tuple are deeply immutable: attempting to insert an object in them without first putting it in a Box will result in a TypeError:
+As stated before Record & Tuple are deeply immutable: attempting to insert an object in them will result in a TypeError:
 
 ```js
 const instance = new MyClass();
@@ -218,7 +195,7 @@ Array.from(tuple).map(x => new MyClass(x))
 
 This defines the new pieces of syntax being added to the language with this proposal.
 
-We define a record or tuple expression by using the `#` modifier in front of otherwise normal object or array expressions. There is no syntax to create box values.
+We define a record or tuple expression by using the `#` modifier in front of otherwise normal object or array expressions.
 
 #### Examples
 
@@ -267,21 +244,7 @@ Records and Tuples may only contain primitives and other Records and Tuples. Att
 ```js
 const obj = {};
 const record = #{ prop: obj }; // TypeError: Record may only contain primitive values
-const record2 = #{ prop: Box(obj) }; // ok
 ```
-
-<!--
-Boxes may only contain objects or functions. Attempting to create a `Box` that contains a primitive throws a `TypeError`.
-```js
-Box({}); // ok
-Box(function () {}); // ok
-
-Box("string"); // TypeError
-Box(null); // TypeError
-Box(#{}); // TypeError
-Box(Box({})); // TypeError
-```
--->
 
 # Equality
 
@@ -314,13 +277,6 @@ If their structure and contents are deeply identical, then `Record` and `Tuple` 
 - `==`, `===` and SameValueZero treat `-0` with `0` as equal
 
 Note that `==` and `===` are more direct about other kinds of values nested in Records and Tuples--returning `true` if and only if the contents are identical (with the exception of `0`/`-0`). This directness has implications for `NaN` as well as comparisons across types. See examples below.
-
-Two boxes are considered equal if they contain the same object:
-```js
-const obj = {};
-assert(Box(obj) === Box(obj));
-assert(Box({}) !== Box({}));
-```
 
 See further discussion in [#65](https://github.com/tc39/proposal-record-tuple/issues/65).
 
@@ -476,21 +432,6 @@ JSON.stringify(#{ a: #[1, 2, 3] }); // '{"a":[1,2,3]}'
 JSON.stringify(#[true, #{ a: #[1, 2, 3] }]); // '[true,{"a":[1,2,3]}]'
 ```
 
-<!--
-Boxes are omitted from the result, but you can pass a custom replacer to serialize them:
-
-```js
-JSON.stringify(#{ prop: Box({ x: 1 }) }, (k, v) => {
-  if (typeof value === "box") {
-    return { $$serializedBox: Box.unbox(value) };
-  }
-  return value;
-});
-
-// '{"prop":{"$$serializedBox":{"x":1}}}'
-```
--->
-
 ## JSON.parseImmutable
 
 We propose to add `JSON.parseImmutable` so we can extract a Record/Tuple type out of a JSON string instead of an Object/Array.
@@ -509,21 +450,18 @@ The [appendix](./NS-Proto-Appendix.md#tuple-prototype) contains a full descripti
 
 ## `typeof`
 
-`typeof` identifies Records, Tuples and Boxes as distinct types:
+`typeof` identifies Records and Tuples as distinct types:
 
 ```js
 assert(typeof #{ a: 1 } === "record");
 assert(typeof #[1, 2]   === "tuple");
-assert(typeof Box({}) === "box");
 ```
 
 ## Usage in {`Map`|`Set`|`WeakMap`|`WeakSet`}
 
-It is possible to use a `Record`, `Tuple` or `Box` as a key in a `Map`, and as a value in a `Set`. When using a `Record` or `Tuple` here, they are compared by value.
+It is possible to use a `Record`, `Tuple` as a key in a `Map`, and as a value in a `Set`. When using a `Record` or `Tuple` here, they are compared by value.
 
 It is not possible to use a `Record` or `Tuple` as a key in a `WeakMap` or as a value in a `WeakSet`, because `Records` and `Tuple`s are not `Objects`, and their lifetime is not observable.
-
-<!-- TODO: Allow things with boxes as weak keys -->
 
 ### Examples
 
@@ -865,13 +803,10 @@ A new, deeply immutable, compound primitive type data structure, proposed in thi
 
 A new, deeply immutable, compound primitive type data structure, proposed in this document, that is analogous to Array. `#[1, 2, 3, 4]`
 
-#### Box
-
-A new primitive type that can store a reference to an object, proposed in this document. `Box({})`.
 
 #### Compound primitive types
 
-Values which act like other JavaScript primitives, but are composed of other constituent values. This document proposes the first three compound primitive types: `Record`, `Tuple` and `Box`.
+Values which act like other JavaScript primitives, but are composed of other constituent values. This document proposes the first three compound primitive types: `Record` and `Tuple`.
 
 #### Simple primitive types
 
