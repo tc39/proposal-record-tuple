@@ -437,7 +437,7 @@
         <p>`Tuple.prototype.some` is a distinct function that implements the same algorithm as `Array.prototype.some` as defined in <emu-xref href="#sec-array.prototype.some"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
         <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
-      <emu-clause id="sec-array.prototype.tolocalestring">
+      <emu-clause id="sec-tuple.prototype.tolocalestring">
         <h1>Tuple.prototype.toLocaleString ( [ _reserved1_ [ , _reserved2_ ] ] )</h1>
         <p>`Tuple.prototype.toLocaleString` is a distinct function that implements the same algorithm as `Array.prototype.toLocaleString` as defined in <emu-xref href="#sec-array.prototype.tolocalestring"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
         <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
@@ -461,10 +461,10 @@
         <h1>Tuple.prototype [ @@iterator ] ()</h1>
         <p>The initial value of the @@iterator property is %Tuple.prototype.values%.</p>
       </emu-clause>
-      <emu-clause id="sec-tuple.prototype.withReversed">
-        <h1>Tuple.prototype.withReversed ( )</h1>
+      <emu-clause id="sec-tuple.prototype.tohReversed">
+        <h1>Tuple.prototype.toReversed ( )</h1>
 
-        <p>When the *withReversed* method is called, the following steps are taken:</p>
+        <p>When the *toReversed* method is called, the following steps are taken:</p>
 
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
@@ -477,8 +477,8 @@
         </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-array.prototype.withSorted">
-        <h1>Tuple.prototype.withSorted ( _compareFn_ )</h1>
+    <emu-clause id="sec-tuple.prototype.toSorted">
+        <h1>Tuple.prototype.toSorted ( _comparefn_ )</h1>
 
         <p>Except as described below, implements the same requirements as those of `Array.prototype.sort` as defined in <emu-xref href="#sec-array.prototype.sort"></emu-xref>. The implementation may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse.</p>
         <p>Upon entry, the following steps are performed to initialize evaluation of the `sorted` function. These steps are used instead of the entry steps in <emu-xref href="#sec-array.prototype.sort"></emu-xref>:</p>
@@ -487,15 +487,16 @@
           1. If _comparefn_ is not *undefined* and IsCallable(_comparefn_) is *false*, throw a *TypeError* exception.
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be a new List containing the elements of _T_.[[Sequence]].
-          1. Let _len_ be the length of _list_.
+          1. Sort _list_ using an implementation-defined sequence of calls to SortCompare. If any such call returns an abrupt completion, stop before performing any further calls to SortCompare or steps in this algorithm and return that completion.
+          1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
-        <p>A new Tuple containing the elements from the original Tuple is returned, where the elements are sorted. The <em>sort order</em> is the ordering, after completion of this function, of the elements of _list_. The <em>sort order</em> of the result of *sorted* is the same order as if the elements of _list_ were sorted in an Array via %Array.prototype.sort% with _comparefn_ as the first argument.</p>
+        <p>The elements of _list_ are sorted in the same order as if they were sorted in an Array via %Array.prototype.sort% with _comparefn_ as the first argument.</p>
     </emu-clause>
 
-    <emu-clause id="sec-array.prototype.withSpliced">
-        <h1>Tuple.prototype.withSpliced ( _start_, _deleteCount_, ..._items_ )</h1>
+    <emu-clause id="sec-tuple.prototype.toSpliced">
+        <h1>Tuple.prototype.toSpliced ( _start_, _deleteCount_, ..._items_ )</h1>
 
-        <p>When the `withSpliced` method is called with two or more arguments _start_, _deleteCount_ and zero or more _items_, a new Tuple is returned where the _deleteCount_ elements of the Tuple starting at integer index _start_ are replaced by the arguments _items_.</p>
+        <p>When the `toSpliced` method is called with two or more arguments _start_, _deleteCount_ and zero or more _items_, a new Tuple is returned where the _deleteCount_ elements of the Tuple starting at integer index _start_ are replaced by the arguments _items_.</p>
         <p>The following steps are taken:</p>
 
         <emu-alg>
@@ -537,15 +538,17 @@
           1. Return a new Tuple value whose [[Sequence]] is _newList_.
         </emu-alg>
       </emu-clause>
-      <emu-clause id="sec-tuple.prototype.withat">
-        <h1>Tuple.prototype.withAt ( _index_, _value_ )</h1>
-        <p>When the *withAt* method is called with two arguments, it returns a new Tuple with the element at index _index_ replaced with value _value_.</p>
+      <emu-clause id="sec-tuple.prototype.with">
+        <h1>Tuple.prototype.with ( _index_, _value_ )</h1>
+        <p>When the *with* method is called with two arguments, it returns a new Tuple with the element at index _index_ replaced with value _value_.</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be a new List containing the elements of _T_.[[Sequence]].
           1. Let _length_ be the length of list _list_.
-          1. Let _I_ be ? ToIndex(_index_).
-          1. If _I_ &ge; _length_, throw a *RangeError* exception.
+          1. Let _relativeIndex_ be ? ToIntegerOrInfinity(_index_).
+          1. If _index_ &ge; 0, let _actualIndex_ be _relativeIndex_.
+          1. Else, let _actualIndex_ be _len_ + _relativeIndex_.
+          1. If _actualIndex_ &ge; _len_ or _actualIndex_ &lt; 0, throw a *RangeError* exception.
           1. If Type(_value_) is Object, throw a *TypeError* exception.
           1. Set _list_[_I_] to _value_.
           1. Return a new Tuple value whose [[Sequence]] is _list_.

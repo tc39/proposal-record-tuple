@@ -48,48 +48,16 @@ Tuple.of(1,2,3); // #[1, 2, 3]
 
 # `Tuple` prototype
 
-## `Tuple.prototype.pop()`
-
-Returns the last value of the tuple.
-
-## `Tuple.prototype.popped()`
-
-Returns a `Tuple` identical to the original `Tuple` except the last element is removed.
-
-## `Tuple.prototype.push(values...)`
-
-No-op, returns void.
-
-## `Tuple.prototype.pushed(values...)`
-
-Returns a `Tuple` identical to the original `Tuple` except that the `values` are added to the end of the `Tuple`.
-
-## `Tuple.prototype.reverse()`
+## `Tuple.prototype.toReversed()`
 
 Returns a `Tuple` of the same values as the original `Tuple` in reverse order.
 
-## `Tuple.prototype.shift()`
-
-Returns the first value of the tuple.
-
-## `Tuple.prototype.shifted()`
-
-Returns a `Tuple` identical to the original `Tuple` except the first element is removed.
-
-## `Tuple.prototype.unshift(values)`
-
-No-op, returns void.
-
-## `Tuple.prototype.unshifted(values)`
-
-Returns a `Tuple` identical to the original `Tuple` except that the `values` are added to the beginning of the `Tuple`.
-
-## `Tuple.prototype.sort(compareFunction?)`
+## `Tuple.prototype.toSorted(compareFunction?)`
 
 Returns a `Tuple` of the same values as the original `Tuple` in sorted order. Optionally a `compareFunction` can be specified, otherwise
 the default sort order is to convert all values to strings, and comparing their sequences of UTF-16 code unit values.
 
-## `Tuple.prototype.splice(start, deleteCount?, items...)`
+## `Tuple.prototype.toSpliced(start, deleteCount?, items...)`
 
 Returns a new `Tuple` for which the elements are removed, replaced, or added to, removing `deleteCount` elements from index `start`, and inserting
 dding `items` starting at `start`.
