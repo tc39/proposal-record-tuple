@@ -806,7 +806,7 @@ A new, deeply immutable, compound primitive type data structure, proposed in thi
 
 #### Compound primitive types
 
-Values which act like other JavaScript primitives, but are composed of other constituent values. This document proposes the first three compound primitive types: `Record` and `Tuple`.
+Values which act like other JavaScript primitives, but are composed of other constituent values. This document proposes the first two compound primitive types: `Record` and `Tuple`.
 
 #### Simple primitive types
 
