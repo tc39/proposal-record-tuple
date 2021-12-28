@@ -459,7 +459,7 @@ assert(typeof #[1, 2]   === "tuple");
 
 ## Usage in {`Map`|`Set`|`WeakMap`|`WeakSet`}
 
-It is possible to use a `Record`, `Tuple` as a key in a `Map`, and as a value in a `Set`. When using a `Record` or `Tuple` here, they are compared by value.
+It is possible to use a `Record` or `Tuple` as a key in a `Map`, and as a value in a `Set`. When using a `Record` or `Tuple` here, they are compared by value.
 
 It is not possible to use a `Record` or `Tuple` as a key in a `WeakMap` or as a value in a `WeakSet`, because `Records` and `Tuple`s are not `Objects`, and their lifetime is not observable.
 
