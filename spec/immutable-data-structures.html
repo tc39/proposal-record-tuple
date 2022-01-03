@@ -180,7 +180,7 @@
       <emu-alg>
         1. If Type(_value_) is Tuple, return _value_.
         1. If Type(_value_) is Object and _value_ has a [[TupleData]] internal slot, then
-          1. Let _t_ be _value_.[[TupleValue]].
+          1. Let _t_ be _value_.[[TupleData]].
           1. Assert: Type(_t_) is Tuple.
           1. Return _t_.
         1. Throw a *TypeError* exception.
