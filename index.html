@@ -2388,7 +2388,7 @@ li.menu-search-result-term:before {
       <emu-note><span class="note">Note</span><div class="note-contents">
         <p>
           A <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> object is created by using the <code>Object</code> function in a call
-          expression, supplying an <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> value as an argument. The resulting
+          expression, supplying a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> value as an argument. The resulting
           object has an internal slot whose value is the <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> value.
           A <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> object can be coerced to a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> value by calling the
           <code>Record</code> <emu-xref href="#constructor"><a href="https://tc39.es/ecma262/#constructor">constructor</a></emu-xref> as a function (<emu-xref href="#sec-record-constructor-record-value" id="_ref_0"><a href="#sec-record-constructor-record-value">8.1.1.1</a></emu-xref>).
@@ -2422,7 +2422,7 @@ li.menu-search-result-term:before {
       <emu-note><span class="note">Note</span><div class="note-contents">
         <p>
           A Tuple object is created by using the <code>Object</code> function in a call
-          expression, supplying an Tuple value as an argument. The resulting
+          expression, supplying a Tuple value as an argument. The resulting
           object has an internal slot whose value is the Tuple value.
         </p>
       </div></emu-note>
@@ -3173,7 +3173,7 @@ li.menu-search-result-term:before {
     <emu-clause id="sec-isconcatspreadable" aoid="IsConcatSpreadable">
       <h1><span class="secnum">3.6</span> IsConcatSpreadable ( <var>O</var> )</h1>
       <p>The abstract operation IsConcatSpreadable takes argument <var>O</var>. It performs the following steps when called:</p>
-      <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_130"><a href="#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>O</var>) is not Object or Tuple, return <emu-val>false</emu-val></li><li>Let <var>spreadable</var> be ? <emu-xref aoid="Get" id="_ref_131"><a href="https://tc39.es/ecma262/#sec-get-o-p">Get</a></emu-xref><ins>V</ins>(<var>O</var>, @@isConcatSpreadable).</li><li>If <var>spreadable</var> is not <emu-val>undefined</emu-val>, return !&nbsp;<emu-xref aoid="ToBoolean" id="_ref_132"><a href="#sec-toboolean">ToBoolean</a></emu-xref>(<var>spreadable</var>).</li><li><ins>If !&nbsp;<emu-xref aoid="IsTuple" id="_ref_133"><a href="#sec-istuple">IsTuple</a></emu-xref>(<var>O</var>), return <emu-val>true</emu-val></ins></li><li>If ?&nbsp;<emu-xref aoid="IsArray" id="_ref_134"><a href="https://tc39.es/ecma262/#sec-isarray">IsArray</a></emu-xref>(<var>O</var>).</li></ol></emu-alg>
+      <emu-alg><ol><li>If <emu-xref aoid="Type" id="_ref_130"><a href="#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>O</var>) is not Object or Tuple, return <emu-val>false</emu-val></li><li>Let <var>spreadable</var> be ? <emu-xref aoid="Get" id="_ref_131"><a href="https://tc39.es/ecma262/#sec-get-o-p">Get</a></emu-xref><ins>V</ins>(<var>O</var>, @@isConcatSpreadable).</li><li>If <var>spreadable</var> is not <emu-val>undefined</emu-val>, return !&nbsp;<emu-xref aoid="ToBoolean" id="_ref_132"><a href="#sec-toboolean">ToBoolean</a></emu-xref>(<var>spreadable</var>).</li><li><ins>If !&nbsp;<emu-xref aoid="IsTuple" id="_ref_133"><a href="#sec-istuple">IsTuple</a></emu-xref>(<var>O</var>), return <emu-val>true</emu-val></ins></li><li>Return ?&nbsp;<emu-xref aoid="IsArray" id="_ref_134"><a href="https://tc39.es/ecma262/#sec-isarray">IsArray</a></emu-xref>(<var>O</var>).</li></ol></emu-alg>
     </emu-clause>
   </emu-clause></emu-import>
 <emu-import href="spec/ordinary-and-exotic-object-behaviours.html"><emu-clause id="sec-ordinary-and-exotic-objects-behaviours">
