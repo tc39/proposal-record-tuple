@@ -244,7 +244,7 @@ _ConstUpdatePart_:
 
 > _ConstUpdatePart_`,` _ConstUpdatePart_
 
-_ConstUpdateExpresion_:
+_ConstUpdateExpression_:
 
 > _Identifier_ `with` _ConstUpdatePart_
 
@@ -320,7 +320,7 @@ Since we established that value types are completely and deeply constant, if the
 
 It is not the case with normal objects, those objects are instantiated in memory and strict comparison will see that both objects are located at different addresses, they are not strictly equal.
 
-### Relation to the [decorator propsal](https://github.com/tc39/proposal-decorators)
+### Relation to the [Decorator Proposal](https://github.com/tc39/proposal-decorators)
 
 `@const` is not a decorator and can't be used to create a new decorator declaration.
 
@@ -354,6 +354,6 @@ Structural sharing is a technique used to limit the memory footprint of immutabl
 
 #### Value type
 
-In this proposal it defines any of those: `boolean`, `number`, `symbol`, `undefiened`, `null`, `@const object`, `@const array` and `@const class`.
+In this proposal it defines any of those: `boolean`, `number`, `symbol`, `undefined`, `null`, `@const object`, `@const array` and `@const class`.
 
 Value types can only contain other value types: because of that, two value types with the same contents are strictly equal.
