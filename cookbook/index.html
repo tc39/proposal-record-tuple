@@ -159,13 +159,17 @@ console.log(fixedUser === #{ name: &quot;danny&quot;, stats: #{
 <p>Note: at the time of writing this, the playground does not support <code>JSON.parseImmutable</code>.</p>
 </blockquote>
 <h2 id="array-like-manipulations-with-tuple-by-copy">Array-like manipulations with Tuple by copy</h2>
-<p>Use the past-tensed array methods for creating a new tuple that would be the result of that operation:</p>
-<pre><code class="language-js">console.log(#[1, 2].pushed(3) === #[1, 2, 3]);</code></pre>
-<pre><code class="language-js">console.log(#[1, 2, 3].spliced(0, 1, 4, 5) === #[4, 5, 2, 3]);</code></pre>
-<pre><code class="language-js">console.log(#[3, 2, 1].sorted() === #[1, 2, 3]);</code></pre>
+<p>Using spread operations, <code>toReversed()</code>, <code>toSorted()</code>, <code>toSpliced()</code> or <code>with()</code> methods you can mutate tuples by copy:</p>
+<pre><code class="language-js">const base = #[1, 2];
+console.log(#[...base, 3] === #[1, 2, 3]);</code></pre>
+<pre><code class="language-js">console.log(#[3, 2, 1].toReversed() === #[3, 2, 1]);</code></pre>
+<pre><code class="language-js">console.log(#[3, 2, 1].toSorted() === #[1, 2, 3]);</code></pre>
+<pre><code class="language-js">console.log(#[1, 2, 3].toSpliced(0, 1, 4, 5) === #[4, 5, 2, 3]);</code></pre>
+<pre><code class="language-js">console.log(#[1, 2, 3].with(1, 5) === #[1, 5, 3]);</code></pre>
 <blockquote>
-<p>Note: at the time of writing this, the playground does not support <code>Tuple.prototype.sorted</code>.</p>
+<p><strong>Note:</strong> at the time of writing this, the playground is not updated to support this <code>.toX</code> terminology, please use <code>.x</code> instead, for instance: <code>toSorted</code> is just <code>sorted</code>.</p>
 </blockquote>
+<p><code>toReversed()</code>, <code>toSorted()</code>, <code>toSpliced()</code> and <code>with()</code> will be available on Arrays too with the <a href="https://github.com/tc39/proposal-change-array-by-copy">Change Array by Copy</a> proposal.</p>
 <h2 id="use-object-methods-on-records">Use Object methods on Records</h2>
 <pre><code class="language-js">const record = #{ z: 1, a: 2 };
 console.log(
