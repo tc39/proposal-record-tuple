@@ -1,6 +1,6 @@
 // @ts-check
 import fse from "fs-extra";
-import marked from "marked";
+import { marked } from "marked";
 import { join } from "path";
 
 async function buildLanguageFile(lang, config, isDefault = false) {
