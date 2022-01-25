@@ -24,10 +24,12 @@
 <h2 id="convert-from-arraysobjects-to-tuplesobjects-with-spread">Convert from Arrays/Objects to Tuples/Objects with spread</h2>
 <pre><code class="language-js">const coordinate = [0,3];
 const fixedCoordinate = #[...coordinate];
-console.log(fixedCoordinate === #[0,3]); // true</code></pre>
+console.log(fixedCoordinate === #[0,3]); // true
+</code></pre>
 <pre><code class="language-js">const user = { name: &quot;danny&quot;, admin: true };
 const fixedUser = #{...user};
-console.log(fixedUser === #{ name: &quot;danny&quot;, admin: true }); // true</code></pre>
+console.log(fixedUser === #{ name: &quot;danny&quot;, admin: true }); // true
+</code></pre>
 <h3 id="recursive-conversion">Recursive conversion</h3>
 <pre><code class="language-js">function recursiveRT(thing, maxDepth = 10) {
     if (typeof thing !== &quot;object&quot;) {
@@ -53,30 +55,36 @@ const fixedUser = recursiveRT(user);
 console.log(fixedUser === #{ name: &quot;danny&quot;, stats: #{
     avg: 42,
     scores: #[40, 42, 44],
-} }); // true</code></pre>
+} }); // true
+</code></pre>
 <h2 id="destructuring-record--tuple-using-standard-destructuring">Destructuring Record &amp; Tuple using standard destructuring</h2>
 <pre><code class="language-js">const [head, ...rest] = #[1, 2, 3];
 console.log(head); // 1
 console.log(rest); // Array [2, 3]
-console.log(#[...rest]); // Tuple #[2, 3]</code></pre>
+console.log(#[...rest]); // Tuple #[2, 3]
+</code></pre>
 <pre><code class="language-js">const {name, ...rest} = #{ name: &quot;danny&quot;, admin: true, score: 42 };
 console.log(name); // danny
 console.log(rest); // Object { admin: true, score: 42 }
-console.log(#{...rest}); // Record #{ admin: true, score: 42 }</code></pre>
+console.log(#{...rest}); // Record #{ admin: true, score: 42 }
+</code></pre>
 <h2 id="concatenate-tuples-with-spread">Concatenate Tuples with spread</h2>
 <pre><code class="language-js">const tup1 = #[1, 2];
 const tup2 = #[3, 4];
 const megaTup = #[...tup1, ...tup2];
-console.log(megaTup === #[1, 2, 3, 4]); // true</code></pre>
+console.log(megaTup === #[1, 2, 3, 4]); // true
+</code></pre>
 <h2 id="create-a-new-record-with-some-values-changed-using-spread">Create a new Record with some values changed using spread</h2>
 <pre><code class="language-js">const user = #{ name: &quot;danny&quot;, admin: false, score: 42 };
 const admin = #{ ...user, admin: true };
-console.log(admin === #{ name: &quot;danny&quot;, admin: true, score: 42 });</code></pre>
+console.log(admin === #{ name: &quot;danny&quot;, admin: true, score: 42 });
+</code></pre>
 <h2 id="property-access-in-records">Property access in records</h2>
 <pre><code class="language-js">const user = #{ name: &quot;danny&quot;, admin: false, score: 42 };
 
 console.log(user.name); // danny
-console.log(user[&quot;score&quot;]); // 42</code></pre>
+console.log(user[&quot;score&quot;]); // 42
+</code></pre>
 <h2 id="record--tuple-as-set-values">Record &amp; Tuple as Set values</h2>
 <pre><code class="language-js">const set = new Set([
     #{ x: 0, y: 0 },
@@ -86,7 +94,8 @@ console.log(user[&quot;score&quot;]); // 42</code></pre>
 console.log(set.has(#{ x: 0, y: 0 })); // true
 console.log(set.has(#{ x: 1, y: 1 })); // false
 console.log(set.has(#[0, 0])); // false
-console.log(set.has(#[1, 1])); // true</code></pre>
+console.log(set.has(#[1, 1])); // true
+</code></pre>
 <h2 id="record--tuple-as-map-keys">Record &amp; Tuple as Map keys</h2>
 <pre><code class="language-js">const map = new Map([
     [#{ x: 0, y: 0 }, &quot;origin&quot;],
@@ -98,7 +107,8 @@ console.log(set.has(#[1, 1])); // true</code></pre>
 console.log(map.get(#{ x: 0, y: 0 })); // origin
 console.log(map.get(#{ x: 1, y: 1 })); // norm
 console.log(map.get(#[0, 0])); // origin
-console.log(map.get(#[1, 1])); // norm</code></pre>
+console.log(map.get(#[1, 1])); // norm
+</code></pre>
 <h3 id="tuple-as-map-keys-example-function-memoizer">Tuple as Map keys example: Function memoizer</h3>
 <pre><code class="language-js">function memoize(func) {
     const memoized = new Map();
@@ -130,17 +140,20 @@ const b = verboseSumOnce(1, 2, 3); // will not spew logs
 const c = verboseSumOnce(2, 3, 4); // will spew logs
 
 console.log(a === b); // true
-console.log(a === c); // false</code></pre>
+console.log(a === c); // false
+</code></pre>
 <h2 id="json">JSON</h2>
 <h3 id="parse">Parse</h3>
 <pre><code class="language-js">const user = JSON.parseImmutable(&#39;{ &quot;name&quot;: &quot;danny&quot;, &quot;admin&quot;: false, &quot;score&quot;: 42 }&#39;);
-console.log(user === #{ name: &quot;danny&quot;, admin: false, score: 42 });</code></pre>
+console.log(user === #{ name: &quot;danny&quot;, admin: false, score: 42 });
+</code></pre>
 <blockquote>
 <p>Note: at the time of writing this, the playground does not support <code>JSON.parseImmutable</code>.</p>
 </blockquote>
 <h3 id="stringify">Stringify</h3>
 <pre><code class="language-js">const jsonUser = JSON.stringify(#{ name: &quot;danny&quot;, admin: false, score: 42 });
-console.log(jsonUser); // {&quot;admin&quot;:false,&quot;name&quot;:&quot;danny&quot;,&quot;score&quot;:42}</code></pre>
+console.log(jsonUser); // {&quot;admin&quot;:false,&quot;name&quot;:&quot;danny&quot;,&quot;score&quot;:42}
+</code></pre>
 <h3 id="recursive-conversion-through-json">Recursive conversion through JSON</h3>
 <pre><code class="language-js">function recursiveRT(thing) {
     return JSON.parseImmutable(JSON.stringify(thing));
@@ -154,18 +167,24 @@ const fixedUser = recursiveRT(user);
 console.log(fixedUser === #{ name: &quot;danny&quot;, stats: #{
     avg: 42,
     scores: #[40, 42, 44],
-} }); // true</code></pre>
+} }); // true
+</code></pre>
 <blockquote>
 <p>Note: at the time of writing this, the playground does not support <code>JSON.parseImmutable</code>.</p>
 </blockquote>
 <h2 id="array-like-manipulations-with-tuple-by-copy">Array-like manipulations with Tuple by copy</h2>
 <p>Using spread operations, <code>toReversed()</code>, <code>toSorted()</code>, <code>toSpliced()</code> or <code>with()</code> methods you can mutate tuples by copy:</p>
 <pre><code class="language-js">const base = #[1, 2];
-console.log(#[...base, 3] === #[1, 2, 3]);</code></pre>
-<pre><code class="language-js">console.log(#[3, 2, 1].toReversed() === #[3, 2, 1]);</code></pre>
-<pre><code class="language-js">console.log(#[3, 2, 1].toSorted() === #[1, 2, 3]);</code></pre>
-<pre><code class="language-js">console.log(#[1, 2, 3].toSpliced(0, 1, 4, 5) === #[4, 5, 2, 3]);</code></pre>
-<pre><code class="language-js">console.log(#[1, 2, 3].with(1, 5) === #[1, 5, 3]);</code></pre>
+console.log(#[...base, 3] === #[1, 2, 3]);
+</code></pre>
+<pre><code class="language-js">console.log(#[3, 2, 1].toReversed() === #[3, 2, 1]);
+</code></pre>
+<pre><code class="language-js">console.log(#[3, 2, 1].toSorted() === #[1, 2, 3]);
+</code></pre>
+<pre><code class="language-js">console.log(#[1, 2, 3].toSpliced(0, 1, 4, 5) === #[4, 5, 2, 3]);
+</code></pre>
+<pre><code class="language-js">console.log(#[1, 2, 3].with(1, 5) === #[1, 5, 3]);
+</code></pre>
 <blockquote>
 <p><strong>Note:</strong> at the time of writing this, the playground is not updated to support this <code>.toX</code> terminology, please use <code>.x</code> instead, for instance: <code>toSorted</code> is just <code>sorted</code>.</p>
 </blockquote>
@@ -182,7 +201,8 @@ console.log(
 
 console.log(
     #[...Object.entries(record)[0]] === #[&quot;a&quot;, 2]
-); // true</code></pre>
+); // true
+</code></pre>
 
 
 <hr/>

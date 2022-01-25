@@ -60,7 +60,8 @@ const wallet = #[
     drivingLicence,
     creditCard,
     debitCard,
-];</code></pre>
+];
+</code></pre>
 <p>In order to create a Record or a Tuple, just use an Object or an Array literal and prefix it with an hash <code>#</code> character.</p>
 <blockquote>
 <p>Note: You can&#39;t put objects in your wallet as your wallet is a Tuple!</p>
@@ -70,7 +71,8 @@ const wallet = #[
 };
 const wallet = #[
     milesCard, // TypeError
-];</code></pre>
+];
+</code></pre>
 </blockquote>
 <h3 id="comparisons">Comparisons</h3>
 <p>The main advantage of this approach, excluding the immutability constraint, is to guarantee value equality instead of identity equality.</p>
@@ -92,7 +94,8 @@ console.log(drivingLicence === #{
 console.log(milesCard === {
     rank: &quot;gold&quot;,
     numero: 123456,
-}); // =&gt; false</code></pre>
+}); // =&gt; false
+</code></pre>
 <p>As we can see, records are compared by value instead of by identity as seen with the <code>milesCard</code>.</p>
 <h2 id="introduction-looking-back">Introduction, looking back!</h2>
 <p>We finally have a quick idea of what Record &amp; Tuple are for but it might be a non-trivial to know what they would be used for... We are going to explore that very soon in the next part, starting with compound values!</p>
@@ -107,7 +110,8 @@ console.log(milesCard === {
     &quot;0:1&quot;: &quot;wall&quot;,
 };
 
-console.log(&quot;at 0:0&quot;, grid[&quot;0:0&quot;]); // player</code></pre>
+console.log(&quot;at 0:0&quot;, grid[&quot;0:0&quot;]); // player
+</code></pre>
 <p>This seems to do what we want, however, it is really easy to make a mistake:</p>
 <pre><code class="language-js">const grid = {
     &quot;0:0&quot;: &quot;player&quot;,
@@ -115,7 +119,8 @@ console.log(&quot;at 0:0&quot;, grid[&quot;0:0&quot;]); // player</code></pre>
     &quot;0:1&quot;: &quot;wall&quot;,
 };
 
-console.log(&quot;at 0:0x0&quot;, grid[&quot;0:0x0&quot;]); // undefined</code></pre>
+console.log(&quot;at 0:0x0&quot;, grid[&quot;0:0x0&quot;]); // undefined
+</code></pre>
 <p>Changing our number representation made it impossible for us to find the location, yet, we know that <code>0 === 0x0</code>.</p>
 <p>Strings let us compound values together but will leave us with their arbitrary constraints.</p>
 <p>Let&#39;s look at another way we could have done this:</p>
@@ -128,7 +133,8 @@ console.log(&quot;at 0:0x0&quot;, grid[&quot;0:0x0&quot;]); // undefined</code><
 console.log(&quot;at 0:0x0&quot;, grid[JSON.stringify({
     x: 0,
     y: 0x0,
-})]); // player</code></pre>
+})]); // player
+</code></pre>
 <p>Great! this works! All we have to do is stringifying values and now we can compare things as we want. There are a few caveats though...</p>
 <pre><code class="language-js">const grid = {
     &#39;{&quot;x&quot;:0,&quot;y&quot;:0}&#39;: &quot;player&quot;,
@@ -139,7 +145,8 @@ console.log(&quot;at 0:0x0&quot;, grid[JSON.stringify({
 console.log(&quot;at 0:0x0&quot;, grid[JSON.stringify({
     y: 0x0,
     x: 0,
-})]); // undefined</code></pre>
+})]); // undefined
+</code></pre>
 <p>We&#39;re not getting what we expect because the order of properties matters in JSON serialization.</p>
 <h2 id="compounding-values-into-another-value-with-tuples">Compounding values into another value with tuples</h2>
 <p>Fortunately we can solve those issues with Records and Tuples. Like strings, we can concatenate together some values and use them to do a bunch of things such as comparing their equality together but also using them to lookup keys. Back to our example but with tuples:</p>
@@ -151,7 +158,8 @@ const grid = new Map([
 ]);
 
 console.log(&quot;at 0:0&quot;, grid.get(#[0, 0])); // player
-console.log(&quot;at 0:0&quot;, grid.get(#[0, 0x0])); // player</code></pre>
+console.log(&quot;at 0:0&quot;, grid.get(#[0, 0x0])); // player
+</code></pre>
 <p>Amazing! This works as expected! The difference between a tuple and a string is that a string will only keep the sequence of character information, so if one char changes, everything is off. However, the tuple will keep the actual sequence of primitive values so if all the values of the tuple are identical, everything will work as expected.</p>
 <p>Now what is interesting is that you can access the internals of the tuple in a way you couldn&#39;t before and use that for equality:</p>
 <pre><code class="language-js">function isAtOrigin(coordinate) {
@@ -161,12 +169,14 @@ console.log(&quot;at 0:0&quot;, grid.get(#[0, 0x0])); // player</code></pre>
 const c1 = #[1, 2];
 const c2 = #[c1[0] - 1, c1[1] * 2 - 4];
 console.log(&quot;c1 at origin?&quot;, isAtOrigin(c1)); // false
-console.log(&quot;c2 at origin?&quot;, isAtOrigin(c2)); // true</code></pre>
+console.log(&quot;c2 at origin?&quot;, isAtOrigin(c2)); // true
+</code></pre>
 <p>Finally, there is no need to compound values of the same type, tuples can also store a sequence of different types:</p>
 <pre><code class="language-js">// Store everything!
 const crazyTuple = #[&quot;hello&quot;, 123, Symbol(), #{}, #[]];
 // ... except objects
-const tooCrazyTuple = #[{}]; // TypeError!</code></pre>
+const tooCrazyTuple = #[{}]; // TypeError!
+</code></pre>
 <h2 id="compounding-values-into-another-value-with-records">Compounding values into another value with records</h2>
 <p>Now let&#39;s take a quick look at records. Records are like tuples but have string-keys like objects, instead of an ordered sequence of elements like a tuple (or array). Let&#39;s name our axes from our previous example:</p>
 <pre><code class="language-js">// We use an ES Map as they can have tuples as key values
@@ -178,7 +188,8 @@ const grid = new Map([
 
 console.log(&quot;at 0:0&quot;, grid.get(#{x:0, y:0})); // player
 console.log(&quot;at 0:0&quot;, grid.get(#{x:0, y:0x0})); // player
-console.log(&quot;at 0:0&quot;, grid.get(#{y:0x0, x:0})); // player</code></pre>
+console.log(&quot;at 0:0&quot;, grid.get(#{y:0x0, x:0})); // player
+</code></pre>
 <p>Note the last <code>console.log</code>; the order did not matter, unlike what we&#39;ve seen when converting objects to JSON.</p>
 <p>The same operations from before are also possible:</p>
 <pre><code class="language-js">function isAtOrigin(coordinate) {
@@ -188,7 +199,8 @@ console.log(&quot;at 0:0&quot;, grid.get(#{y:0x0, x:0})); // player</code></pre>
 const c1 = #{x:1, y:2};
 const c2 = #{x: c1.x - 1, y: c1.y * 2 - 4 };
 console.log(&quot;c1 at origin?&quot;, isAtOrigin(c1)); // false
-console.log(&quot;c2 at origin?&quot;, isAtOrigin(c2)); // true</code></pre>
+console.log(&quot;c2 at origin?&quot;, isAtOrigin(c2)); // true
+</code></pre>
 <p>And you can store any other value in a record:</p>
 <pre><code class="language-js">// Store everything!
 const crazyRecord = #{
@@ -199,7 +211,8 @@ const crazyRecord = #{
     tup: #[],
 };
 // ... except objects
-const tooCrazyRecord = #{ obj: {} }; // TypeError!</code></pre>
+const tooCrazyRecord = #{ obj: {} }; // TypeError!
+</code></pre>
 <h2 id="compound-values-looking-back">Compound values, looking back!</h2>
 <p>By this point, you should get a pretty good idea of how Record and Tuple behave. They have some nice equality properties that let us replace strings in some places. That being said, this is only a small use case for them, next, we&#39;re going to look at how we can do some state management using Record &amp; Tuple.</p>
 <hr>
@@ -232,7 +245,8 @@ function getNbVisitByUser(username) {
 }
 
 console.log(&quot;nb visits&quot;, getNbVisits()); // 3
-console.log(&quot;nb visits by alice&quot;, getNbVisitByUser(&quot;alice&quot;)); // 2</code></pre>
+console.log(&quot;nb visits by alice&quot;, getNbVisitByUser(&quot;alice&quot;)); // 2
+</code></pre>
 <p>As we can see we have some denormalized state that is useful for the kind of lookups we want to do. Maintaining that state can be hard if anything can mutate it. This can happen in large codebases with mutable data structures. Here, we can&#39;t change the data structure so we have to mutate the state atomically:</p>
 <pre><code class="language-js">let appState = #{
     userByVisit: #[],
@@ -269,7 +283,8 @@ visit(&quot;mark&quot;);
 visit(&quot;alice&quot;);
 
 console.log(&quot;nb visits&quot;, getNbVisits()); // 3
-console.log(&quot;nb visits by alice&quot;, getNbVisitByUser(&quot;alice&quot;)); // 2</code></pre>
+console.log(&quot;nb visits by alice&quot;, getNbVisitByUser(&quot;alice&quot;)); // 2
+</code></pre>
 <blockquote>
 <p>Note: We use an assignment to reassign <code>appState</code>; this is fine because the variable can have its value changed unlike the contents of a record. You can try doing an assignment to a record&#39;s property, but it will fail:</p>
 <pre><code class="language-js">let appState = #{
@@ -277,7 +292,8 @@ console.log(&quot;nb visits by alice&quot;, getNbVisitByUser(&quot;alice&quot;))
     visitsByUser: #{},
 };
 appState.userByVisit.push(&quot;jose&quot;); // TypeError
-appState.visitsByUser[&quot;jose&quot;] = 1; // TypeError (if you remove the line before)</code></pre>
+appState.visitsByUser[&quot;jose&quot;] = 1; // TypeError (if you remove the line before)
+</code></pre>
 <p>Note: using spreads to do deep reassignments can be a cumbersome task. That is why, once <a href="https://github.com/tc39/proposal-deep-path-properties-for-record/">Deep Path Properties for Record</a> advances more stages, we&#39;ll be able to feature it in this tutorial!</p>
 </blockquote>
 <h2 id="keeping-track-of-immutable-state-and-comparing-it">Keeping track of immutable state and comparing it</h2>
@@ -324,7 +340,8 @@ console.log(&quot;nb visits (at state 1)&quot;, getNbVisits(appStateHistory[1]))
 console.log(
     &quot;nb visits by alice (at state 1)&quot;,
     getNbVisitByUser(&quot;alice&quot;, appStateHistory[1])
-); // 1</code></pre>
+); // 1
+</code></pre>
 <p>Now that we can keep track of the past, let&#39;s see how we can use it with comparison to be more efficient. We can compose two separate pieces of application state, and use the equality of records to check if we need to re-render the &quot;application&quot; components that depend on that substate.</p>
 <pre><code class="language-js">const appStateHistory = [#{
     profile: #{
@@ -392,7 +409,8 @@ render(); // Will show both Profile and Status strings
 updateStatus(&quot;Feeling Energetic!&quot;, &quot;:D&quot;);
 render(); // Will only show Status string
 updateFullName(&quot;Allie Ri&quot;);
-render(); // Will only show Profile string</code></pre>
+render(); // Will only show Profile string
+</code></pre>
 <p>Now we can choose to only perform expensive operations (like updating our UI) when the piece of state we&#39;re looking at changed!</p>
 <h2 id="state-management-looking-back">State management, looking back!</h2>
 <p>We only scratched the surface of what is possible! As we&#39;ve seen before you might want to use a state management solution like <a href="https://redux.js.org/">Redux</a> to do this. However, <a href="https://redux.js.org/">Redux</a> is not meant to give you comparison operations, you usually have to do it yourself and it is hard to get it right. With Record &amp; Tuple, comparison is performed by the JavaScript engine so you don&#39;t have to do it!</p>
@@ -405,7 +423,8 @@ render(); // Will only show Profile string</code></pre>
     comicSansNodes: #[
         document.body, // TypeError! DOM elements are objects
     ],
-};</code></pre>
+};
+</code></pre>
 <p>What we can do is modify our example so that the mutable parts are referenced with a WeakMap:</p>
 <pre><code class="language-js">// temporary: until WeakMaps can contain symbols as keys, we need to swap them for Maps
 globalThis.WeakMap = globalThis.Map;
@@ -417,7 +436,8 @@ let appState = #{
     comicSansNodes: #[
         bodyRef,
     ],
-};</code></pre>
+};
+</code></pre>
 <p>The Symbol constructor acts as an opaque reference to replace the <code>document.body</code> object, so that <code>appState</code> doesn&#39;t <em>really</em> contain an object. When we need to get the object corresponding to a symbol, we can get it in the WeakMap:</p>
 <pre><code class="language-js">// temporary: until WeakMaps can contain symbols as keys, we need to swap them for Maps
 globalThis.WeakMap = globalThis.Map;
@@ -444,7 +464,8 @@ function makeItComic() {
 document.write(&quot;&lt;p&gt;Hello &lt;strong&gt;R&amp;T&lt;/strong&gt;&lt;/p&gt;&quot;);
 document.querySelectorAll(&quot;*&quot;).forEach(n =&gt; addComicSansNode(n));
 // Finally!
-makeItComic();</code></pre>
+makeItComic();
+</code></pre>
 <h2 id="keeping-track-of-objects-looking-back">Keeping track of objects, looking back!</h2>
 <p>This part introduced us to more advanced concepts that will be abstracted away most of the time through upcoming userland libraries. In general, Record &amp; Tuple is best when used in a functional and immutable way. However, sometimes you need an escape hatch: we chose to make that escape hatch explicit so you can always trust the integrity and equality of your Records and Tuples but the drawback is that you will need to put in more work to reference/dereference non-primitive values.</p>
 <hr>

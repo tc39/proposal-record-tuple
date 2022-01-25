@@ -56,7 +56,8 @@ const portefeuille = #[
     permisDeConduire,
     carteDeCredit,
     carteDeDebit,
-];</code></pre>
+];
+</code></pre>
 <p>Pour créer un Record ou un Tuple, faites comme si vous créeriez un Objet ou un Array mais ajoutez dièze <code>#</code> devant!</p>
 <blockquote>
 <p>Note: Vous ne pouvez pas mettre d&#39;objets dans votre portefeuille car un Tuple n&#39;accepte pas d&#39;objets!</p>
@@ -66,7 +67,8 @@ const portefeuille = #[
 };
 const portefeuille = #[
     carteTrain, // Génère une erreur de type TypeError
-];</code></pre>
+];
+</code></pre>
 </blockquote>
 <h3 id="comparaisons">Comparaisons</h3>
 <p>Le principal avantage de cette approche, outre de vous contraindre à ne pas changer le contenu de ces types, est de garantir une égalité par valeur à l&#39;opposé de par identité.</p>
@@ -88,7 +90,8 @@ console.log(permisDeConduire === #{
 console.log(carteTrain === {
     type: &quot;senior&quot;,
     numero: 123456,
-}); // =&gt; false</code></pre>
+}); // =&gt; false
+</code></pre>
 <p>Comme on le voit ici, le Record est comparé par son contenu. L&#39;objet est comparé par son identité.</p>
 <hr>
 <h1 id="conclusion">Conclusion</h1>
