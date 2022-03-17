@@ -21,7 +21,7 @@
 <p>A series of bite-sized examples of things you can do with the <a href="https://github.com/tc39/proposal-record-tuple">Record &amp; Tuple ECMAScript proposal</a>.</p>
 <p>If you are unsure what this is all about, make sure you check out the <a href="../tutorial/index.html">tutorial</a> first!</p>
 <hr>
-<h2 id="convert-from-arraysobjects-to-tuplesobjects-with-spread">Convert from Arrays/Objects to Tuples/Objects with spread</h2>
+<h2 id="convert-from-arraysobjects-to-tuplesrecords-with-spread">Convert from Arrays/Objects to Tuples/Records with spread</h2>
 <pre><code class="language-js">const coordinate = [0,3];
 const fixedCoordinate = #[...coordinate];
 console.log(fixedCoordinate === #[0,3]); // true
@@ -177,7 +177,7 @@ console.log(fixedUser === #{ name: &quot;danny&quot;, stats: #{
 <pre><code class="language-js">const base = #[1, 2];
 console.log(#[...base, 3] === #[1, 2, 3]);
 </code></pre>
-<pre><code class="language-js">console.log(#[3, 2, 1].toReversed() === #[3, 2, 1]);
+<pre><code class="language-js">console.log(#[3, 2, 1].toReversed() === #[1, 2, 3]);
 </code></pre>
 <pre><code class="language-js">console.log(#[3, 2, 1].toSorted() === #[1, 2, 3]);
 </code></pre>
