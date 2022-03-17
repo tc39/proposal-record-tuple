@@ -11,7 +11,7 @@ If you are unsure what this is all about, make sure you check out the [tutorial]
 
 ---
 
-## Convert from Arrays/Objects to Tuples/Objects with spread
+## Convert from Arrays/Objects to Tuples/Records with spread
 
 ```js
 const coordinate = [0,3];
@@ -212,7 +212,7 @@ console.log(#[...base, 3] === #[1, 2, 3]);
 ```
 
 ```js
-console.log(#[3, 2, 1].toReversed() === #[3, 2, 1]);
+console.log(#[3, 2, 1].toReversed() === #[1, 2, 3]);
 ```
 
 ```js
