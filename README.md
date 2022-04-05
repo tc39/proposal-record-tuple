@@ -385,7 +385,7 @@ const tuple2 = Tuple.from([1, 2, 3]); // note that an iterable will also work
 
 assert(record === #{ a: 1, b: 2, c: 3 });
 assert(tuple === #[1, 2, 3]);
-Record.from({ a: {} }); // TypeError: Can't convert Object with a non-const value to Record
+Record({ a: {} }); // TypeError: Can't convert Object with a non-const value to Record
 Tuple.from([{}, {} , {}]); // TypeError: Can't convert Iterable with a non-const value to Tuple
 ```
 
