@@ -379,7 +379,7 @@ You can convert structures using `Record()`, `Tuple()` (with the spread operator
 
 ```js
 const record = Record({ a: 1, b: 2, c: 3 });
-const record2 = Record.fromEntries([["a", 1], #["b", 2], { 0: 'c', 1: 3, length: 2 }]); // note that any iterable of entries will work
+const record2 = Record.fromEntries([["a", 1], #["b", 2], { 0: 'c', 1: 3 }]); // note that any iterable of entries will work
 const tuple = Tuple(...[1, 2, 3]);
 const tuple2 = Tuple.from([1, 2, 3]); // note that an iterable will also work
 
