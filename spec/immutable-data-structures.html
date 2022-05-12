@@ -53,7 +53,7 @@
             1. If Type(_value_) is Object, throw a *TypeError* exception.
             1. Let _field_ be { [[Key]]: _keyString_, [[Value]]: _value_ }.
             1. Append _field_ to the end of list _fields_.
-          1. Perform ! AddEntriesFromIterable(*undefined*, _iterable_, _adder_).
+          1. Perform ? AddEntriesFromIterable(*undefined*, _iterable_, _adder_).
           1. Return ! CreateRecord(_fields_).
         </emu-alg>
         <emu-note>
