@@ -49,9 +49,8 @@
           1. Perform ? RequireObjectCoercible(_iterable_).
           1. Let _fields_ be a new empty List.
           1. Let _adder_ be a new Abstract Closure with parameters (_key_, _value_) that captures _fields_ and performs the following steps when called:
-            1. If Type(_key_) is Symbol, throw a *TypeError* exception.
             1. If Type(_value_) is Object, throw a *TypeError* exception.
-            1. Let _keyString_ be ? ToPropertyKey(_key_)
+            1. Let _keyString_ be ? ToString(_key_).
             1. Let _field_ be { [[Key]]: _keyString_, [[Value]]: _value_ }.
             1. Append _field_ to the end of list _fields_.
           1. Perform ! AddEntriesFromIterable(*undefined*, _iterable_, _adder_).
