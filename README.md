@@ -27,6 +27,16 @@
 
 ### [Cookbook](https://tc39.es/proposal-record-tuple/cookbook/)
 
+# Content
+
+1. [Overview](#overview)
+1. [Examples](#examples)
+1. [Syntax](#syntax)
+1. [Equality](#equality)
+1. [The object model](#the-object-model-of-record-and-tuple)
+1. [`Record` and `Tuple` standard library support](#record-and-tuple-standard-library-support)
+1. [Rationale](#rationale)
+
 # Overview
 
 This proposal introduces two new deeply immutable data structures to JavaScript:
