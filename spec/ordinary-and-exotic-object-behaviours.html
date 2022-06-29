@@ -13,7 +13,7 @@
       <p>An object is a <dfn id="record-exotic-object">Record exotic object</dfn> (or simply, a Record object) if its following internal methods use the following implementations and is an <emu-xref href="#sec-immutable-prototype-exotic-objects">Immutable Prototype Exotic Object</emu-xref>. These methods are installed in RecordCreate.</p>
 
       <p>Record exotic objects have the same internal slots as ordinary objects. They also have a [[RecordData]] internal slot.</p>
-      
+
       <emu-clause id="sec-record-exotic-objects-isextensible" type="internal method">
         <h1>[[IsExtensible]] ()</h1>
         <dl class="header">
@@ -59,7 +59,7 @@
           1. Return *false*.
         </emu-alg>
       </emu-clause>
-      
+
       <emu-clause id="sec-record-exotic-objects-hasproperty-p" type="internal method">
         <h1>[[HasProperty]] ( _P_ )</h1>
         <dl class="header">
@@ -71,7 +71,7 @@
           1. Return ! RecordHasProperty(_R_, _P_).
         </emu-alg>
       </emu-clause>
-            
+
       <emu-clause id="sec-record-exotic-objects-get-p-receiver" type="internal method">
         <h1>[[Get]] ( _P_, _Receiver_ )</h1>
         <emu-alg>
@@ -144,7 +144,7 @@
             1. Return _R_.
         </emu-alg>
       </emu-clause>
-      
+
       <emu-clause id="sec-recordhasproperty-r-p" type="abstract operation">
         <h1>
           RecordHasProperty (
@@ -191,7 +191,7 @@
 
     <emu-clause id="sec-tuple-exotic-objects">
       <h1>Tuple Exotic Objects</h1>
-      <p>A Tuple object is an exotic object that encapsulates a Tuple value and exposes virtual integer-indexed data properties corresponding to the individual entries set on the underlying Tuple value. All keys properties are non-writable and non-configurable.</p>
+      <p>A Tuple object is an exotic object that encapsulates a Tuple value and exposes virtual integer-indexed data properties corresponding to the individual entries set on the underlying Tuple value. Tuple exotic objects always have a data property named *"length"* whose value is the number of entries in the underlying Tuple value. All keys properties are non-writable and non-configurable.</p>
 
       <p>An object is a <dfn id="tuple-exotic-object">Tuple exotic object</dfn> (or simply, a Tuple object) if its following internal methods use the following implementations and is an <emu-xref href="#sec-immutable-prototype-exotic-objects">Immutable Prototype Exotic Object</emu-xref>.</p>
 
@@ -211,6 +211,9 @@
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *false*.
+          1. If _P_ is *"length"*, then
+            1. Let _length_ be the length of _T_.[[Sequence]].
+            1. Return the PropertyDescriptor { [[Value]]: 𝔽(_length_), [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.
           1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
           1. If _numericIndex_ is *undefined*, return *undefined*.
           1. Let _value_ be ? TupleGet(_T_, _numericIndex_)
@@ -228,6 +231,10 @@
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *false*.
+          1. If _P_ is *"length"*, then
+            1. Let _lengthDesc_ be ! _T_.[[GetOwnProperty]](_P_).
+            1. Let _extensible_ be _T_.[[Extensible]].
+            1. Return ! IsCompatiblePropertyDescriptor(_extensible_, _Desc_, _lengthDesc_).
           1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
           1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
@@ -240,7 +247,7 @@
           1. Return *false*.
         </emu-alg>
       </emu-clause>
-      
+
       <emu-clause id="sec-tuple-exotic-objects-hasproperty-p" type="internal method">
         <h1>[[HasProperty]] ( _P_ )</h1>
         <dl class="header">
@@ -250,13 +257,14 @@
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is not Symbol, then
+            1. If _P_ is *"length"*, return *true*.
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, return ? IsValidTupleIndex(_T_, _numericIndex_)
           1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
           1. Return ? _parent_.[[HasProperty]](_P_).
         </emu-alg>
       </emu-clause>
-            
+
       <emu-clause id="sec-tuple-exotic-objects-get-p-receiver" type="internal method">
         <h1>[[Get]] ( _P_, _Receiver_ )</h1>
         <dl class="header">
@@ -265,6 +273,9 @@
         </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
+          1. If _P_ is *"length"*, then
+            1. Let _length_ be the length of _T_.[[Sequence]].
+            1. Return 𝔽(_length_).
           1. If Type(_P_) is not Symbol, then
             1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, then
@@ -297,6 +308,7 @@
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *true*.
+          1. If _P_ is *"length"*, return *false*.
           1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
           1. If _numericIndex_ is *undefined*, return *true*.
           1. Let _isValidIndex_ ? IsValidTupleIndex( _T_, _numericIndex_ ).
@@ -304,7 +316,7 @@
           1. Return *false*.
         </emu-alg>
       </emu-clause>
-      
+
       <emu-clause id="sec-tuple-exotic-objects-ownpropertykeys" type="internal method">
         <h1>[[OwnPropertyKeys]] ( )</h1>
         <dl class="header">
@@ -320,11 +332,12 @@
           1. Repeat, while _index_ &lt; _len_,
             1. Add ! ToString(_index_) to _keys_.
             1. Set _index_ to _index_ + 1.
+          1. Add *"length"* to _keys_.
           1. Return _keys_
         </emu-alg>
       </emu-clause>
 
-      
+
       <emu-clause id="sec-tuplecreate" type="abstract operation">
         <h1>
           TupleCreate (
@@ -340,10 +353,12 @@
           1. Set _T_'s essential internal methods to the definitions specified in <emu-xref href="#sec-tuple-exotic-objects"></emu-xref>.
           1. Set _T_.[[Prototype]] to %Tuple.prototype%.
           1. Set _T_.[[TupleData]] to _value_.
+          1. Let _length_ be the length of _value_.[[Sequence]].
+          1. Perform ! DefinePropertyOrThrow(_T_, *"length"*, PropertyDescriptor { [[Value]]: 𝔽(_length_), [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }).
           1. Return _T_.
         </emu-alg>
       </emu-clause>
-      
+
       <emu-clause id="sec-isvalidtupleindex-r-p" type="abstract operation">
         <h1>
           IsValidTupleIndex (
