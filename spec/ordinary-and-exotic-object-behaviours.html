@@ -353,8 +353,6 @@
           1. Set _T_'s essential internal methods to the definitions specified in <emu-xref href="#sec-tuple-exotic-objects"></emu-xref>.
           1. Set _T_.[[Prototype]] to %Tuple.prototype%.
           1. Set _T_.[[TupleData]] to _value_.
-          1. Let _length_ be the length of _value_.[[Sequence]].
-          1. Perform ! DefinePropertyOrThrow(_T_, *"length"*, PropertyDescriptor { [[Value]]: 𝔽(_length_), [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }).
           1. Return _T_.
         </emu-alg>
       </emu-clause>
