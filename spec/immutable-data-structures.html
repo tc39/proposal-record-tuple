@@ -190,15 +190,6 @@
         <h1>Tuple.prototype.constructor</h1>
         <p>The initial value of *Tuple.prototype.constructor* is the intrinsic object %Tuple%</p>
       </emu-clause>
-      <emu-clause id="sec-tuple.prototype.length">
-        <h1>get Tuple.prototype.length</h1>
-        <p>*Tuple.prototype.length* is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps:</p>
-        <emu-alg>
-          1. Let _T_ be ? thisTupleValue(*this* value).
-          1. Let _size_ be the length of _T_.[[Sequence]].
-          1. Return 𝔽(_size_).
-        </emu-alg>
-      </emu-clause>
       <emu-clause id="sec-tuple.prototype.at">
         <h1>Tuple.prototype.at ( _index_ )</h1>
         <p>`Tuple.prototype.at` is a distinct function that implements the same algorithm as `Array.prototype.at` as defined in <emu-xref href="#sec-array.prototype.at"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
