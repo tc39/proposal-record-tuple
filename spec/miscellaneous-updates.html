@@ -564,4 +564,28 @@
     </emu-clause>
   </emu-clause>
 
+  <emu-clause id="sec-abstract-operations-for-error-objects">
+    <h1>Miscellaneous updates to Abstract Operations for Error Objects</h1>
+
+    <emu-clause id="sec-installerrorcause" type="abstract operation">
+      <h1>
+        InstallErrorCause (
+          _O_: an Object,
+          _options_: an ECMAScript language value,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It is used to create a *"cause"* property on _O_ when a *"cause"* property is present on _options_.</dd>
+      </dl>
+      <emu-alg>
+        1. <ins>If Type(_options_) is Record, set _options_ to ! ToObject(_options_).</ins>
+        1. If Type(_options_) is Object and ? HasProperty(_options_, *"cause"*) is *true*, then
+          1. Let _cause_ be ? Get(_options_, *"cause"*).
+          1. Perform ! CreateNonEnumerableDataPropertyOrThrow(_O_, *"cause"*, _cause_).
+        1. Return NormalCompletion(*undefined*).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
 </emu-clause>
