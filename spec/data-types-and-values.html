@@ -43,12 +43,8 @@
           1. Repeat, while _k_ &lt; _xLen_,
             1. Let _xField_ be _xList_[_k_].
             1. Let _yField_ be _yList_[_k_].
-            1. Let _xKey_ be _xField_.[[Key]].
-            1. Let _yKey_ be _yField_.[[Key]].
-            1. Let _xValue_ be _xField_.[[Value]].
-            1. Let _yValue_ be _yField_.[[Value]].
-            1. If ! SameValueNonGeneric(_xKey_, _yKey_) is *false*, Return *false*.
-            1. If ! _elementEqual_(_xValue_, _yValue_) is *false*, Return *false*.
+            1. If ! SameValueNonGeneric(_xField_.[[Key]], _yField_.[[Key]]) is *false*, Return *false*.
+            1. If ! _elementEqual_(_xField_.[[Value]], _yField_.[[Value]]) is *false*, Return *false*.
             1. Set _k_ to _k_ + 1.
           1. Return *true*.
         </emu-alg>
