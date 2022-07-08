@@ -128,14 +128,16 @@
           1. Let _k_ be 0.
           1. Let _usingIterator_ be ? GetMethod(_items_, @@iterator).
           1. If _usingIterator_ is not *undefined*, then
-            1. Let _adder_ be a new Abstract Closure with parameters (_key_, _value_) that captures (_list_, _mapFn_, _thisArg_, _mapping_, _k_) and performs the following steps when called:
+            1. Let _closure_ be a new Abstract Closure with parameter (_value_) that captures (_list_, _mapFn_, _thisArg_, _mapping_, _k_) and performs the following steps when called:
+              1. If _k_ &ge; 2<sup>53</sup> - 1, throw a *TypeError* exception.
               1. If _mapping_ is *true*, then
-                1. Let _mappedValue_ be ? Call(_mapfn_, _thisArg_, &laquo; _value_, _k_ &raquo;).
+                1. Let _mappedValue_ be ? Call(_mapfn_, _thisArg_, &laquo; _value_, 𝔽(_k_) &raquo;).
               1. Else, let _mappedValue_ be _value_.
               1. If Type(_mappedValue_) is Object, throw a *TypeError* exception.
               1. Append _mappedValue_ to _list_.
               1. Set _k_ to _k_ + 1.
-            1. Perform ! AddEntriesFromIterable(*undefined*, _iterable_, _adder_).
+            1. Let _adder_ be ! CreateBuiltinFunction(_closure_, 1, *""*, &laquo; &raquo;).
+            1. Perform ? AddValuesFromIterable(*undefined*, _items_, _adder_, _usingIterator_)
             1. Return a new Tuple value whose [[Sequence]] is _list_.
           1. NOTE: _items_ is not an Iterable so assume it is an array-like object.
           1. Let _arrayLike_ be ! ToObject(_items_).
