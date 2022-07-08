@@ -2369,7 +2369,7 @@ li.menu-search-result-term:before {
       </p>
       <emu-note><span class="note">Note</span><div class="note-contents">
         <p>
-          a record value is completely immutable and will not change over time
+          a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref> value is completely immutable and will not change over time
         </p>
       </div></emu-note>
     </emu-clause>
@@ -2403,7 +2403,7 @@ li.menu-search-result-term:before {
       </p>
       <emu-note><span class="note">Note</span><div class="note-contents">
         <p>
-          a tuple value is completely immutable and will not change over time
+          a Tuple value is completely immutable and will not change over time
         </p>
       </div></emu-note>
     </emu-clause>
@@ -2447,7 +2447,7 @@ li.menu-search-result-term:before {
       <emu-clause id="sec-immutable-types-record-equal" aoid="RecordEqual">
         <h1><span class="secnum">2.1.1.2</span> RecordEqual ( <var>x</var>, <var>y</var>, <var>elementEqual</var> )</h1>
         <p>The abstract operation RecordEqual takes arguments <var>x</var> (a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref>), <var>y</var> (a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">Record</a></emu-xref>), and <var>elementEqual</var> (an Abstract Closure). It performs the following steps when called:</p>
-        <emu-alg><ol><li>Let <var>xList</var> be <var>x</var>.[[Fields]].</li><li>Let <var>yList</var> be <var>y</var>.[[Fields]].</li><li>Let <var>xLen</var> be the length of <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> <var>xList</var>.</li><li>Let <var>yLen</var> be the length of <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> <var>yList</var>.</li><li>If <var>xLen</var> ≠ <var>yLen</var>, return <emu-val>false</emu-val>.</li><li>Let <var>k</var> be 0.</li><li>Repeat, while <var>k</var> &lt; <var>xLen</var>,<ol><li>Let <var>xField</var> be <var>xList</var>[<var>k</var>].</li><li>Let <var>yField</var> be <var>yList</var>[<var>k</var>].</li><li>Let <var>xKey</var> be <var>xField</var>.[[Key]].</li><li>Let <var>yKey</var> be <var>yField</var>.[[Key]].</li><li>Let <var>xValue</var> be <var>xField</var>.[[Value]].</li><li>Let <var>yValue</var> be <var>yField</var>.[[Value]].</li><li>If !&nbsp;SameValueNonGeneric(<var>xKey</var>, <var>yKey</var>) is <emu-val>false</emu-val>, Return <emu-val>false</emu-val>.</li><li>If ! <var>elementEqual</var>(<var>xValue</var>, <var>yValue</var>) is <emu-val>false</emu-val>, Return <emu-val>false</emu-val>.</li><li>Set <var>k</var> to <var>k</var> + 1.</li></ol></li><li>Return <emu-val>true</emu-val>.</li></ol></emu-alg>
+        <emu-alg><ol><li>Let <var>xList</var> be <var>x</var>.[[Fields]].</li><li>Let <var>yList</var> be <var>y</var>.[[Fields]].</li><li>Let <var>xLen</var> be the length of <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> <var>xList</var>.</li><li>Let <var>yLen</var> be the length of <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.es/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> <var>yList</var>.</li><li>If <var>xLen</var> ≠ <var>yLen</var>, return <emu-val>false</emu-val>.</li><li>Let <var>k</var> be 0.</li><li>Repeat, while <var>k</var> &lt; <var>xLen</var>,<ol><li>Let <var>xField</var> be <var>xList</var>[<var>k</var>].</li><li>Let <var>yField</var> be <var>yList</var>[<var>k</var>].</li><li>If !&nbsp;SameValueNonGeneric(<var>xField</var>.[[Key]], <var>yField</var>.[[Key]]) is <emu-val>false</emu-val>, Return <emu-val>false</emu-val>.</li><li>If ! <var>elementEqual</var>(<var>xField</var>.[[Value]], <var>yField</var>.[[Value]]) is <emu-val>false</emu-val>, Return <emu-val>false</emu-val>.</li><li>Set <var>k</var> to <var>k</var> + 1.</li></ol></li><li>Return <emu-val>true</emu-val>.</li></ol></emu-alg>
       </emu-clause>
 
       <emu-clause id="sec-immutable-types-record-sameValue" aoid="RecordSameValue">
