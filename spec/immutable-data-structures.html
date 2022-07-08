@@ -563,6 +563,72 @@
           1. Return a new Tuple value whose [[Sequence]] is _list_.
         </emu-alg>
       </emu-clause>
+
+      <emu-clause id="sec-tuple.prototype.group">
+          <h1>Tuple.prototype.group ( _callbackfn_ [ , _thisArg_ ] )</h1>
+          <emu-note>
+            <p>_callbackfn_ should be a function that accepts three arguments. `group` calls _callbackfn_ once for each element in the Tuple, in ascending order, and constructs a new object of arrays. Each value returned by _callbackfn_ is coerced to a property key, and the associated element is included in the array in the constructed object according to this property key.</p>
+            <p>If a _thisArg_ parameter is provided, it will be used as the *this* value for each invocation of _callbackfn_. If it is not provided, *undefined* is used instead.</p>
+            <p>_callbackfn_ is called with three arguments: the value of the element, the index of the element, and the Tuple being traversed.</p>
+            <p>The return value of `group` is an object that does not inherit from _Object.prototype_.</p>
+          </emu-note>
+          <p>When the `group` method is called with one or two arguments, the following steps are taken:</p>
+          <emu-alg>
+            1. Let _O_ be ? ToObject(*this* value).
+            1. Let _len_ be ? LengthOfArrayLike(_O_).
+            1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
+            1. Let _k_ be 0.
+            1. Let _groups_ be a new empty List.
+            1. Repeat, while _k_ &lt; _len_
+              1. Let _Pk_ be ! ToString(𝔽(_k_)).
+              1. Let _kValue_ be ? Get(_O_, _Pk_).
+              1. Let _propertyKey_ be ? ToPropertyKey(? Call(_callbackfn_, _thisArg_, &laquo; _kValue_, 𝔽(_k_), _O_ &raquo;)).
+              1. Perform AddValueToKeyedGroup(_groups_, _propertyKey_, _kValue_).
+              1. Set _k_ to _k_ + 1.
+            1. Let _obj_ be OrdinaryObjectCreate(*null*).
+            1. For each Record { [[Key]], [[Elements]] } _g_ of _groups_, do
+              1. Let _elements_ be CreateArrayFromList(_g_.[[Elements]]).
+              1. Perform ! CreateDataPropertyOrThrow(_obj_, _g_.[[Key]], _elements_).
+            1. Return _obj_.
+          </emu-alg>
+          <emu-note>
+            <p>The `group` function is intentionally generic; it does not require that its *this* value be a Tuple object. Therefore it can be transferred to other kinds of objects for use as a method.</p>
+          </emu-note>
+        </emu-clause>
+
+        <emu-clause id="sec-tuple.prototype.grouptomap">
+          <h1>Tuple.prototype.groupToMap ( _callbackfn_ [ , _thisArg_ ] )</h1>
+          <emu-note>
+            <p>_callbackfn_ should be a function that accepts three arguments. `groupToMap` calls _callbackfn_ once for each element in the Tuple, in ascending order, and constructs a new Map of arrays. Each value returned by _callbackfn_ is used as a key in the Map, and the associated element is included in the array in the constructed Map according to this key.</p>
+            <p>If a _thisArg_ parameter is provided, it will be used as the *this* value for each invocation of _callbackfn_. If it is not provided, *undefined* is used instead.</p>
+            <p>_callbackfn_ is called with three arguments: the value of the element, the index of the element, and the Tuple being traversed.</p>
+            <p>The return value of `groupToMap` is a Map.</p>
+          </emu-note>
+          <p>When the `groupToMap` method is called with one or two arguments, the following steps are taken:</p>
+          <emu-alg>
+            1. Let _O_ be ? ToObject(*this* value).
+            1. Let _len_ be ? LengthOfArrayLike(_O_).
+            1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
+            1. Let _k_ be 0.
+            1. Let _groups_ be a new empty List.
+            1. Repeat, while _k_ &lt; _len_
+              1. Let _Pk_ be ! ToString(𝔽(_k_)).
+              1. Let _kValue_ be ? Get(_O_, _Pk_).
+              1. Let _key_ be ? Call(_callbackfn_, _thisArg_, &laquo; _kValue_, 𝔽(_k_), _O_ &raquo;).
+              1. If _key_ is *-0*<sub>𝔽</sub>, set _key_ to *+0*<sub>𝔽</sub>.
+              1. Perform AddValueToKeyedGroup(_groups_, _key_, _kValue_).
+              1. Set _k_ to _k_ + 1.
+            1. Let _map_ be ! Construct(%Map%).
+            1. For each Record { [[Key]], [[Elements]] } _g_ of _groups_, do
+              1. Let _elements_ be CreateArrayFromList(_g_.[[Elements]]).
+              1. Let _entry_ be the Record { [[Key]]: _g_.[[Key]], [[Value]]: _elements_ }.
+              1. Append _entry_ as the last element of _map_.[[MapData]].
+            1. Return _map_.
+          </emu-alg>
+          <emu-note>
+            <p>The `groupToMap` function is intentionally generic; it does not require that its *this* value be a Tuple object. Therefore it can be transferred to other kinds of objects for use as a method.</p>
+          </emu-note>
+        </emu-clause>
     </emu-clause>
   </emu-clause>
 </emu-clause>
