@@ -1,6 +1,6 @@
 <emu-clause id="sec-purely-editorial">
 	<h1>Purely editorial changes</h1>
-  <p>These changes to unrelated parts of the ecma262 specification are editorial and don't affect the behavior of the modified algorithms. They are refactorings used to share existing algorithm steps with the new algorithms introduced by this proposal.</p>
+  <p>These changes to unrelated parts of the ecma262 specification are editorial and don't affect the behaviour of the modified algorithms. They are refactorings used to share existing algorithm steps with the new algorithms introduced by this proposal.</p>
 
   <emu-clause id="sec-set-objects">
     <h1>Set Objects</h1>
@@ -23,14 +23,14 @@
             1. <del>Let _next_ be ? IteratorStep(_iteratorRecord_).</del>
             1. <del>If _next_ is *false*, return _set_.</del>
             1. <del>Let _nextValue_ be ? IteratorValue(_next_).</del>
-            1. <del>Let _status_ be Call(_adder_, _set_, &laquo; _nextValue_ &raquo;).</del>
+            1. <del>Let _status_ be Completion(Call(_adder_, _set_, &laquo; _nextValue_ &raquo;)).</del>
             1. <del>IfAbruptCloseIterator(_status_, _iteratorRecord_).</del>
           1. <ins>Return ? AddValuesFromIterable(_set_, _iterable_, _adder_).</ins>
         </emu-alg>
 
         <emu-clause id="sec-add-values-from-iterable" type="abstract operation">
           <h1>
-            <ins>AddValuesFromIterable</ins> (
+            AddValuesFromIterable (
               _target_: unknown,
               _iterable_: an ECMAScript language value, but not *undefined* or *null*,
               _adder_: a function object,
@@ -49,7 +49,7 @@
               1. Let _next_ be ? IteratorStep(_iteratorRecord_).
               1. If _next_ is *false*, return _target_.
               1. Let _nextValue_ be ? IteratorValue(_next_).
-              1. Let _status_ be Call(_adder_, _target_, &laquo; _nextValue_ &raquo;).
+              1. Let _status_ be Completion(Call(_adder_, _target_, &laquo; _nextValue_ &raquo;)).
               1. IfAbruptCloseIterator(_status_, _iteratorRecord_).
           </emu-alg>
           <emu-note>
@@ -81,7 +81,7 @@
             1. <del>Let _next_ be ? IteratorStep(_iteratorRecord_).</del>
             1. <del>If _next_ is *false*, return _set_.</del>
             1. <del>Let _nextValue_ be ? IteratorValue(_next_).</del>
-            1. <del>Let _status_ be Call(_adder_, _set_, &laquo; _nextValue_ &raquo;).</del>
+            1. <del>Let _status_ be Completion(Call(_adder_, _set_, &laquo; _nextValue_ &raquo;)).</del>
             1. <del>IfAbruptCloseIterator(_status_, _iteratorRecord_).</del>
           1. <ins>Return ? AddValuesFromIterable(_set_, _iterable_, _adder_).</ins>
         </emu-alg>

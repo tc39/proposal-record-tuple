@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "description": "Record and Tuple value types for JS",
   "scripts": {
-    "prebuild:spec": "mkdirp out",
+    "_prebuild:spec": "mkdirp out",
     "prewatch:spec": "mkdirp out",
-    "build:spec": "ecmarkup spec.html out/index.html",
+    "build:spec": "ecmarkup --lint-spec --verbose --load-biblio @tc39/ecma262-biblio spec.html out/index.html",
     "build:cookbook": "node ./scripts/build-static-page.mjs cookbook",
     "build:tutorial": "node ./scripts/build-static-page.mjs tutorial",
     "build": "concurrently npm:build:spec npm:build:cookbook npm:build:tutorial",
@@ -26,11 +26,15 @@
   },
   "homepage": "https://github.com/tc39/proposal-record-tuple#readme",
   "dependencies": {
+    "@tc39/ecma262-biblio": "^2.1.2336",
     "browser-sync": "^2.26.7",
     "concurrently": "^5.2.0",
-    "ecmarkup": "^9.1.0",
-    "mkdirp": "^0.5.1",
+    "ecmarkup": "^13.0.1",
     "fs-extra": "^9.0.1",
-    "marked": "^4.0.10"
+    "marked": "^4.0.10",
+    "mkdirp": "^0.5.1"
+  },
+  "overrides": {
+    "nwsapi": "2.2.0"
   }
 }

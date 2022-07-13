@@ -15,7 +15,7 @@
       <p>Record exotic objects have the same internal slots as ordinary objects. They also have a [[RecordData]] internal slot.</p>
 
       <emu-clause id="sec-record-exotic-objects-isextensible" type="internal method">
-        <h1>[[IsExtensible]] ()</h1>
+        <h1>[[IsExtensible]] ( )</h1>
         <dl class="header">
           <dt>for</dt>
           <dd>a Record exotic object</dd>
@@ -79,7 +79,7 @@
           1. If Type(_P_) is a Symbol, return *undefined*.
           1. Let _value_ be ! RecordGet( _R_, _P_ ).
           1. If _value_ is ~empty~, return *undefined*.
-          1. Return _value_
+          1. Return _value_.
         </emu-alg>
       </emu-clause>
 
@@ -118,11 +118,11 @@
           1. Let _keys_ be a new empty List.
           1. Let _rec_ be _R_.[[RecordData]].
           1. Assert: Type(_rec_) is Record.
-          1. For each _entry_ of _rec_.[[Fields]], do
-            1. Let _key_ be _entry_.[[Key]]
-            1. Assert: Type(_key_) is String
+          1. For each element _entry_ of _rec_.[[Fields]], do
+            1. Let _key_ be _entry_.[[Key]].
+            1. Assert: Type(_key_) is String.
             1. Append _key_ to _keys_.
-          1. Return _keys_
+          1. Return _keys_.
         </emu-alg>
       </emu-clause>
 
@@ -137,7 +137,7 @@
           <dd>It is used to specify the creation of new Record exotic objects.</dd>
         </dl>
         <emu-alg>
-            1. Let _R_ be ! MakeBasicObject(&laquo; [[RecordData]], [[Prototype]] &raquo;).
+            1. Let _R_ be MakeBasicObject(&laquo; [[RecordData]], [[Prototype]] &raquo;).
             1. Set _R_'s essential internal methods to the definitions specified in <emu-xref href="#sec-record-exotic-objects"></emu-xref>.
             1. Set _R_.[[Prototype]] to *null*.
             1. Set _R_.[[RecordData]] to _value_.
@@ -157,8 +157,8 @@
           1. If Type(_P_) is a Symbol, return *false*.
           1. Let _rec_ be _R_.[[RecordData]].
           1. Assert Type(_rec_) is a Record.
-          1. For each _entry_ of _rec_.[[Fields]], do
-            1. Let _key_ be _entry_.[[Key]]
+          1. For each element _entry_ of _rec_.[[Fields]], do
+            1. Let _key_ be _entry_.[[Key]].
             1. If ! SameValue(_key_, _P_) is *true*, return *true*.
           1. Return *false*.
         </emu-alg>
@@ -178,7 +178,7 @@
           1. Let _rec_ be _R_.[[RecordData]].
           1. Assert Type(_rec_) is Record.
           1. Let _len_ be the length of _rec_.
-          1. For each _entry_ of _rec_.[[Fields]], do:
+          1. For each element _entry_ of _rec_.[[Fields]], do
             1. Let _key_ be _entry_.[[Key]].
             1. Let _val_ be _entry_.[[Value]].
             1. Assert: Type(_key_) is String.
@@ -198,7 +198,7 @@
       <p>Tuple exotic objects have the same internal slots as ordinary objects. They also have a [[TupleData]] internal slot.</p>
 
       <emu-clause id="sec-tuple-exotic-objects-isextensible">
-        <h1>[[IsExtensible]] ()</h1>
+        <h1>[[IsExtensible]] ( )</h1>
         <p>When the [[IsExtensible]] internal method of a Tuple exotic object _T_ is called, the following steps are taken:</p>
         <emu-alg>
           1. Return *false*.
@@ -214,9 +214,9 @@
           1. If _P_ is *"length"*, then
             1. Let _length_ be the length of _T_.[[Sequence]].
             1. Return the PropertyDescriptor { [[Value]]: 𝔽(_length_), [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.
-          1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
+          1. Let _numericIndex_ be CanonicalNumericIndexString(_P_).
           1. If _numericIndex_ is *undefined*, return *undefined*.
-          1. Let _value_ be ? TupleGet(_T_, _numericIndex_)
+          1. Let _value_ be ? TupleGet(_T_, _numericIndex_).
           1. If _value_ is ~empty~, return *undefined*.
           1. Return the PropertyDescriptor { [[Value]]: _value_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
         </emu-alg>
@@ -234,13 +234,13 @@
           1. If _P_ is *"length"*, then
             1. Let _lengthDesc_ be ! _T_.[[GetOwnProperty]](_P_).
             1. Let _extensible_ be _T_.[[Extensible]].
-            1. Return ! IsCompatiblePropertyDescriptor(_extensible_, _Desc_, _lengthDesc_).
+            1. Return IsCompatiblePropertyDescriptor(_extensible_, _Desc_, _lengthDesc_).
           1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
           1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
-          1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
+          1. Let _numericIndex_ be CanonicalNumericIndexString(_P_).
           1. If _numericIndex_ is *undefined*, return *false*.
-          1. Let _current_ be ? TupleGet(_T_, _numericIndex_)
+          1. Let _current_ be ? TupleGet(_T_, _numericIndex_).
           1. If _current_ is ~empty~ return *false*.
           1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
           1. If _Desc_.[[Value]] is present, return ! SameValue(_Desc_.[[Value]], _current_).
@@ -258,8 +258,8 @@
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is not Symbol, then
             1. If _P_ is *"length"*, return *true*.
-            1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
-            1. If _numericIndex_ is not *undefined*, return ? IsValidTupleIndex(_T_, _numericIndex_)
+            1. Let _numericIndex_ be CanonicalNumericIndexString(_P_).
+            1. If _numericIndex_ is not *undefined*, return ? IsValidTupleIndex(_T_, _numericIndex_).
           1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
           1. Return ? _parent_.[[HasProperty]](_P_).
         </emu-alg>
@@ -277,7 +277,7 @@
             1. Let _length_ be the length of _T_.[[Sequence]].
             1. Return 𝔽(_length_).
           1. If Type(_P_) is not Symbol, then
-            1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
+            1. Let _numericIndex_ be CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, then
               1. Let _value_ be ? TupleGet(_T_, _numericIndex_).
               1. If _value_ is ~empty~, return *undefined*.
@@ -309,7 +309,7 @@
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *true*.
           1. If _P_ is *"length"*, return *false*.
-          1. Let _numericIndex_ be ! CanonicalNumericIndexString(_P_).
+          1. Let _numericIndex_ be CanonicalNumericIndexString(_P_).
           1. If _numericIndex_ is *undefined*, return *true*.
           1. Let _isValidIndex_ ? IsValidTupleIndex( _T_, _numericIndex_ ).
           1. If _isValidIndex_ is *false*, return *true*.
@@ -333,10 +333,9 @@
             1. Add ! ToString(_index_) to _keys_.
             1. Set _index_ to _index_ + 1.
           1. Add *"length"* to _keys_.
-          1. Return _keys_
+          1. Return _keys_.
         </emu-alg>
       </emu-clause>
-
 
       <emu-clause id="sec-tuplecreate" type="abstract operation">
         <h1>
@@ -349,7 +348,7 @@
           <dd>It is used to specify the creation of new Tuple exotic objects.</dd>
         </dl>
         <emu-alg>
-          1. Let _T_ be ! MakeBasicObject(&laquo; [[TupleData]], [[Prototype]] &raquo;).
+          1. Let _T_ be MakeBasicObject(&laquo; [[TupleData]], [[Prototype]] &raquo;).
           1. Set _T_'s essential internal methods to the definitions specified in <emu-xref href="#sec-tuple-exotic-objects"></emu-xref>.
           1. Set _T_.[[Prototype]] to %Tuple.prototype%.
           1. Set _T_.[[TupleData]] to _value_.
@@ -366,7 +365,7 @@
         </h1>
         <dl class="header"></dl>
         <emu-alg>
-          1. If _numericIndex_ is *-0*, return *false*.
+          1. If _numericIndex_ is *-0*<sub>𝔽</sub>, return *false*.
           1. If ℝ(_numericIndex_) &lt; 0 or ℝ(_numericIndex_) &ge; the length of _T_.[[TupleData]].[[Sequence]], return *false*.
           1. Return *true*.
         </emu-alg>
@@ -382,7 +381,7 @@
         <dl class="header"></dl>
         <emu-alg>
           1. Let _tup_ be _T_.[[TupleData]].
-          1. If ! IsValidTupleIndex(_numericIndex_) is *false*, return ~empty~.
+          1. If ! IsValidTupleIndex(_T_, _numericIndex_) is *false*, return ~empty~.
           1. Let _value_ be the element with index ℝ(_numericIndex_) in _tup_.[[Sequence]].
           1. Return _value_.
         </emu-alg>

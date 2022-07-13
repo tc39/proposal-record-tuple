@@ -13,9 +13,9 @@
       <p>The optional _reviver_ parameter is a function that takes two parameters, _key_ and _value_. It can filter and transform the results. It is called with each of the _key_/_value_ pairs produced by the parse, and its return value is used instead of the original value. If it returns what it received, the structure is not modified. If it returns *undefined* then the property is deleted from the result.</p>
       <emu-alg>
         1. <del>Let _jsonString_ be ? ToString(_text_).</del>
-        1. <del>Parse ! UTF16DecodeString(_jsonString_) as a JSON text as specified in ECMA-404. Throw a *SyntaxError* exception if it is not a valid JSON text as defined in that specification.</del>
+        1. <del>Parse StringToCodePoints(_jsonString_) as a JSON text as specified in ECMA-404. Throw a *SyntaxError* exception if it is not a valid JSON text as defined in that specification.</del>
         1. <del>Let _scriptString_ be the string-concatenation of *"("*, _jsonString_, and *");"*.</del>
-        1. <del>Let _completion_ be the result of parsing and evaluating ! UTF16DecodeString(_scriptString_) as if it was the source text of an ECMAScript |Script|. The extended PropertyDefinitionEvaluation semantics defined in must not be used during the evaluation.</del>
+        1. <del>Let _completion_ be the result of parsing and evaluating StringToCodePoints(_scriptString_) as if it was the source text of an ECMAScript |Script|. The extended PropertyDefinitionEvaluation semantics defined in must not be used during the evaluation.</del>
         1. <del>Let _unfiltered_ be _completion_.[[Value]].</del>
         1. <del>Assert: _unfiltered_ is either a String, Number, Boolean, Null, or an Object that is defined by either an |ArrayLiteral| or an |ObjectLiteral|.</del>
         1. <ins>Let _unfiltered_ be ? ParseJSONText(_text_).</ins>
@@ -29,10 +29,10 @@
       </emu-alg>
       <p>This function is the <dfn>%JSONParse%</dfn> intrinsic object.</p>
       <p>The *"length"* property of the `parse` function is 2.</p>
-  
+
       <emu-clause id="sec-parsejsontext" type="abstract operation">
         <h1>
-          <ins>ParseJSONText</ins> (
+          ParseJSONText (
             _text_: an ECMAScript language value
           )
         </h1>
@@ -42,16 +42,16 @@
         </dl>
         <emu-alg>
           1. Let _jsonString_ be ? ToString(_text_).
-          1. Parse ! UTF16DecodeString(_jsonString_) as a JSON text as specified in ECMA-404. Throw a *SyntaxError* exception if it is not a valid JSON text as defined in that specification.
+          1. Parse StringToCodePoints(_jsonString_) as a JSON text as specified in ECMA-404. Throw a *SyntaxError* exception if it is not a valid JSON text as defined in that specification.
           1. Let _scriptString_ be the string-concatenation of *"("*, _jsonString_, and *");"*.
-          1. Let _completion_ be the result of parsing and evaluating ! UTF16DecodeString(_scriptString_) as if it was the source text of an ECMAScript |Script|. The extended PropertyDefinitionEvaluation semantics defined in must not be used during the evaluation.
+          1. Let _completion_ be the result of parsing and evaluating StringToCodePoints(_scriptString_) as if it was the source text of an ECMAScript |Script|. The extended PropertyDefinitionEvaluation semantics defined in must not be used during the evaluation.
           1. Let _unfiltered_ be _completion_.[[Value]].
           1. Assert: _unfiltered_ is either a String, Number, Boolean, Null, or an Object that is defined by either an |ArrayLiteral| or an |ObjectLiteral|.
           1. Return _unfiltered_.
         </emu-alg>
       </emu-clause>
     </emu-clause>
-  
+
     <emu-clause id="sec-json.parseimmutable">
       <h1><ins>JSON.parseImmutable ( _text_ [ , _reviver_ ] )</ins></h1>
       <p>The `parseImmutable` function parses a JSON text (a JSON-formatted String) and produces an ECMAScript value. The JSON format represents literals, arrays, and objects with a syntax similar to the syntax for ECMAScript literals, Array Initializers, and Object Initializers. After parsing, JSON objects are realized as ECMAScript records. JSON arrays are realized as ECMAScript tuples. JSON strings, numbers, booleans, and null are realized as ECMAScript Strings, Numbers, Booleans, and *null*.</p>
@@ -62,10 +62,10 @@
       </emu-alg>
       <p>This function is the <dfn>%JSONParseImmutable%</dfn> intrinsic object.</p>
       <p>The *"length"* property of the `parseImmutable` function is 2.</p>
-  
+
       <emu-clause id="sec-buildimmutableproperty" type="abstract operation">
         <h1>
-          <ins>BuildImmutableProperty</ins> (
+          BuildImmutableProperty (
             _value_: an ECMAScript language value,
             _name_: a String,
             _reviver_: a function object or Undefined,
@@ -90,12 +90,12 @@
             1. Else,
               1. Let _props_ be ? EnumerableOwnPropertyNames(_obj_, ~key+value~).
               1. Let _fields_ be a new empty List.
-              1. For each element _prop_ of _props_,
+              1. For each element _prop_ of _props_, do
                 1. Let _childName_ be ! GetV(_prop_, `"0"`).
                 1. Let _childValue_ be ! GetV(_prop_, `"1"`).
                 1. Let _newElement_ be ? BuildImmutableProperty(_childValue_, _childName_, _reviver_).
                 1. Assert: Type(_newElement_) is not Object.
-                1. If _newElement_ is not *undefined*, then:
+                1. If _newElement_ is not *undefined*, then
                   1. Let _field_ be the Record { [[Key]]: _childName_, [[Value]]: _newElement_ }.
                   1. Append _field_ to _fields_.
               1. Let _immutable_ be ! CreateRecord(_fields_).
@@ -111,11 +111,11 @@
           <p>In the case where there are duplicate name Strings within an object, lexically preceding values for the same key shall be overwritten.</p>
         </emu-note>
       </emu-clause>
-  
+
       <emu-note>
-        <p>There are two differences in the behavior of the _reviver_ parameter of the *JSON.parse* and *JSON.parseImmutable* functions:</p>
+        <p>There are two differences in the behaviour of the _reviver_ parameter of the *JSON.parse* and *JSON.parseImmutable* functions:</p>
         <ul>
-          <li>*JSON.parse* passes the parent object as the *this* object, while *JSON.parseImmutable* passes *undefined*.</li>
+          <li>*JSON.parse* passes the parent object as the *this* value, while *JSON.parseImmutable* passes *undefined*.</li>
           <li>When _reviver_ returns *undefined* for an array element, it introduced an hole. When _reviver_ returns *undefined* for a tuple element, *undefined* is used as the resulting value.</li>
         </ul>
       </emu-note>

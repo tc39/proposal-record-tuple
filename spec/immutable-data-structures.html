@@ -23,7 +23,7 @@
           1. Let _obj_ be ? ToObject(_arg_).
           1. Let _keys_ be ? _obj_.[[OwnPropertyKeys]]().
           1. Let _fields_ be a new empty List.
-          1. For each element _key_ of _keys_,
+          1. For each element _key_ of _keys_, do
             1. Let _desc_ be ? _obj_.[[GetOwnProperty]](_key_).
             1. If _desc_ is not *undefined* and _desc_.[[Enumerable]] is *true*, then
               1. If Type(_key_) is Symbol, throw a *TypeError* exception.
@@ -95,7 +95,7 @@
         <emu-alg>
           1. If NewTarget is not *undefined*, throw a *TypeError* exception.
           1. Let _items_ be the List of arguments passed to this function.
-          1. For each element _e_ of _items_,
+          1. For each element _e_ of _items_, do
             1. If Type(_e_) is Object, throw a *TypeError* exception.
           1. Let _tuple_ be a new Tuple value whose [[Sequence]] is _items_.
           1. Return _tuple_.
@@ -117,7 +117,7 @@
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.from">
-        <h1>Tuple.from ( _items_ [ , _mapFn_ [, _thisArg_ ] ] )</h1>
+        <h1>Tuple.from ( _items_ [ , _mapfn_ [ , _thisArg_ ] ] )</h1>
         <p>When the `from` method is called with argument _items_ and optional arguments _mapfn_ and _thisArg_, the following steps are taken:</p>
         <emu-alg>
           1. If _mapfn_ is *undefined*, let _mapping_ be *false*.
@@ -136,8 +136,8 @@
               1. If Type(_mappedValue_) is Object, throw a *TypeError* exception.
               1. Append _mappedValue_ to _list_.
               1. Set _k_ to _k_ + 1.
-            1. Let _adder_ be ! CreateBuiltinFunction(_closure_, 1, *""*, &laquo; &raquo;).
-            1. Perform ? AddValuesFromIterable(*undefined*, _items_, _adder_, _usingIterator_)
+            1. Let _adder_ be CreateBuiltinFunction(_closure_, 1, *""*, &laquo; &raquo;).
+            1. Perform ? AddValuesFromIterable(*undefined*, _items_, _adder_, _usingIterator_).
             1. Return a new Tuple value whose [[Sequence]] is _list_.
           1. NOTE: _items_ is not an Iterable so assume it is an array-like object.
           1. Let _arrayLike_ be ! ToObject(_items_).
@@ -159,7 +159,7 @@
         <p>The *of* method takes any number of arguments, and performs the following steps:</p>
         <emu-alg>
           1. Let _items_ be the List of arguments passed to this function.
-          1. For each element _e_ of _items_,
+          1. For each element _e_ of _items_, do
             1. If Type(_e_) is Object, throw a *TypeError* exception.
           1. Let _tuple_ be a new Tuple value whose [[Sequence]] is _items_.
           1. Return _tuple_.
@@ -179,15 +179,26 @@
         <li>is not a Tuple object; it does not have a [[TupleData]] internal slot.</li>
         <li>has a [[Prototype]] internal slot whose value is *null*.</li>
       </ul>
-      <p>The abstract operation <dfn id="sec-thistuplevalue" aoid="thisTupleValue">thisTupleValue</dfn> takes argument _value_. It performs the following steps when called:</p>
-      <emu-alg>
-        1. If Type(_value_) is Tuple, return _value_.
-        1. If Type(_value_) is Object and _value_ has a [[TupleData]] internal slot, then
-          1. Let _t_ be _value_.[[TupleData]].
-          1. Assert: Type(_t_) is Tuple.
-          1. Return _t_.
-        1. Throw a *TypeError* exception.
-      </emu-alg>
+      <emu-clause id="sec-thistuplevalue" type="abstract operation">
+        <h1>
+          thisTupleValue (
+            _value_: unknown,
+          ): either a normal completion containing a Tuple or a throw completion
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It throws an exception unless _O_ is an Object and has the given internal slot.</dd>
+        </dl>
+        <emu-alg>
+          1. If Type(_value_) is Tuple, return _value_.
+          1. If Type(_value_) is Object and _value_ has a [[TupleData]] internal slot, then
+            1. Let _t_ be _value_.[[TupleData]].
+            1. Assert: Type(_t_) is Tuple.
+            1. Return _t_.
+          1. Throw a *TypeError* exception.
+        </emu-alg>
+      </emu-clause>
+
       <emu-clause id="sec-tuple.prototype.constructor">
         <h1>Tuple.prototype.constructor</h1>
         <p>The initial value of *Tuple.prototype.constructor* is the intrinsic object %Tuple%</p>
@@ -217,10 +228,12 @@
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be _T_.[[Sequence]].
           1. Let _len_ be the number of elements in _list_.
-          1. Let _relativeStart_ be ? ToInteger(_start_).
-          1. If _relativeStart_ &lt; 0, let _k_ be max((_len_ + _relativeStart_), 0); else let _k_ be min(_relativeStart_, _len_).
-          1. If _end_ is *undefined*, let _relativeEnd_ be _len_; else let _relativeEnd_ be ? ToInteger(_end_).
-          1. If _relativeEnd_ &lt; 0, let _final_ be max((_len_ + _relativeEnd_), 0); else let _final_ be min(_relativeEnd_, _len_).
+          1. Let _relativeStart_ be ? ToIntegerOrInfinity(_start_).
+          1. If _relativeStart_ is -&infin;, let _k_ be 0.
+          1. Else if _relativeStart_ &lt; 0, let _k_ be max((_len_ + _relativeStart_), 0); else let _k_ be min(_relativeStart_, _len_).
+          1. If _end_ is *undefined*, let _relativeEnd_ be _len_; else let _relativeEnd_ be ? ToIntegerOrInfinity(_end_).
+          1. If _relativeEnd_ is -&infin;, let _final_ be 0.
+          1. Else if _relativeEnd_ &lt; 0, let _final_ be max((_len_ + _relativeEnd_), 0); else let _final_ be min(_relativeEnd_, _len_).
           1. Let _newList_ be a new empty List.
           1. Repeat, while _k_ &lt; _final_,
             1. Let _kValue_ be _list_[_k_].
@@ -351,7 +364,7 @@
           1. Let _list_ be _T_.[[Sequence]].
           1. Let _depthNum_ be 1.
           1. If _depth_ is not *undefined*, then
-            1. Set _depthNum_ to ? ToInteger(_depth_).
+            1. Set _depthNum_ to ? ToIntegerOrInfinity(_depth_).
           1. Let _flat_ be a new empty List.
           1. Perform ? FlattenIntoTuple(_flat_, _list_, _depthNum_).
           1. Return a new Tuple value whose [[Sequence]] is _flat_.
@@ -363,10 +376,10 @@
           <emu-alg>
             1. Assert: _target_ is a List.
             1. Assert: _source_ is a List.
-            1. Assert: ! IsInteger(_depth_) is *true*, or _depth_ is either *+&infin;* or *-&infin;*.
-            1. Assert: If _mapperFunction_ is present, then ! IsCallable(_mapperFunction_) is *true*, _thisArg_ is present, and _depth_ is *1*.
+            1. Assert: IsIntegralNumber(_depth_) is *true*, or _depth_ is either *+&infin;*<sub>𝔽</sub> or *-&infin;*<sub>𝔽</sub>.
+            1. Assert: If _mapperFunction_ is present, then IsCallable(_mapperFunction_) is *true*, _thisArg_ is present, and _depth_ is 1.
             1. Let _sourceIndex_ be 0.
-            1. For each _element_ of _source_,
+            1. For each element _element_ of _source_, do
               1. If _mapperFunction_ is present, then
                 1. Set _element_ to ? Call(_mapperFunction_, _thisArg_, &laquo; _element_, _sourceIndex_, _source_ &raquo;).
                 1. If Type(_element_) is Object, throw a *TypeError* exception.
@@ -386,7 +399,7 @@
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be _T_.[[Sequence]].
-          1. If ! IsCallable(_mapperFunction_) is *false*, throw a *TypeError* exception.
+          1. If IsCallable(_mapperFunction_) is *false*, throw a *TypeError* exception.
           1. Let _flat_ be a new empty List.
           1. Perform ? FlattenIntoTuple(_flat_, _list_, 1, _mapperFunction_, _thisArg_).
           1. Return a new Tuple value whose [[Sequence]] is _flat_.
@@ -410,7 +423,7 @@
       <emu-clause id="sec-tuple.prototype.map">
         <h1>Tuple.prototype.map ( _callbackfn_ [ , _thisArg_ ] )</h1>
         <emu-note>
-          <p>_callbackfn_ should be a function that accepts three arguments. `map` calls _callbackfn_ once for each element in the Tuple, in ascending order, and constructs a new tuple from the results. </p>
+          <p>_callbackfn_ should be a function that accepts three arguments. `map` calls _callbackfn_ once for each element in the Tuple, in ascending order, and constructs a new tuple from the results.</p>
           <p>If a _thisArg_ parameter is provided, it will be used as the *this* value for each invocation of _callbackfn_. If it is not provided, *undefined* is used instead.</p>
           <p>_callbackfn_ is called with three arguments: the value of the element, the index of the element, and the Tuple being traversed.</p>
         </emu-note>
@@ -452,12 +465,12 @@
         <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.tostring">
-        <h1>Tuple.prototype.toString ()</h1>
+        <h1>Tuple.prototype.toString ( )</h1>
         <p>`Tuple.prototype.toString` is a distinct function that implements the same algorithm as `Array.prototype.toString` as defined in <emu-xref href="#sec-array.prototype.tostring"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
         <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.values">
-        <h1>Tuple.prototype.values ()</h1>
+        <h1>Tuple.prototype.values ( )</h1>
         <p>When the *values* method is called, it returns an iterator over the values of the Tuple.</p>
         <p>The following steps are taken:</p>
         <emu-alg>
@@ -467,7 +480,7 @@
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype-@@iterator">
-        <h1>Tuple.prototype [ @@iterator ] ()</h1>
+        <h1>Tuple.prototype [ @@iterator ] ( )</h1>
         <p>The initial value of the @@iterator property is %Tuple.prototype.values%.</p>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.toReversed">
@@ -512,7 +525,7 @@
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be _T_.[[Sequence]].
           1. Let _len_ be the number of elements in _list_.
-          1. Let _relativeStart_ be ? ToInteger(_start_).
+          1. Let _relativeStart_ be ? ToIntegerOrInfinity(_start_).
           1. If _relativeStart_ &lt; 0, let _actualStart_ be max((_len_ + _relativeStart_), 0); else let _actualStart_ be min(_relativeStart_, _len_).
           1. If the number of actual arguments is 0, then
             1. Let _insertCount_ be 0.
@@ -522,7 +535,7 @@
             1. Let _actualDeleteCount_ be _len_ - _actualStart_.
           1. Else,
             1. Let _insertCount_ be the number of actual arguments minus 2.
-            1. Let _dc_ be ? ToInteger(_deleteCount_).
+            1. Let _dc_ be ? ToIntegerOrInfinity(_deleteCount_).
             1. Let _actualDeleteCount_ be min(max(_dc_, 0), _len_ - _actualStart_).
           1. If _len_ + _insertCount_ - _actualDeleteCount_ &gt; 2<sup>53</sup> - 1, throw a *TypeError* exception.
           1. Let _k_ be 0.
@@ -534,7 +547,7 @@
             1. Append _E_ to the end of list _newList_.
             1. Set _k_ to _k_ + 1.
           1. Let _itemK_ be 0.
-          1. Repeat, while _itemK_ &lt; _itemCount_.
+          1. Repeat, while _itemK_ &lt; _itemCount_,
             1. Let _E_ be _items_[_itemK_].
             1. If Type(_E_) is Object, throw a *TypeError* exception.
             1. Append _E_ to the end of _newList_.
