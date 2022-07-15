@@ -744,19 +744,34 @@
       </emu-note>
     </emu-clause>
 
+    <emu-clause id="sec-samevaluenonnumeric" type="abstract operation" oldids="sec-samevaluenonnumber">
+      <h1>
+        <del>
+          SameValueNonNumeric (
+            _x_: an ECMAScript language value, but not a Number or a BigInt,
+            _y_: an ECMAScript language value, but not a Number or a BigInt,
+          )
+        </del>
+      </h1>
+      <dl class="header">
+      </dl>
+    </emu-clause>
+
     <emu-clause id="sec-samevaluenongeneric" type="abstract operation" oldids="sec-samevaluenonnumeric sec-samevaluenonnumber">
       <h1>
-        SameValueNonGeneric (
-          _x_: an ECMAScript language value, but not a Number or a BigInt,
-          _y_: an ECMAScript language value, but not a Number or a BigInt,
-        )
+        <ins>
+          SameValueNonGeneric (
+            _x_: an ECMAScript language value, but not one of Number, BigInt, Record or Tuple,
+            _y_: an ECMAScript language value, but not one of Number, BigInt, Record or Tuple,
+          )
+        </ins>
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean.</dd>
+        <dd>*SameValueNonGeneric replaces SameValueNonNumeric*.</dd>
       </dl>
       <emu-alg>
-        1. Assert: Type(_x_) is not Number or BigInt.
+        1. Assert: Type(_x_) is not Number or BigInt<ins> or Record or Tuple</ins>,.
         1. Assert: Type(_x_) is the same as Type(_y_).
         1. If Type(_x_) is Undefined, return *true*.
         1. If Type(_x_) is Null, return *true*.
@@ -840,9 +855,11 @@
 
     <emu-clause id="sec-createrecord" type="abstract operation">
       <h1>
-        CreateRecord (
-          _entries_: a List of Records,
-        )
+        <ins>
+          CreateRecord (
+            _entries_: a List of Records { [[Key]]: a String&comma; [[Value]]: an ECMAScript language value },
+          )
+        </ins>
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -856,11 +873,13 @@
 
     <emu-clause id="sec-addpropertyintorecordentrieslist" type="abstract operation">
       <h1>
-        AddPropertyIntoRecordEntriesList (
-          _entries_: a List of Records,
-          _propName_: a property key,
-          _value_: an ECMAScript language value
-        )
+        <ins>
+          AddPropertyIntoRecordEntriesList (
+            _entries_: a List of Records,
+            _propName_: a property key,
+            _value_: an ECMAScript language value
+          )
+        </ins>
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -880,10 +899,12 @@
 
     <emu-clause id="sec-addvaluetotuplesequencelist" type="abstract operation">
       <h1>
-        AddValueToTupleSequenceList (
-          _sequence_: a List of ECMAScript language values,
-          _value_: an ECMAScript language value,
-        )
+        <ins>
+          AddValueToTupleSequenceList (
+            _sequence_: a List of ECMAScript language values,
+            _value_: an ECMAScript language value,
+          )
+        </ins>
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -899,9 +920,11 @@
 
   <emu-clause id="sec-istuple" type="abstract operation">
       <h1>
-        IsTuple (
-          _O_: an ECMAScript language value,
-        )
+        <ins>
+          IsTuple (
+            _O_: an ECMAScript language value,
+          )
+        </ins>
       </h1>
       <dl class="header">
       </dl>
