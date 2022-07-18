@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf8" />
 
-
 <emu-clause id="sec-abstract-operations">
   <h1>Abstract Operations</h1>
   <emu-clause id="sec-type-conversion">
@@ -92,7 +91,7 @@
               Number
             </td>
             <td>
-              If _argument_ is *+0*, *-0*, or *NaN*, return *false*; otherwise return *true*.
+              If _argument_ is *+0*<sub>𝔽</sub>, *-0*<sub>𝔽</sub>, or *NaN*, return *false*; otherwise return *true*.
             </td>
           </tr>
           <tr>
@@ -148,7 +147,6 @@
       </emu-table>
     </emu-clause>
 
-
     <emu-clause id="sec-tonumber" type="abstract operation">
       <h1>
         ToNumber (
@@ -183,7 +181,7 @@
               Null
             </td>
             <td>
-              Return *+0*.
+              Return *+0*<sub>𝔽</sub>.
             </td>
           </tr>
           <tr>
@@ -191,7 +189,7 @@
               Boolean
             </td>
             <td>
-              If _argument_ is *true*, return 1. If _argument_ is *false*, return *+0*.
+              If _argument_ is *true*, return 1. If _argument_ is *false*, return *+0*<sub>𝔽</sub>.
             </td>
           </tr>
           <tr>
@@ -258,7 +256,6 @@
         </table>
       </emu-table>
     </emu-clause>
-
 
     <emu-clause id="sec-tobigint" type="abstract operation">
       <h1>
@@ -331,7 +328,7 @@
               </td>
               <td>
                 <emu-alg>
-                  1. Let _n_ be ! StringToBigInt(_prim_).
+                  1. Let _n_ be StringToBigInt(_prim_).
                   1. If _n_ is *NaN*, throw a *SyntaxError* exception.
                   1. Return _n_.
                 </emu-alg>
@@ -523,7 +520,6 @@
             </td>
           </tr>
           <tr>
-          <tr>
             <td>
               Number
             </td>
@@ -707,11 +703,14 @@
       </dl>
       <emu-alg>
         1. If Type(_x_) is different from Type(_y_), return *false*.
-        1. If Type(_x_) is Number or BigInt, then return ! Type(_x_)::sameValue(_x_, _y_).
-        1. <ins>If Type(_x_) is Record, then return ! RecordSameValue(_x_, _y_).</ins>
-        1. <ins>If Type(_x_) is Tuple, then return ! TupleSameValue(_x_, _y_).</ins>
-        1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
-        1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
+        1. If Type(_x_) is Number, then
+          1. Return Number::sameValue(_x_, _y_).
+        1. If Type(_x_) is BigInt, then
+          1. Return BigInt::sameValue(_x_, _y_).
+        1. <ins>If Type(_x_) is Record, return ! RecordSameValue(_x_, _y_).</ins>
+        1. <ins>If Type(_x_) is Tuple, return ! TupleSameValue(_x_, _y_).</ins>
+        1. <del>Return SameValueNonNumeric(_x_, _y_).</del>
+        1. <ins>Return SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
       <emu-note>
         <p>This algorithm differs from the Strict Equality Comparison Algorithm in its treatment of signed zeroes and NaNs.</p>
@@ -731,30 +730,48 @@
       </dl>
       <emu-alg>
         1. If Type(_x_) is different from Type(_y_), return *false*.
-        1. If Type(_x_) is Number or BigInt, then return ! Type(_x_)::sameValueZero(_x_, _y_).
-        1. <ins>If Type(_x_) is Record, then return ! RecordSameValueZero(_x_, _y_).</ins>
-        1. <ins>If Type(_x_) is Tuple, then return ! TupleSameValueZero(_x_, _y_).</ins>
-        1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
-        1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
+        1. If Type(_x_) is Number, then
+          1. Return Number::sameValueZero(_x_, _y_).
+        1. If Type(_x_) is BigInt, then
+          1. Return BigInt::sameValueZero(_x_, _y_).
+        1. <ins>If Type(_x_) is Record, return ! RecordSameValueZero(_x_, _y_).</ins>
+        1. <ins>If Type(_x_) is Tuple, return ! TupleSameValueZero(_x_, _y_).</ins>
+        1. <del>Return SameValueNonNumeric(_x_, _y_).</del>
+        1. <ins>Return SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
       <emu-note>
-        <p>SameValueZero differs from SameValue only in its treatment of *+0* and *-0*<ins>, and the treatment of those values inside a Record or Tuple</ins>.</p>
+        <p>SameValueZero differs from SameValue only in its treatment of *+0*<sub>𝔽</sub> and *-0*<sub>𝔽</sub><ins>, and the treatment of those values inside a Record or Tuple</ins>.</p>
       </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-samevaluenonnumeric" type="abstract operation" oldids="sec-samevaluenonnumber">
+      <h1>
+        <del>
+          SameValueNonNumeric (
+            _x_: an ECMAScript language value, but not a Number or a BigInt,
+            _y_: an ECMAScript language value, but not a Number or a BigInt,
+          )
+        </del>
+      </h1>
+      <dl class="header">
+      </dl>
     </emu-clause>
 
     <emu-clause id="sec-samevaluenongeneric" type="abstract operation" oldids="sec-samevaluenonnumeric sec-samevaluenonnumber">
       <h1>
-        <del>SameValueNonNumeric</del><ins>SameValueNonGeneric</ins> (
-          _x_: an ECMAScript language value, but not a Number or a BigInt,
-          _y_: an ECMAScript language value, but not a Number or a BigInt,
-        )
+        <ins>
+          SameValueNonGeneric (
+            _x_: an ECMAScript language value, but not one of Number, BigInt, Record or Tuple,
+            _y_: an ECMAScript language value, but not one of Number, BigInt, Record or Tuple,
+          )
+        </ins>
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns a completion record whose [[Type]] is ~normal~ and whose [[Value]] is a Boolean.</dd>
+        <dd>*SameValueNonGeneric replaces SameValueNonNumeric*.</dd>
       </dl>
       <emu-alg>
-        1. Assert: Type(_x_) is not Number or BigInt.
+        1. Assert: Type(_x_) is not Number or BigInt<ins> or Record or Tuple</ins>,.
         1. Assert: Type(_x_) is the same as Type(_y_).
         1. If Type(_x_) is Undefined, return *true*.
         1. If Type(_x_) is Null, return *true*.
@@ -788,7 +805,7 @@
         1. If Type(_x_) is Number and Type(_y_) is String, return IsLooselyEqual(_x_, ! ToNumber(_y_)).
         1. If Type(_x_) is String and Type(_y_) is Number, return IsLooselyEqual(! ToNumber(_x_), _y_).
         1. If Type(_x_) is BigInt and Type(_y_) is String, then
-          1. Let _n_ be ! StringToBigInt(_y_).
+          1. Let _n_ be StringToBigInt(_y_).
           1. If _n_ is *NaN*, return *false*.
           1. Return IsLooselyEqual(_x_, _n_).
         1. If Type(_x_) is String and Type(_y_) is BigInt, return IsLooselyEqual(_y_, _x_).
@@ -816,12 +833,16 @@
       </dl>
       <emu-alg>
         1. If Type(_x_) is different from Type(_y_), return *false*.
-        1. If Type(_x_) is Number or BigInt, then
-          1. Return ! Type(_x_)::equal(_x_, _y_).
-        1. <ins>If Type(_x_) is Record or Tuple, then</ins>
-          1. <ins>Return ! Type(_x_)::sameValueZero(_x_, _y_).</ins>
-        1. <del>Return ! SameValueNonNumeric(_x_, _y_).</del>
-        1. <ins>Return ! SameValueNonGeneric(_x_, _y_).</ins>
+        1. If Type(_x_) is Number, then
+          1. Return Number::equal(_x_, _y_).
+        1. If Type(_x_) is BigInt, then
+          1. Return BigInt::equal(_x_, _y_).
+        1. <ins>If Type(_x_) is Record, then</ins>
+          1. <ins>Return ! RecordSameValueZero(_x_, _y_).</ins>
+        1. <ins>If Type(_x_) is Tuple, then</ins>
+          1. <ins>Return ! TupleSameValueZero(_x_, _y_).</ins>
+        1. <del>Return SameValueNonNumeric(_x_, _y_).</del>
+        1. <ins>Return SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
       <emu-note>
         <p>This algorithm differs from the SameValue Algorithm in its treatment of signed zeroes and NaNs.</p>
@@ -834,9 +855,11 @@
 
     <emu-clause id="sec-createrecord" type="abstract operation">
       <h1>
-        CreateRecord (
-          _entries_: a List of { [[Key]], [[Value]] } records,
-        )
+        <ins>
+          CreateRecord (
+            _entries_: a List of Records { [[Key]]: a String&comma; [[Value]]: an ECMAScript language value },
+          )
+        </ins>
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -850,11 +873,13 @@
 
     <emu-clause id="sec-addpropertyintorecordentrieslist" type="abstract operation">
       <h1>
-        AddPropertyIntoRecordEntriesList (
-          _entries_: a List of { [[Key]], [[Value]] } records,
-          _propName_: a property key,
-          _value_: an ECMAScript language value
-        )
+        <ins>
+          AddPropertyIntoRecordEntriesList (
+            _entries_: a List of Records { [[Key]]: a String&comma; [[Value]]: an ECMAScript language value },
+            _propName_: a property key,
+            _value_: an ECMAScript language value
+          )
+        </ins>
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -863,22 +888,23 @@
       <emu-alg>
           1. If Type(_propName_) is Symbol, throw a *TypeError* exception.
           1. If Type(_value_) is Object, throw a *TypeError* exception.
-          1. Add { [[Key]]: _propType_, [[Value]]: _value_ } to _entries_.
+          1. Add { [[Key]]: _propName_, [[Value]]: _value_ } to _entries_.
           1. Return _entries_.
       </emu-alg>
     </emu-clause>
   </emu-clause>
-
 
   <emu-clause id="sec-operations-on-tuples">
     <h1>Operations on Tuples</h1>
 
     <emu-clause id="sec-addvaluetotuplesequencelist" type="abstract operation">
       <h1>
-        AddValueToTupleSequenceList (
-          _sequence_: a List of ECMAScript language values,
-          _value_: an ECMAScript language value,
-        )
+        <ins>
+          AddValueToTupleSequenceList (
+            _sequence_: a List of ECMAScript language values,
+            _value_: an ECMAScript language value,
+          )
+        </ins>
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -894,15 +920,17 @@
 
   <emu-clause id="sec-istuple" type="abstract operation">
       <h1>
-        IsTuple (
-          _O_: an ECMAScript language value,
-        )
+        <ins>
+          IsTuple (
+            _O_: an ECMAScript language value,
+          )
+        </ins>
       </h1>
       <dl class="header">
       </dl>
       <emu-alg>
         1. If Type(_O_) is Tuple or Type(_O_) is Object and _O_ has a [[TupleData]] internal slot, return *true*.
-        2. Return *false*.
+        1. Return *false*.
       </emu-alg>
     </emu-clause>
 
@@ -915,10 +943,10 @@
       <dl class="header">
       </dl>
       <emu-alg>
-        1. If Type(_O_) is not Object or Tuple, return *false*
+        1. If Type(_O_) is not Object or Tuple, return *false*.
         1. Let _spreadable_ be ? Get<ins>V</ins>(_O_, @@isConcatSpreadable).
         1. If _spreadable_ is not *undefined*, return ! ToBoolean(_spreadable_).
-        1. <ins>If ! IsTuple(_O_), return *true*</ins>
+        1. <ins>If ! IsTuple(_O_), return *true*.</ins>
         1. Return ? IsArray(_O_).
       </emu-alg>
     </emu-clause>
