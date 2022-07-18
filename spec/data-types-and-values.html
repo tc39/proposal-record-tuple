@@ -7,7 +7,7 @@
 
     <emu-clause id="sec-ecmascript-language-types-record-type">
       <h1>The Record Type</h1>
-      <p>The Record type is the set of all mappings from Strings to ECMAScript primitive values including Record and Tuple. Each record value holds an associated [[Fields]] List value which is a list of pairs of the form { [[Key]], [[Value]] } where the [[Key]] is a String and [[Value]] is any primitive value. Entries of [[Fields]] are sorted by [[Key]] in code unit order. The [[Fields]] List and its entries are never modified.</p>
+      <p>The Record type is the set of all mappings from Strings to ECMAScript primitive values including Record and Tuple. Each record value holds an associated [[Fields]] List value which is a list of pairs of the form { [[Key]], [[Value]] } where the [[Key]] is a String and [[Value]] is any primitive value. Entries of [[Fields]] are sorted by [[Key]] in ascending code unit order. The [[Fields]] List and its entries are never modified.</p>
 
       <emu-clause id="sec-immutable-types-record-tostring" type="abstract operation">
         <h1>
