@@ -9,7 +9,7 @@
     "build:cookbook": "node ./scripts/build-static-page.mjs cookbook",
     "build:tutorial": "node ./scripts/build-static-page.mjs tutorial",
     "build": "concurrently npm:build:spec npm:build:cookbook npm:build:tutorial",
-    "watch:spec": "ecmarkup --watch spec.html out/index.html",
+    "watch:spec": "ecmarkup --watch --lint-spec --verbose --load-biblio @tc39/ecma262-biblio spec.html out/index.html",
     "watch:browser": "browser-sync start --server --ss=\"out\" --directory --files=\"out/*.html\"",
     "watch:cookbook": "node ./scripts/watch-static-page.mjs cookbook",
     "watch:tutorial": "node ./scripts/watch-static-page.mjs tutorial",
