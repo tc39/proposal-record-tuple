@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/tc39/proposal-record-tuple#readme",
   "dependencies": {
-    "@tc39/ecma262-biblio": "^2.1.2338",
+    "@tc39/ecma262-biblio": "2.1.2338",
     "browser-sync": "^2.26.7",
     "concurrently": "^5.2.0",
     "ecmarkup": "^13.0.1",
