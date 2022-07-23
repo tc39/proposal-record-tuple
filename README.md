@@ -56,14 +56,14 @@ Records and Tuples aim to be usable and understood with external typesystem supe
 
 Today, userland libraries implement similar concepts, such as [Immutable.js](https://immutable-js.github.io/immutable-js/). Also [a previous proposal](https://github.com/sebmarkbage/ecmascript-immutable-data-structures) has been attempted but abandoned because of the complexity of the proposal and lack of sufficient use cases.
 
-This new proposal is still inspired by this previous proposal but introduces some significant changes: Record and Tuples are now deeply immutable. This property is fundamentally based on the observation that, in large projects, the risk of mixing immutable and mutable data structures grows as the amount of data being stored and passed around grows as well so you'll be more likely handling large record & tuple structures. This can introduce hard-to-find bugs.
+This new proposal is still inspired by this previous proposal but introduces some significant changes: Record and Tuples are now deeply immutable. This property is fundamentally based on the observation that, in large projects, the risk of mixing immutable and mutable data structures grows as the amount of data being stored and passed around grows as well, so you'll be more likely to handle large records & tuple structures. This can introduce hard-to-find bugs.
 
 As a built-in, deeply immutable data structure, this proposal also offers a few usability advantages compared to userland libraries:
-- Records and Tuples are easily introspectable in a debugger, while library provided immutable types are often hard to inspect as you have to inspect through data structure details.
-- Because they're accessed through typical object and array idioms, no additional branching is needed in order to write a generic library that consumes both immutable and JS objects; with user libraries, method calls may be needed just in the immutable case.
-- We avoid cases where developers may expensively convert between regular JS objects and immutable structures, by making it easier to just always use the immutable ones.
+- Records and Tuples are easily introspectable in a debugger, while library-provided immutable types are often hard to inspect as you have to inspect through data structure details.
+- Because they are accessed through a typical object and array idioms, no additional branching is needed in order to write a generic library that consumes both immutable and JS objects; with user libraries, method calls may be needed just in the immutable case.
+- We avoid cases where developers may expensively convert between regular JS objects and immutable structures by making it easier to just always use the immutable ones.
 
-[Immer](https://github.com/mweststrate/immer) is a notable approach to immutable data structures, and prescribes a pattern for manipulation through producers and reducers. It is not providing immutable data types however, as it generates frozen objects. This same pattern can be adapted to the structures defined in this proposal in addition to frozen objects.
+[Immer](https://github.com/mweststrate/immer) is a notable approach to immutable data structures and prescribes a pattern for manipulation through producers and reducers. It is not providing immutable data types, however, as it generates frozen objects. This same pattern can be adapted to the structures defined in this proposal in addition to frozen objects.
 
 Deep equality as defined in user libraries can vary significantly, in part due to possible references to mutable objects. By drawing a hard line about only deeply containing primitives, Records and Tuples, and recursing through the entire structure, this proposal defines simple, unified semantics for comparisons.
 
@@ -528,13 +528,13 @@ At a high level, the object/primitive distinction helps form a hard line between
 
 An alternative to implementing Record and Tuple as primitives would be to use [operator overloading](https://github.com/tc39/proposal-operator-overloading) to achieve a similar result, by implementing an overloaded abstract equality (`==`) operator that deeply compares objects. While this is possible, it doesn't satisfy the full use case, because operator overloading doesn't provide an override for the `===` operator. We want the strict equality (`===`) operator to be a reliable check of "identity" for objects and "observable value" (modulo -0/+0/NaN) for primitive types.
 
-Another option is to perform what is called _interning_: we track globally Record or Tuple objects and if we attempt to create a new one that happens to be identical to an existing Record object, we now reference this existing Record instead of creating a new one. This is essentially what the [polyfill](https://github.com/bloomberg/record-tuple-polyfill) does. We're now equating value and identity. This approach creates problems once we extend that behavior across multiple JavaScript contexts and wouldn't give deep immutability by nature and **it is particularly slow** which would make using Record & Tuple a performance-negative choice.
+Another option is to perform what is called _interning_: we track globally Record or Tuple objects and if we attempt to create a new one that happens to be identical to an existing Record object, we now reference this existing Record instead of creating a new one. This is essentially what the [polyfill](https://github.com/bloomberg/record-tuple-polyfill) does. We're now equating value and identity. This approach creates problems once we extend that behavior across multiple JavaScript contexts and wouldn't give deep immutability by nature and **it is particularly slow**, which would make using Record & Tuple a performance-negative choice.
 
 ## Will developers be familiar with this new concept?
 
 Record & Tuple is built to interoperate with objects and arrays well: you can read them exactly the same way as you would do with objects and arrays. The main change lies in the deep immutability and the comparison by value instead of identity.
 
-Developers used to manipulating objects in an immutable manner (such as transforming pieces of Redux state) will be able to continue to do the same manipulations they used to do on objects and arrays, this time, with more guarantees.
+Developers used to manipulate objects in an immutable manner (such as transforming pieces of Redux state) will be able to continue to do the same manipulations they used to do on objects and arrays, this time, with more guarantees.
 
 We are going to do empirical research through interviews and surveys to figure out if this is working out as we think it does.
 
@@ -670,9 +670,8 @@ that the new keyword will not likely break backwards compatibility.
 
 Using a reserved keyword makes this process easier, but it is not a perfect solution because there are no reserved keywords
 that match the "intent" of the feature, other than `const`. The `const` keyword is also tricky, because it describes
-a similar concept (variable reference immutability) while this proposal intends to add new immutable data structures.
-While immutability is the common thread between these two features, there has been significant community feedback that
-indicates that using `const` in both contexts is undesirable.
+a similar concept (variable reference immutability), while this proposal intends to add new immutable data structures.
+While immutability is the common thread between these two features, significant community feedback indicates that using const in both contexts is undesirable.
 
 Instead of using a keyword, `{| |}` and `[||]` have been suggested as possible alternatives. Currently, the champion group is leaning towards `#[]`/`#{}`, but discussion is ongoing in [#10](https://github.com/tc39/proposal-record-tuple/issues/10).
 
@@ -760,7 +759,7 @@ We've talked with the Readonly Collections champions, and both groups agree that
 
 Neither one is a subset of the other in terms of functionality. At best, they are parallel, just like each proposal is parallel to other collection types in the language.
 
-So, the two champion groups have resolved to ensure that the proposals are in parallel *with respect to each other*. For example, this proposal adds a new `Tuple.prototype.withReversed` method. The idea would be to check, during the design process, if this signature would also make sense for read-only Arrays (if those exist): we extracted these new methods to the [Change Array by copy](https://github.com/tc39/proposal-change-array-by-copy/) proposal, so that we can discuss an API which builds a consistent, shared mental model.
+So, the two champion groups have resolved to ensure that the proposals are in parallel *with respect to each other*. For example, this proposal adds a new `Tuple.prototype.withReversed` method. The idea would be to check whether this signature also makes sense for read-only arrays (if those exists) during the design process: we extracted these new methods to the [Change Array by copy](https://github.com/tc39/proposal-change-array-by-copy/) proposal so that we can discuss an API for building a consistent, shared mental model.
 
 In the current proposal drafts, there aren't any overlapping types for the same kind of data, but both proposals could grow in these directions in the future, and we're trying to think these things through ahead of time. Who knows, some day TC39 could decide to add primitive RecordMap and RecordSet types, as the deeply immutable versions of [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) and [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)! And these would be in parallel with Readonly Collections types.
 
