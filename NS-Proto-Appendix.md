@@ -4,10 +4,6 @@
 
 Converts shallowly an object to a record. If the object has a non-const value, a TypeError will be thrown.
 
-## `Record.isRecord(value) -> boolean`
-
-Checks whether the parameter is either a Record primitive or Record wrapper.
-
 ## `Record.fromEntries(iterator: Iterator): Record`
 
 Similar to `Object.fromEntries`, but created a new `Record`.
@@ -27,15 +23,6 @@ Tuple.from(#[1, 2, 3]); // #[1, 2, 3]
 const set = new Set([1, 2, 3]);
 set.add(0);
 Tuple.from(set) // #[1, 2, 3, 0]
-```
-
-## `Tuple.isTuple(value) => boolean`
-
-Determines whether the passed value is a `Tuple`.
-
-```
-Tuple.isTuple(#[1, 2, 3]); // true
-Tuple.isTuple(#{ a: 1, b: 2 }); // false
 ```
 
 ## `Tuple.of(values...) => Tuple`
