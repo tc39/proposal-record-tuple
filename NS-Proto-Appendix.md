@@ -8,6 +8,10 @@ Converts shallowly an object to a record. If the object has a non-const value, a
 
 Similar to `Object.fromEntries`, but created a new `Record`.
 
+## `Record.recordValue(rec: Record | Object): Record`
+
+Returns the primitive record value of the argument if the argument is already a Record or a Record Exotic Object, otherwise a TypeError will be thrown.
+
 # `Tuple` namespace
 
 ## `Tuple.from(arrayLike, mapFn, thisArg) => Tuple`
