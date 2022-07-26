@@ -7,7 +7,7 @@
 
     <emu-clause id="sec-ecmascript-language-types-record-type">
       <h1>The Record Type</h1>
-      <p>The Record type is the set of all finite mappings from Strings to ECMAScript primitive values including Record and Tuple. Each record value holds an associated [[Fields]] List value which is a list of pairs of the form { [[Key]], [[Value]] } where the [[Key]] is a String and [[Value]] is any primitive value. Entries of [[Fields]] are sorted by [[Key]] in code unit order. The [[Fields]] List and its entries are never modified.</p>
+      <p>The Record type is the set of all finite mappings from Strings to ECMAScript primitive values including Record and Tuple. Each record value holds an associated [[Fields]] List value which is a list of pairs of the form { [[Key]], [[Value]] } where the [[Key]] is a String and [[Value]] is any primitive value. Entries of [[Fields]] are sorted by [[Key]] in ascending code unit order. The [[Fields]] List and its entries are never modified.</p>
 
       <emu-clause id="sec-immutable-types-record-tostring" type="abstract operation">
         <h1>
@@ -128,7 +128,7 @@
           1. Repeat, while _k_ &lt; _xLen_,
             1. Let _xItem_ be _xList_[_k_].
             1. Let _yItem_ be _yList_[_k_].
-            1. If ! _elementEqual_(_xValue_, _yValue_) is *false*, Return *false*.
+            1. If ! _elementEqual_(_xItem_, _yItem_) is *false*, Return *false*.
             1. Set _k_ to _k_ + 1.
           1. Return *true*.
         </emu-alg>
