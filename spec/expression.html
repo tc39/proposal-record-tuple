@@ -72,12 +72,7 @@
         <emu-alg>
           1. Let _entries_ be an empty List.
           1. Perform ? RecordPropertyDefinitionEvaluation of |RecordPropertyDefinitionList| with argument _entries_.
-          1. Let _reversedEntries_ be _entries_ in reverse.
-          1. Let _uniqueEntries_ be an empty List.
-          1. For each element _kv_ in _reversedEntries_, do
-            1. Assert: Type(_kv_.[[Key]]) is String.
-            1. Assert: Type(_kv_.[[Value]]) is not Object.
-            1. If there is no entry _existing_ in _uniqueEntries_ such that _existing_.[[Key]] is _kv_.[[Key]], append _kv_ to _uniqueEntries_.
+          1. Let _uniqueEntries_ be DeduplicateRecordEntries(_entries_).
           1. Return ! CreateRecord(_uniqueEntries_).
         </emu-alg>
       </emu-clause>
