@@ -871,6 +871,29 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-deduplicaterecordentries" type="abstract operation">
+      <h1>
+        <ins>
+          DeduplicateRecordEntries (
+            _entries_: a List of Records with fields [[Key]] (a String) and [[Value]] (an ECMAScript language value),
+          )
+        </ins>
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It is used to creates a copy of _entries_ where only the last entry for each unique key is retained.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _reversedEntries_ be _entries_ in reverse.
+        1. Let _uniqueEntries_ be an empty List.
+        1. For each element _kv_ in _reversedEntries_, do
+          1. Assert: Type(_kv_.[[Key]]) is String.
+          1. Assert: Type(_kv_.[[Value]]) is not Object.
+          1. If there is no entry _existing_ in _uniqueEntries_ such that _existing_.[[Key]] is _kv_.[[Key]], append _kv_ to _uniqueEntries_.
+        1. Return _uniqueEntries_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-addpropertyintorecordentrieslist" type="abstract operation">
       <h1>
         <ins>
