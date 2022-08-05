@@ -168,10 +168,7 @@ console.log(a === c); // false
 
 ### Parse
 
-```js
-const user = JSON.parseImmutable('{ "name": "danny", "admin": false, "score": 42 }');
-console.log(user === #{ name: "danny", admin: false, score: 42 });
-```
+Please see https://github.com/tc39/proposal-json-parseimmutable
 
 > Note: at the time of writing this, the playground does not support `JSON.parseImmutable`.
 
@@ -186,7 +183,17 @@ console.log(jsonUser); // {"admin":false,"name":"danny","score":42}
 
 ```js
 function recursiveRT(thing) {
-    return JSON.parseImmutable(JSON.stringify(thing));
+    function reviver(value) {
+        if (typeof value === 'object' && value !== null) {
+            if (Array.isArray(value)) {
+                return Tuple.from(value);
+            } else {
+                return Record(value);
+            }
+        }
+        return value;
+    }
+    return JSON.parse(JSON.stringify(thing), reviver);
 }
 
 const user = { name: "danny", stats: {
@@ -199,8 +206,6 @@ console.log(fixedUser === #{ name: "danny", stats: #{
     scores: #[40, 42, 44],
 } }); // true
 ```
-
-> Note: at the time of writing this, the playground does not support `JSON.parseImmutable`.
 
 ## Array-like manipulations with Tuple by copy
 
