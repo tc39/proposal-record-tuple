@@ -144,9 +144,7 @@ console.log(a === c); // false
 </code></pre>
 <h2 id="json">JSON</h2>
 <h3 id="parse">Parse</h3>
-<pre><code class="language-js">const user = JSON.parseImmutable(&#39;{ &quot;name&quot;: &quot;danny&quot;, &quot;admin&quot;: false, &quot;score&quot;: 42 }&#39;);
-console.log(user === #{ name: &quot;danny&quot;, admin: false, score: 42 });
-</code></pre>
+<p>Please see <a href="https://github.com/tc39/proposal-json-parseimmutable">https://github.com/tc39/proposal-json-parseimmutable</a></p>
 <blockquote>
 <p>Note: at the time of writing this, the playground does not support <code>JSON.parseImmutable</code>.</p>
 </blockquote>
@@ -156,7 +154,17 @@ console.log(jsonUser); // {&quot;admin&quot;:false,&quot;name&quot;:&quot;danny&
 </code></pre>
 <h3 id="recursive-conversion-through-json">Recursive conversion through JSON</h3>
 <pre><code class="language-js">function recursiveRT(thing) {
-    return JSON.parseImmutable(JSON.stringify(thing));
+    function reviver(value) {
+        if (typeof value === &#39;object&#39; &amp;&amp; value !== null) {
+            if (Array.isArray(value)) {
+                return Tuple.from(value);
+            } else {
+                return Record(value);
+            }
+        }
+        return value;
+    }
+    return JSON.parse(JSON.stringify(thing), reviver);
 }
 
 const user = { name: &quot;danny&quot;, stats: {
@@ -169,9 +177,6 @@ console.log(fixedUser === #{ name: &quot;danny&quot;, stats: #{
     scores: #[40, 42, 44],
 } }); // true
 </code></pre>
-<blockquote>
-<p>Note: at the time of writing this, the playground does not support <code>JSON.parseImmutable</code>.</p>
-</blockquote>
 <h2 id="array-like-manipulations-with-tuple-by-copy">Array-like manipulations with Tuple by copy</h2>
 <p>Using spread operations, <code>toReversed()</code>, <code>toSorted()</code>, <code>toSpliced()</code> or <code>with()</code> methods you can mutate tuples by copy:</p>
 <pre><code class="language-js">const base = #[1, 2];
