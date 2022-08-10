@@ -1,5 +1,6 @@
 {
   "name": "proposal-record-tuple",
+  "private": "true",
   "version": "0.1.0",
   "description": "Record and Tuple value types for JS",
   "scripts": {
@@ -26,12 +27,12 @@
   },
   "homepage": "https://github.com/tc39/proposal-record-tuple#readme",
   "dependencies": {
-    "@tc39/ecma262-biblio": "2.1.2338",
-    "browser-sync": "^2.26.7",
+    "@tc39/ecma262-biblio": "^2.1.2366",
+    "browser-sync": "^2.27.10",
     "concurrently": "^5.2.0",
-    "ecmarkup": "^13.0.1",
+    "ecmarkup": "^14.1.0",
     "fs-extra": "^9.0.1",
-    "marked": "^4.0.10",
+    "marked": "^4.0.18",
     "mkdirp": "^0.5.1"
   },
   "overrides": {
