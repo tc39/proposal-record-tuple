@@ -34,7 +34,7 @@ Likewise, a Tuple is like an Array but is a deeply immutable primitive value.
 What do we mean by `deeply immutable primitive value`?
 
 - Primitive value: A string, a number or a symbol are primitive values in JavaScript. These values are *in general* represented as low-level values attached to the program stack.
-- Deeply immutable: For a value to be deeply immutable, it must be immutable and all of it's subelements must also be deeply immutable. All JavaScript primitive values, including `Record & Tuple`, are deeply immutable, but only records and tuples have "subelements". Records and tuples can only contain primitive values such as strings, numbers, symbols or records and tuples, which makes them deeply immutable by definition.
+- Deeply immutable: For a value to be deeply immutable, it must be immutable and all of its subelements must also be deeply immutable. All JavaScript primitive values, including `Record & Tuple`, are deeply immutable, but only records and tuples have "subelements". Records and tuples can only contain primitive values such as strings, numbers, symbols or records and tuples, which makes them deeply immutable by definition.
 
 One could say that Record & Tuple can be described as [compound primitive values][2ality].
 
