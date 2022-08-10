@@ -48,7 +48,7 @@
           1. If Type(_P_) is a Symbol, return *false*.
           1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
           1. Let _current_ be ! RecordGetOwnProperty(_R_, _P_).
-          1. Return IsCompatiblePropertyDescriptor (*false*, _Desc_, _current_).
+          1. Return IsCompatiblePropertyDescriptor(*false*, _Desc_, _current_).
         </emu-alg>
       </emu-clause>
 
@@ -190,7 +190,7 @@
           <ins>
             RecordGetOwnProperty (
               _R_: a Record,
-              _P_: a PropertyKey
+              _P_: a property key,
             )
           </ins>
         </h1>
@@ -199,7 +199,7 @@
           1. If Type(_P_) is a Symbol, return *undefined*.
           1. Let _getResult_ be ! RecordGet(_R_, _P_).
           1. If _getResult_ is ~empty~, return *undefined*.
-          1. Return the PropertyDescriptor { [[Value]]: _getResult_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
+          1. Return the Property Descriptor { [[Value]]: _getResult_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
         </emu-alg>
       </emu-clause>
     </emu-clause>
