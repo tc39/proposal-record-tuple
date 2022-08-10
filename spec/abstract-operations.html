@@ -13,7 +13,7 @@
         ToPrimitive (
           _input_: an ECMAScript language value,
           optional _preferredType_: ~string~ or ~number~,
-        )
+        ): either a normal completion containing an ECMAScript language value, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -45,7 +45,7 @@
       <h1>
         ToBoolean (
           _argument_: unknown,
-        )
+        ): a Boolean
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -707,8 +707,8 @@
           1. Return Number::sameValue(_x_, _y_).
         1. If Type(_x_) is BigInt, then
           1. Return BigInt::sameValue(_x_, _y_).
-        1. <ins>If Type(_x_) is Record, return ! RecordSameValue(_x_, _y_).</ins>
-        1. <ins>If Type(_x_) is Tuple, return ! TupleSameValue(_x_, _y_).</ins>
+        1. <ins>If Type(_x_) is Record, return RecordSameValue(_x_, _y_).</ins>
+        1. <ins>If Type(_x_) is Tuple, return TupleSameValue(_x_, _y_).</ins>
         1. <del>Return SameValueNonNumeric(_x_, _y_).</del>
         1. <ins>Return SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
@@ -722,7 +722,7 @@
         SameValueZero (
           _x_: an ECMAScript language value,
           _y_: an ECMAScript language value,
-        )
+        ): a Boolean
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -734,8 +734,8 @@
           1. Return Number::sameValueZero(_x_, _y_).
         1. If Type(_x_) is BigInt, then
           1. Return BigInt::sameValueZero(_x_, _y_).
-        1. <ins>If Type(_x_) is Record, return ! RecordSameValueZero(_x_, _y_).</ins>
-        1. <ins>If Type(_x_) is Tuple, return ! TupleSameValueZero(_x_, _y_).</ins>
+        1. <ins>If Type(_x_) is Record, return RecordSameValueZero(_x_, _y_).</ins>
+        1. <ins>If Type(_x_) is Tuple, return TupleSameValueZero(_x_, _y_).</ins>
         1. <del>Return SameValueNonNumeric(_x_, _y_).</del>
         1. <ins>Return SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
@@ -750,7 +750,7 @@
           SameValueNonNumeric (
             _x_: an ECMAScript language value, but not a Number or a BigInt,
             _y_: an ECMAScript language value, but not a Number or a BigInt,
-          )
+          ): a Boolean
         </del>
       </h1>
       <dl class="header">
@@ -763,7 +763,7 @@
           SameValueNonGeneric (
             _x_: an ECMAScript language value, but not one of Number, BigInt, Record or Tuple,
             _y_: an ECMAScript language value, but not one of Number, BigInt, Record or Tuple,
-          )
+          ): a Boolean
         </ins>
       </h1>
       <dl class="header">
@@ -790,7 +790,7 @@
         IsLooselyEqual (
           _x_: an ECMAScript language value,
           _y_: an ECMAScript language value,
-        )
+        ): either a normal completion containing a Boolean or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -802,17 +802,17 @@
         1. If _x_ is *null* and _y_ is *undefined*, return *true*.
         1. If _x_ is *undefined* and _y_ is *null*, return *true*.
         1. [id="step-abstract-equality-comparison-web-compat-insertion-point"] NOTE: This step is replaced in section <emu-xref href="#sec-IsHTMLDDA-internal-slot-aec"></emu-xref>.
-        1. If Type(_x_) is Number and Type(_y_) is String, return IsLooselyEqual(_x_, ! ToNumber(_y_)).
-        1. If Type(_x_) is String and Type(_y_) is Number, return IsLooselyEqual(! ToNumber(_x_), _y_).
+        1. If Type(_x_) is Number and Type(_y_) is String, return ? IsLooselyEqual(_x_, ! ToNumber(_y_)).
+        1. If Type(_x_) is String and Type(_y_) is Number, return ? IsLooselyEqual(! ToNumber(_x_), _y_).
         1. If Type(_x_) is BigInt and Type(_y_) is String, then
           1. Let _n_ be StringToBigInt(_y_).
           1. If _n_ is *NaN*, return *false*.
-          1. Return IsLooselyEqual(_x_, _n_).
-        1. If Type(_x_) is String and Type(_y_) is BigInt, return IsLooselyEqual(_y_, _x_).
-        1. If Type(_x_) is Boolean, return IsLooselyEqual(! ToNumber(_x_), _y_).
-        1. If Type(_y_) is Boolean, return IsLooselyEqual(_x_, ! ToNumber(_y_)).
-        1. If Type(_x_) is either String, Number, BigInt<ins>, Record, Tuple</ins>, or Symbol and Type(_y_) is Object, return IsLooselyEqual(_x_, ? ToPrimitive(_y_)).
-        1. If Type(_x_) is Object and Type(_y_) is either String, Number, BigInt<ins>, Record, Tuple</ins>, or Symbol, return IsLooselyEqual(? ToPrimitive(_x_), _y_).
+          1. Return ? IsLooselyEqual(_x_, _n_).
+        1. If Type(_x_) is String and Type(_y_) is BigInt, return ? IsLooselyEqual(_y_, _x_).
+        1. If Type(_x_) is Boolean, return ? IsLooselyEqual(! ToNumber(_x_), _y_).
+        1. If Type(_y_) is Boolean, return ? IsLooselyEqual(_x_, ! ToNumber(_y_)).
+        1. If Type(_x_) is either String, Number, BigInt<ins>, Record, Tuple</ins>, or Symbol and Type(_y_) is Object, return ? IsLooselyEqual(_x_, ? ToPrimitive(_y_)).
+        1. If Type(_x_) is Object and Type(_y_) is either String, Number, BigInt<ins>, Record, Tuple</ins>, or Symbol, return ? IsLooselyEqual(? ToPrimitive(_x_), _y_).
         1. If Type(_x_) is BigInt and Type(_y_) is Number, or if Type(_x_) is Number and Type(_y_) is BigInt, then
           1. If _x_ or _y_ are any of *NaN*, *+&infin;*<sub>𝔽</sub>, or *-&infin;*<sub>𝔽</sub>, return *false*.
           1. If ℝ(_x_) = ℝ(_y_), return *true*; otherwise return *false*.
@@ -825,7 +825,7 @@
         IsStrictlyEqual (
           _x_: an ECMAScript language value,
           _y_: an ECMAScript language value,
-        )
+        ): a Boolean
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -838,9 +838,9 @@
         1. If Type(_x_) is BigInt, then
           1. Return BigInt::equal(_x_, _y_).
         1. <ins>If Type(_x_) is Record, then</ins>
-          1. <ins>Return ! RecordSameValueZero(_x_, _y_).</ins>
+          1. <ins>Return RecordSameValueZero(_x_, _y_).</ins>
         1. <ins>If Type(_x_) is Tuple, then</ins>
-          1. <ins>Return ! TupleSameValueZero(_x_, _y_).</ins>
+          1. <ins>Return TupleSameValueZero(_x_, _y_).</ins>
         1. <del>Return SameValueNonNumeric(_x_, _y_).</del>
         1. <ins>Return SameValueNonGeneric(_x_, _y_).</ins>
       </emu-alg>
@@ -858,7 +858,7 @@
         <ins>
           CreateRecord (
             _entries_: a List of Records with fields [[Key]] (a String) and [[Value]] (an ECMAScript language value),
-          )
+          ): a new Record value
         </ins>
       </h1>
       <dl class="header">
@@ -876,7 +876,7 @@
         <ins>
           DeduplicateRecordEntries (
             _entries_: a List of Records with fields [[Key]] (a String) and [[Value]] (an ECMAScript language value),
-          )
+          ): a List of Records with fields [[Key]] (a String) and [[Value]] (an ECMAScript language value)
         </ins>
       </h1>
       <dl class="header">
@@ -901,7 +901,7 @@
             _entries_: a List of Records with fields [[Key]] (a String) and [[Value]] (an ECMAScript language value),
             _propName_: a property key,
             _value_: an ECMAScript language value
-          )
+          ): either a normal completion containing a List of Records with fields [[Key]] (a String) and [[Value]] (an ECMAScript language value), or a throw completion
         </ins>
       </h1>
       <dl class="header">
@@ -926,7 +926,7 @@
           AddValueToTupleSequenceList (
             _sequence_: a List of ECMAScript language values,
             _value_: an ECMAScript language value,
-          )
+          ): either a normal completion containing a List of ECMAScript language values, or a throw completion
         </ins>
       </h1>
       <dl class="header">
@@ -946,7 +946,7 @@
         <ins>
           IsTuple (
             _O_: an ECMAScript language value,
-          )
+          ): a Boolean
         </ins>
       </h1>
       <dl class="header">
@@ -961,15 +961,15 @@
       <h1>
         IsConcatSpreadable (
           _O_: unknown,
-        )
+        ): either a normal completion containing a Boolean or a throw completion
       </h1>
       <dl class="header">
       </dl>
       <emu-alg>
         1. If Type(_O_) is not Object or Tuple, return *false*.
         1. Let _spreadable_ be ? Get<ins>V</ins>(_O_, @@isConcatSpreadable).
-        1. If _spreadable_ is not *undefined*, return ! ToBoolean(_spreadable_).
-        1. <ins>If ! IsTuple(_O_), return *true*.</ins>
+        1. If _spreadable_ is not *undefined*, return ToBoolean(_spreadable_).
+        1. <ins>If IsTuple(_O_), return *true*.</ins>
         1. Return ? IsArray(_O_).
       </emu-alg>
     </emu-clause>

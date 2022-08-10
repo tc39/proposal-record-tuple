@@ -14,7 +14,7 @@
           <ins>
             RecordToString (
               _argument_: a Record,
-            )
+            ): a String
           </ins>
         </h1>
         <dl class="header">
@@ -33,7 +33,7 @@
               _x_: a Record,
               _y_: a Record,
               _elementEqual_: an Abstract Closure,
-            )
+            ): a Boolean
           </ins>
         </h1>
         <dl class="header"></dl>
@@ -47,8 +47,8 @@
           1. Repeat, while _k_ &lt; _xLen_,
             1. Let _xField_ be _xList_[_k_].
             1. Let _yField_ be _yList_[_k_].
-            1. If ! SameValueNonGeneric(_xField_.[[Key]], _yField_.[[Key]]) is *false*, Return *false*.
-            1. If ! _elementEqual_(_xField_.[[Value]], _yField_.[[Value]]) is *false*, Return *false*.
+            1. If SameValueNonGeneric(_xField_.[[Key]], _yField_.[[Key]]) is *false*, Return *false*.
+            1. If _elementEqual_(_xField_.[[Value]], _yField_.[[Value]]) is *false*, Return *false*.
             1. Set _k_ to _k_ + 1.
           1. Return *true*.
         </emu-alg>
@@ -60,14 +60,14 @@
             RecordSameValue (
               _x_: a Record,
               _y_: a Record,
-            )
+            ): a Boolean
           </ins>
         </h1>
         <dl class="header"></dl>
         <emu-alg>
           1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
-            1. Return ! SameValue(_elementX_, _elementY_).
-          1. Return ! RecordEqual(_x_, _y_, _elementEqual_).
+            1. Return SameValue(_elementX_, _elementY_).
+          1. Return RecordEqual(_x_, _y_, _elementEqual_).
         </emu-alg>
       </emu-clause>
 
@@ -77,14 +77,14 @@
             RecordSameValueZero (
               _x_: a Record,
               _y_: a Record,
-            )
+            ): a Boolean
           </ins>
         </h1>
         <dl class="header"></dl>
         <emu-alg>
           1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
-            1. Return ! SameValueZero(_elementX_, _elementY_).
-          1. Return ! RecordEqual(_x_, _y_, _elementEqual_).
+            1. Return SameValueZero(_elementX_, _elementY_).
+          1. Return RecordEqual(_x_, _y_, _elementEqual_).
         </emu-alg>
       </emu-clause>
     </emu-clause>
@@ -98,7 +98,7 @@
           <ins>
             TupleToString (
               _argument_: a Tuple,
-            )
+            ): either a normal completion containing an ECMAScript language value, or an abrupt completion
           </ins>
         </h1>
         <dl class="header"></dl>
@@ -114,7 +114,7 @@
               _x_: a Tuple,
               _y_: a Tuple,
               _elementEqual_: an Abstract Closure,
-            )
+            ): a Boolean
           </ins>
         </h1>
         <dl class="header"></dl>
@@ -128,7 +128,7 @@
           1. Repeat, while _k_ &lt; _xLen_,
             1. Let _xItem_ be _xList_[_k_].
             1. Let _yItem_ be _yList_[_k_].
-            1. If ! _elementEqual_(_xItem_, _yItem_) is *false*, Return *false*.
+            1. If _elementEqual_(_xItem_, _yItem_) is *false*, Return *false*.
             1. Set _k_ to _k_ + 1.
           1. Return *true*.
         </emu-alg>
@@ -140,14 +140,14 @@
             TupleSameValue (
               _x_: a Tuple,
               _y_: a Tuple,
-            )
+            ): a Boolean
           </ins>
         </h1>
         <dl class="header"></dl>
         <emu-alg>
           1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
-            1. Return ! SameValue(_elementX_, _elementY_).
-          1. Return ! TupleEqual(_x_, _y_, _elementEqual_).
+            1. Return SameValue(_elementX_, _elementY_).
+          1. Return TupleEqual(_x_, _y_, _elementEqual_).
         </emu-alg>
       </emu-clause>
 
@@ -157,14 +157,14 @@
             TupleSameValueZero (
               _x_: a Tuple,
               _y_: a Tuple,
-            )
+            ): a Boolean
           </ins>
         </h1>
         <dl class="header"></dl>
         <emu-alg>
           1. Let _elementEqual_ be a new Abstract Closure with parameters (_elementX_, _elementY_) that captures no values and performs the following steps when called:
-            1. Return ! SameValueZero(_elementX_, _elementY_).
-          1. Return ! TupleEqual(_x_, _y_, _elementEqual_).
+            1. Return SameValueZero(_elementX_, _elementY_).
+          1. Return TupleEqual(_x_, _y_, _elementEqual_).
         </emu-alg>
       </emu-clause>
     </emu-clause>
