@@ -48,6 +48,7 @@
           1. If Type(_P_) is a Symbol, return *false*.
           1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
           1. Let _current_ be ! RecordGetOwnProperty(_R_, _P_).
+          1. If _current_ is *undefined*, return *false*.
           1. Return IsCompatiblePropertyDescriptor(*false*, _Desc_, _current_).
         </emu-alg>
       </emu-clause>
