@@ -33,7 +33,7 @@
         </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. Return ! RecordGetOwnProperty(_R_, _P_).
+          1. Return RecordGetOwnProperty(_R_, _P_).
         </emu-alg>
       </emu-clause>
 
@@ -47,7 +47,7 @@
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *false*.
           1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
-          1. Let _current_ be ! RecordGetOwnProperty(_R_, _P_).
+          1. Let _current_ be RecordGetOwnProperty(_R_, _P_).
           1. If _current_ is *undefined*, return *false*.
           1. Return IsCompatiblePropertyDescriptor(*false*, _Desc_, _current_).
         </emu-alg>
@@ -61,7 +61,7 @@
         </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. Return ! RecordHasProperty(_R_, _P_).
+          1. Return RecordHasProperty(_R_, _P_).
         </emu-alg>
       </emu-clause>
 
@@ -70,7 +70,7 @@
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
           1. If Type(_P_) is a Symbol, return *undefined*.
-          1. Let _value_ be ! RecordGet( _R_, _P_ ).
+          1. Let _value_ be RecordGet( _R_, _P_ ).
           1. If _value_ is ~empty~, return *undefined*.
           1. Return _value_.
         </emu-alg>
@@ -95,8 +95,7 @@
         </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. Let _hasProperty_ ! RecordHasProperty( _R_, _P_ ).
-          1. If _hasProperty_ is *false*, return *true*.
+          1. If RecordHasProperty( _R_, _P_ ) is *false*, return *true*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -124,7 +123,7 @@
           <ins>
             RecordCreate (
               _value_: a Record,
-            )
+            ): a Record exotic object
           </ins>
         </h1>
         <dl class="header">
@@ -146,7 +145,7 @@
             RecordHasProperty (
               _R_: a Record,
               _P_: a PropertyKey
-            )
+            ): a Boolean
           </ins>
         </h1>
         <dl class="header"></dl>
@@ -156,7 +155,7 @@
           1. Assert Type(_rec_) is a Record.
           1. For each element _entry_ of _rec_.[[Fields]], do
             1. Let _key_ be _entry_.[[Key]].
-            1. If ! SameValue(_key_, _P_) is *true*, return *true*.
+            1. If SameValue(_key_, _P_) is *true*, return *true*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -167,7 +166,7 @@
             RecordGet (
               _R_: a Record,
               _P_: a PropertyKey,
-            )
+            ): an ECMAScript language value or ~empty~
           </ins>
         </h1>
         <dl class="header"></dl>
@@ -192,15 +191,15 @@
             RecordGetOwnProperty (
               _R_: a Record,
               _P_: a property key,
-            )
+            ): a Property Descriptor or *undefined*
           </ins>
         </h1>
         <dl class="header"></dl>
         <emu-alg>
           1. If Type(_P_) is a Symbol, return *undefined*.
-          1. Let _getResult_ be ! RecordGet(_R_, _P_).
+          1. Let _getResult_ be RecordGet(_R_, _P_).
           1. If _getResult_ is ~empty~, return *undefined*.
-          1. Return the Property Descriptor { [[Value]]: _getResult_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
+          1. Return the PropertyDescriptor { [[Value]]: _getResult_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
         </emu-alg>
       </emu-clause>
     </emu-clause>
@@ -235,7 +234,7 @@
             1. Return the PropertyDescriptor { [[Value]]: 𝔽(_length_), [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.
           1. Let _numericIndex_ be CanonicalNumericIndexString(_P_).
           1. If _numericIndex_ is *undefined*, return *undefined*.
-          1. Let _value_ be ? TupleGet(_T_, _numericIndex_).
+          1. Let _value_ be TupleGet(_T_, _numericIndex_).
           1. If _value_ is ~empty~, return *undefined*.
           1. Return the PropertyDescriptor { [[Value]]: _value_, [[Writable]]: *false*, [[Enumerable]]: *true*, [[Configurable]]: *false* }.
         </emu-alg>
@@ -259,10 +258,10 @@
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
           1. Let _numericIndex_ be CanonicalNumericIndexString(_P_).
           1. If _numericIndex_ is *undefined*, return *false*.
-          1. Let _current_ be ? TupleGet(_T_, _numericIndex_).
+          1. Let _current_ be TupleGet(_T_, _numericIndex_).
           1. If _current_ is ~empty~ return *false*.
           1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
-          1. If _Desc_.[[Value]] is present, return ! SameValue(_Desc_.[[Value]], _current_).
+          1. If _Desc_.[[Value]] is present, return SameValue(_Desc_.[[Value]], _current_).
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -278,7 +277,7 @@
           1. If Type(_P_) is not Symbol, then
             1. If _P_ is *"length"*, return *true*.
             1. Let _numericIndex_ be CanonicalNumericIndexString(_P_).
-            1. If _numericIndex_ is not *undefined*, return ? IsValidTupleIndex(_T_, _numericIndex_).
+            1. If _numericIndex_ is not *undefined*, return IsValidTupleIndex(_T_, _numericIndex_).
           1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
           1. Return ? _parent_.[[HasProperty]](_P_).
         </emu-alg>
@@ -298,7 +297,7 @@
           1. If Type(_P_) is not Symbol, then
             1. Let _numericIndex_ be CanonicalNumericIndexString(_P_).
             1. If _numericIndex_ is not *undefined*, then
-              1. Let _value_ be ? TupleGet(_T_, _numericIndex_).
+              1. Let _value_ be TupleGet(_T_, _numericIndex_).
               1. If _value_ is ~empty~, return *undefined*.
               1. Return _value_.
           1. Let _parent_ be ? _T_.[[GetPrototypeOf]]().
@@ -330,8 +329,7 @@
           1. If _P_ is *"length"*, return *false*.
           1. Let _numericIndex_ be CanonicalNumericIndexString(_P_).
           1. If _numericIndex_ is *undefined*, return *true*.
-          1. Let _isValidIndex_ ? IsValidTupleIndex( _T_, _numericIndex_ ).
-          1. If _isValidIndex_ is *false*, return *true*.
+          1. If IsValidTupleIndex( _T_, _numericIndex_ ) is *false*, return *true*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
@@ -361,7 +359,7 @@
           <ins>
             TupleCreate (
               _value_: a Tuple,
-            )
+            ): a Tuple exotic object
           </ins>
         </h1>
         <dl class="header">
@@ -383,7 +381,7 @@
             IsValidTupleIndex (
               _T_: a Tuple object,
               _numericIndex_: an integral Number,
-            )
+            ): a Boolean
           </ins>
         </h1>
         <dl class="header"></dl>
@@ -400,13 +398,13 @@
             TupleGet (
               _T_: a Tuple object,
               _numericIndex_: an integral Number,
-            )
+            ): an ECMAScript language value
           </ins>
         </h1>
         <dl class="header"></dl>
         <emu-alg>
           1. Let _tup_ be _T_.[[TupleData]].
-          1. If ! IsValidTupleIndex(_T_, _numericIndex_) is *false*, return ~empty~.
+          1. If IsValidTupleIndex(_T_, _numericIndex_) is *false*, return ~empty~.
           1. Let _value_ be the element with index ℝ(_numericIndex_) in _tup_.[[Sequence]].
           1. Return _value_.
         </emu-alg>
