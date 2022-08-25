@@ -14,7 +14,7 @@
 **Advisors**
 
 - Philipp Dunkel (Bloomberg)
-- Dan Ehrenberg (Igalia)
+- Dan Ehrenberg (Bloomberg)
 - Maxwell Heiber
 
 **Stage:** 2
