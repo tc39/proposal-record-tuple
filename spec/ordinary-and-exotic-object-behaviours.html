@@ -251,8 +251,7 @@
           1. If Type(_P_) is a Symbol, return *false*.
           1. If _P_ is *"length"*, then
             1. Let _lengthDesc_ be ! _T_.[[GetOwnProperty]](_P_).
-            1. Let _extensible_ be _T_.[[Extensible]].
-            1. Return IsCompatiblePropertyDescriptor(_extensible_, _Desc_, _lengthDesc_).
+            1. Return IsCompatiblePropertyDescriptor(*false*, _Desc_, _lengthDesc_).
           1. If _Desc_.[[Writable]] is present and has value *true*, return *false*.
           1. If _Desc_.[[Enumerable]] is present and has value *false*, return *false*.
           1. If _Desc_.[[Configurable]] is present and has value *true*, return *false*.
@@ -262,7 +261,7 @@
           1. If _current_ is ~empty~ return *false*.
           1. If IsAccessorDescriptor(_Desc_) is *true*, return *false*.
           1. If _Desc_.[[Value]] is present, return SameValue(_Desc_.[[Value]], _current_).
-          1. Return *false*.
+          1. Return *true*.
         </emu-alg>
       </emu-clause>
 
