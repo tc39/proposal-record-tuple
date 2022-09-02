@@ -957,6 +957,28 @@
     </emu-clause>
   </emu-clause>
 
+    <emu-clause id="sec-listjoin" type="abstract operation">
+      <h1>
+        <ins>
+          ListJoin (
+            _list_: a List of Strings,
+          ): a String
+        </ins>
+      </h1>
+      <dl class="header"></dl>
+      <emu-alg>
+        1. Let _ret_ be *""*.
+        1. Let _len_ be the length of _list_.
+        1. Let _k_ be 0.
+        1. Repeat, while _k_ &lt; _len_,
+          1. Let _s_ be _list_[_k_].
+          1. Set _ret_ to be the string-concatenation of _ret_ and _s_.
+          1. Set _k_ to _k_ + 1.
+          1. If _k_ &lt; _len_, Set _ret_ to be the string-concatenation of _ret_ and *", "*.
+        1. Return _ret_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-isconcatspreadable" type="abstract operation">
       <h1>
         IsConcatSpreadable (

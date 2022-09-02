@@ -29,23 +29,28 @@
               1. Let _kvString_ be QuoteJSONString(_key_).
               1. Set _kvString_ to be the string-concatenation of _kvString_ and *": "*.
               1. Let _value_ be _kv_.[[Value]].
-              1. If _value_ is a Symbol, Let _valueString_ be SymbolDescriptiveString(_value_).
-              1. Else if _value_ is a String, Let _valueString_ by QuoteJSONString(_value_).
-              1. Else, Let _valueString_ be ! ToString(_value_).
-              1. Set _kvString_ to be the string-concatenation of _kvString_ and _valueString_.
+              1. Set _kvString_ to be the string-concatenation of _kvString_ and StringifyRecordValue(_value_).
               1. Append _kvString_ to the end of _strings_.
-            1. Let _len_ be the length of List _strings_.
-            1. Let _ret_ be the value *"#{"*.
-            1. Let _k_ be 0.
-            1. Repeat, while _k_ &lt; _len_,
-              1. Let _string_ be _strings_[_k_].
-              1. Set _ret_ to be the string-concatenation of _ret_ and *" "*.
-              1. Set _ret_ to be the string-concatenation of _ret_ and _string_.
-              1. Set _k_ to _k_ + 1.
-              1. If _k_ &lt; _len_, Set _ret_ to be the string-concatenation of _ret_ and *","*.
-              1. Set _ret_ to be the string-concatenation of _ret_ and *" "*.
-            1. Set _ret_ to be the string-concatenation of _ret_ and *"}"*.
+            1. Let _ret_ be *"#{ "*.
+            1. Set _ret_ to be the string-concatenation of _ret_ and ListJoin(_strings_).
+            1. Set _ret_ to be the string-concatenation of _ret_ and *" }"*.
             1. Return _ret_.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-immutable-types-stringify-record-value" type="abstract operation">
+        <h1>
+          <ins>
+            StringifyRecordValue (
+              _value_: an ECMAScript language value, but not an Object,
+            ): a String
+          </ins>
+        </h1>
+        <dl class="header"></dl>
+        <emu-alg>
+          1. If _value_ is a Symbol, Return SymbolDescriptiveString(_value_).
+          1. Else if _value_ is a String, Return QuoteJSONString(_value_).
+          1. Else, Return ! ToString(_value_).
         </emu-alg>
       </emu-clause>
 
@@ -133,18 +138,10 @@
             1. Assert: _list_ is a List of ECMAscript language values.
             1. Let _strings_ be a new empty List.
             1. For each element _value_ of _list_, do
-              1. If _value_ is a Symbol, Let _valueString_ be SymbolDescriptiveString(_value_).
-              1. Else if _value_ is a String, Let _valueString_ by QuoteJSONString(_value_).
-              1. Else, Let _valueString_ be ! ToString(_value_).
+              1. Let _valueString_ be StringifyRecordValue(_value_).
               1. Append _valueString_ to the end of _strings_.
-            1. Let _len_ be the length of _strings_.
             1. Let _ret_ be *"#["*.
-            1. Let _k_ be 0.
-            1. Repeat, while _k_ &lt; _len_,
-              1. Let _string_ be _strings_[_k_].
-              1. Set _ret_ to be the string-concatenation of _ret_ and _string_.
-              1. Set _k_ to _k_ + 1.
-              1. If _k_ &lt; _len_, Set _ret_ to be the string-concatenation of _ret_ and *", "*.
+            1. Set _ret_ to be the string-concatenation of _ret_ and ListJoin(_strings_).
             1. Set _ret_ to be the string-concatenation of _ret_ and *"]"*.
             1. Return _ret_.
         </emu-alg>
