@@ -22,7 +22,26 @@
           <dd>It converts _argument_ to a String.</dd>
         </dl>
         <emu-alg>
-            1. Return *"[object Record]"*.
+            1. Let _list_ be _argument_.[[Fields]].
+            1. Let _length_ be the length of List _list_.
+            1. Let _ret_ be the value *"#{"*.
+            1. Let _k_ be 0.
+            1. Repeat, while _k_ &lt; _len_,
+              1. Let _entry_ be _list_[_k_].
+              1. Let _key_ be _entry_.[[Key]].
+              1. Let _value_ be _entry_.[[Value]].
+              1. If _value_ is a Symbol, Let _valueString_ be SymbolDescriptiveString(_value_).
+              1. Else if _value_ is a String, Let _valueString_ by QuoteJSONString(_value_).
+              1. Else, Let _valueString_ be ! ToString(_value_).
+              1. Set _ret_ to be the string-concatenation _ret_ and *" "*.
+              1. Set _ret_ to be the string-concatenation _ret_ and QuoteJSONString(_key_).
+              1. Set _ret_ to be the string-concatenation _ret_ and *": "*.
+              1. Set _ret_ to be the string-concatenation _ret_ and _valueString_.
+              1. If _k_ = _len_ - 1, Set _ret_ to be the string-concatenation _ret_ and *" "*.
+              1. Else, Set _ret_ to be the string-concatenation _ret_ and *", "*.
+              1. Set _k_ to _k_ + 1.
+            1. Set _ret_ to be the string-concatenation _ret_ and *"}"*.
+            1. Return _ret_.
         </emu-alg>
       </emu-clause>
 
@@ -98,12 +117,28 @@
           <ins>
             TupleToString (
               _argument_: a Tuple,
-            ): either a normal completion containing an ECMAScript language value, or an abrupt completion
+            ): a String
           </ins>
         </h1>
-        <dl class="header"></dl>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It converts _argument_ to a String.</dd>
+        </dl>
         <emu-alg>
-            1. Return ? Call(%Array.prototype.join%, _argument_, &laquo; &raquo;).
+            1. Let _list_ be _argument_.[[Sequence]].
+            1. Let _length_ be the length of List _list_.
+            1. Let _ret_ be the value *"#["*.
+            1. Let _k_ be 0.
+            1. Repeat, while _k_ &lt; _len_,
+              1. Let _value_ be _list_[_k_].
+              1. If _value_ is a Symbol, Let _valueString_ be SymbolDescriptiveString(_value_).
+              1. Else if _value_ is a String, Let _valueString_ by QuoteJSONString(_value_).
+              1. Else, Let _valueString_ be ! ToString(_value_).
+              1. Set _ret_ to be the string-concatenation _ret_ and _valueString_.
+              1. If _k_ &lt; _len_, Set _ret_ to be the string-concatenation _ret_ and *", "*.
+              1. Set _k_ to _k_ + 1.
+            1. Set _ret_ to be the string-concatenation _ret_ and *"]"*.
+            1. Return _ret_.
         </emu-alg>
       </emu-clause>
 
