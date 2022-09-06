@@ -7,7 +7,7 @@
 
     <emu-clause number="8" id="sec-ecmascript-language-types-record-type">
       <h1>The Record Type</h1>
-      <p>The Record type is the set of all finite mappings from Strings to ECMAScript primitive values including Record and Tuple. Each record value holds an associated [[Fields]] List value which is a list of pairs of the form { [[Key]], [[Value]] } where the [[Key]] is a String and [[Value]] is any primitive value. Entries of [[Fields]] are sorted by [[Key]] in ascending code unit order. The [[Fields]] List and its entries are never modified.</p>
+      <p>The <dfn variants="is a Record,is not a Record">Record type</dfn> is the set of all finite mappings from Strings to ECMAScript primitive values including Record and Tuple. Each record value holds an associated [[Fields]] List value which is a list of pairs of the form { [[Key]], [[Value]] } where the [[Key]] is a String and [[Value]] is any primitive value. Entries of [[Fields]] are sorted by [[Key]] in ascending code unit order. The [[Fields]] List and its entries are never modified.</p>
 
       <emu-clause id="sec-immutable-types-record-tostring" type="abstract operation">
         <h1>
@@ -116,7 +116,7 @@
 
     <emu-clause id="sec-ecmascript-language-types-tuple-type">
       <h1>The Tuple Type</h1>
-      <p>The Tuple type is the set of all finite and ordered sequences of ECMAScript primitive values including Record and Tuple. Each tuple value holds an associated [[Sequence]] List which is a list of primitive values. The [[Sequence]] List is integer-indexed. The [[Sequence]] List and its values are never modified.</p>
+      <p>The <dfn variants="is a Tuple,is not a Tuple">Tuple type</dfn> is the set of all finite and ordered sequences of ECMAScript primitive values including Record and Tuple. Each tuple value holds an associated [[Sequence]] List which is a list of primitive values. The [[Sequence]] List is integer-indexed. The [[Sequence]] List and its values are never modified.</p>
 
       <emu-clause id="sec-immutable-types-tuple-tostring" type="abstract operation">
         <h1>
