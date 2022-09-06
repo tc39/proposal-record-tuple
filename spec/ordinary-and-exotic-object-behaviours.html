@@ -398,15 +398,15 @@
           <ins>
             TupleGet (
               _T_: a Tuple object,
-              _numericIndex_: an integral Number,
+              _index_: a Number,
             ): an ECMAScript language value
           </ins>
         </h1>
         <dl class="header"></dl>
         <emu-alg>
           1. Let _tup_ be _T_.[[TupleData]].
-          1. If IsValidTupleIndex(_T_, _numericIndex_) is *false*, return ~empty~.
-          1. Let _value_ be the element with index ℝ(_numericIndex_) in _tup_.[[Sequence]].
+          1. If IsValidTupleIndex(_T_, _index_) is *false*, return ~empty~.
+          1. Let _value_ be the element with index ℝ(_index_) in _tup_.[[Sequence]].
           1. Return _value_.
         </emu-alg>
       </emu-clause>
