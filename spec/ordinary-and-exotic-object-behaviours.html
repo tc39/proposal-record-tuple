@@ -379,14 +379,16 @@
           <ins>
             IsValidTupleIndex (
               _T_: a Tuple object,
-              _numericIndex_: an integral Number,
+              _index_: a Number,
             ): a Boolean
           </ins>
         </h1>
-        <dl class="header"></dl>
+        <dl class="header">
+        </dl>
         <emu-alg>
-          1. If _numericIndex_ is *-0*<sub>𝔽</sub>, return *false*.
-          1. If ℝ(_numericIndex_) &lt; 0 or ℝ(_numericIndex_) &ge; the length of _T_.[[TupleData]].[[Sequence]], return *false*.
+          1. If IsIntegralNumber(_index_) is *false*, return *false*.
+          1. If _index_ is *-0*<sub>𝔽</sub>, return *false*.
+          1. If ℝ(_index_) &lt; 0 or ℝ(_index_) &ge; the length of _T_.[[TupleData]].[[Sequence]], return *false*.
           1. Return *true*.
         </emu-alg>
       </emu-clause>
