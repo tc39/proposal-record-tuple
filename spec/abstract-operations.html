@@ -8,39 +8,6 @@
     <p>The ECMAScript language implicitly performs automatic type conversion as needed. To clarify the semantics of certain constructs it is useful to define a set of conversion abstract operations. The conversion abstract operations are polymorphic; they can accept a value of any ECMAScript language type. But no other specification types are used with these operations.</p>
     <p>The BigInt <ins>, Record, and Tuple</ins> type<ins>s</ins> <del>has</del><ins>have</ins> no implicit conversions in the ECMAScript language; programmers must call BigInt <ins>, Record, or Tuple</ins> explicitly to convert values from other types.</p>
 
-    <emu-clause id="sec-toprimitive" type="abstract operation" oldids="table-9">
-      <h1>
-        ToPrimitive (
-          _input_: an ECMAScript language value,
-          optional _preferredType_: ~string~ or ~number~,
-        ): either a normal completion containing an ECMAScript language value, or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It converts its _input_ argument to a non-Object type. If an object is capable of converting to more than one primitive type, it may use the optional hint _preferredType_ to favour that type.</dd>
-      </dl>
-      <emu-alg>
-        1. If Type(_input_) is Object, then
-          1. <ins>If _input_ has a [[RecordData]] internal slot, return _input_.[[RecordData]].</ins>
-          1. Let _exoticToPrim_ be ? GetMethod(_input_, @@toPrimitive).
-          1. If _exoticToPrim_ is not *undefined*, then
-            1. If _preferredType_ is not present, let _hint_ be *"default"*.
-            1. Else if _preferredType_ is ~string~, let _hint_ be *"string"*.
-            1. Else,
-              1. Assert: _preferredType_ is ~number~.
-              1. Let _hint_ be *"number"*.
-            1. Let _result_ be ? Call(_exoticToPrim_, _input_, &laquo; _hint_ &raquo;).
-            1. If Type(_result_) is not Object, return _result_.
-            1. Throw a *TypeError* exception.
-          1. If _preferredType_ is not present, let _preferredType_ be ~number~.
-          1. Return ? OrdinaryToPrimitive(_input_, _preferredType_).
-        1. Return _input_.
-      </emu-alg>
-      <emu-note>
-        <p><ins>There is explicit handling of <emu-xref href="#sec-record-exotic-objects">Record exotic objects</emu-xref> in ToPrimitive because, unlike the other primitives, there is no prototype to lookup the appropriate methods on.</ins></p>
-      </emu-note>
-    </emu-clause>
-
     <emu-clause id="sec-toboolean" type="abstract operation">
       <h1>
         ToBoolean (
@@ -556,7 +523,7 @@
               <ins>Record</ins>
             </td>
             <td>
-              <ins>Return a new Record object whose [[RecordData]] internal slot is set to _argument_. See <emu-xref href="#sec-record-objects"></emu-xref> for a description of Record objects.</ins>
+              <ins>Return RecordToObject(_argument_).</ins>
             </td>
           </tr>
           <tr>
@@ -852,6 +819,31 @@
 
   <emu-clause number="5" id="sec-operations-on-records">
     <h1>Operations on Records</h1>
+
+    <emu-clause id="sec-recordtoobject" type="abstract operation">
+      <h1>
+        <ins>
+          RecordToObject (
+            _value_: a Record,
+          ): an Object
+        </ins>
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It is used to specify the creation of objects based on the contents of a record.</dd>
+      </dl>
+      <emu-alg>
+          1. Let _obj_ be OrdinaryObjectCreate(*null*).
+          1. For each element _entry_ of _value_.[[Fields]], do
+            1. Let _key_ be _entry_.[[Key]].
+            1. Let _val_ be _entry_.[[Value]].
+            1. Assert: _key_ is a property key.
+            1. Assert: _val_ is an ECMAScript language value.
+            1. Perform ! CreateDataProperty(_obj_, _key_, _val_).
+          1. Perform ! SetIntegrityLevel(_obj_, ~frozen~).
+          1. Return _obj_.
+      </emu-alg>
+    </emu-clause>
 
     <emu-clause id="sec-createrecord" type="abstract operation">
       <h1>
