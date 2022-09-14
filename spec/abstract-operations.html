@@ -446,7 +446,7 @@
               <ins>Record</ins>
             </td>
             <td>
-              <ins>Throw a *TypeError* exception.</ins>
+              <ins>Return RecordToString(_argument_).</ins>
             </td>
           </tr>
           <tr>
@@ -454,7 +454,7 @@
               <ins>Tuple</ins>
             </td>
             <td>
-              <ins>Return ? TupleToString(_argument_).</ins>
+              <ins>Return TupleToString(_argument_).</ins>
             </td>
           </tr>
           <tr>
@@ -579,6 +579,26 @@
         </table>
       </emu-table>
     </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-topropertykey" type="abstract operation">
+    <h1>
+      ToPropertyKey (
+        _argument_: unknown,
+      ): either a normal completion containing a property key or a throw completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It converts _argument_ to a value that can be used as a property key.</dd>
+    </dl>
+    <emu-alg>
+      1. Let _key_ be ? ToPrimitive(_argument_, ~string~).
+      1. If _key_ is a Symbol, then
+        1. Return _key_.
+      1. <ins>If _key_ is a Record or _key_ is a Tuple, then</ins>
+        1. <ins>Throw a *TypeError* exception.</ins>
+      1. Return ! ToString(_key_).
+    </emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-testing-and-comparison-operations">
@@ -956,6 +976,28 @@
       </emu-alg>
     </emu-clause>
   </emu-clause>
+
+    <emu-clause id="sec-listjoin" type="abstract operation">
+      <h1>
+        <ins>
+          ListJoin (
+            _list_: a List of Strings,
+          ): a String
+        </ins>
+      </h1>
+      <dl class="header"></dl>
+      <emu-alg>
+        1. Let _ret_ be *""*.
+        1. Let _len_ be the length of _list_.
+        1. Let _k_ be 0.
+        1. Repeat, while _k_ &lt; _len_,
+          1. Let _s_ be _list_[_k_].
+          1. Set _ret_ to be the string-concatenation of _ret_ and _s_.
+          1. Set _k_ to _k_ + 1.
+          1. If _k_ &lt; _len_, set _ret_ to be the string-concatenation of _ret_ and *", "*.
+        1. Return _ret_.
+      </emu-alg>
+    </emu-clause>
 
     <emu-clause id="sec-isconcatspreadable" type="abstract operation">
       <h1>
