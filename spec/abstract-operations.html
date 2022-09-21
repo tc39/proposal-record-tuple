@@ -37,7 +37,7 @@
         1. Return _input_.
       </emu-alg>
       <emu-note>
-        <p><ins>There is explicit handling of <emu-xref href="#sec-record-exotic-objects">Record exotic objects</emu-xref> in ToPrimitive because, unlike the other primitives, there is no prototype to lookup the appropriate methods on.</ins></p>
+        <p><ins>There is explicit handling of <emu-xref href="#sec-recordtoobject">[[RecordData]]</emu-xref> in ToPrimitive because, unlike the other primitives, there is no prototype to lookup the appropriate methods on.</ins></p>
       </emu-note>
     </emu-clause>
 
@@ -556,7 +556,7 @@
               <ins>Record</ins>
             </td>
             <td>
-              <ins>Return a new Record object whose [[RecordData]] internal slot is set to _argument_. See <emu-xref href="#sec-record-objects"></emu-xref> for a description of Record objects.</ins>
+              <ins>Return RecordToObject(_argument_).</ins>
             </td>
           </tr>
           <tr>
@@ -872,6 +872,32 @@
 
   <emu-clause number="5" id="sec-operations-on-records">
     <h1>Operations on Records</h1>
+
+    <emu-clause id="sec-recordtoobject" type="abstract operation">
+      <h1>
+        <ins>
+          RecordToObject (
+            _value_: a Record,
+          ): an Object
+        </ins>
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It is used to specify the creation of objects based on the contents of a record.</dd>
+      </dl>
+      <emu-alg>
+          1. Let _obj_ be OrdinaryObjectCreate(*null*, &laquo; [[RecordData]] &raquo;).
+          1. Set _obj_.[[RecordData]] to _value_.
+          1. For each element _entry_ of _value_.[[Fields]], do
+            1. Let _key_ be _entry_.[[Key]].
+            1. Let _val_ be _entry_.[[Value]].
+            1. Assert: _key_ is a property key.
+            1. Assert: _val_ is an ECMAScript language value.
+            1. Perform ! CreateDataProperty(_obj_, _key_, _val_).
+          1. Perform ! SetIntegrityLevel(_obj_, ~frozen~).
+          1. Return _obj_.
+      </emu-alg>
+    </emu-clause>
 
     <emu-clause id="sec-createrecord" type="abstract operation">
       <h1>
