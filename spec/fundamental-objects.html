@@ -39,29 +39,3 @@
     </emu-clause>
   </emu-clause>
 </emu-clause>
-
-<emu-clause number="22" id="sec-text-processing">
-  <h1>Text Processing</h1>
-
-  <emu-clause id="sec-string-objects">
-    <h1>String Objects</h1>
-
-    <emu-clause id="sec-string-constructor">
-      <h1>The String Constructor</h1>
-
-      <emu-clause id="sec-string-constructor-string-value">
-        <h1>String ( _value_ )</h1>
-        <p>When `String` is called with argument _value_, the following steps are taken:</p>
-        <emu-alg>
-          1. If _value_ is not present, let _s_ be the empty String.
-          1. Else,
-            1. If NewTarget is *undefined* and Type(_value_) is Symbol, return SymbolDescriptiveString(_value_).
-            1. <ins>If NewTarget is *undefined* and Type(_value_) is Record, return RecordToString(_value_).</ins>
-            1. Let _s_ be ? ToString(_value_).
-          1. If NewTarget is *undefined*, return _s_.
-          1. Return StringCreate(_s_, ? GetPrototypeFromConstructor(NewTarget, *"%String.prototype%"*)).
-        </emu-alg>
-      </emu-clause>
-    </emu-clause>
-  </emu-clause>
-</emu-clause>
