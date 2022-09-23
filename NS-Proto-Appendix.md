@@ -8,9 +8,9 @@ Converts shallowly an object to a record. If the object has a non-const value, a
 
 Similar to `Object.fromEntries`, but created a new `Record`.
 
-## `Record.recordValue(rec: Record | Object): Record`
+## `Record[Symbol.hasInstance](v: unknown)`
 
-Returns the primitive record value of the argument if the argument is already a Record or a Record Object, otherwise a TypeError will be thrown.
+Returns true iff `v` is an object created by coercing a record primitive to an object via [ToObject](https://tc39.es/ecma262/multipage/abstract-operations.html#sec-toobject).
 
 # `Tuple` namespace
 

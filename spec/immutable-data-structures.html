@@ -61,20 +61,27 @@
           <p>The parameter _iterable_ is expected to be an object that implements an @@iterator method that returns an iterator object that produces a two element array-like object whose first element is a value that will be used as a Map key and whose second element is the value to associate with that key.</p>
         </emu-note>
       </emu-clause>
-      <emu-clause id="sec-record.recordValue">
-        <h1>Record.recordValue ( _arg_ )</h1>
-        <p>The *recordValue* function takes one argument _arg_, and performs the following steps:</p>
+      <emu-clause id="sec-record-@@hasinstance">
+        <h1>Record [ @@hasInstance ] ( _V_ )</h1>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
-          1. If Type(_arg_) is Record, return _arg_.
-          1. If Type(_arg_) is Object and _arg_ has a [[RecordData]] internal slot, then
-            1. Let _r_ be _value_.[[RecordData]].
-            1. Assert: Type(_r_) is Record.
-            1. Return _r_.
-          1. Throw a *TypeError* exception.
+          1. If _V_ is an Object and _V_ has a [[RecordData]] internal slot, return *true*. Otherwise, return *false*.
         </emu-alg>
         <emu-note>
-          <p>This static method is similar to the *valueOf* method that other primitves have on their prototype, <emu-xref href="#sec-tuple.prototype.valueof">Tuple.prototype.valueOf</emu-xref> for example. Because Records do not have a prototype the method is a static function on the constructor.</p>
+          <p>The Record constructor overrides the `@@hasInstance` because unlike the other primitives its prototype is *null*.</p>
+          <p>For example,</p>
+          <pre><code class="javascript">
+            Object(#{}) instanceof Record
+          </code></pre>
+          <p>will return *true* instead of throwing a *TypeError*.</p>
+          <p>The method checks for the [[RecordData]] internal slot instead of checking for a *null* [[prototype]] because all prototype chain that terminate end with *null*. So,</p>
+          <pre><code class="javascript">
+            Object.create(null) instanceof Record
+          </code></pre>
+          <p>will return *false*.</p>
         </emu-note>
+        <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
+        <p>The value of the *"name"* property of this method is *"[Symbol.hasInstance]"*.</p>
       </emu-clause>
       <emu-clause id="sec-record.prototype">
         <h1>Record.prototype</h1>
