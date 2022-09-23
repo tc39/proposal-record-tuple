@@ -10,7 +10,7 @@ Similar to `Object.fromEntries`, but created a new `Record`.
 
 ## `Record.recordValue(rec: Record | Object): Record`
 
-Returns the primitive record value of the argument if the argument is already a Record or a Record Exotic Object, otherwise a TypeError will be thrown.
+Returns the primitive record value of the argument if the argument is already a Record or a Record Object, otherwise a TypeError will be thrown.
 
 # `Tuple` namespace
 
