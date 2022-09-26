@@ -3997,7 +3997,7 @@ li.menu-search-result-term:before {
           <p>For example,</p>
           <pre><code class="javascript hljs"><span class="hljs-title class_">Object</span>(#{}) <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Record</span></code></pre>
           <p>will return <emu-val>true</emu-val> instead of throwing a <emu-val>TypeError</emu-val>.</p>
-          <p>The method checks for the [[RecordData]] internal slot instead of checking for a <emu-val>null</emu-val> [[prototype]] because all prototype chain that terminate end with <emu-val>null</emu-val>. So,</p>
+          <p>The method checks for the [[RecordData]] internal slot instead of checking for a <emu-val>null</emu-val> [[prototype]] because all prototype chains that terminate end with <emu-val>null</emu-val>. So,</p>
           <pre><code class="javascript hljs"><span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-literal">null</span>) <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">Record</span></code></pre>
           <p>will return <emu-val>false</emu-val>.</p>
         </div></emu-note>
