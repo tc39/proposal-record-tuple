@@ -74,7 +74,7 @@
             Object(#{}) instanceof Record
           </code></pre>
           <p>will return *true* instead of throwing a *TypeError*.</p>
-          <p>The method checks for the [[RecordData]] internal slot instead of checking for a *null* [[prototype]] because all prototype chain that terminate end with *null*. So,</p>
+          <p>The method checks for the [[RecordData]] internal slot instead of checking for a *null* [[prototype]] because all prototype chains that terminate end with *null*. So,</p>
           <pre><code class="javascript">
             Object.create(null) instanceof Record
           </code></pre>
