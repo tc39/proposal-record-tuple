@@ -153,10 +153,11 @@
       <dl class="header">
       </dl>
       <emu-alg>
-        1. If Type(_O_) is not Object <ins>or Tuple</ins>, return *false*.
-        1. Let _spreadable_ be ? Get<ins>V</ins>(_O_, @@isConcatSpreadable).
+        1. <ins>If IsType(_O_) is *true*, return *true*.</ins>
+        1. If Type(_O_) is not Object, return *false*.
+        1. Let _spreadable_ be ? Get(_O_, @@isConcatSpreadable).
         1. If _spreadable_ is not *undefined*, return ToBoolean(_spreadable_).
-        1. If ? <del>IsArray</del><ins>IsArrayOrTuple</ins>(_O_).
+        1. If ? IsArray(_O_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
