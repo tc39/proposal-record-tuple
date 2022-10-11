@@ -349,8 +349,8 @@
         1. <ins>If Type(_rval_) is Tuple, return *false*.</ins>
         1. If Type(_rval_) is not Object, throw a *TypeError* exception.
         1. Let _privateEnv_ be the running execution context's PrivateEnvironment.
-        1. Let _privateName_ be ! ResolvePrivateIdentifier(_privateEnv_, _privateIdentifier_).
-        1. If ! PrivateElementFind(_rval_, _privateName_) is not ~empty~, return *true*.
+        1. Let _privateName_ be ResolvePrivateIdentifier(_privateEnv_, _privateIdentifier_).
+        1. If PrivateElementFind(_rval_, _privateName_) is not ~empty~, return *true*.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
