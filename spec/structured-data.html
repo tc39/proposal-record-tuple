@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<meta charset="utf8" />
+
+<emu-clause id="sec-structured-data">
+  <h1>Structured Data</h1>
+
+  <emu-clause number="5" id="sec-json-object">
+    <h1>The JSON Object</h1>
+
+    <emu-clause number="2" id="sec-json.stringify">
+      <h1>JSON.stringify ( _value_ [ , _replacer_ [ , _space_ ] ] )</h1>
+
+      <emu-alg>
+        1. Let _stack_ be a new empty List.
+        1. Let _indent_ be the empty String.
+        1. Let _PropertyList_ and _ReplacerFunction_ be *undefined*.
+        1. If Type(_replacer_) is Object <ins>or Tuple</ins>, then
+          1. If IsCallable(_replacer_) is *true*, then
+            1. Set _ReplacerFunction_ to _replacer_.
+          1. Else,
+            1. Let _isArray_ be ? <del>IsArray</del><ins>IsArrayOrTuple</ins>(_replacer_).
+            1. If _isArray_ is *true*, then
+              1. Set _PropertyList_ to a new empty List.
+              1. Let _len_ be ? LengthOfArrayLike(<del>_replacer_</del><ins>! ToObject(_replacer_)</ins>).
+              1. Let _k_ be 0.
+              1. Repeat, while _k_ &lt; _len_,
+                1. Let _prop_ be ! ToString(𝔽(_k_)).
+                1. Let _v_ be ? <del>Get</del><ins>GetV</ins>(_replacer_, _prop_).
+                1. Let _item_ be *undefined*.
+                1. If Type(_v_) is String, set _item_ to _v_.
+                1. Else if Type(_v_) is Number, set _item_ to ! ToString(_v_).
+                1. Else if Type(_v_) is Object, then
+                  1. If _v_ has a [[StringData]] or [[NumberData]] internal slot, set _item_ to ? ToString(_v_).
+                1. If _item_ is not *undefined* and _item_ is not currently an element of _PropertyList_, then
+                  1. Append _item_ to the end of _PropertyList_.
+                1. Set _k_ to _k_ + 1.
+        1. If Type(_space_) is Object, then
+          1. If _space_ has a [[NumberData]] internal slot, then
+            1. Set _space_ to ? ToNumber(_space_).
+          1. Else if _space_ has a [[StringData]] internal slot, then
+            1. Set _space_ to ? ToString(_space_).
+        1. If Type(_space_) is Number, then
+          1. Let _spaceMV_ be ! ToIntegerOrInfinity(_space_).
+          1. Set _spaceMV_ to min(10, _spaceMV_).
+          1. If _spaceMV_ &lt; 1, let _gap_ be the empty String; otherwise let _gap_ be the String value containing _spaceMV_ occurrences of the code unit 0x0020 (SPACE).
+        1. Else if Type(_space_) is String, then
+          1. If the length of _space_ is 10 or less, let _gap_ be _space_; otherwise let _gap_ be the substring of _space_ from 0 to 10.
+        1. Else,
+          1. Let _gap_ be the empty String.
+        1. Let _wrapper_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Perform ! CreateDataPropertyOrThrow(_wrapper_, the empty String, _value_).
+        1. Let _state_ be the Record { [[ReplacerFunction]]: _ReplacerFunction_, [[Stack]]: _stack_, [[Indent]]: _indent_, [[Gap]]: _gap_, [[PropertyList]]: _PropertyList_ }.
+        1. Return ? SerializeJSONProperty(_state_, the empty String, _wrapper_).
+      </emu-alg>
+
+      <emu-clause number="2" id="sec-serializejsonproperty" type="abstract operation">
+        <h1>
+          SerializeJSONProperty (
+            _state_: unknown,
+            _key_: unknown,
+            _holder_: unknown,
+          )
+        </h1>
+        <dl class="header"></dl>
+        <emu-alg>
+          1. Let _value_ be ? Get(_holder_, _key_).
+          1. If Type(_value_) is Object or BigInt, then
+            1. Let _toJSON_ be ? GetV(_value_, *"toJSON"*).
+            1. If IsCallable(_toJSON_) is *true*, then
+              1. Set _value_ to ? Call(_toJSON_, _value_, &laquo; _key_ &raquo;).
+          1. If _state_.[[ReplacerFunction]] is not *undefined*, then
+            1. Set _value_ to ? Call(_state_.[[ReplacerFunction]], _holder_, &laquo; _key_, _value_ &raquo;).
+          1. If Type(_value_) is Object, then
+            1. If _value_ has a [[NumberData]] internal slot, then
+              1. Set _value_ to ? ToNumber(_value_).
+            1. Else if _value_ has a [[StringData]] internal slot, then
+              1. Set _value_ to ? ToString(_value_).
+            1. Else if _value_ has a [[BooleanData]] internal slot, then
+              1. Set _value_ to _value_.[[BooleanData]].
+            1. Else if _value_ has a [[BigIntData]] internal slot, then
+              1. Set _value_ to _value_.[[BigIntData]].
+          1. If _value_ is *null*, return *"null"*.
+          1. If _value_ is *true*, return *"true"*.
+          1. If _value_ is *false*, return *"false"*.
+          1. <ins>If Type(_value_) is Record or Type(_value_) is Tuple, set _value_ to ! ToObject(_value_).</ins>
+          1. If Type(_value_) is String, return QuoteJSONString(_value_).
+          1. If Type(_value_) is Number, then
+            1. If _value_ is finite, return ! ToString(_value_).
+            1. Return *"null"*.
+          1. If Type(_value_) is BigInt, throw a *TypeError* exception.
+          1. If Type(_value_) is Object and IsCallable(_value_) is *false*, then
+            1. Let <del>_isArray_</del><ins>_isArrayOrTuple_</ins> be ? <del>IsArray</del><ins>IsArrayOrTuple</ins>(_value_).</del>
+            1. If <del>_isArray_</del><ins>_isArrayOrTuple_</ins> is *true*, return ? SerializeJSONArray(_state_, _value_).
+            1. Return ? SerializeJSONObject(_state_, _value_).
+          1. Return *undefined*.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>

@@ -1025,19 +1025,16 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-isconcatspreadable" type="abstract operation">
+    <emu-clause id="sec-isarrayortuple" type="abstract operation">
       <h1>
-        IsConcatSpreadable (
-          _O_: unknown,
-        ): either a normal completion containing a Boolean or a throw completion
+        IsArrayOrTuple (
+          _O_: an ECMAScript language value,
+        )
       </h1>
       <dl class="header">
       </dl>
       <emu-alg>
-        1. If Type(_O_) is not Object or Tuple, return *false*.
-        1. Let _spreadable_ be ? Get<ins>V</ins>(_O_, @@isConcatSpreadable).
-        1. If _spreadable_ is not *undefined*, return ToBoolean(_spreadable_).
-        1. <ins>If IsTuple(_O_), return *true*.</ins>
+        1. If IsTuple(_O_), return *true*.
         1. Return ? IsArray(_O_).
       </emu-alg>
     </emu-clause>
