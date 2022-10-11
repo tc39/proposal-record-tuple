@@ -331,9 +331,9 @@
 
       <emu-grammar>RelationalExpression : RelationalExpression `in` ShiftExpression</emu-grammar>
       <emu-alg>
-        1. Let _lref_ be the result of evaluating |RelationalExpression|.
+        1. Let _lref_ be ? Evaluation of |RelationalExpression|.
         1. Let _lval_ be ? GetValue(_lref_).
-        1. Let _rref_ be the result of evaluating |ShiftExpression|.
+        1. Let _rref_ be ? Evaluation of |ShiftExpression|.
         1. Let _rval_ be ? GetValue(_rref_).
         1. <ins>If Type(_rval_) is Record, set _rval_ to ! ToObject(_rval_).</ins>
         1. <ins>If Type(_rval_) is Tuple, set _rval_ to ! ToObject(_rval_).</ins>
@@ -343,7 +343,7 @@
       <emu-grammar>RelationalExpression : PrivateIdentifier `in` ShiftExpression</emu-grammar>
       <emu-alg>
         1. Let _privateIdentifier_ be the StringValue of |PrivateIdentifier|.
-        1. Let _rref_ be the result of evaluating |ShiftExpression|.
+        1. Let _rref_ be ? Evaluation of |ShiftExpression|.
         1. Let _rval_ be ? GetValue(_rref_).
         1. <ins>If Type(_rval_) is Record, return *false*.</ins>
         1. <ins>If Type(_rval_) is Tuple, return *false*.</ins>
