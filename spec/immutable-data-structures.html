@@ -218,8 +218,19 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.at">
         <h1>Tuple.prototype.at ( _index_ )</h1>
-        <p>`Tuple.prototype.at` is a distinct function that implements the same algorithm as `Array.prototype.at` as defined in <emu-xref href="#sec-array.prototype.at"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the length of _elements_.
+          1. Let _relativeIndex_ be ? ToIntegerOrInfinity(_index_).
+          1. If _relativeIndex_ &ge; 0, then
+            1. Let _k_ be _relativeIndex_.
+          1. Else,
+            1. Let _k_ be _len_ + _relativeIndex_.
+          1. If _k_ &lt; 0 or _k_ &ge; _len_, return *undefined*.
+          1. Return _elements_[_k_].
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.valueof">
         <h1>Tuple.prototype.valueOf ( )</h1>
@@ -293,23 +304,98 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.includes">
         <h1>Tuple.prototype.includes ( _searchElement_ [ , _fromIndex_ ] )</h1>
-        <p>`Tuple.prototype.includes` is a distinct function that implements the same algorithm as `Array.prototype.includes` as defined in <emu-xref href="#sec-array.prototype.includes"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This method compares _searchElement_ to the elements of the tuple, in ascending order starting from _fromIndex_, using the SameValueZero algorithm, and if found at any position, returns *true*; otherwise, it returns *false*. The optional second argument _fromIndex_ defaults to *+0*<sub>𝔽</sub> (i.e. the whole tuple is searched).</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the length of _elements_.
+          1. If _len_ is 0, return *false*.
+          1. Let _n_ be ? ToIntegerOrInfinity(_fromIndex_).
+          1. Assert: If _fromIndex_ is *undefined*, then _n_ is 0.
+          1. If _n_ is +&infin;, return *false*.
+          1. Else if _n_ is -&infin;, set _n_ to 0.
+          1. If _n_ &ge; 0, then
+            1. Let _k_ be _n_.
+          1. Else,
+            1. Let _k_ be _len_ + _n_.
+            1. If _k_ &lt; 0, set _k_ to 0.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _elementK_ be _elements_[_k_].
+            1. If SameValueZero(_searchElement_, _elementK_) is *true*, return *true*.
+            1. Set _k_ to _k_ + 1.
+          1. Return *false*.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.indexof">
         <h1>Tuple.prototype.indexOf ( _searchElement_ [ , _fromIndex_ ] )</h1>
-        <p>`Tuple.prototype.indexOf` is a distinct function that implements the same algorithm as `Array.prototype.indexOf` as defined in <emu-xref href="#sec-array.prototype.indexof"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This method compares _searchElement_ to the elements of the tuple, in ascending order starting from _fromIndex_, using the IsStrictlyEqual algorithm, and if found at one or more indices, returns the smallest such index; otherwise, it returns *-1*<sub>𝔽</sub>. The optional second argument _fromIndex_ defaults to *+0*<sub>𝔽</sub> (i.e. the whole tuple is searched).</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the length of _elements_.
+          1. If _len_ is 0, return *-1*<sub>𝔽</sub>.
+          1. Let _n_ be ? ToIntegerOrInfinity(_fromIndex_).
+          1. Assert: If _fromIndex_ is *undefined*, then _n_ is 0.
+          1. If _n_ is +&infin;, return *-1*<sub>𝔽</sub>.
+          1. Else if _n_ is -&infin;, set _n_ to 0.
+          1. If _n_ &ge; 0, then
+            1. Let _k_ be _n_.
+          1. Else,
+            1. Let _k_ be _len_ + _n_.
+            1. If _k_ &lt; 0, set _k_ to 0.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _elementK_ be _elements_[_k_].
+            1. Let _same_ be IsStrictlyEqual(_searchElement_, _elementK_).
+            1. If _same_ is *true*, return 𝔽(_k_).
+            1. Set _k_ to _k_ + 1.
+          1. Return *-1*<sub>𝔽</sub>.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.join">
         <h1>Tuple.prototype.join ( _separator_ )</h1>
-        <p>`Tuple.prototype.join` is a distinct function that implements the same algorithm as `Array.prototype.join` as defined in <emu-xref href="#sec-array.prototype.join"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This method converts the elements of the array to Strings, and then concatenates these Strings, separated by occurrences of the _separator_. If no separator is provided, a single comma is used as the separator.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the length of _elements_.
+          1. If _separator_ is *undefined*, let _sep_ be *","*.
+          1. Else, let _sep_ be ? ToString(_separator_).
+          1. Let _R_ be the empty String.
+          1. Let _k_ be 0.
+          1. Repeat, while _k_ &lt; _len_,
+            1. If _k_ &gt; 0, set _R_ to the string-concatenation of _R_ and _sep_.
+            1. Let _elementK_ be _elements_[_k_].
+            1. If _elementK_ is *undefined* or *null*, let _next_ be the empty String; otherwise, let _next_ be ? ToString(_elementK_).
+            1. Set _R_ to the string-concatenation of _R_ and _next_.
+            1. Set _k_ to _k_ + 1.
+          1. Return _R_.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.lastindexof">
         <h1>Tuple.prototype.lastIndexOf ( _searchElement_ [ , _fromIndex_ ] )</h1>
-        <p>`Tuple.prototype.lastIndexOf` is a distinct function that implements the same algorithm as `Array.prototype.lastIndexOf` as defined in <emu-xref href="#sec-array.prototype.lastindexof"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This method compares _searchElement_ to the elements of the tuple, in descending order starting from _fromIndex_, using the IsStrictlyEqual algorithm, and if found at one or more indices, returns the smallest such index; otherwise, it returns *-1*<sub>𝔽</sub>. The optional second argument _fromIndex_ defaults to the tuple's length minus 1 (i.e. the whole tuple is searched).</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the length of _elements_.
+          1. If _len_ is 0, return *-1*<sub>𝔽</sub>.
+          1. If _fromIndex_ is present, let _n_ be ? ToIntegerOrInfinity(_fromIndex_); else let _n_ be _len_ - 1.
+          1. If _n_ is -&infin;, return *-1*<sub>𝔽</sub>.
+          1. If _n_ &ge; 0, then
+            1. Let _k_ be min(_n_, _len_ - 1).
+          1. Else,
+            1. Let _k_ be _len_ + _n_.
+          1. Repeat, while _k_ &ge; 0,
+            1. Let _elementK_ be _elements_[_k_].
+            1. Let _same_ be IsStrictlyEqual(_searchElement_, _elementK_).
+            1. If _same_ is *true*, return 𝔽(_k_).
+            1. Set _k_ to _k_ - 1.
+          1. Return *-1*<sub>𝔽</sub>.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.entries">
         <h1>Tuple.prototype.entries ( )</h1>
@@ -323,8 +409,21 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.every">
         <h1>Tuple.prototype.every ( _callbackfn_ [ , _thisArg_ ] )</h1>
-        <p>`Tuple.prototype.every` is a distinct function that implements the same algorithm as `Array.prototype.every` as defined in <emu-xref href="#sec-array.prototype.every"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This methods calls _callbackfn_ once for each element of the tuple, in ascending order, until it finds one where _callbackfn_ returns *false*. If such an element is found, `every` immediately returns *false*. Otherwise, if _callbackfn_ returned *true* for all elements, `every` will return *true*.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the length of _elements_.
+          1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
+          1. Let _k_ be 0.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _kValue_ be _elements_[_k_].
+            1. Let _testResult_ be ToBoolean(? Call(_callbackfn_, _thisArg_, &laquo; _kValue_, 𝔽(_k_), _T_ &raquo;)).
+            1. If _testResult_ is *false*, return *false*.
+            1. Set _k_ to _k_ + 1.
+          1. Return *true*.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.filter">
         <h1>Tuple.prototype.filter ( _callbackfn_ [ , _thisArg_ ] )</h1>
@@ -352,23 +451,75 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.find">
         <h1>Tuple.prototype.find ( _predicate_ [ , _thisArg_ ] )</h1>
-        <p>`Tuple.prototype.find` is a distinct function that implements the same algorithm as `Array.prototype.find` as defined in <emu-xref href="#sec-array.prototype.find"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This methods calls _predicate_ once for each element of the tuple, in ascending order, until it finds one where _predicate_ returns *true*. If such an element is found, `find` immediately returns it. Otherwise, if _predicate_ returned *false* for all elements, `find` will return *undefined*.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the number of elements in _elements_.
+          1. If IsCallable(_predicate_) is *false*, throw a *TypeError* exception.
+          1. Let _k_ be 0.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _kValue_ be ? _elements_[_k_].
+            1. Let _testResult_ be ToBoolean(? Call(_predicate_, _thisArg_, &laquo; _kValue_, 𝔽(_k_), _T_ &raquo;)).
+            1. If _testResult_ is *true*, return _kValue_.
+            1. Set _k_ to _k_ + 1.
+          1. Return *undefined*.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.findindex">
         <h1>Tuple.prototype.findIndex ( _predicate_ [ , _thisArg_ ] )</h1>
-        <p>`Tuple.prototype.findIndex` is a distinct function that implements the same algorithm as `Array.prototype.findIndex` as defined in <emu-xref href="#sec-array.prototype.findindex"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This methods calls _predicate_ once for each element of the tuple, in ascending order, until it finds one where _predicate_ returns *true*. If such an element is found, `find` immediately returns its index. Otherwise, if _predicate_ returned *false* for all elements, `find` will return *-1*<sub>𝔽</sub>.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the number of elements in _elements_.
+          1. If IsCallable(_predicate_) is *false*, throw a *TypeError* exception.
+          1. Let _k_ be 0.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _kValue_ be ? _elements_[_k_].
+            1. Let _testResult_ be ToBoolean(? Call(_predicate_, _thisArg_, &laquo; _kValue_, 𝔽(_k_), _T_ &raquo;)).
+            1. If _testResult_ is *true*, return 𝔽(_k_).
+            1. Set _k_ to _k_ + 1.
+          1. Return *-1*<sub>𝔽</sub>.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.findlast">
         <h1>Tuple.prototype.findLast ( _predicate_ [ , _thisArg_ ] )</h1>
-        <p>`Tuple.prototype.findLast` is a distinct function that implements the same algorithm as `Array.prototype.findLast` as defined in <emu-xref href="#sec-array.prototype.findlast"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This methods calls _predicate_ once for each element of the tuple, in descending order, until it finds one where _predicate_ returns *true*. If such an element is found, `find` immediately returns it. Otherwise, if _predicate_ returned *false* for all elements, `find` will return *undefined*.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the number of elements in _elements_.
+          1. If IsCallable(_predicate_) is *false*, throw a *TypeError* exception.
+          1. Let _k_ be _len_ - 1.
+          1. Repeat, while _k_ &ge; 0,
+            1. Let _kValue_ be _elements_[_k_].
+            1. Let _testResult_ be ToBoolean(? Call(_predicate_, _thisArg_, &laquo; _kValue_, 𝔽(_k_), _T_ &raquo;)).
+            1. If _testResult_ is *true*, return _kValue_.
+            1. Set _k_ to _k_ - 1.
+          1. Return *undefined*.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.findlastindex">
         <h1>Tuple.prototype.findLastIndex ( _predicate_ [ , _thisArg_ ] )</h1>
-        <p>`Tuple.prototype.findLastIndex` is a distinct function that implements the same algorithm as `Array.prototype.findLastIndex` as defined in <emu-xref href="#sec-array.prototype.findlastindex"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This methods calls _predicate_ once for each element of the tuple, in descending order, until it finds one where _predicate_ returns *true*. If such an element is found, `find` immediately returns its index. Otherwise, if _predicate_ returned *false* for all elements, `find` will return *-1*<sub>𝔽</sub>.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the number of elements in _elements_.
+          1. If IsCallable(_predicate_) is *false*, throw a *TypeError* exception.
+          1. Let _k_ be _len_ - 1.
+          1. Repeat, while _k_ &ge; 0,
+            1. Let _kValue_ be _elements_[_k_].
+            1. Let _testResult_ be ToBoolean(? Call(_predicate_, _thisArg_, &laquo; _kValue_, 𝔽(_k_), _T_ &raquo;)).
+            1. If _testResult_ is *true*, return 𝔽(_k_).
+            1. Set _k_ to _k_ - 1.
+          1. Return *-1*<sub>𝔽</sub>.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.flat">
         <h1>Tuple.prototype.flat ( [ _depth_ ] )</h1>
@@ -421,8 +572,20 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.foreach">
         <h1>Tuple.prototype.forEach ( _callbackfn_ [ , _thisArg_ ] )</h1>
-        <p>`Tuple.prototype.forEach` is a distinct function that implements the same algorithm as `Array.prototype.forEach` as defined in <emu-xref href="#sec-array.prototype.foreach"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This methods calls _callbackfn_ once for each element of the tuple, in ascending order.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the number of elements in _elements_.
+          1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
+          1. Let _k_ be 0.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _kValue_ be _elements_[_k_].
+            1. Perform ? Call(_callbackfn_, _thisArg_, &laquo; _kValue_, 𝔽(_k_), T &raquo;).
+            1. Set _k_ to _k_ + 1.
+          1. Return *undefined*.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.keys">
         <h1>Tuple.prototype.keys ( )</h1>
@@ -459,24 +622,96 @@
         </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.reduce">
-        <h1>Tuple.prototype.reduce ( _callbackfn_ [ , _thisArg_ ] )</h1>
-        <p>`Tuple.prototype.reduce` is a distinct function that implements the same algorithm as `Array.prototype.reduce` as defined in <emu-xref href="#sec-array.prototype.reduce"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <h1>Tuple.prototype.reduce ( _callbackfn_ [ , _initialValue_ ] )</h1>
+        <p>This methods calls _callbackfn_ once for each element of the tuple, in ascending order, skipping the first one if _initialValue_ is not present. Each value returned by _callbackfn_ is used passed to the next call, and after iterating through all the elements `reduce` returns the last return value of _callbackfn_.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the number of elements in _elements_.
+          1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
+          1. If _len_ = 0 and _initialValue_ is not present, throw a *TypeError* exception.
+          1. Let _k_ be 0.
+          1. Let _accumulator_ be *undefined*.
+          1. If _initialValue_ is present, then
+            1. Set _accumulator_ to _initialValue_.
+          1. Else,
+            1. Set _accumulator_ to the first element of _elements_.
+            1. Set _k_ to 1.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _kValue_ be _elements_[_k_].
+            1. Set _accumulator_ to ? Call(_callbackfn_, *undefined*, &laquo; _accumulator_, _kValue_, 𝔽(_k_), _T_ &raquo;).
+            1. Set _k_ to _k_ + 1.
+          1. Return _accumulator_.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.reduceright">
         <h1>Tuple.prototype.reduceRight ( _callbackfn_ [ , _thisArg_ ] )</h1>
-        <p>`Tuple.prototype.reduceRight` is a distinct function that implements the same algorithm as `Array.prototype.reduceRight` as defined in <emu-xref href="#sec-array.prototype.reduceright"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This methods calls _callbackfn_ once for each element of the tuple, in descending order, skipping the last one if _initialValue_ is not present. Each value returned by _callbackfn_ is used passed to the next call, and after iterating through all the elements `reduceRight` returns the last return value of _callbackfn_.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the number of elements in _elements_.
+          1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
+          1. If _len_ is 0 and _initialValue_ is not present, throw a *TypeError* exception.
+          1. Let _k_ be _len_ - 1.
+          1. Let _accumulator_ be *undefined*.
+          1. If _initialValue_ is present, then
+            1. Set _accumulator_ to _initialValue_.
+          1. Else,
+            1. Set _accumulator_ to the last element of _elements_.
+            1. Set _k_ to _k_ - 1.
+          1. Repeat, while _k_ &ge; 0,
+            1. Let _kValue_ be _elements_[_k_].
+            1. Set _accumulator_ to ? Call(_callbackfn_, *undefined*, &laquo; _accumulator_, _kValue_, 𝔽(_k_), _T_ &raquo;).
+            1. Set _k_ to _k_ - 1.
+          1. Return _accumulator_.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.some">
         <h1>Tuple.prototype.some ( _callbackfn_ [ , _thisArg_ ] )</h1>
-        <p>`Tuple.prototype.some` is a distinct function that implements the same algorithm as `Array.prototype.some` as defined in <emu-xref href="#sec-array.prototype.some"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>This methods calls _callbackfn_ once for each element of the tuple, in ascending order, until it finds one where _callbackfn_ returns *true*. If such an element is found, `some` immediately returns *true*. Otherwise, if _callbackfn_ returned *false* for all elements, `every` will return *false*.</p>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the number of elements in _elements_.
+          1. If IsCallable(_callbackfn_) is *false*, throw a *TypeError* exception.
+          1. Let _k_ be 0.
+          1. Repeat, while _k_ &lt; _len_,
+            1. Let _kValue_ be _elements_[_k_].
+            1. Let _testResult_ be ToBoolean(? Call(_callbackfn_, _thisArg_, &laquo; _kValue_, 𝔽(_k_), _T_ &raquo;)).
+            1. If _testResult_ is *true*, return *true*.
+            1. Set _k_ to _k_ + 1.
+          1. Return *false*.
+        </emu-alg>
+        <emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.tolocalestring">
         <h1>Tuple.prototype.toLocaleString ( [ _reserved1_ [ , _reserved2_ ] ] )</h1>
-        <p>`Tuple.prototype.toLocaleString` is a distinct function that implements the same algorithm as `Array.prototype.toLocaleString` as defined in <emu-xref href="#sec-array.prototype.tolocalestring"></emu-xref> except that ? thisTupleValue(*this* value) is used instead of directly accessing the *this* value. The implementation of the algorithm may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse, do not change, and their access is not observable. However, such optimization must not introduce any observable changes in the specified behaviour of the algorithm.</p>
-        <p>This function is not generic, since thisTupleValue(*this* value) can return an abrupt completion: in that case, that exception is thrown instead of evaluating the algorithm.</p>
+        <p>An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of this method is used.</p>
+        <emu-note type="editor">
+          <p>ECMA-402 does not yet include this method.</p>
+        </emu-note>
+        <p>The following steps are taken:</p>
+        <emu-alg>
+          1. Let _T_ be ? thisTupleValue(*this* value).
+          1. Let _elements_ be _T_.[[Sequence]].
+          1. Let _len_ be the number of elements in _elements_.
+          1. Let _separator_ be the implementation-defined list-separator String value appropriate for the host environment's current locale (such as *", "*).
+          1. Let _R_ be the empty String.
+          1. Let _k_ be 0.
+          1. Repeat, while _k_ &lt; _len_,
+            1. If _k_ &gt; 0, then
+              1. Set _R_ to the string-concatenation of _R_ and _separator_.
+            1. Let _nextElement_ be _elements_[_k_].
+            1. If _nextElement_ is not *undefined* or *null*, then
+              1. Let _S_ be ? ToString(? Invoke(_nextElement_, *"toLocaleString"*)).
+              1. Set _R_ to the string-concatenation of _R_ and _S_.
+            1. Set _k_ to _k_ + 1.
+          1. Return _R_.
+        </emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.tostring">
         <h1>Tuple.prototype.toString ( )</h1>
