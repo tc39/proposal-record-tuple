@@ -218,7 +218,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.at">
         <h1>Tuple.prototype.at ( _index_ )</h1>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.at` as defined in <emu-xref href="#sec-array.prototype.at"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -234,7 +235,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.valueof">
         <h1>Tuple.prototype.valueOf ( )</h1>
-        <p>When the `valueOf` function is called, the following steps are taken:</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Return ? thisTupleValue(*this* value).
         </emu-alg>
@@ -246,8 +247,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.slice">
         <h1>Tuple.prototype.slice ( _start_, _end_ )</h1>
-        <p>When the `slice` method is called with two arguments, _start_ and _end_, and returns a Tuple containing the elements of the Tuple from element _start_ up to, but not including, element _end_ (or through the end of the tuple if _end_ is *undefined*). If _start_ is negative, it is treated as <emu-eqn>_length_ + _start_</emu-eqn> where _length_ is the length of the tuple. If _end_ is negative, it is treated as <emu-eqn>_length_ + _end_</emu-eqn> where _length_ is the length of the tuple.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.slice` as defined in <emu-xref href="#sec-array.prototype.slice"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be _T_.[[Sequence]].
@@ -269,8 +270,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.concat">
         <h1>Tuple.prototype.concat ( ..._args_ )</h1>
-        <p>When the *concat* method is called with zero or more arguments, it returns a Tuple containing the elements of the Tuple followed by the elements of each argument in order.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.concat` as defined in <emu-xref href="#sec-array.prototype.concat"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be a new empty List.
@@ -304,8 +305,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.includes">
         <h1>Tuple.prototype.includes ( _searchElement_ [ , _fromIndex_ ] )</h1>
-        <p>This method compares _searchElement_ to the elements of the tuple, in ascending order starting from _fromIndex_, using the SameValueZero algorithm, and if found at any position, returns *true*; otherwise, it returns *false*. The optional second argument _fromIndex_ defaults to *+0*<sub>𝔽</sub> (i.e. the whole tuple is searched).</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.includes` as defined in <emu-xref href="#sec-array.prototype.includes"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -329,8 +330,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.indexof">
         <h1>Tuple.prototype.indexOf ( _searchElement_ [ , _fromIndex_ ] )</h1>
-        <p>This method compares _searchElement_ to the elements of the tuple, in ascending order starting from _fromIndex_, using the IsStrictlyEqual algorithm, and if found at one or more indices, returns the smallest such index; otherwise, it returns *-1*<sub>𝔽</sub>. The optional second argument _fromIndex_ defaults to *+0*<sub>𝔽</sub> (i.e. the whole tuple is searched).</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.indexOf` as defined in <emu-xref href="#sec-array.prototype.indexof"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -355,8 +356,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.join">
         <h1>Tuple.prototype.join ( _separator_ )</h1>
-        <p>This method converts the elements of the array to Strings, and then concatenates these Strings, separated by occurrences of the _separator_. If no separator is provided, a single comma is used as the separator.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.join` as defined in <emu-xref href="#sec-array.prototype.join"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -376,8 +377,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.lastindexof">
         <h1>Tuple.prototype.lastIndexOf ( _searchElement_ [ , _fromIndex_ ] )</h1>
-        <p>This method compares _searchElement_ to the elements of the tuple, in descending order starting from _fromIndex_, using the IsStrictlyEqual algorithm, and if found at one or more indices, returns the smallest such index; otherwise, it returns *-1*<sub>𝔽</sub>. The optional second argument _fromIndex_ defaults to the tuple's length minus 1 (i.e. the whole tuple is searched).</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.lastIndexOf` as defined in <emu-xref href="#sec-array.prototype.lastindexof"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -399,8 +400,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.entries">
         <h1>Tuple.prototype.entries ( )</h1>
-        <p>When the *entries* method is called, it returns an iterator over the entries of the Tuple.</p>
-        <p>The following steps are taken:</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _tuple_ be ? thisTupleValue(*this* value).
           1. Let _O_ be ! ToObject(_tuple_).
@@ -409,8 +409,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.every">
         <h1>Tuple.prototype.every ( _callbackfn_ [ , _thisArg_ ] )</h1>
-        <p>This methods calls _callbackfn_ once for each element of the tuple, in ascending order, until it finds one where _callbackfn_ returns *false*. If such an element is found, `every` immediately returns *false*. Otherwise, if _callbackfn_ returned *true* for all elements, `every` will return *true*.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.every` as defined in <emu-xref href="#sec-array.prototype.every"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -427,12 +427,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.filter">
         <h1>Tuple.prototype.filter ( _callbackfn_ [ , _thisArg_ ] )</h1>
-        <emu-note>
-          <p>_callbackfn_ should be a function that accepts three arguments and returns a value that is coercible to the Boolean value *true* or *false*. `filter` calls _callbackfn_ once for each element in the tuple, in ascending order, and constructs a new tuple of all the values for which _callbackfn_ returns *true*.</p>
-          <p>If a _thisArg_ parameter is provided, it will be used as the *this* value for each invocation of _callbackfn_. If it is not provided, *undefined* is used instead.</p>
-          <p>_callbackfn_ is called with three arguments: the value of the element, the index of the element, and the Tuple being traversed.</p>
-        </emu-note>
-        <p>When the `filter` method is called with one or two arguments, the following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.filter` as defined in <emu-xref href="#sec-array.prototype.filter"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be _T_.[[Sequence]].
@@ -451,8 +447,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.find">
         <h1>Tuple.prototype.find ( _predicate_ [ , _thisArg_ ] )</h1>
-        <p>This methods calls _predicate_ once for each element of the tuple, in ascending order, until it finds one where _predicate_ returns *true*. If such an element is found, `find` immediately returns it. Otherwise, if _predicate_ returned *false* for all elements, `find` will return *undefined*.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.find` as defined in <emu-xref href="#sec-array.prototype.find"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -469,8 +465,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.findindex">
         <h1>Tuple.prototype.findIndex ( _predicate_ [ , _thisArg_ ] )</h1>
-        <p>This methods calls _predicate_ once for each element of the tuple, in ascending order, until it finds one where _predicate_ returns *true*. If such an element is found, `find` immediately returns its index. Otherwise, if _predicate_ returned *false* for all elements, `find` will return *-1*<sub>𝔽</sub>.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.findIndex` as defined in <emu-xref href="#sec-array.prototype.findindex"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -487,8 +483,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.findlast">
         <h1>Tuple.prototype.findLast ( _predicate_ [ , _thisArg_ ] )</h1>
-        <p>This methods calls _predicate_ once for each element of the tuple, in descending order, until it finds one where _predicate_ returns *true*. If such an element is found, `find` immediately returns it. Otherwise, if _predicate_ returned *false* for all elements, `find` will return *undefined*.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.findLast` as defined in <emu-xref href="#sec-array.prototype.findlast"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -505,8 +501,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.findlastindex">
         <h1>Tuple.prototype.findLastIndex ( _predicate_ [ , _thisArg_ ] )</h1>
-        <p>This methods calls _predicate_ once for each element of the tuple, in descending order, until it finds one where _predicate_ returns *true*. If such an element is found, `find` immediately returns its index. Otherwise, if _predicate_ returned *false* for all elements, `find` will return *-1*<sub>𝔽</sub>.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.findLsatIndex` as defined in <emu-xref href="#sec-array.prototype.findlastindex"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -523,7 +519,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.flat">
         <h1>Tuple.prototype.flat ( [ _depth_ ] )</h1>
-        <p>When the `flat` method is called with zero or one arguments, the following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.flat` as defined in <emu-xref href="#sec-array.prototype.flat"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be _T_.[[Sequence]].
@@ -560,7 +557,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.flatmap">
         <h1>Tuple.prototype.flatMap ( _mapperFunction_ [ , _thisArg_ ] )</h1>
-        <p>When the `flatMap` method is called with one or two arguments, the following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.flatMap` as defined in <emu-xref href="#sec-array.prototype.flatmap"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be _T_.[[Sequence]].
@@ -572,8 +570,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.foreach">
         <h1>Tuple.prototype.forEach ( _callbackfn_ [ , _thisArg_ ] )</h1>
-        <p>This methods calls _callbackfn_ once for each element of the tuple, in ascending order.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.forEach` as defined in <emu-xref href="#sec-array.prototype.foreach"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -589,8 +587,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.keys">
         <h1>Tuple.prototype.keys ( )</h1>
-        <p>When the *keys* method is called, it returns an iterator over the keys of the Tuple.</p>
-        <p>The following steps are taken:</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _tuple_ be ? thisTupleValue(*this* value).
           1. Let _O_ be ! ToObject(_tuple_).
@@ -599,12 +596,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.map">
         <h1>Tuple.prototype.map ( _callbackfn_ [ , _thisArg_ ] )</h1>
-        <emu-note>
-          <p>_callbackfn_ should be a function that accepts three arguments. `map` calls _callbackfn_ once for each element in the Tuple, in ascending order, and constructs a new tuple from the results.</p>
-          <p>If a _thisArg_ parameter is provided, it will be used as the *this* value for each invocation of _callbackfn_. If it is not provided, *undefined* is used instead.</p>
-          <p>_callbackfn_ is called with three arguments: the value of the element, the index of the element, and the Tuple being traversed.</p>
-        </emu-note>
-        <p>When the `map` method is called with one or two arguments, the following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.map` as defined in <emu-xref href="#sec-array.prototype.map"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be _T_.[[Sequence]].
@@ -623,8 +616,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.reduce">
         <h1>Tuple.prototype.reduce ( _callbackfn_ [ , _initialValue_ ] )</h1>
-        <p>This methods calls _callbackfn_ once for each element of the tuple, in ascending order, skipping the first one if _initialValue_ is not present. Each value returned by _callbackfn_ is used passed to the next call, and after iterating through all the elements `reduce` returns the last return value of _callbackfn_.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.reduce` as defined in <emu-xref href="#sec-array.prototype.reduce"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -647,8 +640,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.reduceright">
         <h1>Tuple.prototype.reduceRight ( _callbackfn_ [ , _thisArg_ ] )</h1>
-        <p>This methods calls _callbackfn_ once for each element of the tuple, in descending order, skipping the last one if _initialValue_ is not present. Each value returned by _callbackfn_ is used passed to the next call, and after iterating through all the elements `reduceRight` returns the last return value of _callbackfn_.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.reduceRight` as defined in <emu-xref href="#sec-array.prototype.reduceright"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -671,8 +664,8 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.some">
         <h1>Tuple.prototype.some ( _callbackfn_ [ , _thisArg_ ] )</h1>
-        <p>This methods calls _callbackfn_ once for each element of the tuple, in ascending order, until it finds one where _callbackfn_ returns *true*. If such an element is found, `some` immediately returns *true*. Otherwise, if _callbackfn_ returned *false* for all elements, `every` will return *false*.</p>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.some` as defined in <emu-xref href="#sec-array.prototype.some"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -686,15 +679,11 @@
             1. Set _k_ to _k_ + 1.
           1. Return *false*.
         </emu-alg>
-        <emu-alg>
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.tolocalestring">
         <h1>Tuple.prototype.toLocaleString ( [ _reserved1_ [ , _reserved2_ ] ] )</h1>
-        <p>An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of this method is used.</p>
-        <emu-note type="editor">
-          <p>ECMA-402 does not yet include this method.</p>
-        </emu-note>
-        <p>The following steps are taken:</p>
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.toLocaleString` as defined in <emu-xref href="#sec-array.prototype.tolocalestring"></emu-xref>.</p>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _elements_ be _T_.[[Sequence]].
@@ -715,9 +704,7 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.tostring">
         <h1>Tuple.prototype.toString ( )</h1>
-
-        <p>When the *toString* method is called, the following steps are taken:</p>
-
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _tuple_ be ? thisTupleValue(*this* value).
           1. Return TupleToString(_tuple_).
@@ -726,7 +713,7 @@
       <emu-clause id="sec-tuple.prototype.values">
         <h1>Tuple.prototype.values ( )</h1>
         <p>When the *values* method is called, it returns an iterator over the values of the Tuple.</p>
-        <p>The following steps are taken:</p>
+        <p>It performs the following steps when called:</p>
         <emu-alg>
           1. Let _tuple_ be ? thisTupleValue(*this* value).
           1. Let _O_ be ! ToObject(_tuple_).
@@ -739,9 +726,11 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.toReversed">
         <h1>Tuple.prototype.toReversed ( )</h1>
-
-        <p>When the *toReversed* method is called, the following steps are taken:</p>
-
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.reverse` as defined in <emu-xref href="#sec-array.prototype.reverse"></emu-xref>, but it creates a new tuple rather than mutating its receiver.</p>
+        <emu-note type="editor">
+          Once the Change Array by Copy proposal reaches stage 4, the above paragraph will be updated to reference `Array.prototype.toReversed`.
+        </emu-note>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _oldList_ be a new List containing the elements of _T_.[[Sequence]].
@@ -755,10 +744,11 @@
 
     <emu-clause id="sec-tuple.prototype.toSorted">
         <h1>Tuple.prototype.toSorted ( _comparefn_ )</h1>
-
-        <p>Except as described below, implements the same requirements as those of `Array.prototype.sort` as defined in <emu-xref href="#sec-array.prototype.sort"></emu-xref>. The implementation may be optimized with the knowledge that the *this* value is an object that has a fixed length and whose <emu-xref href="#integer-index">integer-indexed</emu-xref> properties are not sparse.</p>
-        <p>Upon entry, the following steps are performed to initialize evaluation of the `sorted` function. These steps are used instead of the entry steps in <emu-xref href="#sec-array.prototype.sort"></emu-xref>:</p>
-
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.sort` as defined in <emu-xref href="#sec-array.prototype.sort"></emu-xref>, but it creates a new tuple rather than mutating its receiver.</p>
+        <emu-note type="editor">
+          Once the Change Array by Copy proposal reaches stage 4, the above paragraph will be updated to reference `Array.prototype.toSorted`.
+        </emu-note>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. If _comparefn_ is not *undefined* and IsCallable(_comparefn_) is *false*, throw a *TypeError* exception.
           1. Let _T_ be ? thisTupleValue(*this* value).
@@ -771,10 +761,11 @@
 
     <emu-clause id="sec-tuple.prototype.toSpliced">
         <h1>Tuple.prototype.toSpliced ( _start_, _deleteCount_, ..._items_ )</h1>
-
-        <p>When the `toSpliced` method is called with two or more arguments _start_, _deleteCount_ and zero or more _items_, a new Tuple is returned where the _deleteCount_ elements of the Tuple starting at integer index _start_ are replaced by the arguments _items_.</p>
-        <p>The following steps are taken:</p>
-
+        <p>The interpretation and use of the arguments of this method are the same as for `Array.prototype.splice` as defined in <emu-xref href="#sec-array.prototype.splice"></emu-xref>, but it creates a new tuple rather than mutating its receiver.</p>
+        <emu-note type="editor">
+          Once the Change Array by Copy proposal reaches stage 4, the above paragraph will be updated to reference `Array.prototype.toSpliced`.
+        </emu-note>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be _T_.[[Sequence]].
@@ -816,7 +807,10 @@
       </emu-clause>
       <emu-clause id="sec-tuple.prototype.with">
         <h1>Tuple.prototype.with ( _index_, _value_ )</h1>
-        <p>When the *with* method is called with two arguments, it returns a new Tuple with the element at index _index_ replaced with value _value_.</p>
+        <emu-note type="editor">
+          Once the Change Array by Copy proposal reaches stage 4, this method will have the same introduction used for all the other methods and it will reference `Array.prototype.with`.
+        </emu-note>
+        <p>This method performs the following steps when called:</p>
         <emu-alg>
           1. Let _T_ be ? thisTupleValue(*this* value).
           1. Let _list_ be a new List containing the elements of _T_.[[Sequence]].
