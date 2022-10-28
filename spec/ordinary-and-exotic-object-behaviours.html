@@ -31,7 +31,7 @@
         </dl>
         <emu-alg>
           1. Assert: IsPropertyKey(_P_) is *true*.
-          1. If Type(_P_) is a Symbol, return *false*.
+          1. If Type(_P_) is a Symbol, return *undefined*.
           1. If _P_ is *"length"*, then
             1. Let _length_ be the length of _T_.[[Sequence]].
             1. Return the PropertyDescriptor { [[Value]]: 𝔽(_length_), [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.
