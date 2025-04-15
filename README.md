@@ -1,5 +1,10 @@
 # JavaScript Records & Tuples Proposal
 
+> [!IMPORTANT]
+> This proposal has been withdrawn [#394](https://github.com/tc39/proposal-record-tuple/issues/394)
+
+----
+
 **Authors:**
 
 - Robin Ricard (Bloomberg)
@@ -17,7 +22,7 @@
 - Dan Ehrenberg (Bloomberg)
 - Maxwell Heiber
 
-**Stage:** 2
+**Stage:** Withdrawn
 
 ### [Try out Record and Tuple in the playground!](https://rickbutton.github.io/record-tuple-playground)
 
@@ -56,14 +61,14 @@ Records and Tuples aim to be usable and understood with external typesystem supe
 
 Today, userland libraries implement similar concepts, such as [Immutable.js](https://immutable-js.github.io/immutable-js/). Also [a previous proposal](https://github.com/sebmarkbage/ecmascript-immutable-data-structures) has been attempted but abandoned because of the complexity of the proposal and lack of sufficient use cases.
 
-This new proposal is still inspired by this previous proposal but introduces some significant changes: Record and Tuples are now deeply immutable. This property is fundamentally based on the observation that, in large projects, the risk of mixing immutable and mutable data structures grows as the amount of data being stored and passed around grows as well so you'll be more likely handling large record & tuple structures. This can introduce hard-to-find bugs.
+This new proposal is still inspired by this previous proposal but introduces some significant changes: Record and Tuples are now deeply immutable. This property is fundamentally based on the observation that, in large projects, the risk of mixing immutable and mutable data structures grows as the amount of data being stored and passed around grows as well so you'll be more likely to handle large record & tuple structures. This can introduce hard-to-find bugs.
 
 As a built-in, deeply immutable data structure, this proposal also offers a few usability advantages compared to userland libraries:
 - Records and Tuples are easily introspectable in a debugger, while library provided immutable types are often hard to inspect as you have to inspect through data structure details.
-- Because they're accessed through typical object and array idioms, no additional branching is needed in order to write a generic library that consumes both immutable and JS objects; with user libraries, method calls may be needed just in the immutable case.
+- Because they are accessed through typical object and array idioms, no additional branching is needed in order to write a generic library that consumes both immutable and JS objects; with user libraries, method calls may be needed just in the immutable case.
 - We avoid cases where developers may expensively convert between regular JS objects and immutable structures, by making it easier to just always use the immutable ones.
 
-[Immer](https://github.com/mweststrate/immer) is a notable approach to immutable data structures, and prescribes a pattern for manipulation through producers and reducers. It is not providing immutable data types however, as it generates frozen objects. This same pattern can be adapted to the structures defined in this proposal in addition to frozen objects.
+[Immer](https://github.com/mweststrate/immer) is a notable approach to immutable data structures, and prescribes a pattern for manipulation through producers and reducers. However, it is configurable if it generates frozen objects or not. This same pattern can be adapted to the structures defined in this proposal in addition to frozen objects.
 
 Deep equality as defined in user libraries can vary significantly, in part due to possible references to mutable objects. By drawing a hard line about only deeply containing primitives, Records and Tuples, and recursing through the entire structure, this proposal defines simple, unified semantics for comparisons.
 
